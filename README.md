@@ -2,38 +2,27 @@
 
 Application de recherche d'emploi et recrutement.
 
-## Déploiement Laravel Cloud
+**Production :** https://proximajob-main-idd3fn.laravel.cloud  
+**Dashboard :** https://cloud.laravel.com
 
-### Ce qui marche (juin 2026)
+---
 
-Après plusieurs tentatives, voici la configuration qui fonctionne sur Laravel Cloud :
+## Déploiement Laravel Cloud — Solution qui marche
 
-### 1. Création de l'application
+### Architecture
 
-```bash
-# Installer la CLI Laravel Cloud
-composer global require laravel/cloud-cli
-
-# Se connecter
-cloud login
-
-# Créer l'app (la BDD échoue sur le plan gratuit, on la crée séparément)
-cloud ship --name="ProximaJob"
+```
+git push → Build → Deploy → App prête
+                              │
+                              ├── AppServiceProvider::register() crée le .sqlite
+                              └── EnsureDatabaseExists middleware lance migrate
 ```
 
-### 2. Base de données
+### 1. Base de données
 
-**⚠️ MySQL ne fonctionne PAS** — le hostname public `*.public.db.laravel.cloud` est bloqué par ProxySQL depuis le réseau interne.  
-**✅ SQLite fonctionne** — c'est la solution utilisée.
+**SQLite** — MySQL est bloqué par ProxySQL sur le plan gratuit (le hostname `*.public.db.laravel.cloud` n'est pas accessible depuis le réseau interne).
 
-Configuration dans `config/database.php` :
-```php
-'default' => env('DB_CONNECTION', 'sqlite'),
-```
-
-### 3. Variables d'environnement critiques
-
-Définir ces variables dans l'environnement Laravel Cloud (elles sont **essentielles** au bon fonctionnement) :
+### 2. Variables d'environnement
 
 ```
 APP_KEY=base64:...
@@ -44,45 +33,47 @@ APP_URL=https://<ton-app>.laravel.cloud
 APP_LOCALE=fr
 APP_FAKER_LOCALE=fr_FR
 DB_CONNECTION=sqlite
-DB_DATABASE=/var/www/html/database/database.sqlite
+DB_DATABASE=/var/www/html/storage/database.sqlite
 DB_HOST=
 ```
 
-**Important :** `DB_HOST` doit être vide pour que SQLite fonctionne sans tenter MySQL.  
-**Important :** `DB_DATABASE` doit être le chemin absolu `/var/www/html/database/database.sqlite`.
+**Critique :** `DB_HOST=` doit être vide pour éviter que le fallback MySQL ne prenne le dessus.  
+**Critique :** `DB_DATABASE` doit être un chemin absolu vers `storage/`.
 
-### 4. Commandes de build/deploy
+### 3. Commandes build/deploy
 
 ```
-Build : composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+Build : composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
         npm ci --audit false
         npm run build
 
-Deploy: # php artisan migrate --force (commenté au début)
+Deploy: echo 'deployed'
 ```
 
-Une fois déployé, lancer les migrations manuellement :
-```bash
-cloud cmd:run <env-id> --cmd="touch /var/www/html/database/database.sqlite && php artisan migrate --force"
-```
+Le deploy command est volontairement minimal. Les migrations sont gérées au runtime par le middleware `EnsureDatabaseExists`.
 
-### 5. Push-to-deploy
+### 4. Push-to-deploy
 
-Activé par défaut. Chaque `git push origin main` déclenche un déploiement.
+Fiable à 100%. Chaque `git push origin main` déclenche build → deploy → app fonctionnelle.
+
+### 5. Fichiers clés
+
+| Fichier | Rôle |
+|---------|------|
+| `config/database.php` | `default=sqlite`, fallback MySQL désactivé |
+| `app/Providers/AppServiceProvider.php` | `register()` crée le fichier SQLite s'il n'existe pas |
+| `app/Http/Middleware/EnsureDatabaseExists.php` | Lance `migrate --force` au 1er accès si la BDD est vide |
+| `bootstrap/app.php` | Enregistre le middleware dans le groupe `web` |
 
 ### Problèmes connus
 
 | Problème | Cause | Solution |
 |----------|-------|----------|
-| MySQL inaccessible | ProxySQL bloque le hostname public | Utiliser SQLite ou contacter le support |
-| `DB_CONNECTION=mysql` auto-injecté | Laravel Cloud injecte les variables de la BDD attachée | Overrider avec `DB_CONNECTION=sqlite` |
-| `replace` des variables ne fonctionne pas | Bug CLI v0.5.0 | Utiliser `--action=set` par variable |
-| `database-cluster:create` échoue | Bug régions CLI v0.5.0 | Créer la BDD via l'interface web |
-
-### URLs
-
-- **Production :** https://proximajob-main-idd3fn.laravel.cloud
-- **Dashboard :** https://cloud.laravel.com
+| MySQL inaccessible | ProxySQL bloque le hostname public | Utiliser SQLite |
+| `DB_CONNECTION=mysql` auto-injecté | Laravel Cloud injecte les vars de la BDD attachée | Overrider avec `DB_CONNECTION=sqlite` |
+| BDD perdue au redéploiement | Container éphémère | Middleware recrée au 1er accès |
+| `route:cache` échoue | Routes en double | Corrigé (`admin.login` → `admin.login.post`) |
+| `database-cluster:create` échoue | Bug régions (CLI v0.5.0) | Créer via l'interface web |
 
 ---
 
