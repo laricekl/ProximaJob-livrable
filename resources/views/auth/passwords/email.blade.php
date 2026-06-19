@@ -1,165 +1,62 @@
-@extends('layouts.app')
-
-@section('title', 'Mot de passe oublié')
-
-@section('styles')
-<style>
-    .forgot-password-container {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px;
-    }
-
-    .forgot-password-card {
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(20px);
-        border-radius: 24px;
-        padding: 40px;
-        width: 100%;
-        max-width: 450px;
-        box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
-        text-align: center;
-    }
-
-    .forgot-password-card h2 {
-        font-size: 28px;
-        font-weight: 700;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 16px;
-    }
-
-    .forgot-password-card .subtitle {
-        color: #6b7280;
-        margin-bottom: 32px;
-        line-height: 1.6;
-    }
-
-    .form-group {
-        margin-bottom: 24px;
-        text-align: left;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 8px;
-        color: #374151;
-        font-weight: 500;
-    }
-
-    .form-group input {
-        width: 100%;
-        padding: 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        font-size: 16px;
-        transition: all 0.3s ease;
-    }
-
-    .form-group input:focus {
-        outline: none;
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .submit-btn {
-        width: 100%;
-        padding: 16px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        font-size: 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: transform 0.3s ease;
-        margin-bottom: 24px;
-    }
-
-    .submit-btn:hover {
-        transform: translateY(-2px);
-    }
-
-    .back-link {
-        color: #667eea;
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .back-link:hover {
-        color: #764ba2;
-    }
-
-    .alert {
-        padding: 16px;
-        border-radius: 12px;
-        margin-bottom: 24px;
-    }
-
-    .alert-success {
-        background-color: #d1fae5;
-        color: #065f46;
-        border: 1px solid #a7f3d0;
-    }
-
-    .alert-danger {
-        background-color: #fee2e2;
-        color: #991b1b;
-        border: 1px solid #fca5a5;
-    }
-</style>
-@endsection
-
+@extends('layouts.guest')
+@section('title', 'Mot de passe oublie')
 @section('content')
-<div class="forgot-password-container">
-    <div class="forgot-password-card">
-        <h2>Mot de passe oublié ?</h2>
-        <p class="subtitle">
-            Pas de problème. Indiquez-nous simplement votre adresse email et nous vous enverrons un lien de réinitialisation.
-        </p>
+  <main class="flex-grow pt-32 flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-md">
+      <div class="card-glow rounded-[2rem] p-8 md:p-10">
+        <div class="text-center mb-8">
+          <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-secondary-container/12 text-secondary-container">
+            <span class="material-symbols-outlined text-2xl">lock_reset</span>
+          </div>
+          <h1 class="text-3xl font-bold font-serif text-primary mb-2">Mot de passe oublie ?</h1>
+          <p class="text-sm leading-relaxed text-on-surface-variant">
+            Indiquez votre adresse e-mail. Nous vous enverrons un lien pour choisir un nouveau mot de passe.
+          </p>
+        </div>
 
-        {{-- Messages de succès --}}
         @if (session('status'))
-            <div class="alert alert-success">
-                {{ session('status') }}
-            </div>
+          <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800" role="status">
+            {{ session('status') }}
+          </div>
         @endif
 
-        {{-- Messages d'erreur --}}
         @if ($errors->any())
-            <div class="alert alert-danger">
-                @foreach ($errors->all() as $error)
-                    <div>{{ $error }}</div>
-                @endforeach
-            </div>
+          <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+            <p class="font-semibold">Envoi impossible :</p>
+            <ul class="mt-2 list-disc space-y-1 pl-5">
+              @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+              @endforeach
+            </ul>
+          </div>
         @endif
 
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
-            
-            <div class="form-group">
-                <label for="email">Adresse e-mail</label>
-                <input type="email" 
-                       id="email" 
-                       name="email" 
-                       value="{{ old('email') }}"
-                       placeholder="votre@email.com" 
-                       required 
-                       autofocus>
-            </div>
+        <form method="POST" action="{{ route('password.email') }}" class="space-y-5">
+          @csrf
+          <div>
+            <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value="{{ old('email') }}"
+              placeholder="votre@email.com"
+              required
+              autofocus
+              class="w-full rounded-xl border border-outline-variant/50 bg-white/80 px-4 py-3.5 text-sm text-primary placeholder:text-outline focus:outline-none"
+            />
+          </div>
 
-            <button type="submit" class="submit-btn">
-                Envoyer le lien de réinitialisation
-            </button>
+          <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary-container px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary-container/20 transition-all hover:bg-secondary">
+            <span class="material-symbols-outlined text-lg">send</span>
+            Envoyer le lien
+          </button>
         </form>
 
-        <a href="{{ route('login') }}" class="back-link">
-            ← Retour à la connexion
-        </a>
+        <p class="mt-8 text-center text-sm text-on-surface-variant">
+          <a href="{{ route('login') }}" class="font-bold text-secondary-container hover:underline">Retour a la connexion</a>
+        </p>
+      </div>
     </div>
-</div>
+  </main>
 @endsection

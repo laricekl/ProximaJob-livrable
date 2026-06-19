@@ -1,13 +1,11 @@
  
-<body class="bg-gray-100">
-
 <!-- Modal d'ajout d'utilisateur -->
 <div id="addUserModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-    <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
-        <div class="flex items-center justify-between p-6 border-b">
-            <h2 class="text-xl font-semibold text-gray-800">Ajouter un nouvel utilisateur</h2>
-            <button onclick="closeAddModal()" class="text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times text-xl"></i>
+    <div class="w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto rounded-[2rem] border border-outline-variant/20 bg-white shadow-2xl">
+        <div class="flex items-center justify-between border-b border-outline-variant/10 p-6">
+            <h2 class="text-xl font-semibold text-primary">Ajouter un nouvel utilisateur</h2>
+            <button onclick="closeAddModal()" class="flex h-10 w-10 items-center justify-center rounded-full text-outline transition-colors hover:bg-surface-container-low hover:text-primary">
+                <span class="material-symbols-outlined text-xl">close</span>
             </button>
         </div>
 
@@ -125,14 +123,14 @@
                 </div>
             </div>
 
-            <div class="flex items-center justify-end space-x-4 p-6 border-t bg-gray-50">
+            <div class="flex items-center justify-end space-x-4 border-t border-outline-variant/10 bg-surface-container-low/50 p-6">
                 <button type="button" onclick="closeAddModal()" 
-                    class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-100">
+                    class="rounded-xl border border-outline-variant/20 px-4 py-2 text-sm font-semibold text-outline transition-colors hover:bg-surface-container-low">
                     Annuler
                 </button>
                 <button type="submit" 
-                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
-                    <i class="fas fa-plus mr-2"></i>Créer l'utilisateur
+                    class="inline-flex items-center gap-2 rounded-xl bg-secondary-container px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-secondary">
+                    <span class="material-symbols-outlined text-lg">add</span>Créer l'utilisateur
                 </button>
             </div>
         </form>
@@ -178,20 +176,17 @@ function toggleAddEntrepriseSection() {
     const entrepriseSection = document.getElementById('addEntrepriseSection');
     const companyNameInput = document.getElementById('add_company_name');
     const neqInput = document.getElementById('add_neq');
-    const rccmInput = document.getElementById('add_rccm');
     
     if (roleSelect.value === 'entreprise') {
         entrepriseSection.classList.remove('hidden');
         // Rendre les champs obligatoires
         companyNameInput.required = true;
         neqInput.required = true;
-        rccmInput.required = true;
     } else {
         entrepriseSection.classList.add('hidden');
         // Enlever l'obligation
         companyNameInput.required = false;
         neqInput.required = false;
-        rccmInput.required = false;
     }
 }
 

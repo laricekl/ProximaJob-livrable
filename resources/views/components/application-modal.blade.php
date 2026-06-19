@@ -6,15 +6,18 @@
 }
 
 .application-modal .modal-content {
-    border-radius: 12px;
-    border: none;
+    border-radius: 28px;
+    border: 1px solid rgba(148, 163, 184, 0.18);
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.96);
+    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.18);
+    backdrop-filter: blur(18px);
 }
 
 .application-modal .form-header {
-    background: white;
+    background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.92) 100%);
     padding: 30px 40px 20px;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
     position: relative;
 }
 
@@ -25,20 +28,28 @@
     background: none;
     border: none;
     font-size: 24px;
-    color: #666;
+    color: #64748b;
     cursor: pointer;
-    width: 30px;
-    height: 30px;
+    width: 42px;
+    height: 42px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 9999px;
+    transition: all 0.2s ease;
+}
+
+.application-modal .close-btn:hover {
+    background: rgba(148, 163, 184, 0.12);
+    color: #0f172a;
 }
 
 .application-modal .form-title {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 28px;
+    font-weight: 700;
     margin-bottom: 30px;
-    color: #333;
+    color: #0f172a;
+    letter-spacing: -0.02em;
 }
 
 .application-modal .progress-steps {
@@ -71,19 +82,21 @@
 }
 
 .application-modal .step-circle.active {
-    background: #007bff;
+    background: #f97316;
     color: white;
+    box-shadow: 0 12px 28px rgba(249, 115, 22, 0.28);
 }
 
 .application-modal .step-circle.inactive {
-    background: #e9ecef;
-    color: #666;
+    background: #e2e8f0;
+    color: #64748b;
 }
 
 .application-modal .step-label {
     font-size: 14px;
-    color: #666;
+    color: #64748b;
     text-align: center;
+    font-weight: 600;
 }
 
 .application-modal .step:not(:last-child)::after {
@@ -93,12 +106,13 @@
     left: 65px;
     width: 60px;
     height: 2px;
-    background: #e9ecef;
+    background: rgba(148, 163, 184, 0.28);
     z-index: 1;
 }
 
 .application-modal .form-content {
     padding: 40px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.92) 100%);
 }
 
 .application-modal .step-content {
@@ -115,12 +129,12 @@
     gap: 10px;
     font-size: 20px;
     font-weight: 600;
-    color: #333;
+    color: #0f172a;
     margin-bottom: 30px;
 }
 
 .application-modal .section-icon {
-    color: #007bff;
+    color: #f97316;
 }
 
 .application-modal .form-row {
@@ -142,39 +156,42 @@
     display: block;
     margin-bottom: 8px;
     font-weight: 500;
-    color: #333;
+    color: #0f172a;
 }
 
 .application-modal .form-input {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 14px;
     font-size: 16px;
-    transition: border-color 0.3s;
+    transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    background: rgba(255, 255, 255, 0.88);
+    color: #0f172a;
 }
 
 .application-modal .form-input:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: rgba(249, 115, 22, 0.55);
+    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
 }
 
 .application-modal .subsection-title {
     font-size: 18px;
     font-weight: 600;
-    color: #333;
+    color: #0f172a;
     margin-bottom: 20px;
     margin-top: 25px;
 }
 
 .application-modal .blue-background {
-    background: linear-gradient(135deg, #e3f2fd, #f0f8ff) !important;
-    border: 1px solid #bbdefb;
+    background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(255, 247, 237, 0.94)) !important;
+    border: 1px solid rgba(249, 115, 22, 0.14);
 }
 
 .application-modal .upload-section {
-    background: #f8f9fa;
-    border-radius: 12px;
+    background: rgba(248, 250, 252, 0.84);
+    border-radius: 22px;
     padding: 30px;
     margin-bottom: 30px;
 }
@@ -191,7 +208,7 @@
     display: block;
     margin-bottom: 10px;
     font-weight: 500;
-    color: #333;
+    color: #0f172a;
 }
 
 .application-modal .upload-area {
@@ -202,15 +219,21 @@
 }
 
 .application-modal .upload-btn {
-    background: #007bff;
+    background: #f97316;
     color: white;
     border: none;
-    padding: 10px 20px;
-    border-radius: 6px;
-    font-weight: 500;
+    padding: 11px 22px;
+    border-radius: 9999px;
+    font-weight: 700;
     cursor: pointer;
     font-size: 14px;
     flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.application-modal .upload-btn:hover {
+    background: #ea580c;
+    transform: translateY(-1px);
 }
 
 .application-modal .upload-status {
@@ -223,17 +246,17 @@
 }
 
 .application-modal .upload-status.empty {
-    color: #666;
+    color: #64748b;
 }
 
 .application-modal .upload-status:not(.empty) {
-    color: #28a745;
+    color: #0f766e;
 }
 
 .application-modal .upload-status .check-circle {
     width: 24px;
     height: 24px;
-    background: #28a745;
+    background: #0f766e;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -244,17 +267,18 @@
 }
 
 .application-modal .summary-section {
-    background: #f8f9fa;
-    border-radius: 12px;
+    background: rgba(248, 250, 252, 0.86);
+    border-radius: 22px;
     padding: 25px;
     margin-bottom: 25px;
+    border: 1px solid rgba(148, 163, 184, 0.14);
 }
 
 .application-modal .summary-title {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 15px;
-    color: #333;
+    color: #0f172a;
 }
 
 .application-modal .summary-row {
@@ -281,12 +305,12 @@
 
 .application-modal .summary-label {
     font-weight: 600;
-    color: #333;
+    color: #0f172a;
     min-width: fit-content;
 }
 
 .application-modal .summary-value {
-    color: #666;
+    color: #475569;
     font-weight: 400;
 }
 
@@ -301,7 +325,7 @@
     gap: 8px;
     margin-bottom: 8px;
     font-size: 14px;
-    color: #007bff;
+    color: #f97316;
 }
 
 .application-modal .checkbox-group {
@@ -317,7 +341,7 @@
 
 .application-modal .checkbox-label {
     font-size: 14px;
-    color: #333;
+    color: #334155;
     line-height: 1.5;
 }
 
@@ -363,44 +387,54 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 30px;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid rgba(148, 163, 184, 0.18);
 }
 
 .application-modal .btn-secondary {
     background: transparent;
-    color: #666;
-    border: none;
-    padding: 12px 0;
+    color: #64748b;
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    padding: 12px 18px;
     font-size: 16px;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
+    border-radius: 9999px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.application-modal .btn-secondary:hover {
+    background: rgba(148, 163, 184, 0.12);
+    color: #0f172a;
 }
 
 .application-modal .btn-primary {
-    background: #007bff;
+    background: #f97316;
     color: white;
     border: none;
     padding: 12px 30px;
-    border-radius: 6px;
+    border-radius: 9999px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer;
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: all 0.2s ease;
 }
 
 .application-modal .btn-primary:hover {
-    background: #0056b3;
+    background: #ea580c;
+    transform: translateY(-1px);
 }
 
 .divider {
     text-align: center;
     margin: 40px 0;
     position: relative;
-    color: #666;
+    color: #64748b;
     font-weight: 500;
 }
 
@@ -416,7 +450,7 @@
 }
 
 .divider span {
-    background: #f8f9fa;
+    background: rgba(255, 255, 255, 0.94);
     padding: 0 20px;
     position: relative;
     z-index: 2;
@@ -431,7 +465,7 @@
 }
 
 .cv-generator-icon {
-    color: #007bff;
+    color: #f97316;
     font-size: 24px;
     margin-bottom: 15px;
 }
@@ -440,26 +474,32 @@
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #333;
+    color: #0f172a;
 }
 
 .cv-generator p {
-    color: #666;
+    color: #64748b;
     margin-bottom: 20px;
     font-size: 14px;
 }
 
 .generate-btn {
     background: transparent;
-    color: #007bff;
-    border: 2px solid #007bff;
+    color: #f97316;
+    border: 1px solid rgba(249, 115, 22, 0.3);
     padding: 12px 24px;
-    border-radius: 6px;
-    font-weight: 500;
+    border-radius: 9999px;
+    font-weight: 700;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.generate-btn:hover {
+    background: rgba(249, 115, 22, 0.08);
+    border-color: rgba(249, 115, 22, 0.45);
 }
 
 /* Success Modal */
@@ -492,7 +532,7 @@
 .success-icon {
     width: 80px;
     height: 80px;
-    background: #007bff;
+    background: #0f766e;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -506,23 +546,23 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 15px;
-    color: #333;
+    color: #0f172a;
 }
 
 .success-message {
-    color: #666;
+    color: #64748b;
     margin-bottom: 30px;
     line-height: 1.6;
 }
 
 .close-modal-btn {
-    background: #e9ecef;
-    color: #333;
+    background: #e2e8f0;
+    color: #0f172a;
     border: none;
     padding: 12px 30px;
-    border-radius: 6px;
+    border-radius: 9999px;
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 700;
     cursor: pointer;
 }
 
@@ -588,9 +628,9 @@
 input[readonly],
 textarea[readonly],
 select[readonly] {
-    background-color: #f5f5f5;   
-    color: #666;                
-    border-color: #ddd;        
+    background-color: rgba(241, 245, 249, 0.88);
+    color: #64748b;
+    border-color: rgba(148, 163, 184, 0.22);
     cursor: not-allowed;       
 }
 
@@ -603,7 +643,9 @@ select[readonly] {
         <div class="modal-content">
             <!-- Header -->
             <div class="form-header">
-                <button class="close-btn" data-bs-dismiss="modal" aria-label="Close">&times;</button>
+                <button class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
                 <h1 class="form-title">{{ __('interface.apply_now')}}</h1>
 
                 <!-- Progress Steps -->
@@ -629,7 +671,7 @@ select[readonly] {
                     <!-- Étape 1: Informations personnelles -->
                     <div class="step-content active" id="step-1">
                         <div class="section-title">
-                            <i class="fas fa-user section-icon"></i>
+                            <span class="material-symbols-outlined section-icon">person</span>
                             Informations personnelles
                         </div>
                             <input type="hidden" name="offre_id" id="offre_id" value="{{ isset($offre) ? $offre->id : '' }}">
@@ -668,7 +710,7 @@ select[readonly] {
                     <!-- Étape 2: Documents -->
                     <div class="step-content" id="step-2">
                         <div class="section-title">
-                            <i class="fas fa-paperclip section-icon"></i>
+                            <span class="material-symbols-outlined section-icon">attach_file</span>
                             Documents requis
                         </div>
 
@@ -713,7 +755,7 @@ select[readonly] {
                     
                     <div class="text-center mt-3">
                         <button type="button" class="generate-btn" id="add-document-btn">
-                            <i class="fas fa-plus"></i>
+                            <span class="material-symbols-outlined text-base">add</span>
                             Ajouter un document
                         </button>
                     </div>
@@ -724,8 +766,8 @@ select[readonly] {
                         <div class="upload-item additional-document" data-index="{index}">
                             <div class="d-flex justify-content-between align-items-center mb-2">
                                 <label class="upload-label">Document supplémentaire</label>
-                                <button type="button" class="btn btn-sm btn-outline-danger remove-doc-btn">
-                                    <i class="fas fa-times"></i> Supprimer
+                                <button type="button" class="remove-doc-btn">
+                                    <span class="material-symbols-outlined text-base">close</span> Supprimer
                                 </button>
                             </div>
                             
@@ -757,12 +799,12 @@ select[readonly] {
 
                         <div class="cv-generator blue-background">
                             <div class="cv-generator-icon">
-                                <i class="fas fa-magic"></i>
+                                <span class="material-symbols-outlined">auto_awesome</span>
                             </div>
                             <h3>Générer un CV automatiquement</h3>
                             <p>Créez un CV professionnel en quelques minutes avec notre assistant de création.</p>
                             <button type="button" class="generate-btn" onclick="openCVGeneratorModal()">
-                                <i class="fas fa-plus"></i>
+                                <span class="material-symbols-outlined text-base">add</span>
                                 Générer mon CV
                             </button>
                         </div>
@@ -772,7 +814,7 @@ select[readonly] {
                     <!-- Étape 3: Validation -->
                     <div class="step-content" id="step-3">
                         <div class="section-title">
-                            <i class="fas fa-check-circle section-icon"></i>
+                            <span class="material-symbols-outlined section-icon">verified</span>
                             Validation
                         </div>
 
@@ -818,12 +860,12 @@ select[readonly] {
                 <!-- Actions -->
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">
-                        <i class="fas fa-arrow-left"></i>
+                        <span class="material-symbols-outlined text-lg">arrow_back</span>
                         Retour
                     </button>
                     <button type="button" class="btn-primary" id="nextBtn" onclick="nextStep()">
                         Suivant
-                        <i class="fas fa-arrow-right"></i>
+                        <span class="material-symbols-outlined text-lg">arrow_forward</span>
                     </button>
                 </div>
             </div>
@@ -835,7 +877,7 @@ select[readonly] {
 <div class="modal-overlay" id="successModal">
     <div class="success-modal">
         <div class="success-icon">
-            <i class="fas fa-check"></i>
+            <span class="material-symbols-outlined">check</span>
         </div>
         <h2 class="success-title">Candidature réussie !</h2>
         <p class="success-message">
@@ -954,10 +996,10 @@ select[readonly] {
         prevBtn.style.display = currentStep > 1 ? 'flex' : 'none';
 
         if (currentStep === 3) {
-            nextBtn.innerHTML = '<i class="fas fa-check"></i> Finaliser la candidature';
+            nextBtn.innerHTML = '<span class="material-symbols-outlined text-lg">check</span> Finaliser la candidature';
             updateSummary();
         } else {
-            nextBtn.innerHTML = 'Suivant <i class="fas fa-arrow-right"></i>';
+            nextBtn.innerHTML = 'Suivant <span class="material-symbols-outlined text-lg">arrow_forward</span>';
         }
     }
 
@@ -1095,7 +1137,7 @@ select[readonly] {
         const statusDiv = document.getElementById(`${type}-status`);
         statusDiv.innerHTML = `
             <div class="check-circle">
-                <i class="fas fa-check"></i>
+                <span class="material-symbols-outlined text-[12px]">check</span>
             </div>
             <span>${file.name} (${(file.size/1024).toFixed(2)} Ko)</span>
         `;
@@ -1117,11 +1159,11 @@ select[readonly] {
         docsList.innerHTML = '';
 
         if (uploadedFiles.cv) {
-            docsList.innerHTML += `<li><i class="fas fa-file-pdf"></i> CV: ${uploadedFiles.cv.name}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${uploadedFiles.cv.name}</li>`;
         }
 
         if (uploadedFiles.motivation) {
-            docsList.innerHTML += `<li><i class="fas fa-file-pdf"></i> Lettre de motivation: ${uploadedFiles.motivation.name}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> Lettre de motivation: ${uploadedFiles.motivation.name}</li>`;
         }
          // Ajouter les documents supplémentaires au récapitulatif
         document.querySelectorAll('.additional-document').forEach(doc => {
@@ -1129,7 +1171,7 @@ select[readonly] {
             const intitule = doc.querySelector('input[name^="additional_docs"][name$="[intitule]"]').value;
             
             if (fileInput.files[0]) {
-                docsList.innerHTML += `<li><i class="fas fa-file-alt"></i> ${intitule}: ${fileInput.files[0].name}</li>`;
+                docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">attach_file</span> ${intitule}: ${fileInput.files[0].name}</li>`;
             }
         });
     }
@@ -1177,7 +1219,7 @@ async function submitApplication() {
 
         // Afficher un loader
         document.getElementById('nextBtn').disabled = true;
-        document.getElementById('nextBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours...';
+        document.getElementById('nextBtn').innerHTML = '<span class="material-symbols-outlined animate-spin text-lg">progress_activity</span> Envoi en cours...';
 
         // Log pour debugging
         //console.log('Données à envoyer:', {
@@ -1244,7 +1286,7 @@ async function submitApplication() {
         
         // Réactiver le bouton
         document.getElementById('nextBtn').disabled = false;
-        document.getElementById('nextBtn').innerHTML = '<i class="fas fa-check"></i> Finaliser la candidature';
+        document.getElementById('nextBtn').innerHTML = '<span class="material-symbols-outlined text-lg">check</span> Finaliser la candidature';
     }
 }
     // Afficher la modal de succès
@@ -1322,7 +1364,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (file) {
                 statusDiv.innerHTML = `
                     <div class="check-circle">
-                        <i class="fas fa-check"></i>
+                        <span class="material-symbols-outlined text-[12px]">check</span>
                     </div>
                     <span>${file.name}</span>
                 `;
