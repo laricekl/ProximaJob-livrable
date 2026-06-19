@@ -40,6 +40,33 @@ class PublicActionsTest extends TestCase
             ->assertSee('Architecte Donnees QA');
     }
 
+    public function test_public_offers_use_the_custom_single_row_pagination(): void
+    {
+        $enterprise = $this->createEnterprise(['email' => 'enterprise-pagination@example.com']);
+
+        foreach (range(1, 7) as $index) {
+            $this->createOfferFor($enterprise, [
+                'titre' => "Offre pagination {$index}",
+                'poste' => "Offre pagination {$index}",
+                'slug' => "offre-pagination-{$index}",
+            ]);
+        }
+
+        $response = $this->get('/offres?sort=latest');
+
+        $response->assertOk()
+            ->assertSee('Affichage de')
+            ->assertSee('Precedent')
+            ->assertSee('Suivant')
+            ->assertDontSee('Montrant')
+            ->assertDontSee('résultats', false);
+
+        $content = $response->getContent();
+
+        $this->assertSame(1, substr_count($content, 'aria-label="Pagination des offres"'));
+        $this->assertGreaterThanOrEqual(3, substr_count($content, 'data-pagination-control'));
+    }
+
     public function test_language_can_be_changed_from_public_area(): void
     {
         $this->postJson(route('set.language'), ['locale' => 'en'])

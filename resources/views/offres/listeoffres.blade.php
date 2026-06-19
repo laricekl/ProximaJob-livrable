@@ -404,7 +404,7 @@
 
           <!-- Pagination -->
           <div class="mt-10">
-            {{ $offres->links() }}
+            {{ $offres->links('components.pagination.public-pagination') }}
           </div>
 
         </div>
