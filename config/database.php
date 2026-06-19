@@ -2,6 +2,15 @@
 
 use Illuminate\Support\Str;
 
+$sqlitePath = database_path('database.sqlite');
+$requestedConnection = env('DB_CONNECTION', 'sqlite');
+$databaseHost = (string) env('DB_HOST', '');
+$databaseName = (string) env('DB_DATABASE', $sqlitePath);
+$isLaravelCloudMysql = $requestedConnection === 'sqlite'
+    && $databaseHost !== ''
+    && str_contains($databaseHost, '.db.laravel.cloud')
+    && $databaseName !== $sqlitePath;
+
 return [
 
     /*
@@ -16,7 +25,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'sqlite'),
+    'default' => $isLaravelCloudMysql ? 'mysql' : $requestedConnection,
 
     /*
     |--------------------------------------------------------------------------
@@ -34,7 +43,7 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => env('DB_DATABASE', $sqlitePath),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,
@@ -47,7 +56,7 @@ return [
             'url' => env('DB_URL'),
             'host' => env('DB_HOST', '127.0.0.1'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', database_path('database.sqlite')),
+            'database' => env('DB_DATABASE', 'laravel'),
             'username' => env('DB_USERNAME', 'root'),
             'password' => env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
