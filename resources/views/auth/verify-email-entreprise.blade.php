@@ -1,144 +1,84 @@
-@extends('layouts.app')
-
+@extends('layouts.guest')
+@section('title', 'Verification email entreprise')
 @section('content')
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8">
-            <div class="card shadow-lg border-0">
-                <div class="card-body text-center py-5 px-4">
-                    <!-- Icône principale -->
-                    <div class="mb-4">
-                        <i class="fas fa-envelope-open-text fa-5x text-primary"></i>
-                    </div>
-                    
-                    <!-- Titre principal -->
-                    <h2 class="mb-3 fw-bold">Vérifiez votre adresse email</h2>
-                    
-                    <p class="lead text-muted mb-4">
-                        Nous venons d'envoyer un email de vérification à :
-                    </p>
-                    
-                    <!-- Email affiché -->
-                    <div class="mb-4 p-3 bg-light rounded">
-                        <p class="h5 text-primary mb-0">
-                            <i class="fas fa-envelope me-2"></i>
-                            <strong>{{ session('email') ?? 'votre adresse email' }}</strong>
-                        </p>
-                    </div>
-                    
-                    <!-- Instructions -->
-                    <div class="alert alert-info d-flex align-items-start text-start" role="alert">
-                        <i class="fas fa-info-circle fa-lg me-3 mt-1"></i>
-                        <div>
-                            <strong>Prochaines étapes :</strong>
-                            <ol class="mb-0 mt-2 ps-3">
-                                <li>Consultez votre boîte de réception</li>
-                                <li>Cliquez sur le lien de vérification dans l'email</li>
-                                <li>Votre inscription sera ensuite soumise à nos administrateurs pour validation</li>
-                            </ol>
-                        </div>
-                    </div>
-                    
-                    <!-- Messages de succès/erreur -->
-                    @if (session('message'))
-                        <div class="alert alert-success d-flex align-items-center" role="alert">
-                            <i class="fas fa-check-circle me-2"></i>
-                            <div>{{ session('message') }}</div>
-                        </div>
-                    @endif
-                    
-                    @if (session('error'))
-                        <div class="alert alert-danger d-flex align-items-center" role="alert">
-                            <i class="fas fa-exclamation-circle me-2"></i>
-                            <div>{{ session('error') }}</div>
-                        </div>
-                    @endif
-                    
-                    <hr class="my-4">
-                    
-                    <!-- Section renvoyer l'email -->
-                    <div class="mb-4">
-                        <p class="text-muted mb-3">
-                            <i class="fas fa-question-circle"></i> Vous n'avez pas reçu l'email ?
-                        </p>
-                        
-                        <form method="POST" action="{{ route('verification.resend') }}" class="d-inline">
-                            @csrf
-                            <input type="hidden" name="email" value="{{ session('email') }}">
-                            <button type="submit" class="btn btn-outline-primary">
-                                <i class="fas fa-redo me-2"></i>
-                                Renvoyer l'email de vérification
-                            </button>
-                        </form>
-                    </div>
-                    
-                    <!-- Bouton retour -->
-                    <div class="mt-4">
-                        <a href="{{ route('login') }}" class="btn btn-link text-decoration-none">
-                            <i class="fas fa-arrow-left me-2"></i>
-                            Retour à la page de connexion
-                        </a>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Card conseils -->
-            <div class="card mt-4 border-0 shadow-sm">
-                <div class="card-body">
-                     
-                    <ul class="list-unstyled mb-0 small">
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            Vérifiez votre dossier <strong>spam</strong> ou <strong>courrier indésirable</strong>
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            Assurez-vous d'avoir saisi la bonne adresse email
-                        </li>
-                        <li class="mb-2">
-                            <i class="fas fa-check text-success me-2"></i>
-                            Le lien de vérification expire après <strong>24 heures</strong>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-            
-            <!-- Info supplémentaire -->
-            <div class="text-center mt-4">
-                <p class="small text-muted">
-                    <i class="fas fa-shield-alt me-1"></i>
-                    Vos données sont sécurisées et ne seront jamais partagées avec des tiers
-                </p>
-            </div>
+  <main class="flex-grow pt-32 flex items-center justify-center px-4 py-12">
+    <div class="w-full max-w-3xl">
+      <div class="card-glow rounded-[2rem] p-8 md:p-10">
+        <div class="text-center">
+          <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-secondary-container/12 text-secondary-container">
+            <span class="material-symbols-outlined text-4xl">outgoing_mail</span>
+          </div>
+          <h1 class="text-3xl font-bold font-serif text-primary mb-3">Verifiez votre adresse email</h1>
+          <p class="mx-auto max-w-2xl text-sm leading-relaxed text-on-surface-variant">
+            Nous avons bien recu votre demande d'inscription entreprise. Avant de passer a la validation admin, vous devez confirmer votre adresse e-mail.
+          </p>
         </div>
+
+        <div class="mt-8 rounded-[1.75rem] border border-secondary-container/15 bg-white/75 p-6 text-center backdrop-blur-sm">
+          <p class="text-xs font-semibold uppercase tracking-[0.22em] text-outline">Adresse concernee</p>
+          <p class="mt-3 text-lg font-bold text-primary sm:text-xl">{{ session('email') ?? 'votre adresse email' }}</p>
+        </div>
+
+        @if (session('message'))
+          <div class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-800" role="status">
+            {{ session('message') }}
+          </div>
+        @endif
+
+        @if (session('error'))
+          <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-800" role="alert">
+            {{ session('error') }}
+          </div>
+        @endif
+
+        <div class="mt-8 grid gap-5 lg:grid-cols-[1.3fr,0.85fr]">
+          <section class="rounded-[1.75rem] border border-outline-variant/20 bg-white/70 p-6 backdrop-blur-sm">
+            <h2 class="text-lg font-bold text-primary">Ce qui se passe ensuite</h2>
+            <ul class="mt-4 space-y-3 text-sm text-on-surface-variant">
+              <li class="flex gap-3">
+                <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-white">1</span>
+                <span>Ouvrez l'e-mail de verification envoye a votre adresse.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-white">2</span>
+                <span>Cliquez sur le lien pour confirmer que cette adresse vous appartient.</span>
+              </li>
+              <li class="flex gap-3">
+                <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-white">3</span>
+                <span>Votre dossier entreprise sera ensuite transmis a nos administrateurs pour validation finale.</span>
+              </li>
+            </ul>
+
+            <div class="mt-6 rounded-2xl bg-surface-container-low/70 p-5">
+              <p class="text-sm font-semibold text-primary">Conseils rapides</p>
+              <ul class="mt-3 space-y-2 text-sm text-on-surface-variant">
+                <li>Verifiez aussi vos dossiers spam et courrier indesirable.</li>
+                <li>Le lien de verification expire apres 24 heures.</li>
+                <li>Une fois verifie, vous recevrez ensuite la decision d'activation de votre compte.</li>
+              </ul>
+            </div>
+          </section>
+
+          <aside class="rounded-[1.75rem] border border-outline-variant/20 bg-surface-container-low/70 p-6">
+            <h2 class="text-lg font-bold text-primary">Vous n'avez rien recu ?</h2>
+            <p class="mt-3 text-sm leading-relaxed text-on-surface-variant">
+              Nous pouvons renvoyer le lien a cette meme adresse si besoin.
+            </p>
+
+            <form method="POST" action="{{ route('verification.resend') }}" class="mt-6 space-y-3">
+              @csrf
+              <input type="hidden" name="email" value="{{ session('email') }}">
+              <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary-container px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary-container/20 transition-all hover:bg-secondary">
+                <span class="material-symbols-outlined text-lg">refresh</span>
+                Renvoyer l'e-mail
+              </button>
+              <a href="{{ route('login') }}" class="block w-full rounded-xl border border-outline-variant/30 px-5 py-3 text-center text-sm font-semibold text-outline transition-colors hover:border-outline hover:text-on-surface-variant">
+                Retour a la connexion
+              </a>
+            </form>
+          </aside>
+        </div>
+      </div>
     </div>
-</div>
+  </main>
 @endsection
-
-@push('styles')
-<style>
-    .card {
-        border-radius: 15px;
-    }
-    
-    .alert {
-        border-radius: 10px;
-    }
-    
-    .btn {
-        border-radius: 8px;
-        transition: all 0.3s ease;
-    }
-    
-    .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
-    
-    .bg-light {
-        background-color: #f8f9fa !important;
-    }
-</style>
-@endpush
-
