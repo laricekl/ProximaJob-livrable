@@ -13,7 +13,17 @@ class AppServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        //
+        // Auto-créer la BDD SQLite si elle n'existe pas
+        if (config('database.default') === 'sqlite') {
+            $dbPath = config('database.connections.sqlite.database');
+            if ($dbPath && !file_exists($dbPath)) {
+                $dir = dirname($dbPath);
+                if (!is_dir($dir)) {
+                    mkdir($dir, 0755, true);
+                }
+                touch($dbPath);
+            }
+        }
     }
 
 
