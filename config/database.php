@@ -6,10 +6,13 @@ $sqlitePath = database_path('database.sqlite');
 $requestedConnection = env('DB_CONNECTION', 'sqlite');
 $databaseHost = (string) env('DB_HOST', '');
 $databaseName = (string) env('DB_DATABASE', $sqlitePath);
-$isLaravelCloudMysql = $requestedConnection === 'sqlite'
+$usesCloudSqlitePlaceholder = $requestedConnection === 'sqlite'
+    && $databaseName === 'main'
     && $databaseHost !== ''
-    && str_contains($databaseHost, '.db.laravel.cloud')
-    && $databaseName !== $sqlitePath;
+    && str_contains($databaseHost, '.db.laravel.cloud');
+$resolvedSqlitePath = $usesCloudSqlitePlaceholder
+    ? storage_path('database.sqlite')
+    : $databaseName;
 
 return [
 
@@ -25,7 +28,7 @@ return [
     |
     */
 
-    'default' => $isLaravelCloudMysql ? 'mysql' : $requestedConnection,
+    'default' => $requestedConnection,
 
     /*
     |--------------------------------------------------------------------------
@@ -43,7 +46,7 @@ return [
         'sqlite' => [
             'driver' => 'sqlite',
             'url' => env('DB_URL'),
-            'database' => env('DB_DATABASE', $sqlitePath),
+            'database' => $resolvedSqlitePath,
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
             'busy_timeout' => null,
