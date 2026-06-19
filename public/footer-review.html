@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProximaJob - Revue Footer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #dde1e6;
+      --paper: rgba(255, 255, 255, 0.82);
+      --paper-strong: rgba(255, 255, 255, 0.92);
+      --line: rgba(16, 24, 40, 0.08);
+      --text: #1f2937;
+      --muted: #667085;
+      --accent: #eb843c;
+      --accent-dark: #d06e2b;
+      --ink: #1e2436;
+      --success: #3f7c52;
+      --shadow: 0 24px 60px rgba(15, 23, 42, 0.10);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(235,132,60,.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(53,95,163,.08), transparent 22%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 40px 0 72px;
+    }
+
+    .hero {
+      background: linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.56));
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,.5);
+      box-shadow: var(--shadow);
+      border-radius: 36px;
+      padding: 28px 28px 24px;
+      margin-bottom: 30px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      background: rgba(255,255,255,.8);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    h1 {
+      font-family: "Noto Serif", serif;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.03;
+      margin: 18px 0 10px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    .review-grid {
+      display: grid;
+      gap: 26px;
+    }
+
+    .variant {
+      background: rgba(255,255,255,.36);
+      border: 1px solid rgba(255,255,255,.5);
+      border-radius: 34px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .variant-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      padding: 4px 2px 0;
+    }
+
+    .variant-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .variant-note {
+      font-size: 13px;
+      color: var(--muted);
+      background: rgba(255,255,255,.74);
+      border-radius: 999px;
+      padding: 8px 12px;
+      white-space: nowrap;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: -.02em;
+    }
+
+    .brand img {
+      width: 34px;
+      height: auto;
+      display: block;
+    }
+
+    .footer-card {
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.56);
+      backdrop-filter: blur(18px);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+    }
+
+    .links, .mini-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      align-items: center;
+    }
+
+    .links a, .mini-links a, .social a {
+      text-decoration: none;
+      color: var(--muted);
+      transition: .2s ease;
+    }
+
+    .links a:hover, .mini-links a:hover, .social a:hover {
+      color: var(--accent-dark);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 11px 16px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 20px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #f2a162);
+      color: white;
+      font-weight: 800;
+      text-decoration: none;
+      box-shadow: 0 18px 36px rgba(235,132,60,.28);
+    }
+
+    .social {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .social a {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+    }
+
+    .legal {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .footer-1 {
+      padding: 26px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .footer-1-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .footer-1 .cta-band {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 20px;
+      border-radius: 24px;
+      background: linear-gradient(120deg, rgba(30,36,54,.96), rgba(47,58,89,.92));
+      color: white;
+    }
+
+    .footer-1 .cta-band strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+
+    .footer-1-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding-top: 2px;
+    }
+
+    .footer-2 {
+      overflow: hidden;
+    }
+
+    .footer-2-main {
+      display: grid;
+      grid-template-columns: 1.2fr .8fr .8fr .8fr;
+      gap: 22px;
+      padding: 28px;
+    }
+
+    .footer-2 .panel {
+      background: rgba(255,255,255,.64);
+      border: 1px solid rgba(255,255,255,.56);
+      border-radius: 24px;
+      padding: 18px;
+    }
+
+    .footer-2 h3 {
+      margin: 0 0 10px;
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--muted);
+    }
+
+    .footer-2 p, .footer-2 a {
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .footer-2 .bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 18px 28px 24px;
+      border-top: 1px solid var(--line);
+      background: rgba(255,255,255,.52);
+    }
+
+    .footer-3 {
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,.86), rgba(248,249,251,.96));
+    }
+
+    .footer-3-top {
+      display: grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap: 0;
+    }
+
+    .footer-3-brand {
+      padding: 28px;
+      background:
+        radial-gradient(circle at top left, rgba(235,132,60,.16), transparent 35%),
+        transparent;
+    }
+
+    .footer-3-brand p {
+      max-width: 440px;
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 14px 0 20px;
+    }
+
+    .footer-3-side {
+      padding: 28px;
+      border-left: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .footer-3-side .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--success);
+    }
+
+    .footer-3-side .status::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: var(--success);
+      box-shadow: 0 0 0 8px rgba(63,124,82,.12);
+    }
+
+    .footer-3-bottom {
+      border-top: 1px solid var(--line);
+      padding: 18px 28px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .footer-2-main,
+      .footer-3-top {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-3-side {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page { width: min(100vw - 20px, 1180px); padding-top: 20px; }
+      .hero { padding: 22px 18px; border-radius: 26px; }
+      .variant { padding: 14px; border-radius: 24px; }
+      .variant-head,
+      .footer-1-top,
+      .footer-1 .cta-band,
+      .footer-1-bottom,
+      .footer-2 .bottom,
+      .footer-3-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .footer-1,
+      .footer-2-main,
+      .footer-3-brand,
+      .footer-3-side,
+      .footer-3-bottom {
+        padding: 20px;
+      }
+      .variant-note { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <span class="eyebrow">Revue visuelle footer</span>
+      <h1>Trois directions possibles pour le pied de page.</h1>
+      <p>J’ai gardé l’univers ProximaJob, mais avec trois approches différentes: une version premium avec appel à l’action, une version plus éditoriale et structurée, et une version plus marquée “produit” orientée confiance.</p>
+    </section>
+
+    <section class="review-grid">
+      <article class="variant">
+        <div class="variant-head">
+          <div class="variant-title">1. Footer Premium + CTA</div>
+          <div class="variant-note">Plus commercial, bon pour convertir</div>
+        </div>
+        <footer class="footer-card footer-1">
+          <div class="footer-1-top">
+            <a class="brand" href="#">
+              <img src="/img/proxi-mark.png" alt="">
+              <span>ProximaJob</span>
+            </a>
+            <nav class="links">
+              <a href="#">Offres</a>
+              <a href="#">Ressources</a>
+              <a href="#">Tarifs</a>
+              <a href="#">Contact</a>
+            </nav>
+          </div>
+          <div class="cta-band">
+            <div>
+              <strong>Prêt à accélérer votre recherche d’emploi ?</strong>
+              <span class="legal">CV optimisé, matching IA et suivi des candidatures dans un seul espace.</span>
+            </div>
+            <a class="cta" href="#">Commencer</a>
+          </div>
+          <div class="footer-1-bottom">
+            <div class="mini-links">
+              <a href="#">Confidentialité</a>
+              <a href="#">Conditions</a>
+              <a href="#">Cookies</a>
+            </div>
+            <div class="legal">© 2026 ProximaJob. IA Concierge.</div>
+          </div>
+        </footer>
+      </article>
+
+      <article class="variant">
+        <div class="variant-head">
+          <div class="variant-title">2. Footer Editorial</div>
+          <div class="variant-note">Plus complet, plus rassurant, très lisible</div>
+        </div>
+        <footer class="footer-card footer-2">
+          <div class="footer-2-main">
+            <section class="panel">
+              <a class="brand" href="#">
+                <img src="/img/proxi-mark.png" alt="">
+                <span>ProximaJob</span>
+              </a>
+              <p class="legal" style="margin:14px 0 0;">La plateforme qui aide les candidats à mieux postuler et les entreprises à recruter plus vite, avec des outils IA pensés pour l’usage réel.</p>
+            </section>
+            <section class="panel">
+              <h3>Produit</h3>
+              <div class="mini-links" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <a href="#">Offres</a>
+                <a href="#">CV IA</a>
+                <a href="#">Profil public</a>
+              </div>
+            </section>
+            <section class="panel">
+              <h3>Entreprise</h3>
+              <div class="mini-links" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <a href="#">Publication d’offres</a>
+                <a href="#">Candidatures IA</a>
+                <a href="#">Abonnements</a>
+              </div>
+            </section>
+            <section class="panel">
+              <h3>Légal</h3>
+              <div class="mini-links" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <a href="#">Confidentialité</a>
+                <a href="#">Conditions</a>
+                <a href="#">Contact</a>
+              </div>
+            </section>
+          </div>
+          <div class="bottom">
+            <div class="social">
+              <a href="#">in</a>
+              <a href="#">ig</a>
+              <a href="#">fb</a>
+            </div>
+            <div class="legal">© 2026 ProximaJob. Construit pour candidats et recruteurs.</div>
+          </div>
+        </footer>
+      </article>
+
+      <article class="variant">
+        <div class="variant-head">
+          <div class="variant-title">3. Footer Produit / Confiance</div>
+          <div class="variant-note">Plus moderne, plus “startup SaaS”</div>
+        </div>
+        <footer class="footer-card footer-3">
+          <div class="footer-3-top">
+            <section class="footer-3-brand">
+              <a class="brand" href="#">
+                <img src="/img/proxi-mark.png" alt="">
+                <span>ProximaJob</span>
+              </a>
+              <p>Un espace simple pour centraliser les offres, affiner son CV avec l’IA, suivre ses candidatures et rendre le recrutement plus fluide des deux côtés.</p>
+              <div class="links">
+                <a class="pill" href="#">Voir les offres</a>
+                <a class="pill" href="#">Découvrir les tarifs</a>
+              </div>
+            </section>
+            <aside class="footer-3-side">
+              <div>
+                <div class="status">Plateforme active</div>
+                <p class="legal" style="margin:14px 0 0;">Support humain, automatisations IA, espace candidat et espace entreprise unifiés.</p>
+              </div>
+              <div class="mini-links" style="flex-direction:column; align-items:flex-start; gap:8px;">
+                <a href="#">Confidentialité</a>
+                <a href="#">Conditions</a>
+                <a href="#">Contact</a>
+              </div>
+            </aside>
+          </div>
+          <div class="footer-3-bottom">
+            <div class="social">
+              <a href="#">in</a>
+              <a href="#">yt</a>
+              <a href="#">x</a>
+            </div>
+            <div class="legal">© 2026 ProximaJob. IA Concierge pour l’emploi.</div>
+          </div>
+        </footer>
+      </article>
+    </section>
+  </main>
+</body>
+</html>

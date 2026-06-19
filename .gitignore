@@ -1,0 +1,33 @@
+/.phpunit.cache
+/node_modules
+/public/build
+/public/hot
+/public/storage
+/public/assets/cvs/candidatures
+/public/assets/cvs/cv_user_*
+/public/assets/documents/rccm
+/storage/*.key
+/vendor
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+Homestead.json
+Homestead.yaml
+auth.json
+npm-debug.log
+yarn-error.log
+/.fleet
+/.idea
+/.vscode
+
+# Local macOS and development-tool files
+.DS_Store
+/.claude/
+/.netlify/
+/.playwright-mcp/
+/playwright-report/
+/test-results/
+
+# Generated local archive
+/proximajob-netlify.zip
