@@ -992,10 +992,11 @@ private function generateFallbackHTML(): string
     /**
      * Construit le prompt pour Gemini avec gestion des diplômes
      */
- private function buildCVPrompt(array $promptData): string
+private function buildCVPrompt(array $promptData): string
 {
     $candidate = $promptData['candidate'];
     $offer = $promptData['offer'];
+    $requiredSkills = $this->normalizePromptList($offer['competences_requises'] ?? []);
     
     $prompt = "Génère un CV HTML professionnel pour {$candidate['personal_info']['prenom']} {$candidate['personal_info']['nom']} qui postule au poste de {$offer['poste']} chez {$offer['entreprise']['nom']}.
 
@@ -1024,7 +1025,7 @@ SECTION 4: Formations
 " . $this->formatFormationsForPrompt($candidate['formations']) . "
 
 SECTION 5: Compétences pertinentes pour ce poste
-Compétences requises par l'offre: " . implode(', ', $offer['competences_requises']) . "
+Compétences requises par l'offre: " . implode(', ', $requiredSkills) . "
 
 IMPORTANT: 
 - Structure HTML sémantique avec des balises appropriées (h1, h2, p, ul, li)
@@ -1034,6 +1035,25 @@ IMPORTANT:
 CODE HTML:";
 
     return $prompt;
+}
+
+private function normalizePromptList(array|string|null $value): array
+{
+    if (is_array($value)) {
+        return array_values(array_filter(array_map(static function ($item) {
+            return trim((string) $item);
+        }, $value)));
+    }
+
+    if (!is_string($value) || trim($value) === '') {
+        return [];
+    }
+
+    $parts = preg_split('/[\n,;|]+/', $value) ?: [];
+
+    return array_values(array_filter(array_map(static function ($item) {
+        return trim($item);
+    }, $parts)));
 }
 
 private function formatExperiencesForPrompt(array $experiences): string

@@ -68,8 +68,8 @@
 
             <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label for="rccm" class="block text-sm font-semibold text-primary mb-2">RCCM *</label>
-                <input type="text" id="rccm" name="rccm" placeholder="N° RCCM" required
+                <label for="rccm" class="block text-sm font-semibold text-primary mb-2">RCCM</label>
+                <input type="text" id="rccm" name="rccm" placeholder="N° RCCM (optionnel)"
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
@@ -86,10 +86,10 @@
             </div>
 
             <div class="mt-4">
-              <label for="rccm_document" class="block text-sm font-semibold text-primary mb-2">Document RCCM *</label>
+              <label for="rccm_document" class="block text-sm font-semibold text-primary mb-2">Document RCCM</label>
               <div class="relative border-2 border-dashed border-outline-variant/50 rounded-xl p-6 text-center bg-white/50 hover:border-secondary-container/30 transition-colors cursor-pointer">
                 <span class="material-symbols-outlined text-3xl text-outline mb-2">upload_file</span>
-                <p class="text-sm text-outline font-medium">Cliquez pour télécharger le document</p>
+                <p class="text-sm text-outline font-medium">Cliquez pour telecharger le document si vous le souhaitez</p>
                 <p class="text-xs text-outline mt-1">PDF, PNG ou JPG (max 5 Mo)</p>
                 <input type="file" id="rccm_document" name="rccm_document" accept=".pdf,.png,.jpg,.jpeg" class="absolute inset-0 opacity-0 cursor-pointer" />
               </div>
