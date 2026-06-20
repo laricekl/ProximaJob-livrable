@@ -14,6 +14,12 @@ class SocialAuthController extends Controller
 {
     public function redirectToProvider($provider, Request $request)
     {
+        if (! $this->isProviderConfigured($provider)) {
+            return redirect()
+                ->route('login')
+                ->with('error', ucfirst($provider).' n\'est pas encore disponible sur cette version.');
+        }
+
         try {
             // Stocker le mode (login ou register) et le rôle en session
             $mode = $request->query('mode', 'login'); 
@@ -96,5 +102,20 @@ class SocialAuthController extends Controller
         Auth::login($existingUser);
 
         return redirect()->intended('/user')->with('success', 'Connexion réussie avec ' . ucfirst($provider) . ' !');
+    }
+
+    private function isProviderConfigured(string $provider): bool
+    {
+        $supportedProviders = ['google', 'facebook'];
+
+        if (! in_array($provider, $supportedProviders, true)) {
+            return false;
+        }
+
+        $service = config("services.{$provider}");
+
+        return filled($service['client_id'] ?? null)
+            && filled($service['client_secret'] ?? null)
+            && filled($service['redirect'] ?? null);
     }
 }
