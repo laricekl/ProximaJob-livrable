@@ -59,6 +59,22 @@ class AdminManagementTest extends TestCase
             ->assertDontSee($candidate->email);
     }
 
+    public function test_admin_can_authenticate_from_the_admin_login_screen(): void
+    {
+        $admin = $this->createAdmin([
+            'email' => 'admin-login@example.com',
+            'password' => Hash::make('SecureAdmin123!'),
+        ]);
+
+        $response = $this->post(route('admin.login.post'), [
+            'email' => $admin->email,
+            'password' => 'SecureAdmin123!',
+        ]);
+
+        $response->assertRedirect(route('admin.dashboard'));
+        $this->assertAuthenticatedAs($admin);
+    }
+
     public function test_admin_can_filter_offers_with_real_data(): void
     {
         $admin = $this->createAdmin();

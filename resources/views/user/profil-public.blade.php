@@ -1,9 +1,21 @@
 @extends('layouts.candidat')
 @section('title', 'Profil public')
 @php
-  $publicUser = auth()->user();
-  $publicFullName = trim(($publicUser->name ?? 'Jean') . ' ' . ($publicUser->prenom ?? 'Dupont'));
-  $publicInitials = strtoupper(substr($publicUser->name ?? 'J', 0, 1)) . strtoupper(substr($publicUser->prenom ?? 'D', 0, 1));
+  $publicUser = $user ?? auth()->user();
+  $publicFullName = trim(($cvProfile->prenom ?? $publicUser->prenom ?? '') . ' ' . ($cvProfile->nom ?? $publicUser->name ?? ''));
+  $publicFullName = $publicFullName !== '' ? $publicFullName : 'Profil candidat';
+  $publicInitials = $publicUser->initials ?: 'PJ';
+  $profileHeadline = $profileData['headline'] ?? 'Profil en recherche active';
+  $profileLocation = $profileData['location'] ?? 'A renseigner';
+  $profilePhone = $profileData['phone'] ?? 'A renseigner';
+  $profileExperienceYears = $profileData['experience_years'] ?? 0;
+  $profileSkills = $profileData['skills'] ?? collect();
+  $profileSkillsCount = $profileData['skills_count'] ?? 0;
+  $profileCompletion = $profileData['completion_percentage'] ?? 0;
+  $profileApplicationsCount = $profileData['applications_count'] ?? 0;
+  $profilePitch = $profileData['pitch'] ?? '';
+  $profileMotivation = $profileData['motivation'] ?? '';
+  $latestCvLabel = $profileData['latest_cv_label'] ?? null;
 @endphp
 @section('styles')
   <style>
@@ -72,13 +84,13 @@
                 </div>
                 <div class="w-full">
                   <h2 class="text-xl font-bold font-serif text-primary" contenteditable="true" data-placeholder="Votre nom complet">{{ $publicFullName }}</h2>
-                  <p class="text-sm text-on-surface-variant mt-1" contenteditable="true" data-placeholder="Titre professionnel">Développeur Full Stack Senior</p>
+                  <p class="text-sm text-on-surface-variant mt-1" contenteditable="true" data-placeholder="Titre professionnel">{{ $profileHeadline }}</p>
                 </div>
               </div>
               <div class="border-t border-outline-variant/10 px-6 py-4 space-y-3">
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">location_on</span>
-                  <span contenteditable="true" data-placeholder="Votre ville">Montréal, QC</span>
+                  <span contenteditable="true" data-placeholder="Votre ville">{{ $profileLocation }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">mail</span>
@@ -86,11 +98,11 @@
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">call</span>
-                  <span contenteditable="true" data-placeholder="Téléphone">+33 6 12 34 56 78</span>
+                  <span contenteditable="true" data-placeholder="Téléphone">{{ $profilePhone }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">language</span>
-                  <span contenteditable="true" data-placeholder="Site web / LinkedIn">linkedin.com/in/jeandupont</span>
+                  <span contenteditable="true" data-placeholder="Site web / LinkedIn">Ajoutez votre lien public</span>
                 </div>
               </div>
             </div>
@@ -100,19 +112,19 @@
               <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">En résumé</h3>
               <div class="grid grid-cols-2 gap-4">
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
-                  <p class="text-2xl font-bold text-primary">7</p>
+                  <p class="text-2xl font-bold text-primary">{{ $profileExperienceYears }}</p>
                   <p class="text-[10px] text-outline uppercase tracking-wider mt-1">ans d'exp.</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
-                  <p class="text-2xl font-bold text-primary">12</p>
+                  <p class="text-2xl font-bold text-primary">{{ $profileSkillsCount }}</p>
                   <p class="text-[10px] text-outline uppercase tracking-wider mt-1">compétences</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
-                  <p class="text-2xl font-bold text-secondary-container">92%</p>
+                  <p class="text-2xl font-bold text-secondary-container">{{ $profileCompletion }}%</p>
                   <p class="text-[10px] text-outline uppercase tracking-wider mt-1">complétude</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
-                  <p class="text-2xl font-bold text-primary">3</p>
+                  <p class="text-2xl font-bold text-primary">{{ $profileApplicationsCount }}</p>
                   <p class="text-[10px] text-outline uppercase tracking-wider mt-1">candidatures</p>
                 </div>
               </div>
@@ -125,7 +137,7 @@
                 <div>
                   <label class="block text-xs font-semibold text-outline mb-1.5">Salaire souhaité</label>
                   <div class="flex items-center gap-2">
-                    <input type="number" class="w-full px-3 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="45000" value="45000" />
+                    <input type="number" class="w-full px-3 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="45000" value="{{ $publicUser->salary_expectation_min ?? '' }}" />
                     <span class="text-sm text-outline font-medium">€/an</span>
                   </div>
                 </div>
@@ -168,7 +180,7 @@
                 <span class="char-count text-xs text-outline" data-target="pitchBio" data-max="500">0/500</span>
               </div>
               <div class="p-6">
-                <textarea id="pitchBio" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Je suis un développeur full stack passionné avec 7 ans d'expérience dans la conception d'applications web performantes. Spécialisé en React, Node.js et architectures cloud, j'ai mené des projets de A à Z pour des startups comme pour des grands comptes. Je cherche aujourd'hui à rejoindre une équipe ambitieuse où je pourrai avoir un impact réel sur le produit et continuer à progresser techniquement." maxlength="500">Je suis un développeur full stack passionné avec 7 ans d'expérience dans la conception d'applications web performantes. Spécialisé en React, Node.js et architectures cloud, j'ai mené des projets de A à Z pour des startups comme pour des grands comptes.</textarea>
+                <textarea id="pitchBio" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Présentez votre parcours et votre valeur ajoutée." maxlength="500">{{ $profilePitch }}</textarea>
                 <div class="flex justify-end mt-3">
                   <button class="save-section flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                     <span class="material-symbols-outlined text-lg">save</span> Enregistrer
@@ -189,14 +201,11 @@
               </div>
               <div class="p-6">
                 <div id="skillTags" class="flex flex-wrap gap-2 mb-4">
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">React.js <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">Node.js <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">TypeScript <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">PostgreSQL <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">Docker <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">AWS <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">GraphQL <span class="material-symbols-outlined text-sm">close</span></span>
-                  <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">CI/CD <span class="material-symbols-outlined text-sm">close</span></span>
+                  @forelse ($profileSkills as $skillLabel)
+                    <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors">{{ $skillLabel }} <span class="material-symbols-outlined text-sm">close</span></span>
+                  @empty
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-outline text-sm font-medium rounded-full">Ajoutez des competences depuis votre profil</span>
+                  @endforelse
                   <!-- Add skill button -->
                   <button id="addSkillBtn" class="inline-flex items-center gap-1.5 px-4 py-1.5 border-2 border-dashed border-outline-variant/50 text-outline text-sm font-medium rounded-full hover:border-secondary-container/50 hover:text-secondary-container transition-colors">
                     <span class="material-symbols-outlined text-lg">add</span> Ajouter
@@ -222,9 +231,7 @@
                 </a>
               </div>
               <div class="p-6">
-                <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Votre lettre de motivation...">Passionnée par le développement web depuis plus de 7 ans, je suis spécialisée dans la création d'applications full stack performantes et évolutives. Votre offre de Développeur Full Stack a immédiatement retenu mon attention car elle correspond parfaitement à mon expertise technique et à mes aspirations professionnelles.
-
-Au cours de mes expériences précédentes, j'ai pu mener des projets d'envergure de la conception à la mise en production, en collaborant étroitement avec les équipes produit et design.</textarea>
+                <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Votre lettre de motivation...">{{ $profileMotivation }}</textarea>
                 <div class="flex justify-end mt-3">
                   <button class="save-section flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                     <span class="material-symbols-outlined text-lg">save</span> Enregistrer
@@ -244,20 +251,19 @@ Au cours de mes expériences précédentes, j'ai pu mener des projets d'envergur
               </div>
               <div class="p-6">
                 <div class="space-y-6">
-                  <div class="border-l-2 border-secondary-container pl-5 relative">
-                    <div class="absolute -left-[5px] top-1 w-2 h-2 bg-secondary-container rounded-full"></div>
-                    <h4 class="font-bold text-primary">Développeur Full Stack Senior</h4>
-                    <p class="text-sm text-on-surface-variant">TechInnovate • Montréal, QC</p>
-                    <p class="text-xs text-outline mb-2">2022 - Présent</p>
-                    <p class="text-sm text-on-surface-variant">Lead technique d'une équipe de 5 développeurs. Conception et développement d'une plateforme SaaS B2B.</p>
-                  </div>
-                  <div class="border-l-2 border-secondary-container pl-5 relative">
-                    <div class="absolute -left-[5px] top-1 w-2 h-2 bg-secondary-container rounded-full"></div>
-                    <h4 class="font-bold text-primary">Développeur Full Stack</h4>
-                    <p class="text-sm text-on-surface-variant">WebAgency Pro • Lyon, France</p>
-                    <p class="text-xs text-outline mb-2">2019 - 2022</p>
-                    <p class="text-sm text-on-surface-variant">Développement d'applications web sur mesure pour des clients grands comptes. Stack : React, Node.js, PostgreSQL.</p>
-                  </div>
+                  @forelse (($cvProfile?->experiences ?? collect()) as $experience)
+                    <div class="border-l-2 border-secondary-container pl-5 relative">
+                      <div class="absolute -left-[5px] top-1 w-2 h-2 bg-secondary-container rounded-full"></div>
+                      <h4 class="font-bold text-primary">{{ $experience->poste }}</h4>
+                      <p class="text-sm text-on-surface-variant">{{ $experience->entreprise ?: 'Entreprise non precisee' }}</p>
+                      <p class="text-xs text-outline mb-2">{{ $experience->periode ?: 'Periode a completer' }}</p>
+                      @if ($experience->description)
+                        <p class="text-sm text-on-surface-variant">{{ $experience->description }}</p>
+                      @endif
+                    </div>
+                  @empty
+                    <p class="text-sm text-on-surface-variant">Aucune experience n'est encore renseignee dans votre CV.</p>
+                  @endforelse
                 </div>
               </div>
             </div>
@@ -277,20 +283,21 @@ Au cours de mes expériences précédentes, j'ai pu mener des projets d'envergur
                   <input type="file" class="hidden" accept=".pdf,.docx" />
                 </div>
                 <!-- Existing CVs -->
-                <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
-                  <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary-container">description</span></div>
-                    <div>
-                      <p class="text-sm font-semibold text-primary">CV_Jean_Dupont_2025.pdf</p>
-                      <p class="text-[10px] text-outline">Généré par IA • 2 juin 2025</p>
+                @if ($latestCvLabel)
+                  <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
+                    <div class="flex items-center gap-3">
+                      <div class="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary-container">description</span></div>
+                      <div>
+                        <p class="text-sm font-semibold text-primary">{{ $latestCvLabel }}</p>
+                        <p class="text-[10px] text-outline">CV deja ajoute a votre compte</p>
+                      </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <a href="{{ route('infos.cv') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Voir"><span class="material-symbols-outlined text-lg text-outline">visibility</span></a>
+                      <a href="{{ route('cv.personalization.form') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Télécharger"><span class="material-symbols-outlined text-lg text-outline">download</span></a>
                     </div>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <a href="{{ route('infos.cv') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Voir"><span class="material-symbols-outlined text-lg text-outline">visibility</span></a>
-                    <a href="{{ route('cv.personalization.form') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Télécharger"><span class="material-symbols-outlined text-lg text-outline">download</span></a>
-                    <button class="w-9 h-9 rounded-full hover:bg-red-50 transition-colors flex items-center justify-center" title="Supprimer"><span class="material-symbols-outlined text-lg text-outline hover:text-red-500">delete</span></button>
-                  </div>
-                </div>
+                @endif
                 <a href="{{ route('cv.personalization.form') }}" class="flex items-center justify-center gap-2 w-full py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                   <span class="material-symbols-outlined text-lg">auto_awesome</span> Générer un CV avec l'IA
                 </a>

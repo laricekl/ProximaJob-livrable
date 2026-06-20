@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -18,6 +19,8 @@ class EnsureDatabaseExists
             self::$checked = true;
             
             try {
+                $this->ensureUsableConnection();
+
                 if (!Schema::hasTable('migrations')) {
                     Artisan::call('migrate', ['--force' => true]);
                 }
@@ -31,6 +34,30 @@ class EnsureDatabaseExists
         }
 
         return $next($request);
+    }
+
+    private function ensureUsableConnection(): void
+    {
+        try {
+            DB::connection()->getPdo();
+        } catch (\Throwable $exception) {
+            if (! app()->environment('local') || Config::get('database.default') !== 'mysql') {
+                throw $exception;
+            }
+
+            $sqlitePath = storage_path('database.sqlite');
+
+            if (! file_exists($sqlitePath)) {
+                touch($sqlitePath);
+            }
+
+            Config::set('database.default', 'sqlite');
+            Config::set('database.connections.sqlite.database', $sqlitePath);
+
+            DB::purge('sqlite');
+            DB::setDefaultConnection('sqlite');
+            DB::reconnect('sqlite');
+        }
     }
 
     private function shouldSeedDemoData(): bool

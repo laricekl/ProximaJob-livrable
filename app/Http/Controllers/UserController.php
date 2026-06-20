@@ -61,12 +61,78 @@ class UserController extends Controller
 
     public function detailCandidature()
     {
-        $postulation = Postulation::with(['offre.entreprise', 'offre.type'])
+        $postulation = Postulation::with([
+            'offre.entreprise',
+            'offre.type',
+            'user.cvProfile.experiences',
+            'user.cvProfile.competences',
+            'user.skills',
+        ])
             ->where('user_id', Auth::id())
             ->latest()
             ->first();
 
         return view('user.detail-candidature', compact('postulation'));
+    }
+
+    public function publicProfile()
+    {
+        $user = Auth::user()->load([
+            'cvProfile.formations',
+            'cvProfile.competences',
+            'cvProfile.experiences',
+            'cvProfile.langues',
+            'candidateSector.sector',
+            'candidateSector.diplome',
+            'skills',
+            'postulations',
+        ]);
+
+        $cvProfile = $user->cvProfile;
+        $latestExperience = $cvProfile?->experiences->first();
+
+        $skillLabels = $user->skills
+            ->pluck('name')
+            ->filter()
+            ->values();
+
+        if ($skillLabels->isEmpty() && $cvProfile) {
+            $skillLabels = $cvProfile->competences
+                ->pluck('description')
+                ->filter()
+                ->map(fn ($label) => Str::limit(trim($label), 40, ''))
+                ->values();
+        }
+
+        $experienceYears = $user->experience_years;
+        if ($experienceYears === 0 && $cvProfile) {
+            $experienceYears = $cvProfile->experiences->count();
+        }
+
+        $profileData = [
+            'headline' => $latestExperience?->poste
+                ?? $user->candidateSector?->sector?->name
+                ?? 'Profil en recherche active',
+            'location' => $cvProfile?->ville
+                ?: ($user->adresse ?: 'A renseigner'),
+            'phone' => $cvProfile?->telephone
+                ?: ($user->telephone ?: 'A renseigner'),
+            'experience_years' => $experienceYears,
+            'skills' => $skillLabels->take(8),
+            'skills_count' => $skillLabels->count(),
+            'completion_percentage' => $user->profileCompletionPercentage(),
+            'applications_count' => $user->postulations->count(),
+            'pitch' => $latestExperience?->description
+                ?: 'Completez votre profil et votre CV pour mieux presenter votre parcours aux recruteurs.',
+            'motivation' => $user->postulations
+                ->pluck('cover_letter')
+                ->filter()
+                ->first()
+                ?: '',
+            'latest_cv_label' => $user->cv ? basename((string) $user->cv) : null,
+        ];
+
+        return view('user.profil-public', compact('user', 'cvProfile', 'profileData'));
     }
 
     public function historique(Request $request)

@@ -12,7 +12,7 @@
           <p class="text-on-surface-variant text-sm">Accès réservé au personnel autorisé</p>
         </div>
 
-        <form class="space-y-5" action="{{ route('admin.login') }}" method="POST">
+        <form class="space-y-5" action="{{ route('admin.login.post') }}" method="POST">
           @csrf
           <div>
             <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail</label>

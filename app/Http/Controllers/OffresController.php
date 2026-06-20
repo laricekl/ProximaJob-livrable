@@ -171,10 +171,10 @@ class OffresController extends Controller
     }
     public function details()
     {
-        return view('offres.offre-details');
+        return redirect()->route('offres');
     }
     public function appform(){
-        return view('offres.application-form');
+        return redirect()->route('offres');
 
     }
     /**

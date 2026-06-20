@@ -229,7 +229,7 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
     return $stats;
 }
     
-        public function abonnements()
+    public function abonnements()
     {
         $user = Auth::user();
         
@@ -243,7 +243,26 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
     }
      public function promotion()
     {
-        return view("entreprise.promotion-entreprise");
+        $entreprise = Auth::user()->entreprise;
+
+        $offers = Offre::with('type')
+            ->withCount([
+                'postulations',
+                'postulations as autopostulations_count' => function ($query) {
+                    $query->where('autopostulation', true);
+                },
+            ])
+            ->where('entreprise_id', $entreprise->id)
+            ->latest()
+            ->paginate(10);
+
+        $promotionStats = [
+            'total_offers' => $offers->total(),
+            'active_offers' => $offers->getCollection()->where('status', 'active')->count(),
+            'autopostulations' => $offers->getCollection()->sum('autopostulations_count'),
+        ];
+
+        return view("entreprise.promotion-entreprise", compact('offers', 'promotionStats'));
     }
     public function candidat($id)
     {

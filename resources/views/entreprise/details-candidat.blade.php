@@ -34,8 +34,8 @@
               @if ($postulation)
                 <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">work</span> Offre : {{ $postulation->offre?->titre ?? 'Indisponible' }}</span>
               @endif
-              @if ($candidat->candidateSector?->diplome?->name)
-                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">school</span> {{ $candidat->candidateSector->diplome->name }}</span>
+              @if ($candidat->candidateSector?->diplome?->nom_diplome)
+                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">school</span> {{ $candidat->candidateSector->diplome->nom_diplome }}</span>
               @endif
             </div>
           </div>
@@ -70,7 +70,7 @@
               <div class="space-y-3 text-sm text-on-surface-variant">
                 <p><span class="font-semibold text-primary">Inscription :</span> {{ optional($candidat->created_at)->format('d/m/Y') }}</p>
                 <p><span class="font-semibold text-primary">Secteur :</span> {{ $candidat->candidateSector?->sector?->name ?? 'Non renseigné' }}</p>
-                <p><span class="font-semibold text-primary">Diplôme :</span> {{ $candidat->candidateSector?->diplome?->name ?? 'Non renseigné' }}</p>
+                <p><span class="font-semibold text-primary">Diplôme :</span> {{ $candidat->candidateSector?->diplome?->nom_diplome ?? 'Non renseigné' }}</p>
               </div>
             </div>
           </div>

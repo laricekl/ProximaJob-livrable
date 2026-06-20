@@ -4,6 +4,9 @@ namespace Tests\Feature;
 
 use App\Jobs\AutoMatchingJob;
 use App\Models\AutresDoc;
+use App\Models\CandidateSector;
+use App\Models\CvExperience;
+use App\Models\CvProfile;
 use App\Models\Notification;
 use App\Models\Postulation;
 use App\Models\UserAbonnement;
@@ -197,6 +200,106 @@ class CandidateActionsTest extends TestCase
             ->assertRedirect('/user');
 
         $this->assertDatabaseHas('offres', ['id' => $offer->id]);
+    }
+
+    public function test_legacy_cv_routes_redirect_to_the_current_candidate_cv_flow(): void
+    {
+        $candidate = $this->createCandidate();
+
+        $this->actingAs($candidate)
+            ->get(route('cv.create'))
+            ->assertRedirect(route('infos.cv'));
+
+        $this->actingAs($candidate)
+            ->get(route('cv.show', ['id' => 123]))
+            ->assertRedirect(route('infos.cv'));
+
+        $this->actingAs($candidate)
+            ->get(route('cv.edit', ['id' => 123]))
+            ->assertRedirect(route('infos.cv'));
+
+        $this->actingAs($candidate)
+            ->get(route('cv.form'))
+            ->assertRedirect(route('cv.personalization.form'));
+
+        $this->actingAs($candidate)
+            ->post(route('cv.generate'))
+            ->assertRedirect(route('cv.personalization.form'));
+    }
+
+    public function test_candidate_public_profile_uses_real_candidate_data(): void
+    {
+        $candidate = $this->createCandidate([
+            'telephone' => '5141234567',
+            'salary_expectation_min' => 78000,
+        ]);
+        $refs = $this->createHiringReferences();
+
+        CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+            'ville' => 'Montreal',
+        ]);
+
+        CvExperience::create([
+            'cv_profile_id' => $candidate->cvProfile->id,
+            'periode' => '2022 - Aujourd hui',
+            'poste' => 'Developpeuse Laravel',
+            'entreprise' => 'Studio Horizon',
+            'description' => 'Pilotage de projets web et livraison continue.',
+            'ordre' => 0,
+        ]);
+
+        CandidateSector::create([
+            'candidate_id' => $candidate->id,
+            'sector_id' => $refs['sector']->id,
+            'diplome_id' => $refs['diplome']->id,
+            'experience_years' => 5,
+        ]);
+
+        $candidate->skills()->attach($refs['technicalSkill']->id, [
+            'level' => 'avance',
+            'years_experience' => 5,
+            'is_validated' => true,
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('user.profil-public'))
+            ->assertOk()
+            ->assertSee('Camille Martin')
+            ->assertSee('Developpeuse Laravel')
+            ->assertSee('Montreal')
+            ->assertSee('78000')
+            ->assertSee('Laravel');
+    }
+
+    public function test_candidate_application_detail_page_uses_real_application_data(): void
+    {
+        $candidate = $this->createCandidate();
+        $enterprise = $this->createEnterprise([], ['company_name' => 'Studio Horizon']);
+        $offer = $this->createOfferFor($enterprise, [
+            'titre' => 'Analyste Produit',
+            'poste' => 'Analyste Produit',
+            'localisation' => 'Quebec',
+        ]);
+
+        Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $offer->id,
+            'status' => 'en_attente',
+            'autopostulation' => false,
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('user.detail-candidature'))
+            ->assertOk()
+            ->assertSee('Analyste Produit')
+            ->assertSee('Studio Horizon')
+            ->assertSee('Quebec')
+            ->assertSee('Postulation candidate manuelle');
     }
 
     public function test_candidate_profile_rejects_invalid_sector_skill_and_salary_values(): void

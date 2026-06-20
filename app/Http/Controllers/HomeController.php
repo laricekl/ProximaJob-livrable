@@ -124,23 +124,4 @@ class HomeController extends Controller
         //
     }
 
-    public function abonnements() {
-        return view("abonnements");
-    }
-
-    public function services() {
-        return view("services");
-    }
-    public function ressources() {
-        return view("ressources");
-    }
-    public function jobDetails() {
-        return view("job-details");
-    }
-    public function contacts() {
-        return view("contact");
-    }
-    public function appForm() {
-        return view("application-form");
-    }
 }

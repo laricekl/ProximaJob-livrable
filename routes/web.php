@@ -11,14 +11,11 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\EntreprisesController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CandidatureController;
-use App\Http\Controllers\CVGeneratorController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\HomeController;
 use App\Http\Middleware\CheckUserStatus;
 use App\Http\Controllers\Auth\SocialAuthController;
-use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
-use App\Http\Controllers\Auth\ResetPasswordController;  
 use App\Http\Controllers\CvPersonalizationController ; 
 use App\Http\Controllers\CvProfileController;
 use App\Services\JobMatchingService; 
@@ -86,13 +83,13 @@ Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke
     ->name('verification.verify');
 
 Route::get('/verify-email/{token}', [VerifyEmailController::class, 'verify'])
-    ->name('verification.verify-token');
+    ->name('verification.custom.verify');
 
 Route::get('/resend-verification', [VerifyEmailController::class, 'showResendForm'])
-    ->name('verification.resend-form');
+    ->name('verification.custom.resend-form');
 
 Route::post('/resend-verification', [VerifyEmailController::class, 'resend'])
-    ->name('verification.resend');
+    ->name('verification.custom.resend');
 
     
 
@@ -104,8 +101,8 @@ Route::post('/resend-verification', [VerifyEmailController::class, 'resend'])
 // Routes guest
 
 Route::get('/offres', [OffresController::class, 'index'])->name('offres');
-Route::get('/offres/detail', [OffresController::class, 'details'])->name('details.offre');
-Route::get('/app-form', [OffresController::class, 'appform'])->name('app_form');
+Route::redirect('/offres/detail', '/offres')->name('details.offre');
+Route::redirect('/app-form', '/offres')->name('app_form');
 Route::post('/check-email', [UserController::class, 'checkEmail'])->name('check.email');
 Route::get('/offres/{offre:slug}', [UserController::class, 'jobdetails'])->name('job_infos');
 //Route::post('/register/user', [RegisteredUserController::class, 'registerJobSeeker'])->name('register.jobseeker');
@@ -149,7 +146,7 @@ Route::prefix('user')
     Route::get('/abonnement', [UserController::class, 'abonnement'])->name('user.bonnement');
     Route::get('/plan-abonnement', [UserController::class, 'planabonnement'])->name('plan.abonnement');
     Route::get('/infos-cv', [UserController::class, 'infoscv'])->name('infos.cv');
-    Route::view('/profil-public', 'user.profil-public')->name('user.profil-public');
+    Route::get('/profil-public', [UserController::class, 'publicProfile'])->name('user.profil-public');
     Route::get('/detail-candidature', [UserController::class, 'detailCandidature'])->name('user.detail-candidature');
     Route::get('/preview-cv-ia/{candidature}', [CandidatureController::class, 'previewCVia'])->name('preview.cv-ia'); 
     Route::get('/preview-letter-ia/{candidature}', [CandidatureController::class, 'previewletteria'])->name('preview.letter-ia');
@@ -165,10 +162,10 @@ Route::prefix('user')
 
    
     Route::middleware(['auth'])->group(function () {
-    Route::get('/cv/create', [CvProfileController::class, 'create'])->name('cv.create');
+    Route::redirect('/cv/create', '/user/infos-cv')->name('cv.create');
     Route::post('/cv/store', [CvProfileController::class, 'store'])->name('cv.store');
-    Route::get('/cv/{id}', [CvProfileController::class, 'show'])->name('cv.show');
-    Route::get('/cv/{id}/edit', [CvProfileController::class, 'edit'])->name('cv.edit');
+    Route::redirect('/cv/{id}', '/user/infos-cv')->name('cv.show');
+    Route::redirect('/cv/{id}/edit', '/user/infos-cv')->name('cv.edit');
     Route::put('/cv/{id}/update', [CvProfileController::class, 'update'])->name('cv.update');
 });
 
@@ -296,9 +293,13 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
 
 
 
-Route::prefix('cv-generator')->middleware('web')->group(function () {
-    Route::post('/generate', [CVGeneratorController::class, 'generateCV'])->name('cv.generate');
-    Route::get('/form', [CVGeneratorController::class, 'showForm'])->name('cv.form');
+Route::prefix('cv-generator')->middleware(['web', 'auth'])->group(function () {
+    Route::redirect('/form', '/user/personnaliser-cv')->name('cv.form');
+    Route::post('/generate', function () {
+        return redirect()
+            ->route('cv.personalization.form')
+            ->with('info', 'Le generateur CV historique a ete remplace par le parcours CV personnalise.');
+    })->name('cv.generate');
 });
 
 //Route::get('/', function () {
@@ -333,27 +334,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-
-Route::group(['prefix' => 'password'], function() {
-    // Afficher le formulaire de demande de reset
-    Route::get('/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])
-         ->name('password.request');
-    
-    // Envoyer le lien de reset par email
-    Route::post('/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
-         ->name('password.email');
-    
-    // Afficher le formulaire de reset avec token
-    Route::get('/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
-         ->name('password.reset');
-    
-    // Traiter le reset du mot de passe
-    Route::post('/reset', [ResetPasswordController::class, 'reset'])
-         ->name('password.update');
-});
-
-
 
 
 
@@ -638,7 +618,7 @@ Route::get('/email/verify', function () {
 
 Route::post('/email/resend-verification', [ResendVerificationEmailController::class, 'store'])
     ->middleware(['throttle:3,1'])
-    ->name('verification.resend');
+    ->name('enterprise.verification.resend');
 
 /*use Illuminate\Http\Request;
 use Twilio\TwiML\MessagingResponse;

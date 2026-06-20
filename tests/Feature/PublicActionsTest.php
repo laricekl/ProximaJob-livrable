@@ -106,4 +106,13 @@ class PublicActionsTest extends TestCase
             ->assertRedirect(route('contact'))
             ->assertSessionHasErrors(['name', 'firstname', 'email', 'message']);
     }
+
+    public function test_legacy_public_offer_routes_redirect_to_the_current_offers_listing(): void
+    {
+        $this->get(route('details.offre'))
+            ->assertRedirect(route('offres'));
+
+        $this->get(route('app_form'))
+            ->assertRedirect(route('offres'));
+    }
 }

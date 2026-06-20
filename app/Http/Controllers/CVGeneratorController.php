@@ -159,6 +159,6 @@ class CVGeneratorController extends Controller
 
     public function showForm()
     {
-        return view('cv.modals.cv-generator-modal');
+        return redirect()->route('cv.personalization.form');
     }
 }

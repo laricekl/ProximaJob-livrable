@@ -475,16 +475,7 @@ class CvProfileController extends Controller
      */
     public function edit($id)
     {
-        $cvProfile = CvProfile::with([
-            'formations',
-            'competences',
-            'experiences',
-            'langues',
-            'perfectionnements',
-            'benevolats'
-        ])->findOrFail($id);
-
-        return view('cv.edit', compact('cvProfile'));
+        return redirect()->route('infos.cv');
     }
 
     /**

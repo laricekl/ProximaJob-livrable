@@ -42,4 +42,22 @@ class EnterpriseRegistrationTest extends TestCase
         ]);
         $this->assertSame('email_verification_pending', Entreprise::where('user_id', $user->id)->value('status'));
     }
+
+    public function test_enterprise_verification_notice_and_resend_form_are_accessible(): void
+    {
+        $this->withSession([
+            'email' => 'pending-enterprise@example.com',
+            'company_name' => 'Studio Horizon',
+        ])->get(route('enterprise.verification.notice'))
+            ->assertOk()
+            ->assertSee('Verifiez votre adresse email')
+            ->assertSee(route('enterprise.verification.resend'), false);
+
+        $this->withSession([
+            'email' => 'pending-enterprise@example.com',
+        ])->get(route('verification.custom.resend-form'))
+            ->assertOk()
+            ->assertSee('Renvoyer un lien de verification')
+            ->assertSee(route('verification.custom.resend'), false);
+    }
 }

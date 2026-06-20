@@ -65,7 +65,7 @@
               Nous pouvons renvoyer le lien a cette meme adresse si besoin.
             </p>
 
-            <form method="POST" action="{{ route('verification.resend') }}" class="mt-6 space-y-3">
+            <form method="POST" action="{{ route('enterprise.verification.resend') }}" class="mt-6 space-y-3">
               @csrf
               <input type="hidden" name="email" value="{{ session('email') }}">
               <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary-container px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary-container/20 transition-all hover:bg-secondary">
