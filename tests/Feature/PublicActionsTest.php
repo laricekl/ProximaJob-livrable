@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\SiteSetting;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\Feature\Concerns\CreatesTestAccounts;
 use Tests\TestCase;
@@ -20,6 +21,29 @@ class PublicActionsTest extends TestCase
                 ->assertOk()
                 ->assertDontSee('Page Expired');
         }
+    }
+
+    public function test_public_pages_use_centralized_site_settings_for_branding_and_contact(): void
+    {
+        SiteSetting::create([
+            'site_nom' => 'ProximaJob Showcase',
+            'email' => 'contact@showcase.test',
+            'tel' => '+1 555 000 1111',
+            'localisation' => 'Quebec, Canada',
+            'timezone' => 'America/Toronto',
+            'map_embed_url' => 'https://www.google.com/maps/embed?pb=showcase',
+        ]);
+
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('ProximaJob Showcase');
+
+        $this->get('/contact')
+            ->assertOk()
+            ->assertSee('contact@showcase.test')
+            ->assertSee('+1 555 000 1111')
+            ->assertSee('Quebec, Canada')
+            ->assertSee('https://www.google.com/maps/embed?pb=showcase', false);
     }
 
     public function test_public_offer_filters_preserve_real_results(): void

@@ -8,6 +8,7 @@ use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Auth\Notifications\ResetPassword;
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\View;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -33,9 +34,13 @@ class AppServiceProvider extends ServiceProvider
     Paginator::useBootstrapFive();
     
     try {
-        view()->share('siteSettings', SiteSetting::first());
+        View::composer('*', function ($view) {
+            $view->with('siteSettings', SiteSetting::firstOrCreate([], SiteSetting::defaults()));
+        });
     } catch (\Exception $e) {
-        view()->share('siteSettings', null);
+        View::composer('*', function ($view) {
+            $view->with('siteSettings', null);
+        });
     }
 
     // Personnaliser l'email de réinitialisation

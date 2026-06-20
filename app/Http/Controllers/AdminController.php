@@ -571,23 +571,12 @@ public function abonnements(Request $request)
         return view("admin.newsletters" );
     }
 
-  public function parametres()
+    public function parametres()
     {
-
-
-
-         $abonnements = Abonnement::with('fonctionnalites')->get();;
+         $abonnements = Abonnement::with('fonctionnalites')->get();
     
         // Récupérer les paramètres existants ou créer un enregistrement par défaut
-        $settings = SiteSetting::first();
-        
-        if (!$settings) {
-            $settings = SiteSetting::create([
-                'site_nom' => 'Proximalob',
-                'email' => 'contact@proximalob.com',
-                'timezone' => 'Europe/Paris',
-            ]);
-        }
+        $settings = SiteSetting::firstOrCreate([], SiteSetting::defaults());
 
         // Liste des fuseaux horaires
         $timezones = [
@@ -609,13 +598,19 @@ public function abonnements(Request $request)
         $validator = Validator::make($request->all(), [
             'site_nom' => 'required|string|max:255',
             'email' => 'required|email|max:255',
+            'tel' => 'nullable|string|max:255',
+            'localisation' => 'nullable|string|max:255',
             'timezone' => 'required|string|max:100',
+            'map_embed_url' => 'nullable|url|max:5000',
+            'map_zoom' => 'nullable|integer|min:1|max:20',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
             'favicon' => 'nullable|image|mimes:ico,png,jpg|max:1024',
         ], [
             'site_nom.required' => 'Le nom du site est obligatoire.',
             'email.required' => 'L\'email de contact est obligatoire.',
             'email.email' => 'L\'email doit être valide.',
+            'map_embed_url.url' => 'Le lien de la carte doit etre une URL valide.',
+            'map_zoom.integer' => 'Le niveau de zoom doit etre un nombre entier.',
             'logo.image' => 'Le logo doit être une image.',
             'logo.mimes' => 'Le logo doit être au format JPG, PNG ou SVG.',
             'logo.max' => 'Le logo ne doit pas dépasser 2MB.',
@@ -634,15 +629,16 @@ public function abonnements(Request $request)
 
         try {
             // Récupérer ou créer les paramètres
-            $settings = SiteSetting::first();
-            if (!$settings) {
-                $settings = new SiteSetting();
-            }
+            $settings = SiteSetting::firstOrCreate([], SiteSetting::defaults());
 
             // Mise à jour des champs texte
             $settings->site_nom = $request->site_nom;
             $settings->email = $request->email;
+            $settings->tel = $request->tel;
+            $settings->localisation = $request->localisation;
             $settings->timezone = $request->timezone;
+            $settings->map_embed_url = $request->map_embed_url;
+            $settings->map_zoom = $request->filled('map_zoom') ? (int) $request->map_zoom : $settings->map_zoom;
 
             // Gestion du logo
             if ($request->hasFile('logo')) {
@@ -670,20 +666,30 @@ public function abonnements(Request $request)
 
             $settings->save();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Paramètres sauvegardés avec succès !',
-                'data' => [
-                    'logo_url' => $settings->logo_url,
-                    'favicon_url' => $settings->favicon_url,
-                ]
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Paramètres sauvegardés avec succès !',
+                    'data' => [
+                        'logo_url' => $settings->logo_url,
+                        'favicon_url' => $settings->favicon_url,
+                    ]
+                ]);
+            }
+
+            return back()->with('success', 'Paramètres sauvegardés avec succès !');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur lors de la sauvegarde : ' . $e->getMessage()
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la sauvegarde : ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->withErrors([
+                'general' => 'Erreur lors de la sauvegarde des paramètres. Veuillez réessayer.',
+            ]);
         }
     }
 
@@ -703,16 +709,26 @@ public function abonnements(Request $request)
                 $settings->save();
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Logo supprimé avec succès !'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Logo supprimé avec succès !'
+                ]);
+            }
+
+            return back()->with('success', 'Logo supprimé avec succès !');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->withErrors([
+                'appearance' => 'Erreur lors de la suppression du logo.',
+            ]);
         }
     }
 
@@ -732,16 +748,26 @@ public function abonnements(Request $request)
                 $settings->save();
             }
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Favicon supprimé avec succès !'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Favicon supprimé avec succès !'
+                ]);
+            }
+
+            return back()->with('success', 'Favicon supprimé avec succès !');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
-            ], 500);
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
+                ], 500);
+            }
+
+            return back()->withErrors([
+                'appearance' => 'Erreur lors de la suppression du favicon.',
+            ]);
         }
     }
 

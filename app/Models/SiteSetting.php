@@ -24,9 +24,15 @@ class SiteSetting extends Model
     protected $fillable = [
         'site_nom',
         'email', 
+        'tel',
+        'localisation',
         'timezone',
         'logo',
-        'favicon'
+        'favicon',
+        'map_embed_url',
+        'latitude',
+        'longitude',
+        'map_zoom',
     ];
 
     /**
@@ -45,8 +51,22 @@ class SiteSetting extends Model
      * @var array
      */
     protected $attributes = [
+        'site_nom' => 'ProximaJob',
+        'email' => 'contact@proximajob.com',
         'timezone' => 'UTC',
     ];
+
+    public static function defaults(): array
+    {
+        return [
+            'site_nom' => 'ProximaJob',
+            'email' => 'contact@proximajob.com',
+            'tel' => '+1 234 567 890',
+            'localisation' => 'Montreal, QC, Canada',
+            'timezone' => 'America/Toronto',
+            'map_zoom' => 15,
+        ];
+    }
 
     /**
      * Récupère le chemin complet du logo

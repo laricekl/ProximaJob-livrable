@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Abonnement;
+use App\Models\SiteSetting;
 use App\Models\UserAbonnement;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Tests\Feature\Concerns\CreatesTestAccounts;
 use Tests\TestCase;
 
@@ -150,6 +153,40 @@ class AdminManagementTest extends TestCase
         $this->actingAs($admin)->get(route('admin.parametres'))
             ->assertOk()
             ->assertSee('Paramètres');
+    }
+
+    public function test_admin_can_update_global_site_settings_and_files(): void
+    {
+        Storage::fake('public');
+
+        $admin = $this->createAdmin();
+
+        $response = $this->actingAs($admin)->post(route('parametres.update-general'), [
+            'site_nom' => 'ProximaJob Demo',
+            'email' => 'equipe@proximajob.test',
+            'tel' => '+1 555 100 2000',
+            'localisation' => 'Montreal, Canada',
+            'timezone' => 'America/New_York',
+            'map_embed_url' => 'https://www.google.com/maps/embed?pb=test-demo',
+            'map_zoom' => 12,
+            'logo' => UploadedFile::fake()->image('logo.png'),
+            'favicon' => UploadedFile::fake()->image('favicon.png', 32, 32),
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success', 'Paramètres sauvegardés avec succès !');
+
+        $settings = SiteSetting::first();
+
+        $this->assertSame('ProximaJob Demo', $settings->site_nom);
+        $this->assertSame('equipe@proximajob.test', $settings->email);
+        $this->assertSame('+1 555 100 2000', $settings->tel);
+        $this->assertSame('Montreal, Canada', $settings->localisation);
+        $this->assertSame('America/New_York', $settings->timezone);
+        $this->assertSame('https://www.google.com/maps/embed?pb=test-demo', $settings->map_embed_url);
+        $this->assertSame(12, $settings->map_zoom);
+        Storage::disk('public')->assertExists($settings->logo);
+        Storage::disk('public')->assertExists($settings->favicon);
     }
 
     public function test_admin_can_suspend_reactivate_and_delete_a_user_with_password_confirmation(): void

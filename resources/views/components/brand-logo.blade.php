@@ -4,9 +4,14 @@
   'showText' => true,
 ])
 
-<span {{ $attributes->merge(['class' => 'inline-flex items-center gap-1.5 md:gap-2 whitespace-nowrap']) }} data-brand-logo aria-label="ProximaJob">
+@php
+  $brandName = $siteSettings?->site_nom ?: 'ProximaJob';
+  $brandImage = $siteSettings?->logo_url ?: asset('img/proxi-mark.png');
+@endphp
+
+<span {{ $attributes->merge(['class' => 'inline-flex items-center gap-1.5 md:gap-2 whitespace-nowrap']) }} data-brand-logo aria-label="{{ $brandName }}">
   <img
-    src="{{ asset('img/proxi-mark.png') }}"
+    src="{{ $brandImage }}"
     alt=""
     class="{{ $iconClass }} shrink-0 object-contain"
     loading="eager"
@@ -15,6 +20,6 @@
     data-brand-logo-image
   >
   @if ($showText)
-    <span class="{{ $textClass }}">ProximaJob</span>
+    <span class="{{ $textClass }}">{{ $brandName }}</span>
   @endif
 </span>

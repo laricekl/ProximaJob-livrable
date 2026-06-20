@@ -1,7 +1,13 @@
+@php
+  $brandName = $siteSettings?->site_nom ?: 'ProximaJob';
+  $brandFavicon = $siteSettings?->favicon_url ?: asset('favicon.ico');
+@endphp
+
 <meta charset="utf-8" />
 <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 <meta name="csrf-token" content="{{ csrf_token() }}" />
-<title>ProximaJob - @yield('title', 'IA Concierge')</title>
+<title>{{ $brandName }} - @yield('title', 'IA Concierge')</title>
+<link rel="icon" type="image/x-icon" href="{{ $brandFavicon }}" />
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

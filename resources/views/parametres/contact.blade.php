@@ -30,6 +30,12 @@
   </style>
 @endsection
 @section('content')
+  @php
+    $contactPhone = $infos?->tel ?: '+1 234 567 890';
+    $contactEmail = $infos?->email ?: 'contact@proximajob.com';
+    $contactAddress = $infos?->localisation ?: 'Montreal, QC, Canada';
+    $mapEmbedUrl = $infos?->map_embed_url;
+  @endphp
   <main class="flex-grow pt-32">
 
     <x-public-page-hero
@@ -57,7 +63,7 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-primary text-sm">Téléphone</h4>
-                  <p class="text-on-surface-variant text-sm">+1 234 567 890</p>
+                  <p class="text-on-surface-variant text-sm">{{ $contactPhone }}</p>
                 </div>
               </div>
 
@@ -68,7 +74,7 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-primary text-sm">Envoyez-nous un email</h4>
-                  <p class="text-on-surface-variant text-sm">contact@proximajob.com</p>
+                  <p class="text-on-surface-variant text-sm">{{ $contactEmail }}</p>
                 </div>
               </div>
 
@@ -79,7 +85,7 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-primary text-sm">Bureau</h4>
-                  <p class="text-on-surface-variant text-sm">123 Avenue du Travail, Montréal, QC, Canada</p>
+                  <p class="text-on-surface-variant text-sm">{{ $contactAddress }}</p>
                 </div>
               </div>
             </div>
@@ -144,10 +150,21 @@
     <section class="py-20 px-4 md:px-10 bg-white">
       <div class="max-w-6xl mx-auto">
         <div class="rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/20 h-80 bg-surface-container flex items-center justify-center">
-          <div class="text-center text-outline">
-            <span class="material-symbols-outlined text-5xl mb-4">map</span>
-            <p class="text-sm font-medium">Carte intégrée ici</p>
-          </div>
+          @if ($mapEmbedUrl)
+            <iframe
+              src="{{ $mapEmbedUrl }}"
+              class="h-full w-full border-0"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              allowfullscreen
+              title="Carte de localisation {{ $infos?->site_nom ?? 'ProximaJob' }}"
+            ></iframe>
+          @else
+            <div class="text-center text-outline">
+              <span class="material-symbols-outlined text-5xl mb-4">map</span>
+              <p class="text-sm font-medium">Carte intégrée ici</p>
+            </div>
+          @endif
         </div>
       </div>
     </section>

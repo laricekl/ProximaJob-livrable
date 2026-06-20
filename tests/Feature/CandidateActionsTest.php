@@ -12,6 +12,7 @@ use App\Models\Postulation;
 use App\Models\UserAbonnement;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Queue;
 use Tests\Feature\Concerns\CreatesTestAccounts;
 use Tests\TestCase;
@@ -300,6 +301,62 @@ class CandidateActionsTest extends TestCase
             ->assertSee('Studio Horizon')
             ->assertSee('Quebec')
             ->assertSee('Postulation candidate manuelle');
+    }
+
+    public function test_candidate_can_generate_preview_and_download_a_personalized_cv_without_gemini(): void
+    {
+        Storage::fake('public');
+
+        $candidate = $this->createCandidate([
+            'email' => 'cv-fallback@example.com',
+        ]);
+
+        CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+            'ville' => 'Montreal',
+            'logiciels' => 'Laravel, PHP, SQL',
+        ]);
+
+        CvExperience::create([
+            'cv_profile_id' => $candidate->cvProfile->id,
+            'periode' => '2022 - Aujourd hui',
+            'poste' => 'Developpeuse full stack',
+            'entreprise' => 'Studio Horizon',
+            'description' => 'Conception et livraison de produits web.',
+            'ordre' => 0,
+        ]);
+
+        $response = $this->actingAs($candidate)->post(route('cv.personalization.generate'), [
+            'offer_title' => 'Developpeuse Laravel',
+            'offer_details' => 'Nous recherchons une developpeuse Laravel capable de livrer des interfaces fiables et des integrations propres.',
+            'company_name' => 'Entreprise QA',
+            'key_requirements' => 'Laravel, tests automatises, architecture propre',
+            'template_style' => 'modern',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success', 'CV personnalisé généré avec succès !');
+
+        $files = Storage::disk('public')->files('personalized-cvs');
+
+        $this->assertCount(1, $files);
+        $this->assertStringEndsWith('.pdf', $files[0]);
+
+        $filename = basename($files[0]);
+
+        $this->actingAs($candidate)
+            ->get(route('cv.personalization.preview', ['filename' => $filename]))
+            ->assertOk()
+            ->assertSee($filename);
+
+        $this->actingAs($candidate)
+            ->get(route('cv.personalization.download', ['filename' => $filename]))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
     }
 
     public function test_candidate_profile_rejects_invalid_sector_skill_and_salary_values(): void

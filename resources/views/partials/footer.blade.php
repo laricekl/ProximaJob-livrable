@@ -11,7 +11,7 @@
         <a href="{{ route('contact') }}" class="hover:text-secondary-container transition-colors">Contact</a>
       </nav>
 
-      <span class="text-slate-400 shrink-0">© {{ date('Y') }} ProximaJob.</span>
+      <span class="text-slate-400 shrink-0">© {{ date('Y') }} {{ $siteSettings?->site_nom ?? 'ProximaJob' }}.</span>
     </div>
   </div>
 </footer>
