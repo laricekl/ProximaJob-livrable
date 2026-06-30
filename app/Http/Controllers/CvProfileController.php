@@ -232,14 +232,7 @@ class CvProfileController extends Controller
 {
     $userId = auth()->id();
     $existingProfile = CvProfile::where('user_id', $userId)->first();
-    
-    if ($existingProfile) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Vous avez déjà un profil CV. Vous pouvez le modifier depuis votre espace.',
-            'profile_id' => $existingProfile->id
-        ], 422);
-    }
+    $isUpdatingExisting = (bool) $existingProfile;
 
     // Validation des données principales
     $validator = Validator::make($request->all(), [
@@ -256,30 +249,30 @@ class CvProfileController extends Controller
         // Validations pour les tableaux
         'formations' => 'nullable|array',
         'formations.*.periode' => 'nullable|string|max:100',
-        'formations.*.diplome' => 'required_with:formations|exists:diplomes,id',
+        'formations.*.diplome' => 'nullable|exists:diplomes,id',
         'formations.*.etablissement' => 'nullable|string|max:500',
         
         'competences' => 'nullable|array',
-        'competences.*.description' => 'required_with:competences|string',
+        'competences.*.description' => 'nullable|string',
         
         'experiences' => 'nullable|array',
-        'experiences.*.periode' => 'required_with:experiences|string|max:100',
-        'experiences.*.poste' => 'required_with:experiences|string|max:500',
+        'experiences.*.periode' => 'nullable|string|max:100',
+        'experiences.*.poste' => 'nullable|string|max:500',
         'experiences.*.entreprise' => 'nullable|string|max:500',
         'experiences.*.description' => 'nullable|string',
         
         'langues' => 'nullable|array',
-        'langues.*.nom' => 'required_with:langues|string|max:100',
+        'langues.*.nom' => 'nullable|string|max:100',
         'langues.*.niveau' => 'nullable|string|in:Langue maternelle,Courant,Intermédiaire,Notions de base,Connaissances de base',
         
         'perfectionnements' => 'nullable|array',
         'perfectionnements.*.annee' => 'nullable|string|max:50',
-        'perfectionnements.*.formation' => 'required_with:perfectionnements|string|max:500',
+        'perfectionnements.*.formation' => 'nullable|string|max:500',
         'perfectionnements.*.etablissement' => 'nullable|string|max:500',
         
         'benevolats' => 'nullable|array',
         'benevolats.*.periode' => 'nullable|string|max:100',
-        'benevolats.*.role' => 'required_with:benevolats|string|max:500',
+        'benevolats.*.role' => 'nullable|string|max:500',
         'benevolats.*.organisation' => 'nullable|string|max:500',
     ]);
 
@@ -298,9 +291,7 @@ class CvProfileController extends Controller
         // Extraire la province de la ville si fournie
         $province = $this->extractProvince($request->ville);
 
-        // Créer le profil CV principal
-        $cvProfile = CvProfile::create([
-            'user_id' => auth()->id(),
+        $profileData = [
             'nom' => $request->nom,
             'prenom' => $request->prenom_cv,
             'email' => $request->email_cv,
@@ -311,7 +302,23 @@ class CvProfileController extends Controller
             'province' => $province,
             'langues_competences' => $request->langues_competences,
             'logiciels' => $request->logiciels,
-        ]);
+        ];
+
+        if ($isUpdatingExisting) {
+            $cvProfile = $existingProfile;
+            $cvProfile->update($profileData);
+
+            $cvProfile->formations()->delete();
+            $cvProfile->competences()->delete();
+            $cvProfile->experiences()->delete();
+            $cvProfile->langues()->delete();
+            $cvProfile->perfectionnements()->delete();
+            $cvProfile->benevolats()->delete();
+        } else {
+            $cvProfile = CvProfile::create([
+                'user_id' => auth()->id(),
+            ] + $profileData);
+        }
 
         // Ajouter les formations
         if ($request->has('formations') && is_array($request->formations)) {
@@ -445,7 +452,9 @@ class CvProfileController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Votre profil CV a été enregistré avec succès !' . 
+            'message' => ($isUpdatingExisting
+                        ? 'Votre profil CV a été mis à jour avec succès !'
+                        : 'Votre profil CV a été enregistré avec succès !') . 
                         ($autoMatchingTriggered ? ' Recherche d\'opportunités en cours...' : ''),
             'cv_profile_id' => $cvProfile->id,
             'auto_matching_triggered' => $autoMatchingTriggered
