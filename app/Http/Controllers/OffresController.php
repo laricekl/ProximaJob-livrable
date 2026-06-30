@@ -351,8 +351,8 @@ class OffresController extends Controller
         
         // Exigences des candidats
         'diplomes' => 'nullable|array',
-        'diplomes.*.id' => 'required_with:diplomes|exists:diplomes,id',
-        'diplomes.*.obligatoire' => 'required_with:diplomes|boolean',
+        'diplomes.*.id' => 'nullable|exists:diplomes,id',
+        'diplomes.*.obligatoire' => 'nullable|boolean',
         'skillls' => 'nullable|array',
         'skillls.*' => 'exists:skills,id',
         'methodological_skills' => 'nullable|array',
@@ -452,11 +452,18 @@ class OffresController extends Controller
         if ($request->has('diplomes') && is_array($request->diplomes)) {
             $diplomesData = [];
             foreach ($request->diplomes as $diplome) {
+                if (empty($diplome['id'])) {
+                    continue;
+                }
+
                 $diplomesData[$diplome['id']] = [
-                    'obligatoire' => $diplome['obligatoire']
+                    'obligatoire' => (bool) ($diplome['obligatoire'] ?? true)
                 ];
             }
-            $offre->diplomes()->attach($diplomesData);
+
+            if (!empty($diplomesData)) {
+                $offre->diplomes()->attach($diplomesData);
+            }
         }
 
         // Attacher toutes les compétences (techniques, méthodologiques, numériques)

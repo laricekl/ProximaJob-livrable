@@ -3,9 +3,18 @@ import { fileURLToPath } from 'node:url';
 import { expect, test } from '@playwright/test';
 import { expectHealthyResponse } from '../helpers/assertions.js';
 import { login, logout } from '../helpers/auth.js';
-import { buildDemoAccounts } from '../helpers/provisioning.js';
+import {
+  approveEnterpriseForLogin as approveEnterpriseForLoginLocal,
+  buildDemoAccounts,
+  getOfferRecordByTitle as getOfferRecordByTitleLocal,
+  getVerificationToken as getVerificationTokenLocal,
+  verifyCandidateForLogin as verifyCandidateForLoginLocal,
+} from '../helpers/provisioning.js';
 
 const CLOUD_ENVIRONMENT_ID = process.env.UI_CLOUD_ENVIRONMENT_ID || 'env-a20eecae-81b4-4f72-9e10-5091ea0a4f7a';
+const USE_CLOUD_HELPERS =
+  process.env.UI_USE_CLOUD_HELPERS === '1'
+  || /laravel\.cloud/.test(process.env.UI_BASE_URL || '');
 const CV_FIXTURE_PATH = fileURLToPath(new URL('../fixtures/candidate-cv-demo.pdf', import.meta.url));
 const LETTER_FIXTURE_PATH = fileURLToPath(
   new URL('../fixtures/candidate-letter-demo.pdf', import.meta.url),
@@ -62,6 +71,10 @@ function runCloudExpression(expression) {
 }
 
 function getVerificationToken(email) {
+  if (!USE_CLOUD_HELPERS) {
+    return getVerificationTokenLocal(email);
+  }
+
   const safeEmail = escapePhpString(email);
 
   return runCloudExpression(
@@ -70,6 +83,11 @@ function getVerificationToken(email) {
 }
 
 function verifyCandidateForLogin(email) {
+  if (!USE_CLOUD_HELPERS) {
+    verifyCandidateForLoginLocal(email);
+    return;
+  }
+
   const safeEmail = escapePhpString(email);
 
   runCloudExpression(`
@@ -85,6 +103,11 @@ function verifyCandidateForLogin(email) {
 }
 
 function approveEnterpriseForLogin(email) {
+  if (!USE_CLOUD_HELPERS) {
+    approveEnterpriseForLoginLocal(email);
+    return;
+  }
+
   const safeEmail = escapePhpString(email);
 
   runCloudExpression(`
@@ -105,6 +128,10 @@ function approveEnterpriseForLogin(email) {
 }
 
 function getOfferRecordByTitle(title) {
+  if (!USE_CLOUD_HELPERS) {
+    return getOfferRecordByTitleLocal(title);
+  }
+
   const safeTitle = escapePhpString(title);
   const raw = runCloudExpression(`
     $offer = App\\\\Models\\\\Offre::where('titre', '${safeTitle}')->latest('id')->first();

@@ -64,7 +64,12 @@ class RegisteredUserController extends Controller
             'is_active' => false,
         ]);
 
-            // Générer et sauvegarder le token AVEC LE MODÈLE
+        $candidateRole = Role::where('name', 'candidat')->first();
+        if ($candidateRole) {
+            $user->assignRole($candidateRole);
+        }
+
+        // Générer et sauvegarder le token AVEC LE MODÈLE
         $token = Str::random(60);
         
         EmailVerification::create([

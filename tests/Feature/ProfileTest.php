@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class ProfileTest extends TestCase
@@ -95,5 +96,60 @@ class ProfileTest extends TestCase
             ->assertRedirect('/profile');
 
         $this->assertNotNull($user->fresh());
+    }
+
+    public function test_user_can_change_password_from_profile_screen(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('CurrentPass123!'),
+        ]);
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->post(route('profile.change-password'), [
+                'current_password' => 'CurrentPass123!',
+                'new_password' => 'NewSecurePass456!',
+                'new_password_confirmation' => 'NewSecurePass456!',
+            ])
+            ->assertRedirect('/profile')
+            ->assertSessionHas('success', 'Votre mot de passe a été modifié avec succès.');
+
+        $this->assertTrue(Hash::check('NewSecurePass456!', $user->fresh()->password));
+    }
+
+    public function test_profile_password_change_rejects_short_passwords_with_human_message(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('CurrentPass123!'),
+        ]);
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->post(route('profile.change-password'), [
+                'current_password' => 'CurrentPass123!',
+                'new_password' => 'short',
+                'new_password_confirmation' => 'short',
+            ])
+            ->assertRedirect('/profile')
+            ->assertSessionHasErrors([
+                'new_password' => 'Le nouveau mot de passe doit contenir au moins 8 caractères',
+            ]);
+    }
+
+    public function test_profile_password_change_rejects_incorrect_current_password(): void
+    {
+        $user = User::factory()->create([
+            'password' => Hash::make('CurrentPass123!'),
+        ]);
+
+        $this->actingAs($user)
+            ->from('/profile')
+            ->post(route('profile.change-password'), [
+                'current_password' => 'WrongPass999!',
+                'new_password' => 'NewSecurePass456!',
+                'new_password_confirmation' => 'NewSecurePass456!',
+            ])
+            ->assertRedirect('/profile')
+            ->assertSessionHas('error', 'Le mot de passe actuel est incorrect.');
     }
 }

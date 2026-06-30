@@ -98,6 +98,34 @@ class EnterpriseActionsTest extends TestCase
         Queue::assertPushed(AutoMatchingJob::class);
     }
 
+    public function test_enterprise_can_publish_offer_without_selecting_diplomas_from_classic_form(): void
+    {
+        Queue::fake();
+
+        $enterprise = $this->createEnterprise();
+        $payload = $this->validOfferPayload([
+            'diplomes' => [
+                ['obligatoire' => true],
+                ['obligatoire' => true],
+            ],
+        ]);
+
+        $response = $this->actingAs($enterprise)
+            ->post(route('offres.store'), $payload);
+
+        $response
+            ->assertRedirect(route('offres.publies'))
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseHas('offres', [
+            'entreprise_id' => $enterprise->entreprise->id,
+            'titre' => 'Analyste QA Laravel',
+            'status' => 'active',
+        ]);
+        $this->assertDatabaseCount('offre_diplome', 0);
+        Queue::assertPushed(AutoMatchingJob::class);
+    }
+
     public function test_enterprise_offer_validation_errors_are_returned(): void
     {
         $enterprise = $this->createEnterprise();

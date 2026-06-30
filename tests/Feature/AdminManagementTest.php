@@ -155,6 +155,35 @@ class AdminManagementTest extends TestCase
             ->assertSee('Paramètres');
     }
 
+    public function test_legacy_short_admin_paths_redirect_to_the_refactored_admin_pages(): void
+    {
+        $admin = $this->createAdmin();
+
+        $this->actingAs($admin)
+            ->get('/admin/utilisateurs')
+            ->assertRedirect(route('admin.users'));
+
+        $this->actingAs($admin)
+            ->get('/admin/offres')
+            ->assertRedirect(route('admin.offres'));
+
+        $this->actingAs($admin)
+            ->get('/admin/abonnements')
+            ->assertRedirect(route('admin.abonnements'));
+
+        $this->actingAs($admin)
+            ->get('/admin/statistiques')
+            ->assertRedirect(route('admin.statistiques'));
+
+        $this->actingAs($admin)
+            ->get('/admin/newsletters')
+            ->assertRedirect(route('admin.newsletters'));
+
+        $this->actingAs($admin)
+            ->get('/admin/parametres')
+            ->assertRedirect(route('admin.parametres'));
+    }
+
     public function test_admin_can_update_global_site_settings_and_files(): void
     {
         Storage::fake('public');
@@ -187,6 +216,99 @@ class AdminManagementTest extends TestCase
         $this->assertSame(12, $settings->map_zoom);
         Storage::disk('public')->assertExists($settings->logo);
         Storage::disk('public')->assertExists($settings->favicon);
+    }
+
+    public function test_admin_can_create_a_candidate_account(): void
+    {
+        $admin = $this->createAdmin();
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.users.store'), [
+                'name' => 'Nadia',
+                'prenom' => 'Lopez',
+                'email' => 'nadia.lopez@example.com',
+                'password' => 'SecurePass123!',
+                'password_confirmation' => 'SecurePass123!',
+                'role' => 'candidat',
+                'telephone' => '+1 555 444 3333',
+                'adresse' => 'Montreal',
+            ])
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+                'message' => 'Utilisateur créé avec succès !',
+            ]);
+
+        $user = User::where('email', 'nadia.lopez@example.com')->first();
+
+        $this->assertNotNull($user);
+        $this->assertTrue($user->hasRole('candidat'));
+        $this->assertSame('Actif', $user->status);
+        $this->assertSame('+1 555 444 3333', $user->telephone);
+    }
+
+    public function test_admin_can_create_an_approved_enterprise_account(): void
+    {
+        $admin = $this->createAdmin();
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.users.store'), [
+                'name' => 'Sonia',
+                'prenom' => 'Baker',
+                'email' => 'sonia.baker@example.com',
+                'password' => 'SecurePass123!',
+                'password_confirmation' => 'SecurePass123!',
+                'role' => 'entreprise',
+                'company_name' => 'Northwind QA',
+                'neq' => '1234567890',
+                'website' => 'https://northwind.example.com',
+                'description' => 'Entreprise creee depuis l admin.',
+            ])
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+                'message' => 'Utilisateur créé avec succès !',
+            ]);
+
+        $user = User::where('email', 'sonia.baker@example.com')->first();
+
+        $this->assertNotNull($user);
+        $this->assertTrue($user->hasRole('entreprise'));
+        $this->assertDatabaseHas('entreprises', [
+            'user_id' => $user->id,
+            'company_name' => 'Northwind QA',
+            'neq' => '1234567890',
+            'website' => 'https://northwind.example.com',
+            'status' => 'approved',
+        ]);
+    }
+
+    public function test_admin_user_creation_returns_human_validation_errors(): void
+    {
+        $admin = $this->createAdmin();
+
+        $this->actingAs($admin)
+            ->postJson(route('admin.users.store'), [
+                'name' => '',
+                'prenom' => '',
+                'email' => 'not-an-email',
+                'password' => 'short',
+                'password_confirmation' => 'different',
+                'role' => 'entreprise',
+            ])
+            ->assertStatus(422)
+            ->assertJson([
+                'success' => false,
+                'message' => 'Erreur de validation',
+            ])
+            ->assertJsonValidationErrors([
+                'name',
+                'prenom',
+                'email',
+                'password',
+                'company_name',
+                'neq',
+            ]);
     }
 
     public function test_admin_can_suspend_reactivate_and_delete_a_user_with_password_confirmation(): void

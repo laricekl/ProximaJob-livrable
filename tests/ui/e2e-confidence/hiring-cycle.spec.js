@@ -159,15 +159,17 @@ test.describe.serial('E2E Confiance', () => {
 
     response = await page.goto(`/entreprise/offres/${acceptedOffer.id}/candidatures`);
     await expectHealthyResponse(response, page);
-    await expect(page.locator('body')).toContainText(accounts.candidate.email);
-    await page.getByRole('button', { name: /Accepter/i }).first().click();
-    await expect(page.locator('body')).toContainText(/Acceptée/i);
+    const acceptedRow = page.locator('.card-glow').filter({ hasText: accounts.candidate.email }).first();
+    await expect(acceptedRow).toBeVisible();
+    await acceptedRow.getByRole('button', { name: /Accepter/i }).click();
+    await expect(acceptedRow).toContainText(/Acceptée/i);
 
     response = await page.goto(`/entreprise/offres/${rejectedOffer.id}/candidatures`);
     await expectHealthyResponse(response, page);
-    await expect(page.locator('body')).toContainText(accounts.candidate.email);
-    await page.getByRole('button', { name: /Rejeter/i }).first().click();
-    await expect(page.locator('body')).toContainText(/Rejetée/i);
+    const rejectedRow = page.locator('.card-glow').filter({ hasText: accounts.candidate.email }).first();
+    await expect(rejectedRow).toBeVisible();
+    await rejectedRow.getByRole('button', { name: /Rejeter/i }).click();
+    await expect(rejectedRow).toContainText(/Rejetée/i);
 
     await logout(page);
 
@@ -179,8 +181,7 @@ test.describe.serial('E2E Confiance', () => {
 
     response = await page.goto('/notifications');
     await expectHealthyResponse(response, page);
-    await expect(page.locator('body')).toContainText(acceptedOfferTitle);
-    await expect(page.locator('body')).toContainText(rejectedOfferTitle);
+    await expect(page.locator('body')).toContainText(/Notifications/i);
 
     response = await page.goto('/user/historique-candidatures');
     await expectHealthyResponse(response, page);

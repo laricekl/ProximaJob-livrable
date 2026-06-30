@@ -75,6 +75,7 @@ Route::post('/set-language', function () {
 Route::get('/', [HomeController::class, 'index'])->name("welcome");
 Route::view('/terms', 'terms')->name('terms');
 Route::view('/policy', 'policy')->name('policy');
+Route::view('/cookies', 'cookies')->name('cookies.policy');
 
 
 // Routes de vérification d'email
@@ -220,6 +221,12 @@ Route::get('/notifications/unread-count', [NotificationController::class, 'unrea
 
 Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing'  ])->group(function() {
     Route::get("/",[AdminController::class, 'index'])->name("admin.dashboard");
+    Route::redirect('/utilisateurs', '/admin/Gestion/utilisateurs');
+    Route::redirect('/offres', '/admin/Gestion/offres');
+    Route::redirect('/abonnements', '/admin/Gestion/abonnements');
+    Route::redirect('/statistiques', '/admin/Gestion/statistiques');
+    Route::redirect('/newsletters', '/admin/Gestion/newsletters');
+    Route::redirect('/parametres', '/admin/Gestion/parametres');
     Route::get("/Gestion/utilisateurs",[AdminController::class, 'users'])->name("admin.users");
     Route::get("/Gestion/offres",[AdminController::class, 'offres'])->name("admin.offres");
     Route::get("/Gestion/abonnements",[AdminController::class, 'abonnements'])->name("admin.abonnements");
@@ -247,21 +254,12 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
     Route::patch('/offres/{id}/deactivate', [AdminController::class, 'deactivateOffer'])->name('offres.deactivate');
     Route::patch('/offres/{id}/reactivate', [AdminController::class, 'reactivateOffer'])->name('offres.reactivate');
 
-    Route::get('/{abonnement}', [AdminController::class, 'showAbonnement'])->name('admin.abonnements.show');
-    Route::get('/{abonnement}/export', [AdminController::class, 'export'])->name('admin.abonnements.export');
-
-
-
-    Route::get('/parametres', [ParametresController::class, 'parametres'])->name('parametres');
-
     // Routes pour la gestion des paramètres généraux
     Route::post('/parametres/general', [AdminController::class, 'updateGeneral'])->name('parametres.update-general');
     Route::delete('/parametres/remove-logo', [AdminController::class, 'removeLogo'])->name('parametres.remove-logo');
     Route::delete('/parametres/remove-favicon', [AdminController::class, 'removeFavicon'])->name('parametres.remove-favicon');
 
     Route::get('/users-details/{user}', [AdminController::class, 'show'])->name('admin.users.show');
-    Route::put('/users/{user}/status', [AdminController::class, 'updateStatus'])->name('admin.users.updateStatus');
-    Route::put('/users/{user}/entreprise-status', [AdminController::class, 'updateEntrepriseStatus'])->name('admin.users.updateEntrepriseStatus');
     Route::post('entreprises/validate', [AdminController::class, 'validateEntreprise']) ->name('entreprises.validate');
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'adminmarkAsRead'])->name('admin.notifications.read');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('admin.allnotifications.read');

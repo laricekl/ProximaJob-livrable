@@ -63,6 +63,7 @@ class NavigationLinksTest extends TestCase
         $response->assertSee('href="'.route('ressources').'"', false);
         $response->assertSee('href="'.route('abonnement').'"', false);
         $response->assertSee('href="'.route('contact').'"', false);
+        $response->assertSee('href="'.route('cookies.policy').'"', false);
         $response->assertSee('href="'.route('login').'"', false);
         $response->assertSee('href="'.route('register').'"', false);
     }
@@ -92,7 +93,8 @@ class NavigationLinksTest extends TestCase
             ->assertSee('href="'.route('notifications.index').'"', false)
             ->assertSee('href="'.route('user.profil-public').'"', false)
             ->assertSee('href="'.route('profile.edit').'"', false)
-            ->assertSee('href="'.route('user.bonnement').'"', false);
+            ->assertSee('href="'.route('user.bonnement').'"', false)
+            ->assertSee(route('cookies.policy'), false);
     }
 
     public function test_enterprise_navigation_renders_expected_links(): void
@@ -106,7 +108,9 @@ class NavigationLinksTest extends TestCase
             ->assertSee('href="'.route('entreprise.historique').'"', false)
             ->assertSee('href="'.route('entreprise.candidatures_ia').'"', false)
             ->assertSee('href="'.route('entreprise.promotion').'"', false)
-            ->assertSee('href="'.route('entreprise.abonnements').'"', false);
+            ->assertSee('href="'.route('entreprise.abonnements').'"', false)
+            ->assertSee(route('cookies.policy'), false)
+            ->assertDontSee('aria-label="Notifications"', false);
     }
 
     public function test_admin_navigation_renders_expected_links(): void
@@ -122,6 +126,7 @@ class NavigationLinksTest extends TestCase
             ->assertSee('href="'.route('admin.abonnements').'"', false)
             ->assertSee('href="'.route('admin.statistiques').'"', false)
             ->assertSee('href="'.route('admin.newsletters').'"', false)
-            ->assertSee('href="'.route('admin.parametres').'"', false);
+            ->assertSee('href="'.route('admin.parametres').'"', false)
+            ->assertSee('href="'.route('cookies.policy').'"', false);
     }
 }

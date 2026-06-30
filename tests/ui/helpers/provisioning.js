@@ -1,5 +1,8 @@
 import { execFileSync } from 'node:child_process';
+import path from 'node:path';
 import { expect } from '@playwright/test';
+
+const localSqliteDatabase = path.resolve(process.cwd(), 'storage/database.sqlite');
 
 function runLaravelExpression(expression) {
   const bootstrap = [
@@ -12,6 +15,15 @@ function runLaravelExpression(expression) {
   return execFileSync('php', ['-r', bootstrap], {
     cwd: process.cwd(),
     encoding: 'utf8',
+    env: {
+      ...process.env,
+      DB_CONNECTION: process.env.DB_CONNECTION || 'sqlite',
+      DB_DATABASE: process.env.DB_DATABASE || localSqliteDatabase,
+      DB_HOST: process.env.DB_HOST || '',
+      DB_PORT: process.env.DB_PORT || '',
+      DB_USERNAME: process.env.DB_USERNAME || '',
+      DB_PASSWORD: process.env.DB_PASSWORD || '',
+    },
   }).trim();
 }
 
@@ -167,5 +179,23 @@ export function getPostulationStatusFor(email, offerTitle) {
     echo App\\Models\\Postulation::where('user_id', $user->id)
       ->where('offre_id', $offer->id)
       ->value('status') ?? '';
+  `);
+}
+
+export function getNotificationMessagesFor(email) {
+  const safeEmail = escapePhpString(email);
+
+  return runLaravelExpression(`
+    $user = App\\Models\\User::where('email', '${safeEmail}')->first();
+    if (!$user) {
+      echo '';
+      return;
+    }
+    echo App\\Models\\Notification::where('user_id', $user->id)
+      ->latest('id')
+      ->limit(10)
+      ->get()
+      ->map(fn ($notification) => ($notification->title ?? '') . ' ' . ($notification->message ?? ''))
+      ->implode(\"\\n\");
   `);
 }

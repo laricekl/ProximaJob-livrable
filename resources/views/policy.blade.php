@@ -34,7 +34,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">5. Cookies</h2>
-            <p>Nous utilisons des cookies essentiels au fonctionnement du site et des cookies analytiques pour mesurer l'audience. Vous pouvez gérer vos préférences via les paramètres de votre navigateur.</p>
+            <p>Nous utilisons des cookies essentiels au fonctionnement du site et, si vous y consentez, des cookies analytiques, de préférences et de marketing. Vous pouvez gérer vos choix depuis notre <a href="{{ route('cookies.policy') }}" class="text-secondary-container font-semibold hover:underline">politique cookies</a> et le panneau de consentement disponible sur le site.</p>
           </div>
 
           <div>

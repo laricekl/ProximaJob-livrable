@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ProximaJob - Mes CV</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #dde1e6;
+      --paper: rgba(255,255,255,.82);
+      --paper-strong: rgba(255,255,255,.92);
+      --line: rgba(15,23,42,.08);
+      --text: #1f2937;
+      --muted: #667085;
+      --accent: #eb843c;
+      --accent-dark: #d26f2d;
+      --ink: #1d2435;
+      --shadow: 0 24px 60px rgba(15,23,42,.10);
+      --soft-shadow: 0 14px 34px rgba(15,23,42,.07);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(235,132,60,.14), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(53,95,163,.08), transparent 22%),
+        var(--bg);
+      min-height: 100vh;
+    }
+
+    .page {
+      width: min(1240px, calc(100vw - 28px));
+      margin: 0 auto;
+      padding: 28px 0 70px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 18px;
+      background: rgba(255,255,255,.84);
+      border: 1px solid rgba(255,255,255,.48);
+      border-radius: 999px;
+      box-shadow: var(--soft-shadow);
+      backdrop-filter: blur(18px);
+      margin-bottom: 24px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-weight: 800;
+      letter-spacing: -.02em;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 38px;
+      height: 38px;
+      display: block;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 26px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .nav-links span.active {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 22px;
+      margin-bottom: 24px;
+    }
+
+    .hero-main, .hero-side, .panel, .cv-card, .empty-card {
+      background: var(--paper);
+      border: 1px solid rgba(255,255,255,.52);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero-main {
+      border-radius: 34px;
+      padding: 30px;
+      background:
+        radial-gradient(circle at top left, rgba(235,132,60,.14), transparent 30%),
+        linear-gradient(180deg, rgba(255,255,255,.9), rgba(255,255,255,.76));
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.84);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 18px 0 12px;
+      font-family: "Noto Serif", serif;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 1.02;
+      color: var(--ink);
+      letter-spacing: -.03em;
+    }
+
+    .hero-main p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.65;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #f29a56);
+      color: #fff;
+      box-shadow: 0 18px 36px rgba(235,132,60,.24);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,.9);
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    .hero-meta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .hero-side {
+      border-radius: 30px;
+      padding: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+    }
+
+    .hero-side h2 {
+      margin: 0 0 10px;
+      font-size: 26px;
+      line-height: 1.12;
+      color: var(--ink);
+    }
+
+    .hero-side p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .upload-box {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px dashed rgba(15,23,42,.14);
+      border-radius: 22px;
+      background: rgba(255,255,255,.82);
+    }
+
+    .upload-box strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 15px;
+    }
+
+    .upload-actions {
+      margin-top: 16px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .toolbar h3 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--ink);
+    }
+
+    .toolbar p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .cv-card {
+      border-radius: 28px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+    }
+
+    .cv-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .cv-type {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(235,132,60,.12);
+      color: var(--accent-dark);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .cv-status {
+      font-size: 12px;
+      font-weight: 700;
+      color: #3f7c52;
+      background: rgba(63,124,82,.10);
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
+
+    .cv-preview {
+      aspect-ratio: 0.75;
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, rgba(248,250,252,.94), rgba(255,255,255,.86)),
+        #fff;
+      border: 1px solid rgba(15,23,42,.07);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+      padding: 18px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .page-line {
+      border-radius: 999px;
+      background: rgba(148,163,184,.18);
+      margin-bottom: 12px;
+    }
+
+    .page-line.title { height: 18px; width: 64%; background: rgba(29,36,53,.14); }
+    .page-line.short { height: 10px; width: 44%; }
+    .page-line.long { height: 10px; width: 88%; }
+    .page-line.mid { height: 10px; width: 72%; }
+
+    .preview-section {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(15,23,42,.06);
+    }
+
+    .preview-badge {
+      width: 84px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(235,132,60,.18);
+      margin-bottom: 12px;
+    }
+
+    .cv-info {
+      margin-top: 16px;
+    }
+
+    .cv-info h4 {
+      margin: 0;
+      font-size: 20px;
+      color: var(--ink);
+      letter-spacing: -.02em;
+    }
+
+    .cv-info p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .cv-footer {
+      margin-top: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .cv-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cv-links a {
+      color: var(--accent-dark);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .side-panel {
+      display: grid;
+      gap: 16px;
+    }
+
+    .panel {
+      border-radius: 26px;
+      padding: 20px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+    }
+
+    .panel h4 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: var(--ink);
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .mini-list {
+      margin-top: 14px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-item {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.84);
+      border: 1px solid var(--line);
+    }
+
+    .mini-item strong {
+      display: block;
+      color: var(--ink);
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .mini-item span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .empty-card {
+      border-radius: 28px;
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.8)),
+        radial-gradient(circle at top right, rgba(235,132,60,.08), transparent 24%);
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .empty-card h4 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      color: var(--ink);
+    }
+
+    .empty-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1040px) {
+      .hero, .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100vw - 18px, 1240px);
+        padding: 18px 0 44px;
+      }
+
+      .nav {
+        border-radius: 26px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        gap: 14px;
+      }
+
+      .hero-main, .hero-side, .cv-card, .panel, .empty-card {
+        border-radius: 24px;
+      }
+
+      .hero-main {
+        padding: 22px;
+      }
+
+      .toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="nav">
+      <a class="brand" href="#">
+        <img src="/logo.png" alt="ProximaJob">
+        <span>ProximaJob</span>
+      </a>
+      <div class="nav-links">
+        <span>Tableau de bord</span>
+        <span>Offres</span>
+        <span>Candidatures</span>
+        <span class="active">Mes CV</span>
+      </div>
+    </div>
+
+    <section class="hero">
+      <article class="hero-main">
+        <span class="eyebrow">Mes CV</span>
+        <h1>Un espace clair pour créer, importer et gérer toutes vos versions.</h1>
+        <p>
+          Retrouvez vos CV générés, dupliquez-les pour une nouvelle candidature, importez un document existant
+          ou créez une nouvelle base à personnaliser pour un poste précis.
+        </p>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#">Créer un CV</a>
+          <a class="btn btn-secondary" href="#">Importer un CV</a>
+          <a class="btn btn-secondary" href="#">Personnaliser pour une offre</a>
+        </div>
+
+        <div class="hero-meta">
+          <span class="chip">4 CV actifs</span>
+          <span class="chip">2 versions personnalisées</span>
+          <span class="chip">1 brouillon à compléter</span>
+        </div>
+      </article>
+
+      <aside class="hero-side">
+        <h2>Import rapide</h2>
+        <p>Déposez un CV existant pour le retrouver ici avec un aperçu, puis ajustez-le ou utilisez-le comme base de travail.</p>
+        <div class="upload-box">
+          <strong>PDF, DOC ou DOCX jusqu’à 5 Mo</strong>
+          <p>Le document rejoint directement votre bibliothèque de CV.</p>
+          <div class="upload-actions">
+            <a class="btn btn-secondary" href="#">Choisir un fichier</a>
+            <a class="btn btn-primary" href="#">Importer</a>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <div class="toolbar">
+      <div>
+        <h3>Bibliothèque CV</h3>
+        <p>Vos versions récentes, personnalisées et prêtes à l’emploi.</p>
+      </div>
+      <div class="toolbar-actions">
+        <a class="btn btn-secondary" href="#">Tous</a>
+        <a class="btn btn-secondary" href="#">Personnalisés</a>
+        <a class="btn btn-secondary" href="#">Brouillons</a>
+      </div>
+    </div>
+
+    <section class="layout">
+      <div class="grid">
+        <article class="cv-card">
+          <div class="cv-card-top">
+            <span class="cv-type">Base principale</span>
+            <span class="cv-status">À jour</span>
+          </div>
+          <div class="cv-preview">
+            <div class="page-line title"></div>
+            <div class="page-line short"></div>
+            <div class="page-line long"></div>
+            <div class="page-line mid"></div>
+            <div class="preview-section">
+              <div class="preview-badge"></div>
+              <div class="page-line long"></div>
+              <div class="page-line long"></div>
+              <div class="page-line mid"></div>
+            </div>
+            <div class="preview-section">
+              <div class="preview-badge"></div>
+              <div class="page-line long"></div>
+              <div class="page-line mid"></div>
+            </div>
+          </div>
+          <div class="cv-info">
+            <h4>CV général</h4>
+            <p>Votre version de base, utilisée pour générer ou adapter de nouvelles versions.</p>
+          </div>
+          <div class="cv-footer">
+            <span>Mis à jour il y a 2 jours</span>
+            <div class="cv-links">
+              <a href="#">Voir</a>
+              <a href="#">Éditer</a>
+              <a href="#">Dupliquer</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cv-card">
+          <div class="cv-card-top">
+            <span class="cv-type">Personnalisé</span>
+            <span class="cv-status">Prêt à envoyer</span>
+          </div>
+          <div class="cv-preview">
+            <div class="page-line title" style="width:58%"></div>
+            <div class="page-line short" style="width:38%"></div>
+            <div class="page-line long"></div>
+            <div class="page-line long"></div>
+            <div class="preview-section">
+              <div class="preview-badge" style="width:110px"></div>
+              <div class="page-line long"></div>
+              <div class="page-line mid"></div>
+              <div class="page-line long"></div>
+            </div>
+            <div class="preview-section">
+              <div class="preview-badge" style="width:96px"></div>
+              <div class="page-line mid"></div>
+              <div class="page-line short"></div>
+            </div>
+          </div>
+          <div class="cv-info">
+            <h4>CV Marketing senior</h4>
+            <p>Version adaptée pour un poste de marketing numérique, avec expériences et compétences recentrées.</p>
+          </div>
+          <div class="cv-footer">
+            <span>Personnalisé pour une offre</span>
+            <div class="cv-links">
+              <a href="#">Voir</a>
+              <a href="#">Télécharger</a>
+              <a href="#">Repartir de cette base</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="cv-card">
+          <div class="cv-card-top">
+            <span class="cv-type">Brouillon</span>
+            <span class="cv-status" style="color:#8a5a2f;background:rgba(235,132,60,.12)">À compléter</span>
+          </div>
+          <div class="cv-preview">
+            <div class="page-line title" style="width:52%"></div>
+            <div class="page-line short" style="width:34%"></div>
+            <div class="preview-section">
+              <div class="preview-badge" style="width:72px"></div>
+              <div class="page-line mid"></div>
+              <div class="page-line short"></div>
+            </div>
+            <div class="preview-section">
+              <div class="preview-badge" style="width:104px"></div>
+              <div class="page-line long"></div>
+              <div class="page-line mid"></div>
+            </div>
+          </div>
+          <div class="cv-info">
+            <h4>CV administratif</h4>
+            <p>Une base commencée pour vos candidatures administratives, encore à enrichir sur l’expérience.</p>
+          </div>
+          <div class="cv-footer">
+            <span>Dernière édition aujourd’hui</span>
+            <div class="cv-links">
+              <a href="#">Continuer</a>
+              <a href="#">Supprimer</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="empty-card">
+          <div>
+            <h4>Créer une nouvelle version</h4>
+            <p>Partez d’une page blanche, d’un CV existant ou d’une base générale pour un nouveau poste.</p>
+          </div>
+          <div class="hero-actions" style="margin-top:18px">
+            <a class="btn btn-primary" href="#">Nouveau CV</a>
+            <a class="btn btn-secondary" href="#">Dupliquer un CV</a>
+          </div>
+        </article>
+      </div>
+
+      <aside class="side-panel">
+        <article class="panel">
+          <h4>Actions rapides</h4>
+          <p>Les raccourcis utiles pour avancer sans chercher dans les menus.</p>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>Prévisualiser</strong>
+              <span>Voir la version plein écran d’un CV avant envoi.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Dupliquer</strong>
+              <span>Créer une nouvelle variante à partir d’une base existante.</span>
+            </div>
+            <div class="mini-item">
+              <strong>Personnaliser</strong>
+              <span>Adapter rapidement un CV à une offre précise.</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <h4>Dernières activités</h4>
+          <div class="mini-list">
+            <div class="mini-item">
+              <strong>CV Marketing senior</strong>
+              <span>Personnalisé hier pour une offre “Responsable acquisition”.</span>
+            </div>
+            <div class="mini-item">
+              <strong>CV général</strong>
+              <span>Mis à jour avec une nouvelle expérience et une compétence.</span>
+            </div>
+          </div>
+        </article>
+      </aside>
+    </section>
+  </main>
+</body>
+</html>

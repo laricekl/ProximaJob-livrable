@@ -903,15 +903,42 @@ select[readonly] {
     // Rendre currentStep accessible globalement
     window.currentStep = currentStep;
 
+    function resolveBootstrapModal(modalElement) {
+        if (window.bootstrap?.Modal) {
+            return window.bootstrap.Modal.getInstance(modalElement) || new window.bootstrap.Modal(modalElement);
+        }
+
+        return null;
+    }
+
+    function openFallbackModal(modalElement) {
+        modalElement.style.display = 'block';
+        modalElement.classList.add('show');
+        modalElement.removeAttribute('aria-hidden');
+        document.body.classList.add('modal-open');
+    }
+
+    function closeFallbackModal(modalElement) {
+        modalElement.classList.remove('show');
+        modalElement.style.display = 'none';
+        modalElement.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+    }
+
     // Ouvrir le modal de candidature
     function openApplicationModal(offreId = null) {
         const modalElement = document.getElementById('applicationModal');
-        const modal = new bootstrap.Modal(modalElement);
+        const modal = resolveBootstrapModal(modalElement);
         const resolvedOffreId = offreId || modalElement.dataset.defaultOffreId || '';
 
         resetForm();
         document.getElementById('offre_id').value = resolvedOffreId;
-        modal.show();
+
+        if (modal) {
+            modal.show();
+        } else {
+            openFallbackModal(modalElement);
+        }
     }
 
 
@@ -1291,9 +1318,12 @@ async function submitApplication() {
 }
     // Afficher la modal de succès
     function showSuccessModal() {
-        const applicationModal = bootstrap.Modal.getInstance(document.getElementById('applicationModal'));
+        const applicationModalElement = document.getElementById('applicationModal');
+        const applicationModal = resolveBootstrapModal(applicationModalElement);
         if (applicationModal) {
             applicationModal.hide();
+        } else {
+            closeFallbackModal(applicationModalElement);
         }
 
         setTimeout(() => {

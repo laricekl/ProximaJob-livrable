@@ -23,6 +23,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\EntrepriseValidated;
+use Illuminate\Validation\ValidationException;
+use Throwable;
 
 
 class AdminController extends Controller
@@ -856,9 +858,10 @@ public function abonnements(Request $request)
                     'user_id' => $user->id,
                     'company_name' => $validatedData['company_name'],
                     'neq' => $validatedData['neq'],
-                    'rccm' => $validatedData['rccm'] ?? null,
                     'website' => $validatedData['website'] ?? null,
                     'description' => $validatedData['description'] ?? null,
+                    'status' => 'approved',
+                    'verified_at' => now(),
                 ];
 
                 // Gérer le logo
@@ -895,7 +898,7 @@ public function abonnements(Request $request)
                 'errors' => $e->errors()
             ], 422);
             
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             return response()->json([
                 'success' => false,

@@ -351,12 +351,24 @@ class CandidateActionsTest extends TestCase
         $this->actingAs($candidate)
             ->get(route('cv.personalization.preview', ['filename' => $filename]))
             ->assertOk()
-            ->assertSee($filename);
+            ->assertSee($filename)
+            ->assertDontSee('Jean Dupont')
+            ->assertDontSee('TechCorp');
 
         $this->actingAs($candidate)
             ->get(route('cv.personalization.download', ['filename' => $filename]))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_candidate_without_cv_profile_is_redirected_to_builder_before_cv_personalization(): void
+    {
+        $candidate = $this->createCandidate();
+
+        $this->actingAs($candidate)
+            ->get(route('cv.personalization.form'))
+            ->assertRedirect(route('infos.cv'))
+            ->assertSessionHas('error', 'Veuillez compléter votre CV dans le builder avant de le personnaliser.');
     }
 
     public function test_candidate_profile_rejects_invalid_sector_skill_and_salary_values(): void

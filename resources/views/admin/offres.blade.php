@@ -115,7 +115,7 @@
         <span class="text-outline">
           {{ $offers->firstItem() ?? 0 }}-{{ $offers->lastItem() ?? 0 }} sur {{ $offers->total() }} offres
         </span>
-        {{ $offers->links() }}
+        {{ $offers->withQueryString()->links('components.pagination.admin-pagination') }}
       </div>
     </div>
   </div>

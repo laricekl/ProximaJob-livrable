@@ -28,8 +28,8 @@ class CvPersonalizationController extends Controller
         $cvProfile = CvProfile::where('user_id', $user->id)->first();
 
         if (!$cvProfile) {
-            return redirect()->route('profile.edit')
-                ->with('error', 'Veuillez compléter votre profil CV avant de personnaliser.');
+            return redirect()->route('infos.cv')
+                ->with('error', 'Veuillez compléter votre CV dans le builder avant de le personnaliser.');
         }
 
         // Récupérer les offres récentes pour suggestions

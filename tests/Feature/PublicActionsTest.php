@@ -16,7 +16,7 @@ class PublicActionsTest extends TestCase
     {
         $this->createOfferFor();
 
-        foreach (['/', '/offres', '/contact', '/ressources', '/abonnement', '/terms', '/policy'] as $path) {
+        foreach (['/', '/offres', '/contact', '/ressources', '/abonnement', '/terms', '/policy', '/cookies'] as $path) {
             $this->get($path)
                 ->assertOk()
                 ->assertDontSee('Page Expired');
@@ -89,6 +89,19 @@ class PublicActionsTest extends TestCase
 
         $this->assertSame(1, substr_count($content, 'aria-label="Pagination des offres"'));
         $this->assertGreaterThanOrEqual(3, substr_count($content, 'data-pagination-control'));
+    }
+
+    public function test_cookie_consent_banner_and_policy_link_are_rendered_on_public_pages(): void
+    {
+        $response = $this->get('/');
+
+        $response->assertOk()
+            ->assertSee('Vos préférences de confidentialité')
+            ->assertSee('Tout accepter')
+            ->assertSee('Refuser')
+            ->assertSee('Personnaliser')
+            ->assertSee(route('cookies.policy'), false)
+            ->assertSee('Gérer les cookies');
     }
 
     public function test_language_can_be_changed_from_public_area(): void

@@ -12,6 +12,7 @@
   </main>
 
   @include('partials.footer')
+  @include('partials.cookie-consent')
 
   @yield('scripts')
 </body>

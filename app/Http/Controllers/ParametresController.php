@@ -15,7 +15,7 @@ class ParametresController extends Controller
      */
     public function index()
     {
-        return view("");
+        return redirect()->route('contact');
     }
     public function contact()
     {

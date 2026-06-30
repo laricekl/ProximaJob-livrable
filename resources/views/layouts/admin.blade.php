@@ -92,8 +92,9 @@
       <div class="max-w-5xl mx-auto py-6 px-4 md:px-10 flex flex-col sm:flex-row justify-between items-center gap-4">
         <span class="text-[11px] text-primary/30 font-medium">© {{ date('Y') }} {{ $siteSettings?->site_nom ?? 'ProximaJob' }}.</span>
         <nav class="flex items-center gap-6 text-[11px] uppercase tracking-widest text-primary/30 font-bold">
-          <a href="#" class="hover:text-secondary-container transition-colors">Confidentialité</a>
-          <a href="#" class="hover:text-secondary-container transition-colors">Conditions</a>
+          <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">Confidentialité</a>
+          <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">Cookies</a>
+          <a href="{{ route('terms') }}" class="hover:text-secondary-container transition-colors">Conditions</a>
         </nav>
       </div>
     </footer>
@@ -107,6 +108,7 @@
     document.getElementById('userBtn').addEventListener('click', () => document.getElementById('userDropdown').classList.toggle('active'));
     document.addEventListener('click', (e) => { if (!e.target.closest('#userBtn') && !e.target.closest('#userDropdown')) document.getElementById('userDropdown').classList.remove('active'); });
   </script>
+  @include('partials.cookie-consent')
   @yield('scripts')
 </body>
 </html>

@@ -9,6 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const fixturesDir = path.resolve(__dirname, '../fixtures');
+const localSqliteDatabase = path.resolve(process.cwd(), 'storage/database.sqlite');
 
 function runLaravelExpression(expression) {
   const bootstrap = [
@@ -21,6 +22,15 @@ function runLaravelExpression(expression) {
   return execFileSync('php', ['-r', bootstrap], {
     cwd: process.cwd(),
     encoding: 'utf8',
+    env: {
+      ...process.env,
+      DB_CONNECTION: process.env.DB_CONNECTION || 'sqlite',
+      DB_DATABASE: process.env.DB_DATABASE || localSqliteDatabase,
+      DB_HOST: process.env.DB_HOST || '',
+      DB_PORT: process.env.DB_PORT || '',
+      DB_USERNAME: process.env.DB_USERNAME || '',
+      DB_PASSWORD: process.env.DB_PASSWORD || '',
+    },
   }).trim();
 }
 

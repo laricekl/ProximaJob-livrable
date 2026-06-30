@@ -7,6 +7,7 @@
 
       <nav class="flex items-center gap-3 shrink min-w-0">
         <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">Confidentialite</a>
+        <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">Cookies</a>
         <a href="{{ route('terms') }}" class="hover:text-secondary-container transition-colors">Conditions</a>
         <a href="{{ route('contact') }}" class="hover:text-secondary-container transition-colors">Contact</a>
       </nav>

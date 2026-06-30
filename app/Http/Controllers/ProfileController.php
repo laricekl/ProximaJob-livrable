@@ -69,10 +69,11 @@ class ProfileController extends Controller
     // Validation des données
     $validator = Validator::make($request->all(), [
         'current_password' => ['required', 'string'],
-        'new_password' => ['required', 'confirmed' ],
+        'new_password' => ['required', 'string', 'min:8', 'confirmed' ],
     ], [
         'current_password.required' => 'Le mot de passe actuel est requis',
         'new_password.required' => 'Le nouveau mot de passe est requis',
+        'new_password.min' => 'Le nouveau mot de passe doit contenir au moins 8 caractères',
         'new_password.confirmed' => 'La confirmation du nouveau mot de passe ne correspond pas',
     ]);
 
