@@ -246,7 +246,7 @@
   <section class="cookie-consent-card px-4 py-3 md:px-4.5 md:py-3.5">
     <div class="cookie-consent-summary">
       <div class="cookie-summary-copy">
-        <p class="cookie-consent-kicker">Confidentialité</p>
+        <p class="cookie-consent-kicker">Vos préférences de confidentialité</p>
         <div class="cookie-consent-line cookie-mini-note text-xs leading-5 md:text-[13px]">
           <span class="cookie-consent-title">Cookies essentiels actifs</span>
           <span class="cookie-consent-separator" aria-hidden="true"></span>
@@ -259,13 +259,13 @@
 
       <div class="cookie-consent-actions flex flex-wrap items-center gap-2">
         <button type="button" data-cookie-action="toggle-preferences" class="rounded-full px-2 py-1 text-[12px] font-bold text-outline transition hover:text-secondary-container">
-          Réglages
+          Personnaliser
         </button>
         <button type="button" data-cookie-action="decline-all" class="rounded-full border border-outline-variant/30 bg-white/80 px-3 py-1.5 text-[12px] font-bold text-primary transition hover:bg-surface-container-low">
           Refuser
         </button>
         <button type="button" data-cookie-action="accept-all" class="rounded-full bg-secondary-container px-3 py-1.5 text-[12px] font-bold text-white transition hover:bg-secondary">
-          Accepter
+          Tout accepter
         </button>
         <button type="button" data-cookie-action="close-preferences" class="cookie-close-button h-8 w-8 items-center justify-center rounded-full border border-outline-variant/20 bg-white/85 text-outline transition hover:text-primary">
           <span class="material-symbols-outlined text-[16px]">close</span>

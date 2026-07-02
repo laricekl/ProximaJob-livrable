@@ -1,6 +1,11 @@
 @extends('layouts.candidat')
-@section('title', 'Mon CV')
+@section('title', 'CV')
 @section('content')
+  @php
+    $uploadedCvPath = auth()->user()?->cv;
+    $generatedCvs = $existingProfile?->cvGeneres ?? collect();
+    $hasAnyCvDocument = $existingProfile || $uploadedCvPath || $generatedCvs->isNotEmpty();
+  @endphp
   <main class="flex-grow pt-32 pb-16">
 
     <section class="py-8 px-4 md:px-10">
@@ -12,6 +17,100 @@
           <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-outline-variant/10 text-sm font-semibold text-secondary-container hover:bg-surface-container-low transition-colors">
             <span class="material-symbols-outlined text-lg">visibility</span> Previsualiser mon CV
           </a>
+        </div>
+
+        <div class="mb-6 rounded-2xl border border-outline-variant/10 bg-white p-5 md:p-6">
+          <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <h2 class="text-xl font-bold font-serif text-primary">Mes CV</h2>
+              <p class="text-sm text-on-surface-variant mt-1">Retrouvez ici votre CV principal, votre CV téléversé et vos versions générées.</p>
+            </div>
+            <div class="inline-flex items-center gap-2 rounded-full bg-surface-container-low px-3 py-1.5 text-xs font-semibold text-outline">
+              <span class="material-symbols-outlined text-base">folder_open</span>
+              {{ ($existingProfile ? 1 : 0) + ($uploadedCvPath ? 1 : 0) + $generatedCvs->count() }} document(s)
+            </div>
+          </div>
+
+          <div class="grid gap-4 mt-5 md:grid-cols-2 xl:grid-cols-3">
+            @if ($existingProfile)
+              <div class="rounded-2xl border border-outline-variant/10 bg-surface-container-low p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-secondary-container/10 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-secondary-container">description</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-primary">CV principal</p>
+                      <p class="text-xs text-on-surface-variant">Profil enregistré dans ProximaJob</p>
+                    </div>
+                  </div>
+                  <span class="text-[11px] font-semibold uppercase tracking-wide text-secondary-container">Actif</span>
+                </div>
+                <div class="mt-4 space-y-1">
+                  <p class="text-sm font-semibold text-primary">{{ trim(($existingProfile->prenom ?? '') . ' ' . ($existingProfile->nom ?? '')) ?: 'CV candidat' }}</p>
+                  <p class="text-xs text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
+                </div>
+              </div>
+            @endif
+
+            @if ($uploadedCvPath)
+              <div class="rounded-2xl border border-outline-variant/10 bg-surface-container-low p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-secondary-container/10 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-secondary-container">upload_file</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-primary">CV téléversé</p>
+                      <p class="text-xs text-on-surface-variant">Document source ajouté au compte</p>
+                    </div>
+                  </div>
+                  <a href="{{ asset($uploadedCvPath) }}" target="_blank" rel="noopener" class="text-xs font-semibold text-secondary-container hover:text-secondary">Ouvrir</a>
+                </div>
+                <div class="mt-4 space-y-1">
+                  <p class="text-sm font-semibold text-primary">{{ basename($uploadedCvPath) }}</p>
+                  <p class="text-xs text-on-surface-variant">Disponible pour vos candidatures.</p>
+                </div>
+              </div>
+            @endif
+
+            @forelse ($generatedCvs as $generatedCv)
+              <div class="rounded-2xl border border-outline-variant/10 bg-surface-container-low p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-secondary-container/10 flex items-center justify-center">
+                      <span class="material-symbols-outlined text-secondary-container">auto_awesome</span>
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-primary">CV généré</p>
+                      <p class="text-xs text-on-surface-variant">{{ $generatedCv->created_at?->format('d/m/Y') ?: 'Version personnalisée' }}</p>
+                    </div>
+                  </div>
+                  <a href="{{ $generatedCv->url_fichier }}" target="_blank" rel="noopener" class="text-xs font-semibold text-secondary-container hover:text-secondary">Voir</a>
+                </div>
+                <div class="mt-4 space-y-1">
+                  <p class="text-sm font-semibold text-primary">{{ $generatedCv->nom_fichier ?: basename($generatedCv->chemin_fichier) }}</p>
+                  <p class="text-xs text-on-surface-variant">Version issue de la personnalisation.</p>
+                </div>
+              </div>
+            @empty
+              @if (! $existingProfile && ! $uploadedCvPath)
+                <div class="rounded-2xl border border-dashed border-outline-variant/20 bg-surface-container-low p-5 md:col-span-2 xl:col-span-3">
+                  <p class="text-sm font-semibold text-primary">Aucun CV affichable pour le moment</p>
+                  <p class="text-xs text-on-surface-variant mt-1">Complétez votre CV ci-dessous ou générez une version personnalisée pour voir vos documents ici.</p>
+                </div>
+              @endif
+            @endforelse
+          </div>
+
+          @if ($hasAnyCvDocument)
+            <div class="mt-4 flex flex-wrap gap-3">
+              <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-secondary-container hover:text-secondary">
+                <span class="material-symbols-outlined text-lg">add_circle</span>
+                Créer un autre CV
+              </a>
+            </div>
+          @endif
         </div>
 
         <div class="flex flex-col md:flex-row gap-0 card-glow rounded-2xl overflow-hidden">

@@ -13,7 +13,7 @@
       <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.home') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.home') }}">Tableau de bord</a></li>
       <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('offres') }}">Offres</a></li>
       <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia', 'candidature.historique', 'candidature_ia.historique') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.historiques') }}">Candidatures</a></li>
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('infos.cv') }}">Mon CV</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('infos.cv') }}">CV</a></li>
     </ul>
     <div class="flex items-center gap-4 relative">
       <div class="hidden md:block">
@@ -52,7 +52,7 @@
       <a href="{{ route('offres') }}" class="text-lg font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary' : 'text-slate-500' }}">Offres</a>
       <a href="{{ route('user.historiques') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia', 'candidature.historique', 'candidature_ia.historique') ? 'text-primary' : 'text-slate-500' }}">Candidatures</a>
       <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-slate-500' }}">Profil public</a>
-      <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-slate-500' }}">Mon CV</a>
+      <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-slate-500' }}">CV</a>
       <a href="{{ route('notifications.index') }}" class="text-lg font-semibold {{ $isCandidateRoute('notifications.index') ? 'text-primary' : 'text-slate-500' }}">Notifications</a>
       <div class="flex items-center justify-between gap-4">
         <span class="text-xs font-black uppercase tracking-widest text-outline">Langue</span>

@@ -674,7 +674,8 @@ public function update(Request $request)
         'experiences',
         'langues',
         'perfectionnements',
-        'benevolats'
+        'benevolats',
+        'cvGeneres'
     ])->where('user_id', $userId)->first();
 
      
