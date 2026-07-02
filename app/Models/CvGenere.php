@@ -9,6 +9,8 @@ class CvGenere extends Model
 {
     use HasFactory;
 
+    public $timestamps = false;
+
     protected $fillable = [
         'cv_profile_id',
         'nom_fichier',
@@ -17,8 +19,6 @@ class CvGenere extends Model
 
     protected $casts = [
         'date_generation' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
     ];
 
     public function cvProfile()

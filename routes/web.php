@@ -156,6 +156,7 @@ Route::prefix('user')
     Route::get('/personnaliser-cv', [CvPersonalizationController::class, 'showForm'])->name('cv.personalization.form');
     Route::post('/generer-cv-personnalise', [CvPersonalizationController::class, 'generateCV'])->name('cv.personalization.generate');
     Route::get('/previsualiser-cv/{filename}', [CvPersonalizationController::class, 'previewCV'])->name('cv.personalization.preview');
+    Route::get('/afficher-cv/{filename}', [CvPersonalizationController::class, 'inlineCV'])->name('cv.personalization.inline');
     Route::get('/telecharger-cv/{filename}', [CvPersonalizationController::class, 'downloadCV'])->name('cv.personalization.download');
 
 
@@ -165,6 +166,10 @@ Route::prefix('user')
     Route::middleware(['auth'])->group(function () {
     Route::redirect('/cv/create', '/user/infos-cv')->name('cv.create');
     Route::post('/cv/store', [CvProfileController::class, 'store'])->name('cv.store');
+    Route::post('/cv/upload-source', [CvProfileController::class, 'uploadSourceCv'])->name('cv.upload-source');
+    Route::post('/cv/import-uploaded', [CvProfileController::class, 'importFromUploadedCv'])->name('cv.import-uploaded');
+    Route::get('/cv/principal/afficher', [CvProfileController::class, 'inlinePrincipalPdf'])->name('cv.principal.inline');
+    Route::get('/cv/principal/telecharger', [CvProfileController::class, 'downloadPrincipalPdf'])->name('cv.principal.download');
     Route::redirect('/cv/{id}', '/user/infos-cv')->name('cv.show');
     Route::redirect('/cv/{id}/edit', '/user/infos-cv')->name('cv.edit');
     Route::put('/cv/{id}/update', [CvProfileController::class, 'update'])->name('cv.update');

@@ -5,25 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV - {{ $cvProfile->prenom }} {{ $cvProfile->nom }}</title>
     <style>
+        @page {
+            margin: 16mm;
+            size: A4;
+        }
+
         body {
             font-family: 'Arial', sans-serif;
-            line-height: 1.6;
+            line-height: 1.4;
             color: #333;
             max-width: 210mm;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0;
             background: #fff;
+            font-size: 11pt;
         }
         .header {
             text-align: center;
             border-bottom: 3px solid #2c5aa0;
-            padding-bottom: 20px;
-            margin-bottom: 30px;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            page-break-inside: avoid;
         }
         .header h1 {
             color: #2c5aa0;
             margin: 0;
-            font-size: 28px;
+            font-size: 23px;
         }
         .header .contact {
             display: flex;
@@ -33,24 +40,26 @@
             flex-wrap: wrap;
         }
         .section {
-            margin-bottom: 25px;
+            margin-bottom: 15px;
+            page-break-inside: avoid;
         }
         .section h2 {
             color: #2c5aa0;
             border-bottom: 2px solid #eaeaea;
             padding-bottom: 5px;
-            margin-bottom: 15px;
-            font-size: 18px;
+            margin-bottom: 10px;
+            font-size: 15px;
         }
         .personalization-note {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 10px;
             border-left: 4px solid #2c5aa0;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             font-style: italic;
         }
         .experience-item, .formation-item {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
+            page-break-inside: avoid;
         }
         .item-header {
             display: flex;
@@ -67,9 +76,9 @@
         }
         .skill-tag {
             background: #e9ecef;
-            padding: 5px 12px;
+            padding: 4px 9px;
             border-radius: 15px;
-            font-size: 14px;
+            font-size: 11px;
         }
         .languages {
             display: flex;
@@ -92,6 +101,17 @@
     </style>
 </head>
 <body>
+    @php
+        $limitText = fn ($text, $limit = 360) => \Illuminate\Support\Str::limit((string) $text, $limit, '...');
+        $experiences = $cvProfile->experiences?->take(5) ?? collect();
+        $formations = $cvProfile->formations?->take(4) ?? collect();
+        $competencesSpecifiques = $cvProfile->competences?->where('type', 'specifique')->take(8) ?? collect();
+        $competencesGenerales = $cvProfile->competences?->where('type', 'generale')->take(8) ?? collect();
+        $perfectionnements = $cvProfile->perfectionnements?->take(4) ?? collect();
+        $langues = $cvProfile->langues?->take(5) ?? collect();
+        $benevolats = $cvProfile->benevolats?->take(3) ?? collect();
+    @endphp
+
     <!-- En-tête -->
     <div class="header">
         <h1>{{ $cvProfile->prenom }} {{ $cvProfile->nom }}</h1>
@@ -101,9 +121,6 @@
             @endif
             @if($cvProfile->telephone)
                 <span>📞 {{ $cvProfile->telephone }}</span>
-            @endif
-            @if($cvProfile->ville)
-                <span>📍 {{ $cvProfile->ville }}{{ $cvProfile->province ? ', ' . $cvProfile->province : '' }}</span>
             @endif
         </div>
     </div>
@@ -119,15 +136,15 @@
     @if($cvProfile->objectif_professionnel)
     <div class="section">
         <h2>Profil Professionnel</h2>
-        <p>{{ $cvProfile->objectif_professionnel }}</p>
+        <p>{{ $limitText($cvProfile->objectif_professionnel, 420) }}</p>
     </div>
     @endif
 
     <!-- Expériences professionnelles -->
-    @if($cvProfile->experiences && $cvProfile->experiences->count() > 0)
+    @if($experiences->isNotEmpty())
     <div class="section">
         <h2>Expériences Professionnelles</h2>
-        @foreach($cvProfile->experiences as $experience)
+        @foreach($experiences as $experience)
         <div class="experience-item">
             <div class="item-header">
                 <span>{{ $experience->poste }}</span>
@@ -135,7 +152,7 @@
             </div>
             <div class="company">{{ $experience->entreprise }}</div>
             @if($experience->description)
-            <p>{{ $experience->description }}</p>
+            <p>{{ $limitText($experience->description) }}</p>
             @endif
         </div>
         @endforeach
@@ -143,10 +160,10 @@
     @endif
 
     <!-- Formations -->
-    @if($cvProfile->formations && $cvProfile->formations->count() > 0)
+    @if($formations->isNotEmpty())
     <div class="section">
         <h2>Formation</h2>
-        @foreach($cvProfile->formations as $formation)
+        @foreach($formations as $formation)
         <div class="formation-item">
             <div class="item-header">
                 <span>{{ $formation->diplome }}</span>
@@ -166,24 +183,24 @@
         <h2>Compétences</h2>
         
         <!-- Compétences spécifiques -->
-        @if($cvProfile->competences->where('type', 'specifique')->count() > 0)
+        @if($competencesSpecifiques->isNotEmpty())
         <div style="margin-bottom: 15px;">
             <strong>Techniques :</strong>
             <div class="skills-list">
-                @foreach($cvProfile->competences->where('type', 'specifique') as $competence)
-                <span class="skill-tag">{{ $competence->description }}</span>
+                @foreach($competencesSpecifiques as $competence)
+                <span class="skill-tag">{{ $limitText($competence->description, 120) }}</span>
                 @endforeach
             </div>
         </div>
         @endif
 
         <!-- Compétences générales -->
-        @if($cvProfile->competences->where('type', 'generale')->count() > 0)
+        @if($competencesGenerales->isNotEmpty())
         <div style="margin-bottom: 15px;">
             <strong>Transversales :</strong>
             <div class="skills-list">
-                @foreach($cvProfile->competences->where('type', 'generale') as $competence)
-                <span class="skill-tag">{{ $competence->description }}</span>
+                @foreach($competencesGenerales as $competence)
+                <span class="skill-tag">{{ $limitText($competence->description, 120) }}</span>
                 @endforeach
             </div>
         </div>
@@ -203,11 +220,11 @@
     </div>
 
     <!-- Langues -->
-    @if($cvProfile->langues && $cvProfile->langues->count() > 0)
+    @if($langues->isNotEmpty())
     <div class="section">
         <h2>Langues</h2>
         <div class="languages">
-            @foreach($cvProfile->langues as $langue)
+            @foreach($langues as $langue)
             <div class="language-item">
                 <strong>{{ $langue->nom }}:</strong> 
                 <span>{{ $langue->niveau }}</span>
@@ -218,10 +235,10 @@
     @endif
 
     <!-- Certifications et perfectionnements -->
-    @if($cvProfile->perfectionnements && $cvProfile->perfectionnements->count() > 0)
+    @if($perfectionnements->isNotEmpty())
     <div class="section">
         <h2>Certifications & Perfectionnements</h2>
-        @foreach($cvProfile->perfectionnements as $perfectionnement)
+        @foreach($perfectionnements as $perfectionnement)
         <div class="experience-item">
             <div class="item-header">
                 <span>{{ $perfectionnement->formation }}</span>
@@ -234,10 +251,10 @@
     @endif
 
     <!-- Bénévolat -->
-    @if($cvProfile->benevolats && $cvProfile->benevolats->count() > 0)
+    @if($benevolats->isNotEmpty())
     <div class="section">
         <h2>Engagements & Bénévolat</h2>
-        @foreach($cvProfile->benevolats as $benevolat)
+        @foreach($benevolats as $benevolat)
         <div class="experience-item">
             <div class="item-header">
                 <span>{{ $benevolat->role }}</span>
@@ -245,16 +262,11 @@
             </div>
             <div class="company">{{ $benevolat->organisation }}</div>
             @if($benevolat->description)
-            <p>{{ $benevolat->description }}</p>
+            <p>{{ $limitText($benevolat->description) }}</p>
             @endif
         </div>
         @endforeach
     </div>
     @endif
-
-    <!-- Message de fallback -->
-    <div class="no-print" style="text-align: center; margin-top: 30px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 5px;">
-        <small>CV généré automatiquement - Version simplifiée</small>
-    </div>
 </body>
 </html>

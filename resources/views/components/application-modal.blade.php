@@ -1,8 +1,26 @@
 
 <style>
 /* Styles pour le modal de candidature */
+.application-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1050;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    padding: 24px 16px;
+    background: rgba(15, 23, 42, 0.58);
+}
+
+.application-modal.show {
+    display: flex !important;
+}
+
 .application-modal .modal-dialog {
     max-width: 800px;
+    width: 100%;
+    margin: auto;
 }
 
 .application-modal .modal-content {
@@ -568,8 +586,12 @@
 
 /* Modal Responsivité */
 @media (max-width: 768px) {
+    .application-modal {
+        padding: 10px;
+    }
+
     .application-modal .modal-dialog {
-        margin: 10px;
+        margin: 0;
     }
 
     .application-modal .form-header {
@@ -643,7 +665,7 @@ select[readonly] {
         <div class="modal-content">
             <!-- Header -->
             <div class="form-header">
-                <button class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="close-btn" data-bs-dismiss="modal" onclick="closeApplicationModal()" aria-label="Close">
                     <span class="material-symbols-outlined">close</span>
                 </button>
                 <h1 class="form-title">{{ __('interface.apply_now')}}</h1>
@@ -912,10 +934,11 @@ select[readonly] {
     }
 
     function openFallbackModal(modalElement) {
-        modalElement.style.display = 'block';
+        modalElement.style.display = 'flex';
         modalElement.classList.add('show');
         modalElement.removeAttribute('aria-hidden');
         document.body.classList.add('modal-open');
+        document.body.style.overflow = 'hidden';
     }
 
     function closeFallbackModal(modalElement) {
@@ -923,7 +946,31 @@ select[readonly] {
         modalElement.style.display = 'none';
         modalElement.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
+        document.body.style.overflow = 'auto';
     }
+
+    function closeApplicationModal() {
+        const modalElement = document.getElementById('applicationModal');
+        const modal = resolveBootstrapModal(modalElement);
+
+        if (modal) {
+            modal.hide();
+        } else {
+            closeFallbackModal(modalElement);
+        }
+    }
+
+    window.openCVGeneratorModal = function() {
+        const modalElement = document.getElementById('applicationModal');
+        const offerId = document.getElementById('offre_id')?.value || modalElement?.dataset.defaultOffreId || '';
+        const url = new URL('{{ route('cv.personalization.form') }}', window.location.origin);
+
+        if (offerId) {
+            url.searchParams.set('offre_id', offerId);
+        }
+
+        window.location.href = url.toString();
+    };
 
     // Ouvrir le modal de candidature
     function openApplicationModal(offreId = null) {

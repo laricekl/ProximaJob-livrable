@@ -336,6 +336,14 @@ class CandidateActionsTest extends TestCase
             'company_name' => 'Entreprise QA',
             'key_requirements' => 'Laravel, tests automatises, architecture propre',
             'template_style' => 'modern',
+            'accent_color' => 'green',
+            'font_style' => 'classic',
+            'density' => 'compact',
+            'section_order' => 'experience_first',
+            'page_limit' => 1,
+            'summary_tone' => 'direct',
+            'sections_present' => 1,
+            'sections' => ['software', 'languages'],
         ]);
 
         $response->assertRedirect();
@@ -345,6 +353,12 @@ class CandidateActionsTest extends TestCase
 
         $this->assertCount(1, $files);
         $this->assertStringEndsWith('.pdf', $files[0]);
+
+        $this->assertDatabaseHas('cv_generes', [
+            'cv_profile_id' => $candidate->cvProfile->id,
+            'nom_fichier' => 'CV adapte - Developpeuse Laravel - Entreprise QA',
+            'chemin_fichier' => $files[0],
+        ]);
 
         $filename = basename($files[0]);
 
@@ -356,9 +370,128 @@ class CandidateActionsTest extends TestCase
             ->assertDontSee('TechCorp');
 
         $this->actingAs($candidate)
+            ->get(route('cv.personalization.inline', ['filename' => $filename]))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+
+        $this->actingAs($candidate)
             ->get(route('cv.personalization.download', ['filename' => $filename]))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_candidate_cv_personalization_form_can_prefill_from_offer(): void
+    {
+        $candidate = $this->createCandidate();
+        $enterprise = $this->createEnterprise([], [
+            'company_name' => 'Atelier Produit Nord',
+        ]);
+        $offer = $this->createOfferFor($enterprise, [
+            'titre' => 'Analyste QA Produit',
+            'poste' => 'Analyste QA Produit',
+            'description' => 'Valider les parcours utilisateurs et documenter les anomalies prioritaires.',
+            'criteres' => 'Tests fonctionnels, communication, Jira',
+        ]);
+
+        CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('cv.personalization.form', ['offre_id' => $offer->id]))
+            ->assertOk()
+            ->assertSee('value="Analyste QA Produit"', false)
+            ->assertSee('value="Atelier Produit Nord"', false)
+            ->assertSee('Valider les parcours utilisateurs et documenter les anomalies prioritaires.')
+            ->assertSee('Tests fonctionnels, communication, Jira');
+    }
+
+    public function test_candidate_can_preview_and_download_principal_cv_pdf(): void
+    {
+        $candidate = $this->createCandidate([
+            'email' => 'principal-pdf@example.com',
+        ]);
+
+        $profile = CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+            'ville' => 'Montreal',
+            'logiciels' => 'Laravel, PHP, SQL',
+            'langues_competences' => 'Gestion de projets web, communication, analyse.',
+        ]);
+
+        CvExperience::create([
+            'cv_profile_id' => $profile->id,
+            'periode' => '2022 - Aujourd hui',
+            'poste' => 'Developpeuse full stack',
+            'entreprise' => 'Studio Horizon',
+            'description' => 'Conception et livraison de produits web.',
+            'ordre' => 0,
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('cv.principal.inline'))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+
+        $this->actingAs($candidate)
+            ->get(route('cv.principal.download'))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_candidate_cv_personalization_rejects_invalid_display_options(): void
+    {
+        $candidate = $this->createCandidate();
+
+        CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+        ]);
+
+        $this->actingAs($candidate)->from(route('cv.personalization.form'))->post(route('cv.personalization.generate'), [
+            'offer_title' => 'Developpeuse Laravel',
+            'offer_details' => 'Nous recherchons une developpeuse Laravel capable de livrer des interfaces fiables.',
+            'template_style' => 'creative',
+            'accent_color' => 'neon',
+            'page_limit' => 9,
+            'sections_present' => 1,
+            'sections' => ['salary'],
+        ])
+            ->assertRedirect(route('cv.personalization.form'))
+            ->assertSessionHasErrors(['template_style', 'accent_color', 'page_limit', 'sections.0']);
+    }
+
+    public function test_candidate_can_upload_source_cv_from_cv_builder(): void
+    {
+        $candidate = $this->createCandidate();
+
+        $response = $this->actingAs($candidate)->postJson(route('cv.upload-source'), [
+            'cv' => UploadedFile::fake()->create('source-cv.pdf', 64, 'application/pdf'),
+        ]);
+
+        $response
+            ->assertOk()
+            ->assertJson(['success' => true])
+            ->assertJsonPath('filename', fn ($filename) => str_starts_with($filename, 'cv_user_'.$candidate->id.'_'));
+
+        $candidate->refresh();
+
+        $this->assertNotNull($candidate->cv);
+        $this->assertStringStartsWith('assets/cvs/cv_user_'.$candidate->id.'_', $candidate->cv);
+        $this->assertFileExists(public_path($candidate->cv));
+
+        @unlink(public_path($candidate->cv));
     }
 
     public function test_candidate_without_cv_profile_is_redirected_to_builder_before_cv_personalization(): void

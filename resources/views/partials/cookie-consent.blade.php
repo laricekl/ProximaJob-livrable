@@ -11,13 +11,13 @@
 
     .cookie-consent-card {
       pointer-events: auto;
-      width: min(52rem, calc(100vw - 2rem));
+      width: min(64rem, calc(100vw - 2rem));
       margin: 0 auto;
       border: 1px solid rgba(15, 23, 42, 0.1);
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(18px);
       box-shadow: 0 14px 32px rgba(15, 23, 42, 0.1);
-      border-radius: 1.25rem;
+      border-radius: 999px;
     }
 
     .cookie-consent-shell.is-preferences-mode {
@@ -68,7 +68,9 @@
     }
 
     .cookie-summary-copy {
-      max-width: 27rem;
+      min-width: 0;
+      flex: 1 1 auto;
+      max-width: none;
     }
 
     .cookie-consent-hidden {
@@ -129,15 +131,17 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.9rem;
+      gap: 1rem;
+      min-width: 0;
     }
 
     .cookie-consent-actions {
+      flex: 0 0 auto;
       flex-wrap: nowrap;
     }
 
     .cookie-consent-kicker {
-      margin: 0 0 0.2rem;
+      margin: 0;
       color: rgba(100, 116, 139, 0.95);
       font-size: 0.68rem;
       font-weight: 800;
@@ -149,7 +153,9 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      flex-wrap: wrap;
+      min-width: 0;
+      overflow: hidden;
+      white-space: nowrap;
     }
 
     .cookie-consent-title {
@@ -167,7 +173,7 @@
 
     @media (max-width: 640px) {
       .cookie-consent-shell {
-        padding: 0 0.75rem 0.75rem;
+        padding: 0 0.5rem 0.5rem;
       }
 
       .cookie-consent-shell.is-preferences-mode {
@@ -181,41 +187,49 @@
       }
 
       .cookie-consent-card {
-        border-radius: 1.25rem;
+        border-radius: 999px;
         width: 100%;
       }
 
       .cookie-consent-summary {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.45rem;
         text-align: left;
       }
 
       .cookie-consent-line {
-        gap: 0.35rem;
+        gap: 0.25rem;
       }
 
       .cookie-summary-copy {
-        max-width: none;
         width: 100%;
       }
 
       .cookie-consent-actions {
-        width: 100%;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        width: auto;
+        flex-wrap: nowrap;
+        gap: 0.25rem;
+        justify-content: flex-end;
       }
 
       .cookie-consent-actions > button:not(.cookie-close-button) {
-        min-height: 2.35rem;
+        min-height: 2rem;
+        padding: 0.35rem 0.55rem;
+        font-size: 0.68rem;
         justify-content: center;
       }
 
       .cookie-consent-actions > button[data-cookie-action="toggle-preferences"] {
         border: 1px solid rgba(15, 23, 42, 0.08);
         background: rgba(255, 255, 255, 0.72);
-        padding-inline: 0.75rem;
+        padding-inline: 0.55rem;
+      }
+
+      .cookie-consent-separator,
+      .cookie-optional-note,
+      .cookie-policy-link {
+        display: none;
       }
 
       .cookie-consent-shell.is-preferences-mode .cookie-consent-summary {
@@ -263,21 +277,18 @@
   data-cookie-policy-url="{{ route('cookies.policy') }}"
   class="cookie-consent-shell cookie-consent-hidden"
 >
-  <section class="cookie-consent-card px-4 py-3 md:px-4.5 md:py-3.5">
+  <section class="cookie-consent-card px-3 py-2 md:px-4 md:py-2.5">
     <div class="cookie-consent-summary">
       <div class="cookie-summary-copy">
-        <p class="cookie-consent-kicker">
-          Confidentialité
+        <p class="cookie-accessible-only">
           <span class="cookie-accessible-only">Vos préférences de confidentialité</span>
         </p>
         <div class="cookie-consent-line cookie-mini-note text-xs leading-5 md:text-[13px]">
-          <span class="cookie-consent-title">Cookies essentiels actifs</span>
+          <span class="cookie-consent-title">Cookies</span>
           <span class="cookie-consent-separator" aria-hidden="true"></span>
-          <span>Audience, préférences et marketing en option.</span>
+          <span class="cookie-optional-note">Audience, préférences et marketing en option.</span>
+          <a href="{{ route('cookies.policy') }}" class="cookie-policy-link font-bold text-secondary-container hover:underline">Politique cookies</a>
         </div>
-        <p class="mt-1 text-[11px] font-medium text-outline md:text-xs">
-          <a href="{{ route('cookies.policy') }}" class="font-bold text-secondary-container hover:underline">Réglages et politique</a>
-        </p>
       </div>
 
       <div class="cookie-consent-actions flex flex-wrap items-center gap-2">
@@ -304,7 +315,7 @@
               <h3 class="text-sm font-bold text-primary">Cookies nécessaires</h3>
               <p class="mt-1 text-sm text-on-surface-variant">Connexion, sécurité, navigation, choix de langue et mémorisation de votre consentement.</p>
             </div>
-            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Toujours actifs</span>
+            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Actifs</span>
           </div>
         </article>
 

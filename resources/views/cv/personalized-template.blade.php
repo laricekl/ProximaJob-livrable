@@ -4,18 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CV - {{ $prenom }} {{ $nom }}</title>
+    @php
+        $options = array_merge([
+            'template_style' => 'modern',
+            'accent_color' => 'blue',
+            'font_style' => 'sober',
+            'density' => 'balanced',
+            'section_order' => 'skills_first',
+            'page_limit' => 2,
+            'sections' => ['software', 'languages', 'perfectionnements', 'benevolats'],
+        ], $cv_options ?? []);
+        $limits = array_merge([
+            'experiences' => 5,
+            'formations' => 4,
+            'competences' => 8,
+            'perfectionnements' => 4,
+            'langues' => 5,
+            'benevolats' => 3,
+        ], $cv_limits ?? []);
+        $accent = [
+            'blue' => '#2f5f8f',
+            'green' => '#2f7d5c',
+            'bordeaux' => '#8a334b',
+            'anthracite' => '#343a40',
+            'petrol' => '#28666e',
+        ][$options['accent_color']] ?? '#2f5f8f';
+        $fontFamily = [
+            'sober' => 'Arial, sans-serif',
+            'modern' => 'DejaVu Sans, Arial, sans-serif',
+            'classic' => 'Georgia, Times, serif',
+        ][$options['font_style']] ?? 'Arial, sans-serif';
+        $density = [
+            'airy' => ['font' => '11pt', 'line' => '1.48', 'section' => '18px', 'item' => '12px', 'margin' => '17mm'],
+            'balanced' => ['font' => '10.5pt', 'line' => '1.35', 'section' => '14px', 'item' => '9px', 'margin' => '15mm'],
+            'compact' => ['font' => '10pt', 'line' => '1.24', 'section' => '10px', 'item' => '7px', 'margin' => '13mm'],
+        ][$options['density']] ?? ['font' => '10.5pt', 'line' => '1.35', 'section' => '14px', 'item' => '9px', 'margin' => '15mm'];
+        $styleIsClassic = $options['template_style'] === 'classic';
+        $styleIsExecutive = $options['template_style'] === 'executive';
+    @endphp
     <style>
         @page {
-            margin: 15mm;
+            margin: {{ $density['margin'] }};
             size: A4;
         }
         
         body {
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
-            font-size: 11pt;
-            line-height: 1.4;
+            font-family: {{ $fontFamily }};
+            font-size: {{ $density['font'] }};
+            line-height: {{ $density['line'] }};
             color: #000;
         }
         
@@ -26,7 +64,9 @@
         
         .cv-header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: {{ $styleIsExecutive ? '24px' : '18px' }};
+            padding-bottom: {{ $styleIsClassic ? '0' : '10px' }};
+            border-bottom: {{ $styleIsClassic ? '0' : '2px solid '.$accent }};
             page-break-inside: avoid;
         }
         
@@ -36,6 +76,7 @@
             text-transform: uppercase;
             margin-bottom: 8px;
             letter-spacing: 1px;
+            color: {{ $styleIsClassic ? '#000' : $accent }};
         }
         
         .cv-contact {
@@ -52,23 +93,24 @@
         }
         
         .cv-section {
-            margin-bottom: 20px;
+            margin-bottom: {{ $density['section'] }};
             page-break-inside: avoid;
         }
         
         .cv-section-title {
             font-weight: bold;
             font-size: 12pt;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            border-bottom: 1px solid #000;
+            border-bottom: {{ $styleIsClassic ? '1px solid #000' : '1.5px solid '.$accent }};
             padding-bottom: 2px;
+            color: {{ $styleIsClassic ? '#000' : $accent }};
         }
         
         .cv-item {
             display: table;
             width: 100%;
-            margin-bottom: 12px;
+            margin-bottom: {{ $density['item'] }};
             page-break-inside: avoid;
         }
         
@@ -89,6 +131,7 @@
         .cv-job-title {
             font-weight: bold;
             margin-bottom: 2px;
+            color: {{ $styleIsExecutive ? '#111827' : '#000' }};
         }
         
         .cv-company {
@@ -123,23 +166,23 @@
     </style>
 </head>
 <body>
+    @php
+        $limitText = fn ($text, $limit = 360) => \Illuminate\Support\Str::limit((string) $text, $limit, '...');
+        $visibleSections = collect($options['sections'] ?? []);
+        $experiences = collect($experiences ?? [])->take((int) $limits['experiences']);
+        $formations = collect($formations ?? [])->take((int) $limits['formations']);
+        $competencesList = collect($competences ?? [])->take((int) $limits['competences']);
+        $perfectionnements = $visibleSections->contains('perfectionnements') ? collect($perfectionnements ?? [])->take((int) $limits['perfectionnements']) : collect();
+        $langues = $visibleSections->contains('languages') ? collect($langues ?? [])->take((int) $limits['langues']) : collect();
+        $benevolats = $visibleSections->contains('benevolats') ? collect($benevolats ?? [])->take((int) $limits['benevolats']) : collect();
+        $logiciels = $limitText($logiciels ?? '', 260);
+        $langues_competences = $limitText($langues_competences ?? '', 420);
+    @endphp
     <div class="cv-container">
         <!-- En-tête -->
         <div class="cv-header">
             <div class="cv-name">{{ strtoupper($nom ?? '') }} {{ strtoupper($prenom ?? '') }}</div>
             
-            @if(!empty($personalization_note))
-                <div class="personalization-note">{{ $personalization_note }}</div>
-            @endif
-            
-            @if(!empty($adresse))
-                <div class="cv-contact">{{ $adresse }}</div>
-            @endif
-            @if(!empty($ville) || !empty($province) || !empty($code_postal))
-                <div class="cv-contact">
-                    {{ $ville ?? '' }}{{ !empty($province) ? ' (' . $province . ')' : '' }}{{ !empty($code_postal) ? ' ' . $code_postal : '' }}
-                </div>
-            @endif
             @if(!empty($telephone))
                 <div class="cv-contact">{{ $telephone }}</div>
             @endif
@@ -148,50 +191,16 @@
             @endif
         </div>
 
-        <!-- Compétences en premier -->
-        @if(!empty($langues_competences) || !empty($logiciels) || (!empty($competences) && count($competences) > 0))
-            <div class="cv-section">
-                <div class="cv-section-title">COMPÉTENCES</div>
-                <div class="cv-competences-list">
-                    @if(!empty($langues_competences))
-                        <div class="cv-skills-section">• <strong>Langues :</strong> {{ $langues_competences }}</div>
-                    @endif
-                    @if(!empty($logiciels))
-                        <div class="cv-skills-section">• <strong>Logiciels :</strong> {{ $logiciels }}</div>
-                    @endif
-                    @if(!empty($competences) && count($competences) > 0)
-                        @foreach($competences as $competence)
-                            @if(!empty($competence['description']))
-                                <div class="cv-competence-item">• {!! nl2br(htmlspecialchars($competence['description'])) !!}</div>
-                            @endif
-                        @endforeach
-                    @endif
-                </div>
-            </div>
-        @endif
-
-        <!-- Expériences de travail -->
-        @if(!empty($experiences) && count($experiences) > 0)
-            <div class="cv-section">
-                <div class="cv-section-title">EXPÉRIENCES DE TRAVAIL</div>
-                @foreach($experiences as $experience)
-                    @if(!empty($experience['poste']))
-                        <div class="cv-item">
-                            <div class="cv-dates">{{ $experience['periode'] ?? '' }}</div>
-                            <div class="cv-content">
-                                <div class="cv-job-title">{{ $experience['poste'] }}</div>
-                                @if(!empty($experience['entreprise']))
-                                    <div class="cv-company">{{ $experience['entreprise'] }}</div>
-                                @endif
-                            </div>
-                        </div>
-                    @endif
-                @endforeach
-            </div>
+        @if($options['section_order'] === 'experience_first')
+            @include('cv.partials.personalized-experiences', ['experiences' => $experiences])
+            @include('cv.partials.personalized-skills', ['langues_competences' => $langues_competences, 'logiciels' => $logiciels, 'competencesList' => $competencesList, 'visibleSections' => $visibleSections, 'limitText' => $limitText])
+        @else
+            @include('cv.partials.personalized-skills', ['langues_competences' => $langues_competences, 'logiciels' => $logiciels, 'competencesList' => $competencesList, 'visibleSections' => $visibleSections, 'limitText' => $limitText])
+            @include('cv.partials.personalized-experiences', ['experiences' => $experiences])
         @endif
 
         <!-- Formation -->
-        @if(!empty($formations) && count($formations) > 0)
+        @if($formations->isNotEmpty())
             <div class="cv-section">
                 <div class="cv-section-title">FORMATION</div>
                 @foreach($formations as $formation)
@@ -211,7 +220,7 @@
         @endif
 
         <!-- Perfectionnement -->
-        @if(!empty($perfectionnements) && count($perfectionnements) > 0)
+        @if($perfectionnements->isNotEmpty())
             <div class="cv-section">
                 <div class="cv-section-title">PERFECTIONNEMENT</div>
                 @foreach($perfectionnements as $perfectionnement)
@@ -231,7 +240,7 @@
         @endif
 
         <!-- Langues -->
-        @if(!empty($langues) && count($langues) > 0)
+        @if($langues->isNotEmpty())
             <div class="cv-section">
                 <div class="cv-section-title">LANGUES</div>
                 <div class="cv-languages">
@@ -249,7 +258,7 @@
         @endif
 
         <!-- Activités bénévoles -->
-        @if(!empty($benevolats) && count($benevolats) > 0)
+        @if($benevolats->isNotEmpty())
             <div class="cv-section">
                 <div class="cv-section-title">ACTIVITÉS BÉNÉVOLES</div>
                 @foreach($benevolats as $benevolat)

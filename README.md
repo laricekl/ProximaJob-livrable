@@ -91,3 +91,15 @@ npm install && npm run dev
 
 php artisan serve
 ```
+
+### Identifiants de test locaux
+
+Apres `php artisan migrate --seed`, les comptes suivants peuvent servir aux tests manuels:
+
+| Role | Email | Mot de passe | Usage |
+|------|-------|--------------|-------|
+| Candidat | `test@example.com` | `password` | Parcours utilisateur candidat |
+| Admin | `admin@example.com` | `password` | Acces administration local |
+| Marketing | `marketing@example.com` | `password` | Verification du role marketing |
+
+Les donnees de demonstration ajoutent aussi des entreprises et des offres afin que les pages publiques, candidat et entreprise affichent du contenu reel.

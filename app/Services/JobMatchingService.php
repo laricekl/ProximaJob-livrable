@@ -10,6 +10,7 @@ use App\Models\CandidateSkill;
 use App\Models\JobOfferSkill;
 use App\Models\Postulation;
 use App\Models\CvProfile;
+use App\Models\CvGenere;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
 use Carbon\Carbon;
@@ -22,6 +23,16 @@ class JobMatchingService
 {
     private const MIN_MATCH_SCORE = 0;
     private const MAX_APPLICATIONS_PER_DAY = 3;
+    private const DEFAULT_CV_OPTIONS = [
+        'template_style' => 'modern',
+        'accent_color' => 'blue',
+        'font_style' => 'sober',
+        'density' => 'balanced',
+        'section_order' => 'skills_first',
+        'page_limit' => 2,
+        'summary_tone' => 'professional',
+        'sections' => ['software', 'languages', 'perfectionnements', 'benevolats'],
+    ];
     
 
     private function parseExperienceInterval(string $expString): ?array
@@ -555,7 +566,10 @@ class JobMatchingService
             $cvProfile = CvProfile::with([
                 'formations',
                 'competences', 
-                'experiences'
+                'experiences',
+                'langues',
+                'perfectionnements',
+                'benevolats',
             ])->where('user_id', $candidateId)->first();
 
             if (!$cvProfile) {
@@ -564,24 +578,34 @@ class JobMatchingService
             }
 
             $offer = Offre::findOrFail($offerId);
+            $options = $this->normalizeCvCustomizationOptions();
             
             $promptData = $this->preparePromptDataForGemini($cvProfile->id, $offer->id);
-            $cvHtml = $this->generateCVWithGemini($promptData);
+            $promptData['customization_options'] = $options;
+            $options = $this->normalizeCvCustomizationOptions();
+            $promptData['customization_options'] = $options;
+            $baseData = $this->personalizeCVData($cvProfile, $offer);
+            $structuredData = $this->generateStructuredCVWithGemini($promptData);
+            $personalizedData = $this->mergeStructuredCVData($baseData, $structuredData);
+            $personalizedData['cv_options'] = $options;
+            $personalizedData['cv_limits'] = $this->cvPageLimits($options['page_limit']);
+            $personalizedData['cv_options'] = $options;
+            $personalizedData['cv_limits'] = $this->cvPageLimits($options['page_limit']);
             
-            if (!$cvHtml) {
-                Log::warning('Échec Gemini, utilisation template classique', [
-                    'candidate_id' => $candidateId,
-                    'offer_id' => $offerId
-                ]);
-                return $this->generateClassicCV($cvProfile, $offer);
-            }
-            
-            // Convertir en PDF
-            $pdf = PDF::loadHTML($cvHtml);
-            $filename = 'cv_gemini_' . $cvProfile->id . '_' . $offer->id . '_' . time() . '.pdf';
+            $pdf = PDF::loadView('cv.personalized-template', $personalizedData)
+                ->setPaper('a4')
+                ->setOption('dpi', 150)
+                ->setOption('defaultFont', 'Arial');
+            $filename = 'cv_perso_' . $cvProfile->id . '_' . $offer->id . '_' . time() . '.pdf';
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
+
+            CvGenere::create([
+                'cv_profile_id' => $cvProfile->id,
+                'nom_fichier' => $this->generatedCvLabel($offer),
+                'chemin_fichier' => $filePath,
+            ]);
             
             Log::info('CV Gemini généré avec succès', [
                 'candidate_id' => $candidateId,
@@ -633,6 +657,12 @@ class JobMatchingService
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
+
+            CvGenere::create([
+                'cv_profile_id' => $cvProfile->id,
+                'nom_fichier' => $this->generatedCvLabel($offer),
+                'chemin_fichier' => $filePath,
+            ]);
             
             return $filePath;
             
@@ -688,10 +718,6 @@ class JobMatchingService
                     'prenom' => $cvProfile->prenom,
                     'email' => $cvProfile->email,
                     'telephone' => $cvProfile->telephone,
-                    'adresse' => $cvProfile->adresse,
-                    'ville' => $cvProfile->ville,
-                    'code_postal' => $cvProfile->code_postal,
-                    'province' => $cvProfile->province,
                 ],
                 'formations' => $cvProfile->formations->map(function ($formation) {
                     return [
@@ -816,10 +842,6 @@ class JobMatchingService
                     'prenom' => $cvProfile->prenom,
                     'email' => $cvProfile->email,
                     'telephone' => $cvProfile->telephone,
-                    'adresse' => $cvProfile->adresse,
-                    'ville' => $cvProfile->ville,
-                    'code_postal' => $cvProfile->code_postal,
-                    'province' => $cvProfile->province,
                 ],
                 'formations' => $cvProfile->formations->map(function ($formation) {
                     return [
@@ -892,42 +914,6 @@ class JobMatchingService
     }
     
     /**
-     * Génère le CV HTML avec Gemini
-     */
- private function generateCVWithGemini(array $promptData): ?string
-{
-    try {
-        $prompt = $this->buildCVPrompt($promptData);
-        Log::info('Envoi prompt Gemini', [
-            'longueur' => strlen($prompt),
-            'candidate' => $promptData['candidate']['personal_info']['prenom'] . ' ' . $promptData['candidate']['personal_info']['nom']
-        ]);
-
-        $response = Prism::text()
-            ->using(Provider::Gemini, 'gemini-2.5-flash')
-            ->withPrompt($prompt)
-            ->generate();
-
-        $result = trim($response->text);
-        // Nettoyer la réponse
-        $result = $this->cleanGeminiResponse($result);
-
-        // Log un extrait du résultat pour débogage
-        Log::info('Réponse Gemini (extrait)', ['extrait' => substr($result, 0, 500)]);
-
-        if (empty($result) || strlen($result) < 500) {
-            Log::error('Réponse Gemini trop courte après nettoyage', ['longueur' => strlen($result)]);
-            return null;
-        }
-
-        return $result;
-    } catch (\Exception $e) {
-        Log::error('Erreur Gemini', ['error' => $e->getMessage()]);
-        return null;
-    }
-}
-
-    /**
      * Nettoie la réponse de Gemini
      */
  private function cleanGeminiResponse(string $html): string
@@ -978,63 +964,13 @@ private function generateFallbackHTML(): string
     </head>
     <body>
         <div class="header">
-            <h1>CV Personnalisé</h1>
-            <p>Généré automatiquement par notre système</p>
+            <h1>Curriculum vitae</h1>
         </div>
         <div class="section">
-            <p>Ce CV a été personnalisé pour correspondre aux exigences du poste.</p>
-            <p>Les détails complets sont disponibles dans le profil du candidat.</p>
+            <p>Profil professionnel.</p>
         </div>
     </body>
     </html>';
-}
-
-    /**
-     * Construit le prompt pour Gemini avec gestion des diplômes
-     */
-private function buildCVPrompt(array $promptData): string
-{
-    $candidate = $promptData['candidate'];
-    $offer = $promptData['offer'];
-    $requiredSkills = $this->normalizePromptList($offer['competences_requises'] ?? []);
-    
-    $prompt = "Génère un CV HTML professionnel pour {$candidate['personal_info']['prenom']} {$candidate['personal_info']['nom']} qui postule au poste de {$offer['poste']} chez {$offer['entreprise']['nom']}.
-
-INSTRUCTIONS CRITIQUES :
-1. Retourne UNIQUEMENT du code HTML COMPLET (avec <!DOCTYPE html>, <html>, <head>, <body>)
-2. Style CSS intégré dans la balise <style>
-3. Format A4, police professionnelle (Arial, sans-serif)
-4. Maximum 2 pages
-
-CONTENU REQUIS dans le HTML :
-
-SECTION 1: En-tête
-- Nom complet: {$candidate['personal_info']['prenom']} {$candidate['personal_info']['nom']}
-- Email: {$candidate['personal_info']['email']}
-- Téléphone: {$candidate['personal_info']['telephone']}
-- Adresse: {$candidate['personal_info']['adresse']}
-
-SECTION 2: Objectif professionnel
-- Adapter pour le poste: {$offer['poste']}
-- Mentionner l'entreprise: {$offer['entreprise']['nom']}
-
-SECTION 3: Expériences professionnelles
-" . $this->formatExperiencesForPrompt($candidate['experiences']) . "
-
-SECTION 4: Formations
-" . $this->formatFormationsForPrompt($candidate['formations']) . "
-
-SECTION 5: Compétences pertinentes pour ce poste
-Compétences requises par l'offre: " . implode(', ', $requiredSkills) . "
-
-IMPORTANT: 
-- Structure HTML sémantique avec des balises appropriées (h1, h2, p, ul, li)
-- Ne pas inclure de commentaires, seulement du HTML
-- Le CV doit être prêt pour impression PDF
-
-CODE HTML:";
-
-    return $prompt;
 }
 
 private function normalizePromptList(array|string|null $value): array
@@ -1056,23 +992,6 @@ private function normalizePromptList(array|string|null $value): array
     }, $parts)));
 }
 
-private function formatExperiencesForPrompt(array $experiences): string
-{
-    $formatted = '';
-    foreach ($experiences as $exp) {
-        $formatted .= "- {$exp['poste']} chez {$exp['entreprise']} ({$exp['periode']})\n";
-    }
-    return $formatted;
-}
-
-private function formatFormationsForPrompt(array $formations): string
-{
-    $formatted = '';
-    foreach ($formations as $formation) {
-        $formatted .= "- {$formation['diplome']} à {$formation['etablissement']} ({$formation['periode']})\n";
-    }
-    return $formatted;
-}
     public function testCompleteCVGeneration(int $candidateId, int $offerId): array
     {
         try {
@@ -1110,20 +1029,17 @@ private function formatFormationsForPrompt(array $formations): string
                 ]
             ];
             
-            $cvHtml = $this->generateCVWithGemini($promptData);
-            
-            if (!$cvHtml) {
-                return [
-                    'success' => false,
-                    'error' => 'Échec génération Gemini',
-                    'debug_data' => $debugData
-                ];
-            }
+            $options = $this->normalizeCvCustomizationOptions();
+            $promptData['customization_options'] = $options;
+            $baseData = $this->personalizeCVData($cvProfile, $offer);
+            $structuredData = $this->generateStructuredCVWithGemini($promptData);
+            $personalizedData = $this->mergeStructuredCVData($baseData, $structuredData);
+            $personalizedData['cv_options'] = $options;
+            $personalizedData['cv_limits'] = $this->cvPageLimits($options['page_limit']);
 
             return [
                 'success' => true,
-                'cv_html' => $cvHtml,
-                'cv_length' => strlen($cvHtml),
+                'cv_data' => $personalizedData,
                 'debug_data' => $debugData
             ];
             
@@ -1159,17 +1075,15 @@ private function formatFormationsForPrompt(array $formations): string
             
             // CORRECTION : Passer les IDs au lieu des objets
             $promptData = $this->preparePromptDataForGemini($cvProfile->id, $offer->id);
-            $cvHtml = $this->generateCVWithGemini($promptData);
-            
-            if (!$cvHtml) {
-                return ['error' => 'Échec de génération avec Gemini'];
-            }
+            $baseData = $this->personalizeCVData($cvProfile, $offer);
+            $structuredData = $this->generateStructuredCVWithGemini($promptData);
+            $personalizedData = $this->mergeStructuredCVData($baseData, $structuredData);
 
             return [
                 'success' => true,
                 'candidate_name' => $cvProfile->prenom . ' ' . $cvProfile->nom,
                 'offer_title' => $offer->titre,
-                'cv_html' => $cvHtml,
+                'cv_data' => $personalizedData,
                 'prompt_data' => $promptData // Pour debug
             ];
             
@@ -1181,7 +1095,7 @@ private function formatFormationsForPrompt(array $formations): string
     /**
      * Personnalise les données du CV selon l'offre
      */
-    private function personalizeCVData(CvProfile $cvProfile, Offre $offer): array
+    private function personalizeCVData(CvProfile $cvProfile, $offer): array
     {
         $data = [
             'nom' => $cvProfile->nom,
@@ -1205,12 +1119,12 @@ private function formatFormationsForPrompt(array $formations): string
         ];
 
         // Réorganiser les compétences selon les besoins de l'offre
-        if ($offer->skills->isNotEmpty()) {
+        if (isset($offer->skills) && $offer->skills instanceof Collection && $offer->skills->isNotEmpty()) {
             $data['competences'] = $this->prioritizeSkills($data['competences'], $offer);
         }
 
         // Réorganiser les expériences selon la pertinence
-        $data['experiences'] = $this->prioritizeExperiences($data['experiences'], $offer);
+        $data['experiences'] = $this->prioritizeExperiences($data['experiences']);
 
         return $data;
     }
@@ -1232,7 +1146,7 @@ private function formatFormationsForPrompt(array $formations): string
     /**
      * Priorise les expériences selon la pertinence pour l'offre
      */
-    private function prioritizeExperiences(Collection $experiences, Offre $offer): Collection
+    private function prioritizeExperiences(Collection $experiences): Collection
     {
         return $experiences->sortByDesc(function ($experience) {
             // Prioriser les expériences les plus récentes
@@ -1243,9 +1157,190 @@ private function formatFormationsForPrompt(array $formations): string
     /**
      * Génère une note de personnalisation pour le CV
      */
-    private function generatePersonalizationNote(CvProfile $cvProfile, Offre $offer): string
+    private function generatePersonalizationNote(CvProfile $cvProfile, $offer): string
     {
         return " " . $offer->titre;
+    }
+
+    private function generateStructuredCVWithGemini(array $promptData): ?array
+    {
+        try {
+            $prompt = $this->buildStructuredCVPrompt($promptData);
+
+            Log::info('Envoi prompt Gemini structure CV', [
+                'longueur' => strlen($prompt),
+                'candidate' => $promptData['candidate']['personal_info']['prenom'].' '.$promptData['candidate']['personal_info']['nom'],
+            ]);
+
+            $response = Prism::text()
+                ->using(Provider::Gemini, 'gemini-2.5-flash')
+                ->withPrompt($prompt)
+                ->generate();
+
+            $decoded = $this->decodeStructuredCVResponse(trim($response->text));
+
+            if (! $decoded) {
+                Log::warning('Réponse Gemini structure CV invalide');
+                return null;
+            }
+
+            $options = $this->normalizeCvCustomizationOptions($promptData['customization_options'] ?? []);
+
+            return $this->normalizeStructuredCVData($decoded, $this->cvPageLimits($options['page_limit']));
+        } catch (\Exception $e) {
+            Log::warning('Erreur Gemini structure CV', ['error' => $e->getMessage()]);
+            return null;
+        }
+    }
+
+    private function buildStructuredCVPrompt(array $promptData): string
+    {
+        $candidate = $promptData['candidate'];
+        $offer = $promptData['offer'];
+        $options = $this->normalizeCvCustomizationOptions($promptData['customization_options'] ?? []);
+        $limits = $this->cvPageLimits($options['page_limit']);
+        $requiredSkills = $this->normalizePromptList($offer['competences_requises'] ?? []);
+        $schema = [
+            'langues_competences' => '',
+            'logiciels' => '',
+            'competences' => [['description' => '']],
+            'experiences' => [['periode' => '', 'poste' => '', 'entreprise' => '', 'description' => '']],
+            'formations' => [['periode' => '', 'diplome' => '', 'etablissement' => '']],
+            'perfectionnements' => [['annee' => '', 'formation' => '', 'etablissement' => '']],
+            'langues' => [['nom' => '', 'niveau' => '']],
+            'benevolats' => [['periode' => '', 'role' => '', 'organisation' => '']],
+        ];
+
+        return "Tu adaptes le contenu d'un CV, mais tu ne génères jamais de HTML ni de CSS.\n"
+            ."Réponds uniquement avec un JSON valide, sans markdown.\n"
+            ."Le PDF final sera généré par un template fixe. Ne mentionne jamais que le CV est généré, personnalisé, adapté, automatique ou simplifié.\n"
+            ."Ne retourne aucune adresse, ville, code postal ou localisation personnelle.\n"
+            ."Objectif: sélectionner et reformuler sobrement les informations les plus pertinentes pour l'offre.\n"
+            ."Ton du résumé/compétences: {$options['summary_tone']}.\n"
+            ."Longueur demandée: {$options['page_limit']} page(s). Sections autorisées: ".implode(', ', $options['sections']).".\n"
+            ."Limites: {$limits['experiences']} expériences, {$limits['formations']} formations, {$limits['competences']} compétences, {$limits['perfectionnements']} perfectionnements, {$limits['langues']} langues, {$limits['benevolats']} bénévolats. Descriptions d'expérience: 220 caractères maximum.\n"
+            ."Schema JSON attendu: ".json_encode($schema, JSON_UNESCAPED_UNICODE)."\n\n"
+            ."Candidat: ".json_encode($candidate, JSON_UNESCAPED_UNICODE)."\n\n"
+            ."Offre: ".json_encode([
+                'poste' => $offer['poste'] ?? '',
+                'entreprise' => $offer['entreprise']['nom'] ?? '',
+                'description' => $offer['description'] ?? '',
+                'competences_requises' => $requiredSkills,
+            ], JSON_UNESCAPED_UNICODE);
+    }
+
+    private function decodeStructuredCVResponse(string $response): ?array
+    {
+        $response = trim($response);
+        $response = preg_replace('/^```json\s*/i', '', $response) ?? $response;
+        $response = preg_replace('/^```\s*/', '', $response) ?? $response;
+        $response = preg_replace('/```\s*$/', '', $response) ?? $response;
+
+        if (! str_starts_with($response, '{')) {
+            $start = strpos($response, '{');
+            $end = strrpos($response, '}');
+
+            if ($start !== false && $end !== false && $end > $start) {
+                $response = substr($response, $start, $end - $start + 1);
+            }
+        }
+
+        $decoded = json_decode($response, true);
+
+        return is_array($decoded) ? $decoded : null;
+    }
+
+    private function normalizeStructuredCVData(array $data, array $limits): array
+    {
+        $cleanString = fn ($value, $limit = 500) => mb_substr(trim((string) $value), 0, $limit);
+        $cleanList = function (string $key, array $fields, int $limit) use ($data, $cleanString) {
+            $items = is_array($data[$key] ?? null) ? $data[$key] : [];
+
+            return collect($items)
+                ->filter(fn ($item) => is_array($item))
+                ->take($limit)
+                ->map(function ($item) use ($fields, $cleanString) {
+                    $normalized = [];
+
+                    foreach ($fields as $field => $max) {
+                        $normalized[$field] = $cleanString($item[$field] ?? '', $max);
+                    }
+
+                    return $normalized;
+                })
+                ->filter(fn ($item) => trim(implode('', $item)) !== '')
+                ->values()
+                ->all();
+        };
+
+        return [
+            'langues_competences' => $cleanString($data['langues_competences'] ?? '', 700),
+            'logiciels' => $cleanString($data['logiciels'] ?? '', 350),
+            'competences' => $cleanList('competences', ['description' => 180], $limits['competences'] ?? 8),
+            'experiences' => $cleanList('experiences', ['periode' => 80, 'poste' => 160, 'entreprise' => 160, 'description' => 220], $limits['experiences'] ?? 5),
+            'formations' => $cleanList('formations', ['periode' => 80, 'diplome' => 180, 'etablissement' => 180], $limits['formations'] ?? 4),
+            'perfectionnements' => $cleanList('perfectionnements', ['annee' => 60, 'formation' => 180, 'etablissement' => 180], $limits['perfectionnements'] ?? 4),
+            'langues' => $cleanList('langues', ['nom' => 80, 'niveau' => 80], $limits['langues'] ?? 5),
+            'benevolats' => $cleanList('benevolats', ['periode' => 80, 'role' => 180, 'organisation' => 180], $limits['benevolats'] ?? 3),
+        ];
+    }
+
+    private function mergeStructuredCVData(array $baseData, ?array $aiData): array
+    {
+        if (! $aiData) {
+            return $baseData;
+        }
+
+        foreach (['langues_competences', 'logiciels'] as $field) {
+            if (! empty($aiData[$field])) {
+                $baseData[$field] = $aiData[$field];
+            }
+        }
+
+        foreach (['competences', 'experiences', 'formations', 'perfectionnements', 'langues', 'benevolats'] as $field) {
+            if (! empty($aiData[$field]) && is_array($aiData[$field])) {
+                $baseData[$field] = $aiData[$field];
+            }
+        }
+
+        return $baseData;
+    }
+
+    private function normalizeCvCustomizationOptions(array $options = []): array
+    {
+        $normalized = array_merge(self::DEFAULT_CV_OPTIONS, $options);
+        $allowed = [
+            'template_style' => ['modern', 'classic', 'executive'],
+            'accent_color' => ['blue', 'green', 'bordeaux', 'anthracite', 'petrol'],
+            'font_style' => ['sober', 'modern', 'classic'],
+            'density' => ['airy', 'balanced', 'compact'],
+            'section_order' => ['skills_first', 'experience_first'],
+            'summary_tone' => ['direct', 'professional', 'human', 'technical'],
+        ];
+
+        foreach ($allowed as $key => $values) {
+            if (! in_array($normalized[$key] ?? null, $values, true)) {
+                $normalized[$key] = self::DEFAULT_CV_OPTIONS[$key];
+            }
+        }
+
+        $normalized['page_limit'] = in_array((int) ($normalized['page_limit'] ?? 2), [1, 2, 3], true)
+            ? (int) $normalized['page_limit']
+            : 2;
+
+        $sections = is_array($normalized['sections'] ?? null) ? $normalized['sections'] : self::DEFAULT_CV_OPTIONS['sections'];
+        $normalized['sections'] = array_values(array_intersect($sections, self::DEFAULT_CV_OPTIONS['sections']));
+
+        return $normalized;
+    }
+
+    private function cvPageLimits(int $pageLimit): array
+    {
+        return match ($pageLimit) {
+            1 => ['experiences' => 3, 'formations' => 2, 'competences' => 5, 'perfectionnements' => 2, 'langues' => 4, 'benevolats' => 1],
+            3 => ['experiences' => 8, 'formations' => 5, 'competences' => 12, 'perfectionnements' => 5, 'langues' => 6, 'benevolats' => 4],
+            default => ['experiences' => 5, 'formations' => 4, 'competences' => 8, 'perfectionnements' => 4, 'langues' => 5, 'benevolats' => 3],
+        };
     }
 
     /**
@@ -1254,25 +1349,37 @@ private function formatFormationsForPrompt(array $formations): string
     public function generatePersonalizedCVForUser(CvProfile $cvProfile, $virtualOffer, int $userId): array
     {
         try {
+            $cvProfile->loadMissing([
+                'formations',
+                'competences',
+                'experiences',
+                'langues',
+                'perfectionnements',
+                'benevolats',
+            ]);
+
             // Utiliser la méthode adaptée pour les données manuelles
             $promptData = $this->preparePromptDataForManualCustomization($cvProfile->id, [
                 'offer_title' => $virtualOffer->titre,
                 'offer_details' => $virtualOffer->description,
                 'key_requirements' => $virtualOffer->competences ?? '',
                 'company_name' => $virtualOffer->entreprise->name ?? 'Entreprise Cible',
-                'template_style' => 'modern'
+                'template_style' => $virtualOffer->customization_options['template_style'] ?? 'modern',
+                'summary_tone' => $virtualOffer->customization_options['summary_tone'] ?? 'professional',
+                'page_limit' => $virtualOffer->customization_options['page_limit'] ?? 2,
+                'sections' => $virtualOffer->customization_options['sections'] ?? self::DEFAULT_CV_OPTIONS['sections'],
             ]);
-            
-            // Générer le CV avec Gemini
-            $cvHtml = $this->generateCVWithGemini($promptData);
-            
-            if (!$cvHtml) {
-                // Fallback sur template classique
-                $cvHtml = $this->generateFallbackCV($cvProfile, $virtualOffer);
-            }
+            $options = $this->normalizeCvCustomizationOptions($virtualOffer->customization_options ?? []);
+            $promptData['customization_options'] = $options;
 
-            // Convertir en PDF
-            $pdf = PDF::loadHTML($cvHtml)
+            $baseData = $this->personalizeCVData($cvProfile, $virtualOffer);
+            $structuredData = $this->generateStructuredCVWithGemini($promptData);
+            $personalizedData = $this->mergeStructuredCVData($baseData, $structuredData);
+            $personalizedData['cv_options'] = $options;
+            $personalizedData['cv_limits'] = $this->cvPageLimits($options['page_limit']);
+
+            // Le template reste contrôlé par le code. L'IA ne fournit que des données.
+            $pdf = PDF::loadView('cv.personalized-template', $personalizedData)
                 ->setPaper('a4')
                 ->setOption('dpi', 150)
                 ->setOption('defaultFont', 'Arial');
@@ -1281,6 +1388,12 @@ private function formatFormationsForPrompt(array $formations): string
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
+
+            CvGenere::create([
+                'cv_profile_id' => $cvProfile->id,
+                'nom_fichier' => $this->generatedCvLabel($virtualOffer),
+                'chemin_fichier' => $filePath,
+            ]);
 
             // Log de l'activité
             Log::info('CV personnalisé généré manuellement', [
@@ -1664,5 +1777,18 @@ private function buildCoverLetterPrompt(CvProfile $cvProfile, Offre $offer): str
         ];
 
         return view('cv.fallback-template', $data)->render();
+    }
+
+    private function generatedCvLabel($offer): string
+    {
+        $title = trim((string) ($offer->titre ?? $offer->poste ?? 'Offre'));
+        $company = trim((string) ($offer->entreprise->name ?? $offer->entreprise->company_name ?? ''));
+        $label = 'CV adapte - '.$title;
+
+        if ($company !== '') {
+            $label .= ' - '.$company;
+        }
+
+        return mb_substr($label, 0, 500);
     }
 }

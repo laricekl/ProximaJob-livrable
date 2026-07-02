@@ -679,7 +679,9 @@ public function update(Request $request)
     ])->where('user_id', $userId)->first();
 
      
-        return view("user.infos-cv", compact('existingProfile'));
+        $diplomes = Diplome::orderBy('nom_diplome')->get();
+
+        return view("user.infos-cv", compact('existingProfile', 'diplomes'));
     }
 
 }
