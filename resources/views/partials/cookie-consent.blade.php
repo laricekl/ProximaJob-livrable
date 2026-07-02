@@ -11,13 +11,13 @@
 
     .cookie-consent-card {
       pointer-events: auto;
-      max-width: 40rem;
+      width: min(52rem, calc(100vw - 2rem));
       margin: 0 auto;
       border: 1px solid rgba(15, 23, 42, 0.1);
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(18px);
       box-shadow: 0 14px 32px rgba(15, 23, 42, 0.1);
-      border-radius: 999px;
+      border-radius: 1.25rem;
     }
 
     .cookie-consent-shell.is-preferences-mode {
@@ -68,11 +68,23 @@
     }
 
     .cookie-summary-copy {
-      max-width: 24rem;
+      max-width: 27rem;
     }
 
     .cookie-consent-hidden {
       display: none !important;
+    }
+
+    .cookie-accessible-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
 
     .cookie-choice-chip[aria-pressed="true"] {
@@ -120,6 +132,10 @@
       gap: 0.9rem;
     }
 
+    .cookie-consent-actions {
+      flex-wrap: nowrap;
+    }
+
     .cookie-consent-kicker {
       margin: 0 0 0.2rem;
       color: rgba(100, 116, 139, 0.95);
@@ -165,8 +181,8 @@
       }
 
       .cookie-consent-card {
-        border-radius: 1.5rem;
-        max-width: none;
+        border-radius: 1.25rem;
+        width: 100%;
       }
 
       .cookie-consent-summary {
@@ -187,15 +203,19 @@
 
       .cookie-consent-actions {
         width: 100%;
-        justify-content: flex-start;
+        flex-wrap: wrap;
+        justify-content: space-between;
       }
 
       .cookie-consent-actions > button:not(.cookie-close-button) {
-        min-height: 2.75rem;
+        min-height: 2.35rem;
+        justify-content: center;
       }
 
       .cookie-consent-actions > button[data-cookie-action="toggle-preferences"] {
-        padding-inline: 0;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: rgba(255, 255, 255, 0.72);
+        padding-inline: 0.75rem;
       }
 
       .cookie-consent-shell.is-preferences-mode .cookie-consent-summary {
@@ -246,7 +266,10 @@
   <section class="cookie-consent-card px-4 py-3 md:px-4.5 md:py-3.5">
     <div class="cookie-consent-summary">
       <div class="cookie-summary-copy">
-        <p class="cookie-consent-kicker">Vos préférences de confidentialité</p>
+        <p class="cookie-consent-kicker">
+          Confidentialité
+          <span class="cookie-accessible-only">Vos préférences de confidentialité</span>
+        </p>
         <div class="cookie-consent-line cookie-mini-note text-xs leading-5 md:text-[13px]">
           <span class="cookie-consent-title">Cookies essentiels actifs</span>
           <span class="cookie-consent-separator" aria-hidden="true"></span>
