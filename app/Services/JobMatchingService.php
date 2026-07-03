@@ -1235,6 +1235,18 @@ private function normalizePromptList(array|string|null $value): array
             ], JSON_UNESCAPED_UNICODE);
     }
 
+    private function buildCVPrompt(array $promptData): string
+    {
+        $candidate = $promptData['candidate'] ?? [];
+        $offer = $promptData['offer'] ?? [];
+        $requiredSkills = $this->normalizePromptList($offer['competences_requises'] ?? []);
+
+        return "Candidat: ".json_encode($candidate, JSON_UNESCAPED_UNICODE)."\n"
+            ."Poste visé: ".($offer['poste'] ?? '')."\n"
+            ."Entreprise: ".($offer['entreprise']['nom'] ?? '')."\n"
+            ."Compétences requises par l'offre: ".implode(', ', $requiredSkills);
+    }
+
     private function decodeStructuredCVResponse(string $response): ?array
     {
         $response = trim($response);

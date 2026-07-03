@@ -2,10 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class SecurityTest extends TestCase
 {
+    use RefreshDatabase;
+
     /**
      * Vérifie que les anciennes routes de debug/test retournent 404.
      */

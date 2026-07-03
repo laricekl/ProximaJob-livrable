@@ -133,7 +133,7 @@ Route::prefix('user')
    
     Route::middleware(['auth'])->group(function () {
     Route::redirect('/cv/create', '/user/infos-cv')->name('cv.create');
-    Route::post('/cv/store', [CvProfileController::class, 'store'])->name('cv.store');
+    Route::post('/cv/store', fn () => redirect()->route('infos.cv'))->name('cv.store');
     Route::post('/cv/upload-source', [CvProfileController::class, 'uploadSourceCv'])->name('cv.upload-source');
     Route::post('/cv/import-uploaded', [CvProfileController::class, 'importFromUploadedCv'])->name('cv.import-uploaded');
     Route::get('/cv/principal/afficher', [CvProfileController::class, 'inlinePrincipalPdf'])->name('cv.principal.inline');
@@ -304,6 +304,4 @@ Route::get('/email/verify', function () {
 Route::post('/email/resend-verification', [ResendVerificationEmailController::class, 'store'])
     ->middleware(['throttle:3,1'])
     ->name('enterprise.verification.resend');
-
-
 

@@ -355,7 +355,7 @@ class AdminManagementTest extends TestCase
                 'message' => "L'utilisateur Julie Bernard a été supprimé avec succès.",
             ]);
 
-        $this->assertDatabaseMissing('users', [
+        $this->assertSoftDeleted('users', [
             'id' => $candidate->id,
         ]);
     }

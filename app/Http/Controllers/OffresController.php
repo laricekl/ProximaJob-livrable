@@ -301,6 +301,8 @@ class OffresController extends Controller
             }
         }
 
+        $categoryId = Categorie::firstOrCreate(['nom' => 'Technologie'])->id;
+
         // Créer l'offre
         $offre = Offre::create([
             'entreprise_id' => Auth::user()->entreprise->id,
@@ -308,6 +310,7 @@ class OffresController extends Controller
             'poste' => $request->jobTitle,
             'description' => $request->jobDescription,
             'localisation' => $request->location,
+            'categorie_id' => $categoryId,
             'sector_id' => $request->sector,
             'type_id' => $request->contractType,
             'status' => 'active',

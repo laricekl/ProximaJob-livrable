@@ -22,7 +22,7 @@ class CvPersonalizationController extends Controller
     /**
      * Affiche le formulaire de personnalisation
      */
-    public function showForm()
+    public function showForm(Request $request)
     {
         $user = Auth::user();
         $cvProfile = CvProfile::where('user_id', $user->id)->first();
@@ -39,7 +39,38 @@ class CvPersonalizationController extends Controller
             ->take(10)
             ->get(['id', 'titre', 'entreprise_id']);
 
-        return view('cv.personalization-form', compact('cvProfile', 'recentOffers'));
+        $selectedOffer = null;
+        $selectedOfferDetails = '';
+        $selectedOfferRequirements = '';
+        $selectedOfferCompany = '';
+
+        if ($request->filled('offre_id')) {
+            $selectedOffer = Offre::with(['entreprise'])
+                ->whereKey($request->integer('offre_id'))
+                ->first();
+
+            if ($selectedOffer) {
+                $selectedOfferDetails = $selectedOffer->description
+                    ?: $selectedOffer->missions
+                    ?: $selectedOffer->responsibilities
+                    ?: '';
+
+                $selectedOfferRequirements = $selectedOffer->competences
+                    ?: $selectedOffer->criteres
+                    ?: '';
+
+                $selectedOfferCompany = $selectedOffer->entreprise->company_name ?? '';
+            }
+        }
+
+        return view('cv.personalization-form', compact(
+            'cvProfile',
+            'recentOffers',
+            'selectedOffer',
+            'selectedOfferDetails',
+            'selectedOfferRequirements',
+            'selectedOfferCompany'
+        ));
     }
 
     /**
@@ -52,7 +83,16 @@ class CvPersonalizationController extends Controller
             'offer_title' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
             'key_requirements' => 'nullable|string',
-            'template_style' => 'nullable|in:modern,classic,executive,creative'
+            'template_style' => 'nullable|in:modern,classic,executive',
+            'accent_color' => 'nullable|in:blue,green,bordeaux,anthracite,petrol',
+            'font_style' => 'nullable|in:sober,modern,classic',
+            'density' => 'nullable|in:airy,balanced,compact',
+            'section_order' => 'nullable|in:skills_first,experience_first',
+            'page_limit' => 'nullable|integer|in:1,2,3',
+            'summary_tone' => 'nullable|in:direct,professional,human,technical',
+            'sections_present' => 'nullable|boolean',
+            'sections' => 'nullable|array',
+            'sections.*' => 'in:software,languages,perfectionnements,benevolats',
         ]);
 
         try {
@@ -113,7 +153,7 @@ class CvPersonalizationController extends Controller
             abort(404);
         }
 
-        $fileUrl = Storage::disk('public')->url($filePath);
+        $fileUrl = route('cv.personalization.inline', ['filename' => $filename]);
         
         return view('cv.preview', compact('fileUrl', 'filename'));
     }
@@ -150,6 +190,18 @@ class CvPersonalizationController extends Controller
         $offer->competences = $request->key_requirements;
         $offer->entreprise = new \stdClass();
         $offer->entreprise->name = $request->company_name ?? 'Entreprise Cible';
+        $offer->customization_options = [
+            'template_style' => $request->input('template_style', 'modern'),
+            'accent_color' => $request->input('accent_color', 'blue'),
+            'font_style' => $request->input('font_style', 'sober'),
+            'density' => $request->input('density', 'balanced'),
+            'section_order' => $request->input('section_order', 'skills_first'),
+            'page_limit' => (int) $request->input('page_limit', 2),
+            'summary_tone' => $request->input('summary_tone', 'professional'),
+            'sections' => $request->boolean('sections_present')
+                ? $request->input('sections', [])
+                : $request->input('sections', ['software', 'languages', 'perfectionnements', 'benevolats']),
+        ];
         
         return $offer;
     }

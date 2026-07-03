@@ -12,6 +12,7 @@ use App\Models\Postulation;
 use App\Models\UserAbonnement;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Queue;
 use Tests\Feature\Concerns\CreatesTestAccounts;
@@ -147,6 +148,16 @@ class CandidateActionsTest extends TestCase
             'level' => 'avance',
         ]);
         Queue::assertPushed(AutoMatchingJob::class);
+
+        DB::table('abonnements')->insert([
+            'id' => 2,
+            'nom' => 'Test candidat',
+            'duree' => 'mensuel',
+            'montant' => 0,
+            'actif' => true,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
 
         $this->actingAs($candidate)
             ->postJson(route('abonnements.souscrire'))
@@ -474,6 +485,8 @@ class CandidateActionsTest extends TestCase
 
     public function test_candidate_can_upload_source_cv_from_cv_builder(): void
     {
+        Storage::fake('public');
+
         $candidate = $this->createCandidate();
 
         $response = $this->actingAs($candidate)->postJson(route('cv.upload-source'), [
@@ -483,15 +496,14 @@ class CandidateActionsTest extends TestCase
         $response
             ->assertOk()
             ->assertJson(['success' => true])
-            ->assertJsonPath('filename', fn ($filename) => str_starts_with($filename, 'cv_user_'.$candidate->id.'_'));
+            ->assertJsonPath('filename', fn ($filename) => str_starts_with($filename, 'source_'.$candidate->id.'_'))
+            ->assertJsonPath('path', fn ($path) => str_starts_with($path, 'cvs-source/source_'.$candidate->id.'_'));
 
         $candidate->refresh();
 
         $this->assertNotNull($candidate->cv);
-        $this->assertStringStartsWith('assets/cvs/cv_user_'.$candidate->id.'_', $candidate->cv);
-        $this->assertFileExists(public_path($candidate->cv));
-
-        @unlink(public_path($candidate->cv));
+        $this->assertStringStartsWith('cvs-source/source_'.$candidate->id.'_', $candidate->cv);
+        Storage::disk('public')->assertExists($candidate->cv);
     }
 
     public function test_candidate_without_cv_profile_is_redirected_to_builder_before_cv_personalization(): void
@@ -501,7 +513,7 @@ class CandidateActionsTest extends TestCase
         $this->actingAs($candidate)
             ->get(route('cv.personalization.form'))
             ->assertRedirect(route('infos.cv'))
-            ->assertSessionHas('error', 'Veuillez compléter votre CV dans le builder avant de le personnaliser.');
+            ->assertSessionHas('error', 'Veuillez compléter votre profil CV avant de personnaliser.');
     }
 
     public function test_candidate_profile_rejects_invalid_sector_skill_and_salary_values(): void

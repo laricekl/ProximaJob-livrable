@@ -541,6 +541,7 @@ public function update(Request $request, $id)
         return response()->json([
             'success' => true,
             'message' => 'CV source téléversé avec succès.',
+            'filename' => basename($path),
             'path' => $path,
         ]);
     }

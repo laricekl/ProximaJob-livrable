@@ -74,7 +74,7 @@ class EnterpriseActionsTest extends TestCase
             ->assertOk()
             ->assertJson(['success' => true]);
 
-        $this->assertDatabaseMissing('offres', ['id' => $offerId]);
+        $this->assertSoftDeleted('offres', ['id' => $offerId]);
     }
 
     public function test_enterprise_can_publish_offer_from_classic_form_flow(): void

@@ -22,11 +22,11 @@ class DashboardRedirectController extends Controller
         }
 
         if ($user->hasRole('entreprise')) {
-            return redirect()->route('entreprise.dashboard');
+            return redirect()->route('offres.publies');
         }
 
         if ($user->hasRole('candidat')) {
-            return redirect()->route('user.dashboard');
+            return redirect()->route('user.home');
         }
 
         return redirect('/');

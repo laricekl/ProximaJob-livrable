@@ -93,7 +93,7 @@ class NavigationLinksTest extends TestCase
             ->assertSee('href="'.route('notifications.index').'"', false)
             ->assertSee('href="'.route('user.profil-public').'"', false)
             ->assertSee('href="'.route('profile.edit').'"', false)
-            ->assertSee('href="'.route('user.bonnement').'"', false)
+            ->assertSee('href="'.route('user.abonnement').'"', false)
             ->assertSee(route('cookies.policy'), false);
     }
 
