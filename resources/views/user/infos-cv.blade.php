@@ -216,7 +216,7 @@
               </div>
             </div>
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" src="" class="h-[980px] w-full bg-white md:h-[1120px]" title="Apercu du CV adapte"></iframe>
+              <iframe id="generatedCvFrame" src="" class="h-[980px] w-full bg-white md:h-[1120px]" style="zoom: 0.87; -moz-transform: scale(0.87); -moz-transform-origin: top left;" title="Apercu du CV adapte"></iframe>
             </div>
           </div>
 
@@ -400,7 +400,7 @@
 
           <!-- Contenu du formulaire -->
           <div class="flex-1 p-8">
-            <form id="cvDataForm">
+            <form id="cvDataForm" method="POST" action="{{ route('cv.store') }}">
               @csrf
 
               <!-- Section 1: Infos personnelles -->
@@ -1059,7 +1059,7 @@
         const response = await fetch('{{ route('cv.store') }}', {
           method: 'POST',
           headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
             'Accept': 'application/json'
           },
           body: formData

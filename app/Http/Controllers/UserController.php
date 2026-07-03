@@ -59,18 +59,28 @@ class UserController extends Controller
         return view('dashboard', compact('recommendedOffres', 'dashboardStats', 'recentApplications'));
     }
 
-    public function detailCandidature()
+    public function detailCandidature(Request $request)
     {
-        $postulation = Postulation::with([
+        $query = Postulation::with([
             'offre.entreprise',
             'offre.type',
             'user.cvProfile.experiences',
             'user.cvProfile.competences',
             'user.skills',
         ])
-            ->where('user_id', Auth::id())
-            ->latest()
-            ->first();
+            ->where('user_id', Auth::id());
+
+        // Permet de voir une candidature spécifique via ?id=X
+        if ($request->has('id')) {
+            $postulation = $query->where('id', $request->id)->first();
+        } else {
+            $postulation = $query->latest()->first();
+        }
+
+        if (!$postulation) {
+            return redirect()->route('user.historiques')
+                ->with('error', 'Aucune candidature trouvée.');
+        }
 
         return view('user.detail-candidature', compact('postulation'));
     }
@@ -303,7 +313,13 @@ public function jobdetails($slug)
 
     public function abonnement()
     {
-        return view("user.abonnement");
+        $abonnements = Abonnement::where('actif', true)->get();
+        $userAbonnement = UserAbonnement::where('user_id', auth()->id())
+            ->where('status', 'Actif')
+            ->latest('date_fin')
+            ->first();
+
+        return view("user.abonnement", compact('abonnements', 'userAbonnement'));
     }
 
     public function planabonnement()
@@ -361,7 +377,7 @@ public function jobdetails($slug)
                 'message' => 'Abonnement souscrit avec succès !'
             ]);
 
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur lors de la souscription : ' . $e->getMessage()
@@ -520,12 +536,12 @@ public function update(Request $request)
             $user->cv = 'assets/cvs/'.$cvFileName;
         }
         
-        $user->save();
-
+        // Appliquer salary_expectation avant la sauvegarde
         if ($request->has('salary_expectation')) {
             $user->salary_expectation_min = (int) $request->salary_expectation;
-            $user->save();
         }
+
+        $user->save();
 
         // Variable pour suivre si des éléments importants ont changé
         $significantChanges = false;

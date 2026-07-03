@@ -71,15 +71,38 @@ class CandidatureController extends Controller
         $motivationPath = $this->storeFile($request->file('motivation'), $storagePath, "motivation_{$uniqueId}");
 
 
-            // Création/mise à jour de la postulation
-            $candidature = Postulation::updateOrCreate(
-                ['user_id' => $userId, 'offre_id' => $offreId],
-                [
+            // Vérifier si une candidature existe déjà pour cette offre
+            $existingCandidature = Postulation::where('user_id', $userId)
+                ->where('offre_id', $offreId)
+                ->first();
+
+            if ($existingCandidature) {
+                // Ne pas écraser une candidature déjà acceptée ou refusée
+                if (in_array($existingCandidature->status, ['accepted', 'rejected'])) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'Vous avez déjà une candidature ' . $existingCandidature->status . ' pour cette offre.'
+                    ], 422);
+                }
+
+                // Mettre à jour la candidature existante
+                $existingCandidature->update([
                     'cv' => $cvPath,
                     'lettre_motivation' => $motivationPath,
                     'status' => 'en_attente'
-                ]
-            );
+                ]);
+                $candidature = $existingCandidature;
+            } else {
+                $candidature = Postulation::create([
+                    'user_id' => $userId,
+                    'offre_id' => $offreId,
+                    'cv' => $cvPath,
+                    'lettre_motivation' => $motivationPath,
+                    'status' => 'en_attente',
+                    'autopostulation' => false,
+                    'application_date' => now(),
+                ]);
+            }
 
             // Gestion des documents supplémentaires
             if (!empty($validated['additional_docs'])) {
@@ -106,20 +129,22 @@ class CandidatureController extends Controller
 
             // Récupérer l'entreprise propriétaire de l'offre
             $offre = Offre::with('entreprise.user')->find($offreId);
-            $entrepriseUser = $offre->entreprise->user;
+            $entrepriseUser = $offre->entreprise?->user;
 
-            // Créer la notification
-            Notification::create([
-                'user_id' => $entrepriseUser->id,
-                'role' => 'entreprise',  
-                'title' => 'Nouvelle candidature reçue',
-                'message' => 'Un candidat a postulé à votre offre "' . $offre->titre . '"',
-                'link' => "/entreprise/offres/{$offreId}/candidatures",  
-                'is_read' => false,
-            ]);
+            // Créer la notification (seulement si l'entreprise a un utilisateur)
+            if ($entrepriseUser) {
+                Notification::create([
+                    'user_id' => $entrepriseUser->id,
+                    'role' => 'entreprise',
+                    'title' => 'Nouvelle candidature reçue',
+                    'message' => 'Un candidat a postulé à votre offre "' . $offre->titre . '"',
+                    'link' => "/entreprise/offres/{$offreId}/candidatures",
+                    'is_read' => false,
+                ]);
+            }
 
-            $message = $candidature->wasRecentlyCreated 
-                ? 'Votre candidature a été envoyée avec succès!' 
+            $message = $candidature->wasRecentlyCreated
+                ? 'Votre candidature a été envoyée avec succès!'
                 : 'Votre candidature a été mise à jour avec succès!';
 
             return response()->json([
@@ -257,7 +282,7 @@ class CandidatureController extends Controller
         ]);
             
     } catch (\Exception $e) {
-        Log::error('Erreur prévisualisation CV', [
+        Log::error('Erreur prévisualisation lettre de motivation', [
             'candidature_id' => $candidatureId,
             'error' => $e->getMessage()
         ]);
@@ -510,7 +535,13 @@ private function servePublicFile($filePath, $candidature)
         ]);
 
         try {
-            $postulation = Postulation::whereHas('offre', fn($q) => $q->where('entreprise_id', Auth::user()->entreprise->id))
+            $postulation = Postulation::whereHas('offre', function ($q) {
+                    $entreprise = Auth::user()->entreprise;
+                    if (!$entreprise) {
+                        throw new \Illuminate\Database\Eloquent\ModelNotFoundException('Entreprise non trouvée');
+                    }
+                    $q->where('entreprise_id', $entreprise->id);
+                })
                 ->with(['user', 'offre']) 
                 ->findOrFail($id);
 

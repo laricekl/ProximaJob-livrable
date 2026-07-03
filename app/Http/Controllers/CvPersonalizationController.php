@@ -22,14 +22,14 @@ class CvPersonalizationController extends Controller
     /**
      * Affiche le formulaire de personnalisation
      */
-    public function showForm(Request $request)
+    public function showForm()
     {
         $user = Auth::user();
         $cvProfile = CvProfile::where('user_id', $user->id)->first();
 
         if (!$cvProfile) {
             return redirect()->route('infos.cv')
-                ->with('error', 'Veuillez compléter votre CV dans le builder avant de le personnaliser.');
+                ->with('error', 'Veuillez compléter votre profil CV avant de personnaliser.');
         }
 
         // Récupérer les offres récentes pour suggestions
@@ -39,38 +39,7 @@ class CvPersonalizationController extends Controller
             ->take(10)
             ->get(['id', 'titre', 'entreprise_id']);
 
-        $selectedOffer = null;
-        $selectedOfferDetails = '';
-        $selectedOfferRequirements = '';
-        $selectedOfferCompany = '';
-
-        if ($request->filled('offre_id')) {
-            $selectedOffer = Offre::with(['entreprise'])
-                ->whereKey($request->integer('offre_id'))
-                ->first();
-
-            if ($selectedOffer) {
-                $selectedOfferDetails = $selectedOffer->description
-                    ?: $selectedOffer->missions
-                    ?: $selectedOffer->responsibilities
-                    ?: '';
-
-                $selectedOfferRequirements = $selectedOffer->competences
-                    ?: $selectedOffer->criteres
-                    ?: '';
-
-                $selectedOfferCompany = $selectedOffer->entreprise->company_name ?? '';
-            }
-        }
-
-        return view('cv.personalization-form', compact(
-            'cvProfile',
-            'recentOffers',
-            'selectedOffer',
-            'selectedOfferDetails',
-            'selectedOfferRequirements',
-            'selectedOfferCompany'
-        ));
+        return view('cv.personalization-form', compact('cvProfile', 'recentOffers'));
     }
 
     /**
@@ -83,16 +52,7 @@ class CvPersonalizationController extends Controller
             'offer_title' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
             'key_requirements' => 'nullable|string',
-            'template_style' => 'nullable|in:modern,classic,executive',
-            'accent_color' => 'nullable|in:blue,green,bordeaux,anthracite,petrol',
-            'font_style' => 'nullable|in:sober,modern,classic',
-            'density' => 'nullable|in:airy,balanced,compact',
-            'section_order' => 'nullable|in:skills_first,experience_first',
-            'page_limit' => 'nullable|integer|in:1,2,3',
-            'summary_tone' => 'nullable|in:direct,professional,human,technical',
-            'sections_present' => 'nullable|boolean',
-            'sections' => 'nullable|array',
-            'sections.*' => 'in:software,languages,perfectionnements,benevolats',
+            'template_style' => 'nullable|in:modern,classic,executive,creative'
         ]);
 
         try {
@@ -123,6 +83,26 @@ class CvPersonalizationController extends Controller
     }
 
     /**
+     * Retourne le PDF brut pour affichage dans un iframe.
+     */
+    public function inlineCV($filename)
+    {
+        $filePath = 'personalized-cvs/' . $filename;
+
+        if (!Storage::disk('public')->exists($filePath)) {
+            abort(404, 'CV introuvable.');
+        }
+
+        $fullPath = Storage::disk('public')->path($filePath);
+
+        return response()->file($fullPath, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="' . $filename . '"',
+            'Cache-Control' => 'no-cache, no-store, must-revalidate',
+        ]);
+    }
+
+    /**
      * Prévisualise le CV généré
      */
     public function previewCV($filename)
@@ -133,26 +113,9 @@ class CvPersonalizationController extends Controller
             abort(404);
         }
 
-        $fileUrl = route('cv.personalization.inline', ['filename' => $filename]);
+        $fileUrl = Storage::disk('public')->url($filePath);
         
         return view('cv.preview', compact('fileUrl', 'filename'));
-    }
-
-    /**
-     * Affiche le PDF généré dans le navigateur.
-     */
-    public function inlineCV($filename)
-    {
-        $filePath = 'personalized-cvs/' . $filename;
-
-        if (!Storage::disk('public')->exists($filePath)) {
-            abort(404);
-        }
-
-        return response()->file(Storage::disk('public')->path($filePath), [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$filename.'"',
-        ]);
     }
 
     /**
@@ -166,7 +129,12 @@ class CvPersonalizationController extends Controller
             abort(404);
         }
 
-        return Storage::disk('public')->download($filePath, "CV_Personnalise_{$filename}.pdf");
+        // Éviter la double extension .pdf.pdf
+        $downloadName = str_ends_with($filename, '.pdf')
+            ? "CV_Personnalise_{$filename}"
+            : "CV_Personnalise_{$filename}.pdf";
+
+        return Storage::disk('public')->download($filePath, $downloadName);
     }
 
     /**
@@ -182,18 +150,6 @@ class CvPersonalizationController extends Controller
         $offer->competences = $request->key_requirements;
         $offer->entreprise = new \stdClass();
         $offer->entreprise->name = $request->company_name ?? 'Entreprise Cible';
-        $offer->customization_options = [
-            'template_style' => $request->input('template_style', 'modern'),
-            'accent_color' => $request->input('accent_color', 'blue'),
-            'font_style' => $request->input('font_style', 'sober'),
-            'density' => $request->input('density', 'balanced'),
-            'section_order' => $request->input('section_order', 'skills_first'),
-            'page_limit' => (int) $request->input('page_limit', 2),
-            'summary_tone' => $request->input('summary_tone', 'professional'),
-            'sections' => $request->boolean('sections_present')
-                ? $request->input('sections', [])
-                : $request->input('sections', ['software', 'languages', 'perfectionnements', 'benevolats']),
-        ];
         
         return $offer;
     }

@@ -14,8 +14,14 @@ use Twilio\TwiML\MessagingResponse;
 |
 */
 
+use App\Models\Diplome;
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::middleware('auth:sanctum')->get('/diplomes', function () {
+    return response()->json(Diplome::all());
 });
 
 

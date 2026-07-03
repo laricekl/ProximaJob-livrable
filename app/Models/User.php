@@ -10,13 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable 
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
 
     protected $fillable = [
         'name',
@@ -253,7 +254,13 @@ class User extends Authenticatable
 
     public function getAvatarInitials(): string
     {
-        return strtoupper(substr($this->name, 0, 1) . substr($this->prenom, 0, 1));
+        return strtoupper(substr((string) $this->name, 0, 1) . substr((string) $this->prenom, 0, 1));
+    }
+
+    // Accesseur pour compatibilité Blade : $user->initials
+    public function getInitialsAttribute(): string
+    {
+        return $this->getAvatarInitials();
     }
 
     public function getAvatarColor(): string
@@ -360,11 +367,6 @@ class User extends Authenticatable
         }
 
         return 'bg-blue-50 text-blue-700';
-    }
-
-    public function getInitialsAttribute(): string
-    {
-        return strtoupper(substr((string) $this->name, 0, 1) . substr((string) $this->prenom, 0, 1));
     }
 
     public function candidateSector(): HasOne

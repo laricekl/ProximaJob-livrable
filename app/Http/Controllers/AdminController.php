@@ -1067,7 +1067,7 @@ public function abonupdate(Request $request, $id)
         \Log::error('Erreur mise à jour abonnement: ' . $e->getMessage(), [
             'exception' => $e,
             'abonnement_id' => $id,
-            'request_data' => $request->all(),
+            'request_data' => $request->except(['password', 'password_confirmation', 'logo', 'profile_photo', 'token', 'current_password']),
             'trace' => $e->getTraceAsString()
         ]);
         

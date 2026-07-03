@@ -2,7 +2,7 @@
 @section('title', 'Profil public')
 @php
   $publicUser = $user ?? auth()->user();
-  $publicFullName = trim(($cvProfile->prenom ?? $publicUser->prenom ?? '') . ' ' . ($cvProfile->nom ?? $publicUser->name ?? ''));
+  $publicFullName = trim(($cvProfile?->prenom ?? $publicUser->prenom ?? '') . ' ' . ($cvProfile?->nom ?? $publicUser->name ?? ''));
   $publicFullName = $publicFullName !== '' ? $publicFullName : 'Profil candidat';
   $publicInitials = $publicUser->initials ?: 'PJ';
   $profileHeadline = $profileData['headline'] ?? 'Profil en recherche active';

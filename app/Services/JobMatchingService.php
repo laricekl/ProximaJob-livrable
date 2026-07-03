@@ -21,7 +21,7 @@ use Prism\Prism\Enums\Provider;
 
 class JobMatchingService
 {
-    private const MIN_MATCH_SCORE = 0;
+    private const MIN_MATCH_SCORE = 50;
     private const MAX_APPLICATIONS_PER_DAY = 3;
     private const DEFAULT_CV_OPTIONS = [
         'template_style' => 'modern',
@@ -260,7 +260,7 @@ class JobMatchingService
     /**
      * Lance le processus de matching automatique
      */
-    public function processAutoMatching(): array
+    public function processAutoMatching(?int $candidateId = null): array
     {
         $results = [
             'processed_offers' => 0,
@@ -276,8 +276,8 @@ class JobMatchingService
             $activeOffers = $this->getActiveOffers();
             $results['processed_offers'] = $activeOffers->count();
 
-            $activeOffers->each(function ($offerId) use (&$results) {
-                $this->processOfferMatching($offerId, $results);
+            $activeOffers->each(function ($offerId) use (&$results, $candidateId) {
+                $this->processOfferMatching($offerId, $results, $candidateId);
             });
 
             Log::info('Auto-matching terminé', $results);
@@ -293,11 +293,11 @@ class JobMatchingService
     /**
      * Traite le matching pour une offre spécifique
      */
-    private function processOfferMatching(int $offerId, array &$results): void
+    private function processOfferMatching(int $offerId, array &$results, ?int $candidateId = null): void
     {
-        $eligibleCandidates = $this->findEligibleCandidates($offerId);
+        $eligibleCandidates = $this->findEligibleCandidates($offerId, $candidateId);
 
-        $results['candidates_details'] = [];  
+        $results['candidates_details'] = [];
 
         $eligibleCandidates->each(function ($candidate) use ($offerId, &$results) {
             // Formater les données du candidat
@@ -329,24 +329,24 @@ class JobMatchingService
     /**
      * Trouve les IDs des candidats éligibles pour une offre
      */
-    private function findEligibleCandidates(int $offerId): Collection
+    private function findEligibleCandidates(int $offerId, ?int $candidateId = null): Collection
     {
         $offer = Offre::with(['diplomes' => function($query) {
             $query->wherePivot('obligatoire', true);
         }])->findOrFail($offerId);
-        
+
         $experienceInterval = $this->parseExperienceInterval($offer->required_experience ?? '0');
-        
+
         // Récupérer les compétences techniques requises pour l'offre
         $requiredTechnicalSkillIds = JobOfferSkill::where('job_offer_id', $offerId)
             ->where('skill_type', 'technical')
             ->pluck('skill_id')
             ->toArray();
-        
+
         $query = User::with([
                 'cvProfile.formations',
                 'cvProfile.competences',
-                'cvProfile.experiences', 
+                'cvProfile.experiences',
                 'cvProfile.langues',
                 'cvProfile.perfectionnements',
                 'cvProfile.benevolats',
@@ -354,10 +354,14 @@ class JobMatchingService
                 'candidateSector',
                 'candidateSkills'
             ]);
-        
+
+        // Si un candidat spécifique est fourni, filtrer uniquement pour lui
+        if ($candidateId) {
+            $query->where('id', $candidateId);
+        }
+
         // Ajouter uniquement la condition d'expérience
         $query->whereHas('candidateSector', function ($query) use ($experienceInterval) {
-            // Ajouter uniquement la condition d'expérience
             $this->addExperienceCondition($query, $experienceInterval);
         });
 
@@ -375,11 +379,13 @@ class JobMatchingService
         // Filtrer par compétences techniques si l'offre en a
         if (!empty($requiredTechnicalSkillIds)) {
             $minRequiredSkills = max(1, ceil(count($requiredTechnicalSkillIds) * 0.6)); // Minimum 60% des compétences
-            
-            $query->whereHas('candidateSkills', function ($q) use ($requiredTechnicalSkillIds, $minRequiredSkills) {
-                $q->whereIn('skill_id', $requiredTechnicalSkillIds)
-                  ->groupBy('candidate_id')
-                  ->havingRaw('COUNT(DISTINCT skill_id) >= ?', [$minRequiredSkills]);
+
+            $query->whereIn('id', function ($subQuery) use ($requiredTechnicalSkillIds, $minRequiredSkills) {
+                $subQuery->select('candidate_id')
+                    ->from('candidate_skills')
+                    ->whereIn('skill_id', $requiredTechnicalSkillIds)
+                    ->groupBy('candidate_id')
+                    ->havingRaw('COUNT(DISTINCT skill_id) >= ?', [$minRequiredSkills]);
             });
         }
 

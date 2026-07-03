@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Postulation extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -16,7 +17,11 @@ class Postulation extends Model
         'autopostulation',
         'lettre_motivation',
         'cover_letter',
-        'status'
+        'status',
+        'match_score',
+        'application_date',
+        'algorithm_version',
+        'match_details',
     ];
 
     protected $casts = [

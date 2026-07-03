@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\OffresController;
 use App\Http\Controllers\ParametresController;
 use App\Http\Controllers\RessourcesController;
@@ -18,24 +16,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CvPersonalizationController ; 
 use App\Http\Controllers\CvProfileController;
-use App\Services\JobMatchingService; 
 use App\Http\Controllers\Auth\ResendVerificationEmailController;
-use App\Models\Offre;
-use App\Models\User;
-use App\Models\Notification;  
-use App\Models\CandidateSector;
-use App\Models\CandidateSkill;
-use App\Models\JobOfferSkill;
-use App\Models\Postulation;
-use App\Models\CvProfile;
-use App\Models\Sector;
-use App\Models\Diplome;
-
-
- 
-
-  use Prism\Prism\Prism;
-use Prism\Prism\Enums\Provider;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,26 +30,11 @@ use Prism\Prism\Enums\Provider;
 */
 
 // Route pour changer la langue
-Route::post('/set-language', function () {
-    $locale = request('locale');
-    $supportedLocales = ['fr', 'en'];
+Route::post('/set-language', [App\Http\Controllers\LocaleController::class, 'setLanguage'])
+    ->name('set.language');
 
-    if (in_array($locale, $supportedLocales)) {
-        Session::put('locale', $locale);
-        App::setLocale($locale);
-
-        return response()->json([
-            'success' => true,
-            'locale' => $locale,
-            'message' => __('Langue changée avec succès')
-        ]);
-    }
-
-    return response()->json([
-        'success' => false,
-        'message' => __('Langue non supportée')
-    ], 400);
-})->name('set.language');
+// Health check
+Route::get('/health', [App\Http\Controllers\HealthController::class, 'check'])->name('health');
 
 
 
@@ -135,8 +101,6 @@ Route::prefix('user')
     ->middleware(['auth', 'verified' , 'candidate.access', 'user.status' ])
     ->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('user.home');
-        Route::get('/historique-candidature', [UserController::class, 'historique'])->name('candidature.historique');
-        Route::get('/historique-candidature_ia', [UserController::class, 'historique_ia'])->name('candidature_ia.historique');
         Route::get('/offres/{offre:slug}', [UserController::class, 'jobdetails'])->name('job_details');
         Route::post('/candidature/store', [CandidatureController::class, 'store'])->name('candidatures.store');
         Route::post('/profile/update', [UserController::class, 'update'])->name('user.profile.update'); 
@@ -144,7 +108,11 @@ Route::prefix('user')
        // Route::get('/preview-cv/{candidature}', [CandidatureController::class, 'previewCV'])->name('preview.cv');
     Route::get('/historique-candidatures', [UserController::class, 'historique'])->name('user.historiques');
     Route::get('/historique-candidatures_ia', [UserController::class, 'historique_ia'])->name('user.historiques_ia');
-    Route::get('/abonnement', [UserController::class, 'abonnement'])->name('user.bonnement');
+
+    // Redirections rétrocompatibles (anciens noms de routes)
+    Route::redirect('/historique-candidature', '/user/historique-candidatures')->name('candidature.historique');
+    Route::redirect('/historique-candidature_ia', '/user/historique-candidatures_ia')->name('candidature_ia.historique');
+    Route::get('/abonnement', [UserController::class, 'abonnement'])->name('user.abonnement');
     Route::get('/plan-abonnement', [UserController::class, 'planabonnement'])->name('plan.abonnement');
     Route::get('/infos-cv', [UserController::class, 'infoscv'])->name('infos.cv');
     Route::get('/profil-public', [UserController::class, 'publicProfile'])->name('user.profil-public');
@@ -247,13 +215,11 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
 
 
     Route::post('/verify-password', function (Illuminate\Http\Request $request) {
-    if (\Hash::check($request->password, auth()->user()->password)) {
-        return response()->json(['valid' => true]);
-    }
-    return response()->json(['valid' => false]);
-
-   
-        }) ;
+        if (\Hash::check($request->password, auth()->user()->password)) {
+            return response()->json(['valid' => true]);
+        }
+        return response()->json(['valid' => false]);
+    })->middleware('throttle:5,1');
 
     Route::post('/users', [AdminController::class, 'store'])->name('admin.users.store');
     Route::patch('/offres/{id}/deactivate', [AdminController::class, 'deactivateOffer'])->name('offres.deactivate');
@@ -281,7 +247,7 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
 });
 
 
-    Route::get('/candidatures/{user_id}/{offre_id}/{filename}', function ($offre_id, $user_id, $filename) {
+    Route::get('/candidatures/{user_id}/{offre_id}/{filename}', function ($user_id, $offre_id, $filename) {
     $path = storage_path("app/private/candidatures/$user_id/$offre_id/$filename");
 
     if (!file_exists($path)) {
@@ -315,19 +281,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('profile.change-password');
 });
 
-Route::get('/dashboard', function () {
-    $user = auth()->user();
-
-    if ($user->hasRole('admin') || $user->hasRole('Marketing')) {
-        return redirect()->route('admin.dashboard');
-    }
-
-    if ($user->hasRole('entreprise')) {
-        return redirect()->route('offres.publies');
-    }
-
-    return redirect()->route('user.home');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [App\Http\Controllers\DashboardRedirectController::class, 'index'])
+    ->middleware(['auth', 'verified'])->name('dashboard');
 
 
 Route::middleware('auth')->group(function () {
@@ -337,279 +292,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
-
-
-
-Route::get('/ai', function(){
-$response = Prism::text()
-->using(Provider::Gemini, 'gemini-2.5-flash')
-->withPrompt('possible de me generer un cv ?')
-->generate();
-
-echo $response->text;
-});
-
- 
-Route::get('/test-gemini-cv/{candidateId}/{offerId}', function($candidateId, $offerId) {
-    $matchingService = new JobMatchingService();  
-    $result = $matchingService->generateCVForCandidate($candidateId, $offerId);
-    
-    if (isset($result['cv_html'])) {
-        return response($result['cv_html'])->header('Content-Type', 'text/html');
-    }
-    
-    return response()->json($result);
-});
-
-Route::get('/test-prism', function(){
-    try {
-        $response = Prism::text()
-            ->using(Provider::Gemini, 'gemini-2.5-flash')
-            ->withPrompt('Test de connexion - réponds "OK" si tout fonctionne')
-            ->generate();
-
-        return response()->json([
-            'success' => true,
-            'response' => $response->text
-        ]);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'error' => $e->getMessage()
-        ], 500);
-    }
-});
-
-
-Route::get('/test-gemini-fast', function(){
-    try {
-        $prompt = "CV HTML simple pour Marie Martin, développeuse web. HTML seulement.";
-        
-        $response = Prism::text()
-            ->using(Provider::Gemini, 'gemini-2.5-flash')
-            ->withPrompt($prompt)
-            ->generate();
-
-        return response($response->text)->header('Content-Type', 'text/html');
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'type' => get_class($e)
-        ], 500);
-    }
-});
-
-
-Route::get('/test-complete-cv/{candidateId}/{offerId}', function($candidateId, $offerId) {
-    $matchingService = new JobMatchingService();
-    $result = $matchingService->testCompleteCVGeneration($candidateId, $offerId);
-    
-    if (isset($result['cv_html'])) {
-        return response($result['cv_html'])->header('Content-Type', 'text/html');
-    }
-    
-    return response()->json($result);
-});
-
-Route::get('/test-gemini-step-by-step/{candidateId}/{offerId}', function($candidateId, $offerId) {
-    try {
-        $matchingService = new JobMatchingService();
-        
-        // 1. Récupérer les données
-        $cvProfile = CvProfile::with([
-            'formations',
-            'competences', 
-            'experiences'
-        ])->where('user_id', $candidateId)->first();
-
-        if (!$cvProfile) {
-            return response()->json(['error' => 'Profil CV non trouvé'], 404);
-        }
-
-        $offer = Offre::findOrFail($offerId);
-        
-        // 2. Préparer les données
-        $promptData = [
-            'candidate' => [
-                'personal_info' => [
-                    'nom' => $cvProfile->nom,
-                    'prenom' => $cvProfile->prenom,
-                    'email' => $cvProfile->email,
-                    'telephone' => $cvProfile->telephone,
-                    'adresse' => $cvProfile->adresse,
-                    'ville' => $cvProfile->ville,
-                    'code_postal' => $cvProfile->code_postal,
-                    'province' => $cvProfile->province,
-                ],
-                'formations' => $cvProfile->formations->map(function ($formation) {
-                    return [
-                        'periode' => $formation->periode,
-                        'diplome' => $formation->diplome,
-                        'etablissement' => $formation->etablissement,
-                    ];
-                })->toArray(),
-                'experiences' => $cvProfile->experiences->map(function ($experience) {
-                    return [
-                        'periode' => $experience->periode,
-                        'poste' => $experience->poste,
-                        'entreprise' => $experience->entreprise,
-                        'description' => $experience->description,
-                    ];
-                })->toArray(),
-                'competences' => [
-                    'specifiques' => $cvProfile->competences->where('type', 'specifique')->pluck('description')->toArray(),
-                    'generales' => $cvProfile->competences->where('type', 'generale')->pluck('description')->toArray(),
-                ]
-            ],
-            'offer' => [
-                'titre' => $offer->titre,
-                'poste' => $offer->poste,
-                'description' => $offer->description,
-                'competences_requises' => $offer->competences,
-            ]
-        ];
-        
-        // 3. Afficher les données pour debug
-        $debugInfo = [
-            'candidate' => [
-                'name' => $cvProfile->prenom . ' ' . $cvProfile->nom,
-                'email' => $cvProfile->email,
-                'phone' => $cvProfile->telephone,
-                'formations' => $promptData['candidate']['formations'],
-                'experiences' => $promptData['candidate']['experiences'],
-            ],
-            'offer' => [
-                'poste' => $offer->poste,
-                'titre' => $offer->titre,
-            ]
-        ];
-        
-        // 4. Tester avec un prompt très simple d'abord
-        $simplePrompt = "Génère un CV HTML simple pour {$cvProfile->prenom} {$cvProfile->nom} - {$offer->poste}. HTML seulement.";
-        
-        Log::info('=== TEST SIMPLE ===');
-        $simpleResponse = Prism::text()
-            ->using(Provider::Gemini, 'gemini-2.5-flash')
-            ->withPrompt($simplePrompt)
-            ->generate();
-            
-        $simpleResult = trim($simpleResponse->text);
-        
-        return response()->json([
-            'step_1_simple_test' => [
-                'success' => !empty($simpleResult),
-                'response_length' => strlen($simpleResult),
-                'response_preview' => substr($simpleResult, 0, 200),
-            ],
-            'debug_data' => $debugInfo,
-            'prompt_data_sample' => [
-                'formations' => $promptData['candidate']['formations'],
-                'experiences' => $promptData['candidate']['experiences'],
-            ]
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ], 500);
-    }
-});
-
-
-Route::get('/test-final-cv/{candidateId}/{offerId}', function($candidateId, $offerId) {
-    $matchingService = new JobMatchingService();
-    $result = $matchingService->testCompleteCVGeneration($candidateId, $offerId);
-    
-    if (isset($result['cv_html'])) {
-        // Nettoyer la réponse pour l'affichage
-        $cleanHtml = preg_replace('/```html\s*/', '', $result['cv_html']);
-        $cleanHtml = preg_replace('/```\s*/', '', $cleanHtml);
-        $cleanHtml = trim($cleanHtml);
-        
-        return response($cleanHtml)->header('Content-Type', 'text/html');
-    }
-    
-    return response()->json($result);
-});
-
-
- Route::get('/debug-offre/{offerId}', function($offerId) {
-    $offer =  Offre::with(['diplome', 'sector'])->findOrFail($offerId);
-    
-    return response()->json([
-        'offre' => [
-            'id' => $offer->id,
-            'titre' => $offer->titre,
-            'sector_id' => $offer->sector_id,
-            'sector_name' => $offer->sector->name ?? 'NULL',
-            'diplome_id' => $offer->diplome_id,
-            'diplome_name' => $offer->diplome->nom_diplome  ,
-            'annee_experience' => $offer->annee_experience
-        ]
-    ]);
-});
-
-
-Route::get('/diagnose-diplome-relation/{offerId}', function($offerId) {
-    try {
-        $offer =  Offre::findOrFail($offerId);
-        
-        // Test 1: Vérifier le diplôme directement
-        $directDiplome =  Diplome::find($offer->diplome_id);
-        
-        // Test 2: Vérifier la relation via Eloquent
-        $relationDiplome = $offer->diplome;
-        
-        // Test 3: Vérifier la structure de la table
-        $tableColumns = \Schema::getColumnListing('offres');
-        
-        return response()->json([
-            'tests' => [
-                'test_1_direct_diplome' => $directDiplome ? [
-                    'exists' => true,
-                    'id' => $directDiplome->id,
-                    'nom_diplome' => $directDiplome->nom_diplome
-                ] : ['exists' => false],
-                
-                'test_2_relation_diplome' => $relationDiplome ? [
-                    'exists' => true,
-                    'id' => $relationDiplome->id,
-                    'nom_diplome' => $relationDiplome->nom_diplome
-                ] : ['exists' => false, 'problem' => 'RELATION CASSÉE'],
-                
-                'test_3_table_columns' => $tableColumns,
-                'has_diplome_id_column' => in_array('diplome_id', $tableColumns)
-            ],
-            'diagnostic' => (!$directDiplome ? 'DIPLÔME NEXISTE PAS EN BASE' : 
-                           !$relationDiplome )? 'RELATION ELoquent CASSÉE' : 'PROBLÈME INCONNU'
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json(['error' => $e->getMessage()], 500);
-    }
-});
-
-
-
- 
-Route::get('/api/diplomes', function() {  
-
-    $diplomes = Diplome::all();
-        return response()->json($diplomes);
-    
-});
-
-
- 
-Route::get('/test-email', function () {
-    Mail::raw('Test email', function ($message) {
-        $message->to('freddymerlinaikpe@gmail.com')
-                ->subject('Test');
-    });
-    return 'Email sent';
-});
 
 
 Route::get('/email/verify', function () {
@@ -623,28 +305,5 @@ Route::post('/email/resend-verification', [ResendVerificationEmailController::cl
     ->middleware(['throttle:3,1'])
     ->name('enterprise.verification.resend');
 
-/*use Illuminate\Http\Request;
-use Twilio\TwiML\MessagingResponse;
 
-Route::post('api/twilio/webhook', function (Request $request) {
 
-    $dipome= Dipome::get();
-    $body = strtolower(trim($request->input('Body')));
-    $reply = "Hello cest ok !";
-
-    $response = Prism::text()
-->using(Provider::Gemini, 'gemini-2.5-flash')
-->withPrompt('possible de me generer un cv ?')
-->generate();
-
-echo $response->text;
-
-    $response = new MessagingResponse();
-    $response->message($reply);
-
-    return response($response)->header('Content-Type', 'text/xml');
-})->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);*/
-
- 
-
- 

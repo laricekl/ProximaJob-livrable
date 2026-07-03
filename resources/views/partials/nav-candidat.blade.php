@@ -12,8 +12,8 @@
     <ul class="hidden lg:flex items-center gap-8">
       <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.home') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.home') }}">Tableau de bord</a></li>
       <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('offres') }}">Offres</a></li>
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia', 'candidature.historique', 'candidature_ia.historique') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.historiques') }}">Candidatures</a></li>
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('infos.cv') }}">CV</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.historiques') }}">Candidatures</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('infos.cv') }}">Mon CV</a></li>
     </ul>
     <div class="flex items-center gap-4 relative">
       <div class="hidden md:block">
@@ -32,7 +32,7 @@
         <div class="px-4 py-3 border-b border-outline-variant/10 mb-2"><p class="text-sm font-bold text-primary">{{ $candidateFullName }}</p><p class="text-xs text-outline">{{ auth()->user()->email ?? '' }}</p></div>
         <a href="{{ route('user.profil-public') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ $isCandidateRoute('user.profil-public') ? 'text-secondary-container bg-secondary-container/5 font-semibold' : 'text-primary hover:bg-surface-container-low' }} transition-colors"><span class="material-symbols-outlined text-lg {{ $isCandidateRoute('user.profil-public') ? '' : 'text-outline' }}">public</span> Mon profil public</a>
         <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ $isCandidateRoute('profile.edit') ? 'text-secondary-container bg-secondary-container/5 font-semibold' : 'text-primary hover:bg-surface-container-low' }} transition-colors"><span class="material-symbols-outlined text-lg {{ $isCandidateRoute('profile.edit') ? '' : 'text-outline' }}">settings</span> Paramètres</a>
-        <a href="{{ route('user.bonnement') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-primary hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-lg text-outline">workspace_premium</span> Mon abonnement</a>
+        <a href="{{ route('user.abonnement') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-primary hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-lg text-outline">workspace_premium</span> Mon abonnement</a>
         <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-outline-variant/10 pt-2">
           @csrf
           <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-secondary-container hover:bg-secondary-container/10 transition-colors"><span class="material-symbols-outlined text-lg">logout</span> Déconnexion</button>
@@ -50,9 +50,9 @@
     <div id="menu-panel" class="absolute top-0 right-0 w-72 h-full nav-glass rounded-l-3xl shadow-2xl transform translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col gap-8 pt-28 px-8">
       <a href="{{ route('user.home') }}" class="text-lg font-bold {{ $isCandidateRoute('user.home') ? 'text-primary' : 'text-slate-500' }}">Tableau de bord</a>
       <a href="{{ route('offres') }}" class="text-lg font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary' : 'text-slate-500' }}">Offres</a>
-      <a href="{{ route('user.historiques') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia', 'candidature.historique', 'candidature_ia.historique') ? 'text-primary' : 'text-slate-500' }}">Candidatures</a>
+      <a href="{{ route('user.historiques') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary' : 'text-slate-500' }}">Candidatures</a>
       <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-slate-500' }}">Profil public</a>
-      <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-slate-500' }}">CV</a>
+      <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-slate-500' }}">Mon CV</a>
       <a href="{{ route('notifications.index') }}" class="text-lg font-semibold {{ $isCandidateRoute('notifications.index') ? 'text-primary' : 'text-slate-500' }}">Notifications</a>
       <div class="flex items-center justify-between gap-4">
         <span class="text-xs font-black uppercase tracking-widest text-outline">Langue</span>

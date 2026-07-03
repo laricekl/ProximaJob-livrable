@@ -9,14 +9,9 @@ use App\Models\CvExperience;
 use App\Models\CvLangue;
 use App\Models\CvPerfectionnement;
 use App\Models\CvBenevolat;
-use App\Models\Diplome;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class CvProfileController extends Controller
 {
@@ -26,336 +21,18 @@ class CvProfileController extends Controller
      
 
     /**
-     * Stocker un nouveau profil CV
-     */
-   /* public function store(Request $request)
-    {
-
-            $userId = auth()->id();
-            $existingProfile = CvProfile::where('user_id', $userId)->first();
-            
-            if ($existingProfile) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Vous avez déjà un profil CV. Vous pouvez le modifier depuis votre espace.',
-                    'profile_id' => $existingProfile->id
-                ], 422);
-            }
-        // Validation des données principales
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telephone' => 'required|string|max:50',
-            'adresse' => 'nullable|string',
-            'ville' => 'nullable|string|max:255',
-            'code_postal' => 'nullable|string|max:20',
-            'langues_competences' => 'nullable|string',
-            'logiciels' => 'nullable|string',
-            
-            // Validations pour les tableaux
-            'formations' => 'nullable|array',
-            'formations.*.periode' => 'nullable|string|max:100',
-            'formations.*.diplome' => 'required_with:formations|exists:diplomes,id',
-            'formations.*.etablissement' => 'nullable|string|max:500',
-            
-            'competences' => 'nullable|array',
-            'competences.*.description' => 'required_with:competences|string',
-            
-            'experiences' => 'nullable|array',
-            'experiences.*.periode' => 'required_with:experiences|string|max:100',
-            'experiences.*.poste' => 'required_with:experiences|string|max:500',
-            'experiences.*.entreprise' => 'nullable|string|max:500',
-            'experiences.*.description' => 'nullable|string',
-            
-            'langues' => 'nullable|array',
-            'langues.*.nom' => 'required_with:langues|string|max:100',
-            'langues.*.niveau' => 'nullable|string|in:Langue maternelle,Courant,Intermédiaire,Notions de base,Connaissances de base',
-            
-            'perfectionnements' => 'nullable|array',
-            'perfectionnements.*.annee' => 'nullable|string|max:50',
-            'perfectionnements.*.formation' => 'required_with:perfectionnements|string|max:500',
-            'perfectionnements.*.etablissement' => 'nullable|string|max:500',
-            
-            'benevolats' => 'nullable|array',
-            'benevolats.*.periode' => 'nullable|string|max:100',
-            'benevolats.*.role' => 'required_with:benevolats|string|max:500',
-            'benevolats.*.organisation' => 'nullable|string|max:500',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Veuillez corriger les erreurs du formulaire',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        // Utiliser une transaction pour garantir l'intégrité des données
-        DB::beginTransaction();
-
-        try {
-            // Extraire la province de la ville si fournie
-            $province = $this->extractProvince($request->ville);
-
-            // Créer le profil CV principal
-            $cvProfile = CvProfile::create([
-                'user_id' => auth()->id(), // Si l'utilisateur est connecté
-                'nom' => $request->nom,
-                'prenom' => $request->prenom,
-                'email' => $request->email,
-                'telephone' => $request->telephone,
-                'adresse' => $request->adresse,
-                'ville' => $request->ville,
-                'code_postal' => $request->code_postal,
-                'province' => $province,
-                'langues_competences' => $request->langues_competences,
-                'logiciels' => $request->logiciels,
-            ]);
-
-            // Ajouter les formations
-            if ($request->has('formations')) {
-                foreach ($request->formations as $index => $formation) {
-                       
-                        if (!empty($formation['diplome'])) {
-                            $diplome = \App\Models\Diplome::find($formation['diplome']);
-                            if ($diplome) {
-                                CvFormation::create([
-                                    'cv_profile_id' => $cvProfile->id,
-                                    'periode' => $formation['periode'] ?? null,
-                                    'diplome' => $diplome->nom_diplome,
-                                    'diplome_id' => $diplome->id,
-                                    'etablissement' => $formation['etablissement'] ?? null,
-                                    'ordre' => $index
-                                ]);
-                            } else {
-                                \Log::warning('Diplôme non trouvé', [
-                                    'diplome_id' => $formation['diplome'],
-                                    'cv_profile_id' => $cvProfile->id
-                                ]);
-                            }
-                        }
-                }
-            }
-
-       
-            // Ajouter les compétences spécifiques
-            if ($request->has('competences')) {
-                foreach ($request->competences as $index => $competence) {
-                    if (!empty($competence['description'])) {
-                        CvCompetence::create([
-                            'cv_profile_id' => $cvProfile->id,
-                            'description' => $competence['description'],
-                            'type' => 'specifique',
-                            'ordre' => $index
-                        ]);
-                    }
-                }
-            }
-
-            // Ajouter les expériences professionnelles
-            if ($request->has('experiences')) {
-                foreach ($request->experiences as $index => $experience) {
-                    if (!empty($experience['poste'])) {
-                        CvExperience::create([
-                            'cv_profile_id' => $cvProfile->id,
-                            'periode' => $experience['periode'],
-                            'poste' => $experience['poste'],
-                            'entreprise' => $experience['entreprise'] ?? null,
-                            'description' => $experience['description'] ?? null,
-                            'ordre' => $index
-                        ]);
-                    }
-                }
-            }
-
-            // Ajouter les langues
-            if ($request->has('langues')) {
-                foreach ($request->langues as $index => $langue) {
-                    if (!empty($langue['nom'])) {
-                        CvLangue::create([
-                            'cv_profile_id' => $cvProfile->id,
-                            'nom' => $langue['nom'],
-                            'niveau' => $langue['niveau'] ?? null,
-                            'ordre' => $index
-                        ]);
-                    }
-                }
-            }
-
-            // Ajouter les perfectionnements
-            if ($request->has('perfectionnements')) {
-                foreach ($request->perfectionnements as $index => $perfectionnement) {
-                    if (!empty($perfectionnement['formation'])) {
-                        CvPerfectionnement::create([
-                            'cv_profile_id' => $cvProfile->id,
-                            'annee' => $perfectionnement['annee'] ?? null,
-                            'formation' => $perfectionnement['formation'],
-                            'etablissement' => $perfectionnement['etablissement'] ?? null,
-                            'ordre' => $index
-                        ]);
-                    }
-                }
-            }
-
-            // Ajouter les activités bénévoles
-            if ($request->has('benevolats')) {
-                foreach ($request->benevolats as $index => $benevolat) {
-                    if (!empty($benevolat['role'])) {
-                        CvBenevolat::create([
-                            'cv_profile_id' => $cvProfile->id,
-                            'periode' => $benevolat['periode'] ?? null,
-                            'role' => $benevolat['role'],
-                            'organisation' => $benevolat['organisation'] ?? null,
-                            'ordre' => $index
-                        ]);
-                    }
-                }
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Votre profil CV a été enregistré avec succès !',
-                'cv_profile_id' => $cvProfile->id
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Une erreur est survenue lors de l\'enregistrement',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }*/
-
-     
-    public function inlinePrincipalPdf(Request $request)
-    {
-        $cvProfile = $this->currentUserCvProfile($request);
-        $filename = $this->principalCvFilename($cvProfile);
-        $pdf = $this->makePrincipalCvPdf($cvProfile);
-
-        return response($pdf->output(), 200, [
-            'Content-Type' => 'application/pdf',
-            'Content-Disposition' => 'inline; filename="'.$filename.'"',
-        ]);
-    }
-
-    public function downloadPrincipalPdf(Request $request)
-    {
-        $cvProfile = $this->currentUserCvProfile($request);
-
-        return $this->makePrincipalCvPdf($cvProfile)
-            ->download($this->principalCvFilename($cvProfile));
-    }
-
-    public function uploadSourceCv(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'cv' => 'required|file|mimes:pdf,doc,docx,txt|max:5120',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Veuillez choisir un CV PDF, DOC, DOCX ou TXT de 5 Mo maximum.',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
-        $user = $request->user();
-
-        if (! $user) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Session utilisateur introuvable.',
-            ], 401);
-        }
-
-        $uploadPath = public_path('assets/cvs');
-
-        if (! File::exists($uploadPath)) {
-            File::makeDirectory($uploadPath, 0755, true);
-        }
-
-        if ($user->cv && Str::startsWith($user->cv, 'assets/cvs/')) {
-            $oldPath = public_path($user->cv);
-
-            if (File::exists($oldPath)) {
-                File::delete($oldPath);
-            }
-        }
-
-        $file = $request->file('cv');
-        $extension = $file->getClientOriginalExtension();
-        $filename = 'cv_user_'.$user->id.'_'.Str::uuid().'.'.$extension;
-        $file->move($uploadPath, $filename);
-
-        $user->cv = 'assets/cvs/'.$filename;
-        $user->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'CV source téléversé. Vous pouvez maintenant l’analyser.',
-            'cv' => $user->cv,
-            'filename' => $filename,
-            'url' => asset($user->cv),
-        ]);
-    }
-
-    public function importFromUploadedCv(Request $request)
-    {
-        $user = $request->user();
-
-        if (! $user || empty($user->cv)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Aucun CV televerse trouve sur votre compte.',
-            ], 404);
-        }
-
-        $path = $this->resolveUploadedCvPath((string) $user->cv);
-
-        if (! $path || ! File::exists($path)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Le fichier CV televerse est introuvable.',
-            ], 404);
-        }
-
-        $text = $this->extractTextFromCvFile($path);
-
-        if (trim($text) === '') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Impossible de lire ce CV. Essayez un PDF texte, DOCX ou TXT.',
-            ], 422);
-        }
-
-        $fallbackDraft = $this->buildCvDraftFromText($text, $user);
-        $aiDraft = $this->buildCvDraftWithAi($text);
-        $fields = $aiDraft ? $this->mergeCvDrafts($fallbackDraft, $aiDraft) : $fallbackDraft;
-        $source = $aiDraft && $this->cvDraftHasUsefulData($aiDraft) ? 'deepseek' : 'fallback';
-
-        return response()->json([
-            'success' => true,
-            'message' => $source === 'deepseek'
-                ? 'CV analyse par IA. Verifiez les champs avant enregistrement.'
-                : 'Informations extraites sans IA. Verifiez les champs avant enregistrement.',
-            'fields' => $fields,
-            'source' => $source,
-        ]);
-    }
-
  public function store(Request $request)
 {
     $userId = auth()->id();
     $existingProfile = CvProfile::where('user_id', $userId)->first();
-    $isUpdatingExisting = (bool) $existingProfile;
+    
+    if ($existingProfile) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Vous avez déjà un profil CV. Vous pouvez le modifier depuis votre espace.',
+            'profile_id' => $existingProfile->id
+        ], 422);
+    }
 
     // Validation des données principales
     $validator = Validator::make($request->all(), [
@@ -372,30 +49,30 @@ class CvProfileController extends Controller
         // Validations pour les tableaux
         'formations' => 'nullable|array',
         'formations.*.periode' => 'nullable|string|max:100',
-        'formations.*.diplome' => 'nullable|exists:diplomes,id',
+        'formations.*.diplome' => 'required_with:formations|exists:diplomes,id',
         'formations.*.etablissement' => 'nullable|string|max:500',
         
         'competences' => 'nullable|array',
-        'competences.*.description' => 'nullable|string',
+        'competences.*.description' => 'required_with:competences|string',
         
         'experiences' => 'nullable|array',
-        'experiences.*.periode' => 'nullable|string|max:100',
-        'experiences.*.poste' => 'nullable|string|max:500',
+        'experiences.*.periode' => 'required_with:experiences|string|max:100',
+        'experiences.*.poste' => 'required_with:experiences|string|max:500',
         'experiences.*.entreprise' => 'nullable|string|max:500',
         'experiences.*.description' => 'nullable|string',
         
         'langues' => 'nullable|array',
-        'langues.*.nom' => 'nullable|string|max:100',
+        'langues.*.nom' => 'required_with:langues|string|max:100',
         'langues.*.niveau' => 'nullable|string|in:Langue maternelle,Courant,Intermédiaire,Notions de base,Connaissances de base',
         
         'perfectionnements' => 'nullable|array',
         'perfectionnements.*.annee' => 'nullable|string|max:50',
-        'perfectionnements.*.formation' => 'nullable|string|max:500',
+        'perfectionnements.*.formation' => 'required_with:perfectionnements|string|max:500',
         'perfectionnements.*.etablissement' => 'nullable|string|max:500',
         
         'benevolats' => 'nullable|array',
         'benevolats.*.periode' => 'nullable|string|max:100',
-        'benevolats.*.role' => 'nullable|string|max:500',
+        'benevolats.*.role' => 'required_with:benevolats|string|max:500',
         'benevolats.*.organisation' => 'nullable|string|max:500',
     ]);
 
@@ -414,7 +91,9 @@ class CvProfileController extends Controller
         // Extraire la province de la ville si fournie
         $province = $this->extractProvince($request->ville);
 
-        $profileData = [
+        // Créer le profil CV principal
+        $cvProfile = CvProfile::create([
+            'user_id' => auth()->id(),
             'nom' => $request->nom,
             'prenom' => $request->prenom_cv,
             'email' => $request->email_cv,
@@ -425,23 +104,7 @@ class CvProfileController extends Controller
             'province' => $province,
             'langues_competences' => $request->langues_competences,
             'logiciels' => $request->logiciels,
-        ];
-
-        if ($isUpdatingExisting) {
-            $cvProfile = $existingProfile;
-            $cvProfile->update($profileData);
-
-            $cvProfile->formations()->delete();
-            $cvProfile->competences()->delete();
-            $cvProfile->experiences()->delete();
-            $cvProfile->langues()->delete();
-            $cvProfile->perfectionnements()->delete();
-            $cvProfile->benevolats()->delete();
-        } else {
-            $cvProfile = CvProfile::create([
-                'user_id' => auth()->id(),
-            ] + $profileData);
-        }
+        ]);
 
         // Ajouter les formations
         if ($request->has('formations') && is_array($request->formations)) {
@@ -575,9 +238,7 @@ class CvProfileController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => ($isUpdatingExisting
-                        ? 'Votre profil CV a été mis à jour avec succès !'
-                        : 'Votre profil CV a été enregistré avec succès !') . 
+            'message' => 'Votre profil CV a été enregistré avec succès !' . 
                         ($autoMatchingTriggered ? ' Recherche d\'opportunités en cours...' : ''),
             'cv_profile_id' => $cvProfile->id,
             'auto_matching_triggered' => $autoMatchingTriggered
@@ -625,7 +286,106 @@ public function update(Request $request, $id)
         ], 403);
     }
 
-    return $this->store($request);
+    // Validation des données
+    $validator = Validator::make($request->all(), [
+        'prenom_cv' => 'required|string|max:255',
+        'nom' => 'required|string|max:255',
+        'email_cv' => 'required|email|max:255',
+        'telephone_cv' => 'nullable|string|max:50',
+        'adresse' => 'nullable|string|max:500',
+        'ville' => 'nullable|string|max:255',
+        'code_postal' => 'nullable|string|max:20',
+        'langues_competences' => 'nullable|string',
+        'logiciels' => 'nullable|string',
+        'formations' => 'nullable|array',
+        'competences' => 'nullable|array',
+        'experiences' => 'nullable|array',
+        'langues' => 'nullable|array',
+        'perfectionnements' => 'nullable|array',
+        'benevolats' => 'nullable|array',
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Veuillez corriger les erreurs du formulaire',
+            'errors' => $validator->errors()
+        ], 422);
+    }
+
+    DB::beginTransaction();
+
+    try {
+        // Mettre à jour les informations de base du profil CV
+        $cvProfile->update([
+            'nom' => $request->nom,
+            'prenom' => $request->prenom_cv,
+            'email' => $request->email_cv,
+            'telephone' => $request->telephone_cv,
+            'adresse' => $request->adresse,
+            'ville' => $request->ville,
+            'code_postal' => $request->code_postal,
+            'province' => $this->extractProvince($request->ville),
+            'langues_competences' => $request->langues_competences,
+            'logiciels' => $request->logiciels,
+        ]);
+
+        // Mettre à jour les relations (formations, compétences, expériences, etc.)
+        $this->updateRelations($cvProfile, $request);
+
+        DB::commit();
+
+        // ============================================
+        // 🚀 DÉCLENCHEMENT DE L'AUTO-MATCHING
+        // ============================================
+        try {
+            // Dispatcher le job d'auto-matching
+            \App\Jobs\AutoMatchingJob::dispatch($cvProfile->user_id)
+               ->delay(now()->addSeconds(5));
+            
+            \Log::info('Auto-matching Job dispatché après mise à jour profil CV', [
+                'user_id' => $cvProfile->user_id,
+                'cv_profile_id' => $cvProfile->id,
+                'has_formations' => $cvProfile->formations()->count() > 0,
+                'has_experiences' => $cvProfile->experiences()->count() > 0
+            ]);
+            
+            $autoMatchingTriggered = true;
+            
+        } catch (\Exception $e) {
+            \Log::error('Erreur lors du dispatch AutoMatchingJob après mise à jour CV', [
+                'user_id' => $cvProfile->user_id,
+                'cv_profile_id' => $cvProfile->id,
+                'error' => $e->getMessage()
+            ]);
+            
+            $autoMatchingTriggered = false;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Votre profil CV a été mis à jour avec succès !' . 
+                        ($autoMatchingTriggered ? ' Recherche d\'opportunités en cours...' : ''),
+            'cv_profile_id' => $cvProfile->id,
+            'auto_matching_triggered' => $autoMatchingTriggered
+        ]);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        
+        \Log::error('Erreur lors de la mise à jour du CV:', [
+            'error' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+            'user_id' => auth()->id(),
+            'cv_profile_id' => $id
+        ]);
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Une erreur est survenue lors de la mise à jour',
+            'error' => config('app.debug') ? $e->getMessage() : 'Erreur serveur'
+        ], 500);
+    }
 }
 
     /**
@@ -637,34 +397,6 @@ public function update(Request $request, $id)
             return $matches[1];
         }
         return null;
-    }
-
-    private function currentUserCvProfile(Request $request): CvProfile
-    {
-        return CvProfile::with([
-            'formations',
-            'competences',
-            'experiences',
-            'langues',
-            'perfectionnements',
-            'benevolats',
-        ])
-            ->where('user_id', $request->user()->id)
-            ->firstOrFail();
-    }
-
-    private function makePrincipalCvPdf(CvProfile $cvProfile)
-    {
-        return Pdf::loadView('cv.principal-template', [
-            'cvProfile' => $cvProfile,
-        ])->setPaper('a4', 'portrait');
-    }
-
-    private function principalCvFilename(CvProfile $cvProfile): string
-    {
-        $name = Str::slug(trim($cvProfile->prenom.' '.$cvProfile->nom)) ?: 'candidat';
-
-        return 'cv-principal-'.$name.'.pdf';
     }
 
     /**
@@ -694,10 +426,16 @@ public function update(Request $request, $id)
     {
         foreach ($formations as $index => $formation) {
             if (!empty($formation['diplome'])) {
+                // Résoudre le nom du diplôme à partir de l'ID
+                $diplome = \App\Models\Diplome::find($formation['diplome']);
+                $diplomeNom = $diplome ? $diplome->nom_diplome : $formation['diplome'];
+                $diplomeId = $diplome ? $diplome->id : null;
+
                 CvFormation::create([
                     'cv_profile_id' => $cvProfile->id,
                     'periode' => $formation['periode'] ?? null,
-                    'diplome' => $formation['diplome'],
+                    'diplome' => $diplomeNom,
+                    'diplome_id' => $diplomeId,
                     'etablissement' => $formation['etablissement'] ?? null,
                     'ordre' => $index
                 ]);
@@ -779,126 +517,246 @@ public function update(Request $request, $id)
         }
     }
 
-    private function resolveUploadedCvPath(string $storedPath): ?string
+    /**
+     * Téléverse le CV source (PDF/DOCX) de l'utilisateur.
+     */
+    public function uploadSourceCv(Request $request)
     {
-        foreach ([public_path($storedPath), storage_path('app/public/'.$storedPath), storage_path('app/'.$storedPath)] as $candidate) {
-            if (File::exists($candidate)) {
-                return $candidate;
+        $request->validate([
+            'cv' => 'required|file|mimes:pdf,doc,docx,txt|max:4096',
+        ]);
+
+        $user = auth()->user();
+        $file = $request->file('cv');
+        $path = $file->storeAs(
+            'cvs-source',
+            'source_' . $user->id . '_' . time() . '.' . $file->getClientOriginalExtension(),
+            'public'
+        );
+
+        // Stocker le chemin dans le champ cv de l'utilisateur pour référence
+        $user->cv = $path;
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'CV source téléversé avec succès.',
+            'path' => $path,
+        ]);
+    }
+
+    /**
+     * Importe les données du CV uploadé pour pré-remplir le formulaire CV.
+     * Utilise Gemini pour analyser le CV et extraire les champs structurés.
+     */
+    public function importFromUploadedCv(Request $request)
+    {
+        $user = auth()->user();
+
+        if (!$user->cv) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucun CV source téléversé. Importez d\'abord un fichier.',
+            ], 400);
+        }
+
+        $fullPath = storage_path('app/public/' . $user->cv);
+
+        if (!file_exists($fullPath)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le fichier CV source est introuvable.',
+            ], 404);
+        }
+
+        // Extraire le contenu texte du CV
+        $cvText = $this->extractTextFromCvFile($fullPath, $user->cv);
+
+        if (!$cvText) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Impossible de lire le contenu de ce fichier. Essayez avec un fichier TXT ou PDF contenant du texte.',
+            ], 422);
+        }
+
+        // Analyser avec Gemini (avec fallback regex si Gemini indisponible)
+        $fields = $this->analyzeCvWithGemini($cvText, $user);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'CV analysé avec succès. Les champs ont été pré-remplis.',
+            'fields' => $fields,
+        ]);
+    }
+
+    /**
+     * Extrait le texte brut d'un fichier CV (TXT ou PDF).
+     */
+    private function extractTextFromCvFile(string $path, string $filename): ?string
+    {
+        $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+        if ($ext === 'txt') {
+            $content = file_get_contents($path);
+            return mb_convert_encoding($content ?: '', 'UTF-8');
+        }
+
+        // Pour les PDF, extraction basique du texte entre les flux
+        if ($ext === 'pdf') {
+            $content = file_get_contents($path);
+            if (!$content) return null;
+
+            // Extraction simple du texte lisible dans un PDF
+            $text = '';
+            // Décode les flux texte entre BT et ET
+            if (preg_match_all('/BT\s*(.*?)\s*ET/s', $content, $blocks)) {
+                foreach ($blocks[1] as $block) {
+                    // Extrait le texte entre parenthèses dans les commandes Tj
+                    if (preg_match_all('/\((.*?)\)\s*Tj/', $block, $matches)) {
+                        $text .= implode(' ', $matches[1]) . "\n";
+                    }
+                }
             }
+
+            // Fallback : extraire tout texte lisible
+            if (empty(trim($text))) {
+                preg_match_all('/\(([^)]{2,})\)/', $content, $matches);
+                $text = implode("\n", $matches[1]);
+            }
+
+            return $text ?: null;
+        }
+
+        // DOCX — tentative d'extraction du XML
+        if ($ext === 'docx') {
+            $content = file_get_contents($path);
+            if (!$content) return null;
+            // DOCX est un ZIP contenant word/document.xml
+            $tmp = sys_get_temp_dir() . '/cv_import_' . uniqid();
+            file_put_contents($tmp, $content);
+            $zip = new \ZipArchive();
+            if ($zip->open($tmp) === true) {
+                $xml = $zip->getFromName('word/document.xml');
+                $zip->close();
+                unlink($tmp);
+                if ($xml) {
+                    $text = strip_tags($xml);
+                    $text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
+                    // Nettoie les espaces multiples
+                    $text = preg_replace('/\s+/', ' ', $text);
+                    return trim($text);
+                }
+            }
+            unlink($tmp);
+            return null;
         }
 
         return null;
     }
 
-    private function extractTextFromCvFile(string $path): string
+    /**
+     * Analyse le contenu d'un CV avec DeepSeek pour extraire les champs structurés.
+     * Fallback sur Gemini, puis sur l'extraction regex si aucun provider n'est disponible.
+     */
+    private function analyzeCvWithGemini(string $cvText, $user): array
     {
-        return match (strtolower(pathinfo($path, PATHINFO_EXTENSION))) {
-            'txt' => (string) File::get($path),
-            'pdf' => $this->extractTextFromPdf($path),
-            'docx' => $this->extractTextFromDocx($path),
-            'doc' => $this->extractTextFromDoc($path),
-            default => '',
-        };
-    }
+        $prompt = <<<PROMPT
+Tu es un assistant RH expert en analyse de CV. Analyse le CV suivant et extrait les informations dans un format JSON structuré.
 
-    private function extractTextFromPdf(string $path): string
-    {
-        $binary = trim((string) shell_exec('command -v pdftotext 2>/dev/null'));
+CV à analyser :
+```
+{$cvText}
+```
 
-        return $binary === ''
-            ? ''
-            : (string) shell_exec(escapeshellcmd($binary).' -layout '.escapeshellarg($path).' - 2>/dev/null');
-    }
+Retourne UNIQUEMENT un objet JSON valide avec ces clés (laisse vide si non trouvé) :
+{
+    "nom": "",
+    "prenom_cv": "",
+    "email_cv": "",
+    "telephone_cv": "",
+    "adresse": "",
+    "ville": "",
+    "code_postal": "",
+    "langues_competences": "",
+    "logiciels": "",
+    "formations": [{"periode": "", "diplome": "", "etablissement": ""}],
+    "competences": [{"description": ""}],
+    "experiences": [{"periode": "", "poste": "", "entreprise": "", "description": ""}],
+    "langues": [{"langue": ""}],
+    "perfectionnements": [{"annee": "", "formation": "", "etablissement": ""}],
+    "benevolats": [{"periode": "", "role": "", "organisation": ""}]
+}
 
-    private function extractTextFromDocx(string $path): string
-    {
-        $zip = new \ZipArchive();
+IMPORTANT: Retourne UNIQUEMENT le JSON, pas de texte autour.
+PROMPT;
 
-        if ($zip->open($path) !== true) {
-            return '';
-        }
-
-        $xml = $zip->getFromName('word/document.xml') ?: '';
-        $zip->close();
-
-        if ($xml === '') {
-            return '';
-        }
-
-        $xml = preg_replace('/<\/w:p>/', "\n", $xml) ?? $xml;
-        $xml = preg_replace('/<\/w:tab>/', "\t", $xml) ?? $xml;
-
-        return html_entity_decode(strip_tags($xml), ENT_QUOTES | ENT_XML1, 'UTF-8');
-    }
-
-    private function extractTextFromDoc(string $path): string
-    {
-        $binary = trim((string) shell_exec('command -v textutil 2>/dev/null'));
-
-        return $binary === ''
-            ? ''
-            : (string) shell_exec(escapeshellcmd($binary).' -convert txt -stdout '.escapeshellarg($path).' 2>/dev/null');
-    }
-
-    private function buildCvDraftFromText(string $text, $user): array
-    {
-        $text = preg_replace("/\r\n|\r/", "\n", $text) ?? $text;
-        $lines = collect(explode("\n", $text))
-            ->map(fn ($line) => trim(preg_replace('/\s+/', ' ', $line) ?? $line))
-            ->filter()
-            ->values();
-
-        $email = $this->firstRegex($text, '/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i') ?: (string) $user->email;
-        $phone = $this->firstRegex($text, '/(?:\+?1[\s.\-]?)?(?:\(?\d{3}\)?[\s.\-]?)\d{3}[\s.\-]?\d{4}/');
-        [$prenom, $nom] = $this->splitName($this->guessNameLine($lines, $email, $phone), $user);
-
-        $skillsText = $this->extractSection($text, ['competences', 'compétences', 'skills'], ['experience', 'expérience', 'formation', 'education', 'langues']);
-        $experienceText = $this->extractSection($text, ['experience', 'expérience', 'employment', 'work history'], ['formation', 'education', 'competences', 'compétences', 'langues']);
-        $formationText = $this->extractSection($text, ['formation', 'education', 'etudes', 'études'], ['experience', 'expérience', 'competences', 'compétences', 'langues']);
-        $languageText = $this->extractSection($text, ['langues', 'languages'], ['experience', 'expérience', 'formation', 'education', 'competences', 'compétences']);
-
-        return [
-            'nom' => $nom,
-            'prenom_cv' => $prenom,
-            'email_cv' => $email,
-            'telephone_cv' => $phone,
-            'ville' => $this->guessCityLine($lines),
-            'langues_competences' => $this->shortText($skillsText ?: $this->extractBulletBlock($text), 500),
-            'logiciels' => $this->shortText($this->extractSoftwareLine($text)),
-            'competences' => array_values(array_filter([
-                $this->shortText($skillsText ?: $this->extractBulletBlock($text), 600),
-            ])),
-            'langues' => array_values(array_filter([
-                [
-                    'nom' => $this->guessLanguageName($languageText),
-                    'niveau' => $this->guessLanguageLevel($languageText),
-                ],
-            ], fn ($item) => trim(implode('', $item)) !== '')),
-            'experiences' => array_values(array_filter([
-                [
-                    'periode' => $this->firstRegex($experienceText, '/(?:19|20)\d{2}\s*(?:-|–|à|a|to)\s*(?:present|aujourd.?hui|maintenant|(?:19|20)\d{2})/iu'),
-                    'poste' => $this->guessTitleFromSection($experienceText),
-                    'entreprise' => '',
-                    'description' => $this->shortText($experienceText, 900),
-                ],
-            ], fn ($item) => trim(implode('', $item)) !== '')),
-            'formations' => array_values(array_filter([
-                [
-                    'periode' => $this->firstRegex($formationText, '/(?:19|20)\d{2}\s*(?:-|–|à|a|to)\s*(?:present|aujourd.?hui|maintenant|(?:19|20)\d{2})/iu'),
-                    'etablissement' => $this->guessTitleFromSection($formationText),
-                ],
-            ], fn ($item) => trim(implode('', $item)) !== '')),
+        // Essayer DeepSeek d'abord, puis Gemini, puis fallback regex
+        $providers = [
+            [\Prism\Prism\Enums\Provider::DeepSeek, 'deepseek-chat', 'DEEPSEEK_API_KEY'],
+            [\Prism\Prism\Enums\Provider::Gemini, 'gemini-2.5-flash', 'GEMINI_API_KEY'],
         ];
-    }
 
-    private function buildCvDraftWithAi(string $text): ?array
-    {
-        if (env('CV_AI_PROVIDER', 'deepseek') !== 'deepseek' || ! env('DEEPSEEK_API_KEY')) {
-            return null;
+        foreach ($providers as [$provider, $model, $envKey]) {
+            if (!env($envKey)) continue;
+
+            try {
+                $response = \Prism\Prism\Prism::text()
+                    ->using($provider, $model)
+                    ->withPrompt($prompt)
+                    ->withMaxTokens(4096)
+                    ->generate();
+
+                $jsonText = trim($response->text);
+                $jsonText = preg_replace('/^```json\s*/', '', $jsonText);
+                $jsonText = preg_replace('/\s*```$/', '', $jsonText);
+
+                $fields = json_decode($jsonText, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    \Log::warning("CV analysis with {$model} returned invalid JSON", [
+                        'error' => json_last_error_msg(),
+                        'provider' => $model,
+                    ]);
+                    continue; // Essayer le provider suivant
+                }
+
+                return $this->normalizeGeminiFields($fields);
+
+            } catch (\Exception $e) {
+                \Log::warning("CV analysis failed with {$model}: " . $e->getMessage());
+                continue; // Essayer le provider suivant
+            }
         }
 
-        $text = $this->shortText($text, 12000);
-        $schema = [
+        // Aucun provider IA disponible — fallback regex
+        \Log::info('CV analysis: no AI provider available, using regex fallback');
+        return $this->extractFieldsFromText($cvText);
+    }
+
+    /**
+     * Normalise les champs retournés par Gemini pour correspondre au formulaire.
+     */
+    private function normalizeGeminiFields(array $fields): array
+    {
+        // S'assurer que tous les champs attendus existent
+        $defaults = [
+            'nom', 'prenom_cv', 'email_cv', 'telephone_cv',
+            'adresse', 'ville', 'code_postal', 'langues_competences', 'logiciels',
+        ];
+
+        foreach ($defaults as $key) {
+            $fields[$key] = $fields[$key] ?? '';
+        }
+
+        return $fields;
+    }
+
+    /**
+     * Extraction basique de champs depuis un fichier texte (fallback sans IA).
+     */
+    private function extractFieldsFromText(string $text): array
+    {
+        $fields = [
             'nom' => '',
             'prenom_cv' => '',
             'email_cv' => '',
@@ -908,330 +766,63 @@ public function update(Request $request, $id)
             'code_postal' => '',
             'langues_competences' => '',
             'logiciels' => '',
-            'competences' => [['description' => '']],
-            'experiences' => [['periode' => '', 'poste' => '', 'entreprise' => '', 'description' => '']],
-            'formations' => [['periode' => '', 'etablissement' => '', 'diplome_text' => '']],
-            'langues' => [['nom' => '', 'niveau' => '']],
-            'perfectionnements' => [['annee' => '', 'formation' => '', 'etablissement' => '']],
-            'benevolats' => [['periode' => '', 'role' => '', 'organisation' => '']],
         ];
 
-        $prompt = "Tu extrais un CV en JSON strict pour pre-remplir un formulaire Laravel.\n"
-            ."Contraintes:\n"
-            ."- Reponds uniquement avec du JSON valide, sans markdown.\n"
-            ."- N'invente rien. Si une information manque, mets une chaine vide.\n"
-            ."- Maximum 5 experiences, 5 formations, 8 competences, 5 langues.\n"
-            ."- Les niveaux de langue doivent etre: Langue maternelle, Courant, Intermédiaire, Notions de base, Connaissances de base, ou vide.\n"
-            ."- Schema attendu: ".json_encode($schema, JSON_UNESCAPED_UNICODE)."\n\n"
-            ."Texte du CV:\n".$text;
-
-        try {
-            $response = Http::timeout(45)
-                ->withToken(env('DEEPSEEK_API_KEY'))
-                ->post('https://api.deepseek.com/v1/chat/completions', [
-                    'model' => env('DEEPSEEK_MODEL', 'deepseek-chat'),
-                    'temperature' => 0,
-                    'max_tokens' => 3000,
-                    'messages' => [
-                        ['role' => 'system', 'content' => 'Tu es un extracteur de CV. Tu reponds uniquement en JSON valide.'],
-                        ['role' => 'user', 'content' => $prompt],
-                    ],
-                    'response_format' => ['type' => 'json_object'],
-                ]);
-
-            if (! $response->successful()) {
-                return null;
-            }
-
-            $content = $response->json('choices.0.message.content');
-
-            if (! is_string($content) || trim($content) === '') {
-                return null;
-            }
-
-            $decoded = json_decode($content, true);
-
-            return is_array($decoded) ? $this->normalizeAiCvDraft($decoded) : null;
-        } catch (\Throwable $e) {
-            return null;
-        }
-    }
-
-    private function normalizeAiCvDraft(array $draft): array
-    {
-        $string = fn ($key, $limit = 500) => $this->shortText((string) ($draft[$key] ?? ''), $limit);
-        $list = function (string $key, array $allowed, int $limit = 5) use ($draft) {
-            $items = is_array($draft[$key] ?? null) ? $draft[$key] : [];
-
-            return collect($items)
-                ->filter(fn ($item) => is_array($item))
-                ->take($limit)
-                ->map(function ($item) use ($allowed) {
-                    $normalized = [];
-
-                    foreach ($allowed as $field => $max) {
-                        $normalized[$field] = $this->shortText((string) ($item[$field] ?? ''), $max);
-                    }
-
-                    return $normalized;
-                })
-                ->filter(fn ($item) => trim(implode('', $item)) !== '')
-                ->values()
-                ->all();
-        };
-
-        $normalized = [
-            'nom' => $string('nom', 120),
-            'prenom_cv' => $string('prenom_cv', 120),
-            'email_cv' => $string('email_cv', 160),
-            'telephone_cv' => $string('telephone_cv', 60),
-            'adresse' => $string('adresse', 255),
-            'ville' => $string('ville', 160),
-            'code_postal' => $string('code_postal', 30),
-            'langues_competences' => $string('langues_competences', 800),
-            'logiciels' => $string('logiciels', 500),
-            'competences' => $list('competences', ['description' => 500], 8),
-            'experiences' => $list('experiences', ['periode' => 100, 'poste' => 180, 'entreprise' => 180, 'description' => 900], 5),
-            'formations' => collect($list('formations', ['periode' => 100, 'etablissement' => 220, 'diplome_text' => 220], 5))
-                ->map(function ($formation) {
-                    $formation['diplome'] = $this->matchDiplomeId((string) ($formation['diplome_text'] ?? ''));
-
-                    return $formation;
-                })
-                ->all(),
-            'langues' => $list('langues', ['nom' => 100, 'niveau' => 80], 5),
-            'perfectionnements' => $list('perfectionnements', ['annee' => 50, 'formation' => 220, 'etablissement' => 220], 5),
-            'benevolats' => $list('benevolats', ['periode' => 100, 'role' => 220, 'organisation' => 220], 5),
-        ];
-
-        return $this->normalizeCvNameFields($normalized);
-    }
-
-    private function normalizeCvNameFields(array $draft): array
-    {
-        $firstName = trim((string) ($draft['prenom_cv'] ?? ''));
-        $lastName = trim((string) ($draft['nom'] ?? ''));
-
-        if ($firstName !== '' && $lastName !== '' && str_starts_with(
-            $this->normalizeSearchText($lastName),
-            $this->normalizeSearchText($firstName).' '
-        )) {
-            $draft['nom'] = trim(mb_substr($lastName, mb_strlen($firstName)));
+        // Email
+        if (preg_match('/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/', $text, $m)) {
+            $fields['email_cv'] = $m[0];
         }
 
-        return $draft;
-    }
-
-    private function mergeCvDrafts(array $fallback, array $ai): array
-    {
-        $merged = $fallback;
-
-        foreach ($ai as $key => $value) {
-            if (is_array($value)) {
-                if (! empty($value)) {
-                    $merged[$key] = $value;
-                }
-
-                continue;
-            }
-
-            if (trim((string) $value) !== '') {
-                $merged[$key] = $value;
-            }
+        // Téléphone nord-américain
+        if (preg_match('/\(?[0-9]{3}\)?[-.\s]?[0-9]{3}[-.\s]?[0-9]{4}/', $text, $m)) {
+            $fields['telephone_cv'] = $m[0];
         }
 
-        return $merged;
-    }
-
-    private function cvDraftHasUsefulData(array $draft): bool
-    {
-        foreach (['nom', 'prenom_cv', 'email_cv', 'telephone_cv', 'adresse', 'ville', 'langues_competences', 'logiciels'] as $key) {
-            if (trim((string) ($draft[$key] ?? '')) !== '') {
-                return true;
-            }
+        // Code postal canadien
+        if (preg_match('/[A-Za-z]\d[A-Za-z]\s?\d[A-Za-z]\d/', $text, $m)) {
+            $fields['code_postal'] = $m[0];
         }
 
-        foreach (['competences', 'experiences', 'formations', 'langues', 'perfectionnements', 'benevolats'] as $key) {
-            if (! empty($draft[$key])) {
-                return true;
-            }
+        return $fields;
+    }
+
+    /**
+     * Affiche le PDF du CV principal dans un iframe (inline).
+     */
+    public function inlinePrincipalPdf()
+    {
+        $cvProfile = CvProfile::with([
+            'formations', 'competences', 'experiences',
+            'langues', 'perfectionnements', 'benevolats',
+        ])->where('user_id', auth()->id())->first();
+
+        if (!$cvProfile) {
+            abort(404, 'Aucun profil CV trouvé. Veuillez d\'abord créer votre CV.');
         }
 
-        return false;
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.principal-template', compact('cvProfile'));
+        $pdf->setPaper('A4');
+
+        return $pdf->stream('cv_principal.pdf');
     }
 
-    private function matchDiplomeId(string $label): string
+    /**
+     * Télécharge le PDF du CV principal.
+     */
+    public function downloadPrincipalPdf()
     {
-        $normalizedLabel = $this->normalizeSearchText($label);
+        $cvProfile = CvProfile::with([
+            'formations', 'competences', 'experiences',
+            'langues', 'perfectionnements', 'benevolats',
+        ])->where('user_id', auth()->id())->first();
 
-        if ($normalizedLabel === '') {
-            return '';
+        if (!$cvProfile) {
+            abort(404, 'Aucun profil CV trouvé. Veuillez d\'abord créer votre CV.');
         }
 
-        $diplomes = Diplome::query()->select('id', 'nom_diplome')->get();
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.principal-template', compact('cvProfile'));
+        $pdf->setPaper('A4');
 
-        foreach ($diplomes as $diplome) {
-            $normalizedDiplome = $this->normalizeSearchText((string) $diplome->nom_diplome);
-
-            if ($normalizedDiplome !== '' && (
-                str_contains($normalizedLabel, $normalizedDiplome)
-                || str_contains($normalizedDiplome, $normalizedLabel)
-            )) {
-                return (string) $diplome->id;
-            }
-        }
-
-        $aliases = [
-            'dec' => ['dec', 'cegep'],
-            'baccalaureat' => ['baccalaureat', 'bachelor'],
-            'dep' => ['dep', 'professionnelles'],
-        ];
-
-        foreach ($aliases as $needle => $words) {
-            if (! collect($words)->contains(fn ($word) => str_contains($normalizedLabel, $word))) {
-                continue;
-            }
-
-            $match = $diplomes->first(fn ($diplome) => str_contains(
-                $this->normalizeSearchText((string) $diplome->nom_diplome),
-                $needle
-            ));
-
-            if ($match) {
-                return (string) $match->id;
-            }
-        }
-
-        return '';
-    }
-
-    private function normalizeSearchText(string $value): string
-    {
-        $value = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value) ?: $value;
-        $value = mb_strtolower($value);
-
-        return trim((string) preg_replace('/[^a-z0-9]+/', ' ', $value));
-    }
-
-    private function firstRegex(string $text, string $pattern): string
-    {
-        preg_match($pattern, $text, $matches);
-
-        return trim($matches[0] ?? '');
-    }
-
-    private function guessNameLine($lines, ?string $email, ?string $phone): string
-    {
-        foreach ($lines->take(8) as $line) {
-            if (($email && str_contains($line, $email)) || ($phone && str_contains($line, $phone))) {
-                continue;
-            }
-
-            if (preg_match('/@|www\.|linkedin|github|curriculum|resume|cv/i', $line)) {
-                continue;
-            }
-
-            if (str_word_count($line) >= 2 && mb_strlen($line) <= 60) {
-                return $line;
-            }
-        }
-
-        return '';
-    }
-
-    private function splitName(string $nameLine, $user): array
-    {
-        if ($nameLine === '') {
-            return [(string) ($user->prenom ?? ''), (string) ($user->name ?? '')];
-        }
-
-        $parts = preg_split('/\s+/', trim($nameLine)) ?: [];
-        $prenom = array_shift($parts) ?: (string) ($user->prenom ?? '');
-        $nom = trim(implode(' ', $parts)) ?: (string) ($user->name ?? '');
-
-        return [$prenom, $nom];
-    }
-
-    private function guessCityLine($lines): string
-    {
-        foreach ($lines->take(12) as $line) {
-            if (preg_match('/\b(Montreal|Montréal|Quebec|Québec|Laval|Longueuil|Gatineau|Sherbrooke|Toronto|Ottawa)\b/i', $line)) {
-                return $line;
-            }
-        }
-
-        return '';
-    }
-
-    private function extractSection(string $text, array $starts, array $ends): string
-    {
-        $startPattern = implode('|', array_map(fn ($item) => preg_quote($item, '/'), $starts));
-        $endPattern = implode('|', array_map(fn ($item) => preg_quote($item, '/'), $ends));
-
-        if (! preg_match('/(?:^|\n)\s*('.$startPattern.')\s*:?\s*\n(?P<body>.*?)(?=\n\s*('.$endPattern.')\s*:?\s*\n|$)/isu', $text, $matches)) {
-            return '';
-        }
-
-        return trim($matches['body'] ?? '');
-    }
-
-    private function extractSoftwareLine(string $text): string
-    {
-        preg_match('/(?:logiciels|outils|technologies|software|tools)\s*:?\s*(.+)/iu', $text, $matches);
-
-        return trim($matches[1] ?? '');
-    }
-
-    private function extractBulletBlock(string $text): string
-    {
-        preg_match_all('/^\s*(?:[-*•]|–)\s*(.+)$/mu', $text, $matches);
-
-        return implode("\n", array_slice($matches[1] ?? [], 0, 8));
-    }
-
-    private function guessTitleFromSection(string $section): string
-    {
-        foreach (explode("\n", $section) as $line) {
-            $line = trim($line);
-
-            if ($line !== '' && mb_strlen($line) <= 100 && ! preg_match('/^(?:[-*•]|–)/', $line)) {
-                return $line;
-            }
-        }
-
-        return '';
-    }
-
-    private function guessLanguageName(string $section): string
-    {
-        if ($section === '') {
-            return '';
-        }
-
-        foreach (['Français', 'Francais', 'Anglais', 'English', 'Espagnol', 'Spanish'] as $language) {
-            if (stripos($section, $language) !== false) {
-                return str_replace('Francais', 'Français', $language);
-            }
-        }
-
-        return trim(strtok($section, "\n,;")) ?: '';
-    }
-
-    private function guessLanguageLevel(string $section): string
-    {
-        return match (true) {
-            preg_match('/maternelle|native/iu', $section) === 1 => 'Langue maternelle',
-            preg_match('/courant|fluent|bilingue/iu', $section) === 1 => 'Courant',
-            preg_match('/intermediaire|intermédiaire|intermediate/iu', $section) === 1 => 'Intermédiaire',
-            preg_match('/base|notions|basic/iu', $section) === 1 => 'Notions de base',
-            default => '',
-        };
-    }
-
-    private function shortText(string $text, int $limit = 500): string
-    {
-        $text = trim(preg_replace('/\n{3,}/', "\n\n", $text) ?? $text);
-
-        return mb_strlen($text) > $limit ? mb_substr($text, 0, $limit - 1).'…' : $text;
+        return $pdf->download('cv_principal.pdf');
     }
 }

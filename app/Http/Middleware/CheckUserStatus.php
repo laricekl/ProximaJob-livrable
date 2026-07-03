@@ -14,10 +14,9 @@ class CheckUserStatus
         if (Auth::check()) {
             $user = Auth::user();
             $useractif = Auth::user()->status;
-            $role = $user->role; 
-            
-            // Vérifier si le compte est actif
-            if ( $role ==='candidat' && $useractif != 'Actif') {
+
+            // Vérifier si le compte candidat est actif
+            if ($user->hasRole('candidat') && $useractif != 'Actif') {
                 Auth::logout();
                 return redirect()->route('login')
                     ->with('error', 'Votre compte est inactif. Veuillez contacter notre assistance.');

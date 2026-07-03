@@ -494,15 +494,15 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('connected/candidatures') ? 'active' : '' }}"
-                            href="{{ route('candidature.historique') }}">{{ __('interface.history') }}</a>
+                            href="{{ route('user.historiques') }}">{{ __('interface.history') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link"
-                            href="{{ route('user.bonnement') }}">{{ __('interface.subscription') }}</a>
+                            href="{{ route('user.abonnement') }}">{{ __('interface.subscription') }}</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('connected/candidatures-ia') ? 'active' : '' }}"
-                            href="{{ route('candidature_ia.historique') }}">{{ __('interface.ai_application') }}</a>
+                            href="{{ route('user.historiques_ia') }}">{{ __('interface.ai_application') }}</a>
                     </li>
                 </ul>
 

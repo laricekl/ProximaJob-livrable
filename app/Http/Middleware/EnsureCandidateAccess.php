@@ -28,7 +28,12 @@ class EnsureCandidateAccess
         }
 
         if (!$user->hasRole('candidat')) {
-            abort(403);
+            \Log::warning('Accès candidat refusé — rôle non candidat', [
+                'user_id' => $user->id,
+                'roles' => $user->roles->pluck('name')->toArray(),
+                'route' => request()->path(),
+            ]);
+            abort(403, 'Accès réservé aux candidats. Vous n\'avez pas les permissions nécessaires.');
         }
 
         return $next($request);
