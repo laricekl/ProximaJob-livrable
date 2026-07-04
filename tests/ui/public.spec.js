@@ -13,7 +13,7 @@ const publicPages = [
   { path: '/offres', title: /Offres|ProximaJob/i, landmark: /offres/i },
   { path: '/contact', title: /Contact|ProximaJob/i, landmark: /contact/i },
   { path: '/ressources', title: /Ressources|ProximaJob/i, landmark: /ressources/i },
-  { path: '/abonnement', title: /Abonnement|Tarifs|ProximaJob/i, landmark: /abonnement|tarifs/i },
+  { path: '/abonnement', title: /Abonnement|Forfaits|ProximaJob/i, landmark: /abonnement|forfaits/i },
 ];
 
 test.describe('public area', () => {
@@ -70,7 +70,7 @@ test.describe('public area', () => {
       /concierge dédié/i,
       /Explorer par/i,
       /Dernières opportunités/i,
-      /Choisissez votre formule/i,
+      /Choisissez votre forfait/i,
       /Gratuit/i,
       /Premium/i,
       /Entreprise/i,

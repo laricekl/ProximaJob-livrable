@@ -23,7 +23,7 @@ class PublicActionsTest extends TestCase
         }
     }
 
-    public function test_public_pages_use_centralized_site_settings_for_branding_and_contact(): void
+    public function test_public_pages_use_centralized_site_settings_for_branding_and_map(): void
     {
         SiteSetting::create([
             'site_nom' => 'ProximaJob Showcase',
@@ -40,10 +40,11 @@ class PublicActionsTest extends TestCase
 
         $this->get('/contact')
             ->assertOk()
-            ->assertSee('contact@showcase.test')
-            ->assertSee('+1 555 000 1111')
-            ->assertSee('Quebec, Canada')
-            ->assertSee('https://www.google.com/maps/embed?pb=showcase', false);
+            ->assertDontSee('contact@showcase.test')
+            ->assertDontSee('+1 555 000 1111')
+            ->assertDontSee('Quebec, Canada')
+            ->assertSee('img/contact-map-montreal.png', false)
+            ->assertSee('https://www.google.com/maps/search/?api=1&amp;query=Quebec%2C+Canada', false);
     }
 
     public function test_public_offer_filters_preserve_real_results(): void
@@ -61,7 +62,10 @@ class PublicActionsTest extends TestCase
 
         $this->get(route('job_infos', $offer))
             ->assertOk()
-            ->assertSee('Architecte Donnees QA');
+            ->assertSee('Architecte Donnees QA')
+            ->assertSee('Se connecter')
+            ->assertDontSee('Tableau de bord')
+            ->assertDontSee('Jean Dupont');
     }
 
     public function test_public_offers_use_the_custom_single_row_pagination(): void

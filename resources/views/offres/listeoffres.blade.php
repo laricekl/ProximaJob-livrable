@@ -158,38 +158,19 @@
   </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32 pb-20 bg-surface-container-low/40">
-    <div class="max-w-7xl mx-auto px-4 md:px-10">
+  <main class="flex-grow pt-32 pb-20" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
+    <x-public-page-hero
+      title="Opportunités d'emploi"
+      subtitle="Explorez les offres disponibles et repérez rapidement celles qui correspondent à votre profil."
+    />
 
-      <!-- Page Header -->
-      <section class="mb-8 rounded-[1.75rem] bg-white/95 border border-outline-variant/10 shadow-sm p-6 md:p-8">
-        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div>
-            <h1 class="text-4xl md:text-5xl font-bold font-serif text-primary leading-tight tracking-tight">
-              Opportunités <span class="text-secondary-container">d'emploi</span>
-            </h1>
-            <p class="text-lg text-on-surface-variant mt-3 max-w-2xl">
-              Explorez les offres disponibles et repérez rapidement celles qui correspondent à votre profil.
-            </p>
-          </div>
-          <div class="grid grid-cols-2 gap-3 sm:flex">
-            <div class="rounded-2xl bg-surface-container-low border border-outline-variant/10 px-5 py-4">
-              <p class="text-2xl font-bold text-primary">{{ $offres->total() }}</p>
-              <p class="text-xs font-semibold text-on-surface-variant">offres actives</p>
-            </div>
-            <div class="rounded-2xl bg-secondary-container/5 border border-secondary-container/10 px-5 py-4">
-              <p class="text-2xl font-bold text-primary">{{ $categoriesWithCount->count() }}</p>
-              <p class="text-xs font-semibold text-on-surface-variant">catégories</p>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div class="max-w-7xl mx-auto px-4 md:px-10 mt-8">
 
       <!-- Search Bar -->
       <div class="search-glass relative z-10 mb-8">
 
         <!-- MOBILE: Compact single-row -->
-        <form method="GET" action="{{ route('offres') }}" data-testid="offers-mobile-search-form" class="flex md:hidden items-center gap-1 bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm p-1.5 border border-outline-variant/10">
+        <form method="GET" action="{{ route('offres') }}" data-testid="offers-mobile-search-form" class="flex md:hidden items-center gap-1 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-1.5 border border-white">
           <div class="flex-1 flex items-center min-w-0 px-3 py-1.5">
             <span class="material-symbols-outlined text-outline mr-2 text-sm flex-shrink-0">search</span>
             <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
@@ -203,7 +184,7 @@
         </form>
 
         <!-- MOBILE: Filter panel -->
-        <form method="GET" action="{{ route('offres') }}" id="search-filter-panel" data-testid="offers-mobile-filter-form" class="md:hidden bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm p-3 border border-outline-variant/10 hidden">
+        <form method="GET" action="{{ route('offres') }}" id="search-filter-panel" data-testid="offers-mobile-filter-form" class="md:hidden bg-white backdrop-blur-xl rounded-2xl shadow-lg p-3 border border-white hidden">
           <input type="hidden" name="search" value="{{ $search }}">
           <div class="flex items-center px-3 py-2 mb-2 border-b border-outline-variant/20">
             <span class="material-symbols-outlined text-outline mr-2 text-sm">location_on</span>
@@ -222,7 +203,7 @@
         </form>
 
         <!-- DESKTOP: Full multi-field row -->
-        <form method="GET" action="{{ route('offres') }}" data-testid="offers-desktop-search-form" class="hidden md:flex items-center gap-2 bg-white/90 backdrop-blur-xl rounded-2xl shadow-sm p-2 border border-outline-variant/10">
+        <form method="GET" action="{{ route('offres') }}" data-testid="offers-desktop-search-form" class="hidden md:flex items-center gap-2 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-2 border border-white">
           <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
             <span class="material-symbols-outlined text-outline mr-3 text-base">search</span>
             <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
@@ -250,13 +231,13 @@
 
         <!-- SIDEBAR FILTRES -->
         <aside class="w-full lg:w-72 flex-shrink-0">
-          <form method="GET" action="{{ route('offres') }}" data-testid="offers-filter-form" class="bg-white/90 backdrop-blur-xl border border-outline-variant/10 rounded-2xl p-6 shadow-sm lg:sticky lg:top-28">
+          <form method="GET" action="{{ route('offres') }}" data-testid="offers-filter-form" class="bg-white backdrop-blur-xl border border-white rounded-2xl p-6 shadow-lg lg:sticky lg:top-28">
             <input type="hidden" name="search" value="{{ $search }}">
             <input type="hidden" name="localisation" value="{{ $localisation }}">
             <input type="hidden" name="sort" value="{{ $sort }}">
 
             <div class="flex items-center justify-between mb-6">
-              <h3 class="font-bold text-primary text-sm uppercase tracking-widest">Filtres</h3>
+              <h3 class="font-bold text-primary text-sm uppercase tracking-wide">Filtres</h3>
               <a href="{{ route('offres') }}" class="text-[10px] font-bold uppercase tracking-wider text-secondary-container hover:underline">Réinitialiser</a>
             </div>
 
@@ -345,9 +326,10 @@
         <div class="flex-1 min-w-0">
 
           <!-- Barre de tri + compteur -->
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 rounded-2xl bg-white/90 border border-outline-variant/10 shadow-sm px-5 py-4">
-            <p class="text-sm text-on-surface-variant">
-              <span class="font-bold text-primary">{{ $offres->total() }} offres</span> correspondent à vos critères
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 rounded-2xl bg-white border border-white shadow-md px-5 py-4">
+            <p class="text-sm text-on-surface-variant flex items-center gap-2">
+              <span class="material-symbols-outlined text-base text-secondary-container">manage_search</span>
+              <span><span class="font-bold text-primary">{{ $offres->total() }} offres</span> correspondent à vos critères</span>
             </p>
             <div class="flex items-center gap-3">
               <button id="filter-toggle" class="lg:hidden flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary-container bg-secondary-container/5 border border-secondary-container/20 rounded-xl px-4 py-2 hover:bg-secondary-container/10 transition-colors">
@@ -384,10 +366,10 @@
           <!-- Job Cards -->
           <div class="offres-jobs space-y-4">
             @forelse ($offres as $offre)
-            <a href="{{ route('job_infos', $offre) }}" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 bg-white rounded-2xl border border-outline-variant/10 hover:border-secondary-container/30 hover:shadow-[0_16px_44px_rgba(17,24,39,0.06)] transition-all duration-300 cursor-pointer relative overflow-hidden">
+            <a href="{{ route('job_infos', $offre) }}" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 bg-white rounded-2xl border border-white shadow-md hover:border-secondary-container/30 hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden" aria-label="Voir les détails de l'offre {{ $offre->poste ?: $offre->titre }}">
               <div class="absolute inset-y-0 left-0 w-1 bg-secondary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div class="flex items-center gap-4 relative z-10 min-w-0">
-                <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0">
+                <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0 shadow-sm ring-1 ring-secondary-container/10">
                   <span class="material-symbols-outlined text-secondary-container text-xl">work</span>
                 </div>
                 <div class="min-w-0">
@@ -399,8 +381,8 @@
                 </div>
               </div>
               <div class="mt-2 sm:mt-0 flex items-center justify-between sm:justify-end gap-3 relative z-10 sm:flex-shrink-0">
-                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
-                <span class="text-sm font-bold text-primary/70 whitespace-nowrap">
+                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
+                <span class="text-sm font-bold text-primary/70 whitespace-nowrap min-w-32 text-right">
                   @if ($offre->salaire_min || $offre->salaire_max)
                     {{ $offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', ' ') : '?' }} - {{ $offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', ' ') : '?' }} $
                   @else
@@ -414,7 +396,7 @@
             </a>
             @empty
             <div class="rounded-2xl border border-dashed border-outline-variant/30 bg-surface-container-low p-6 text-sm text-on-surface-variant">
-              Aucune offre ne correspond a vos criteres pour le moment.
+              Aucune offre ne correspond à vos critères pour le moment.
             </div>
             @endforelse
           </div>

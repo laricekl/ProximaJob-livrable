@@ -11,7 +11,7 @@
       <div class="max-w-7xl mx-auto">
         <div class="mb-8">
           <h1 class="text-2xl font-bold font-serif text-primary mb-2">Mes abonnements</h1>
-          <p class="text-sm text-on-surface-variant">Consultez vos formules actives, leur duree et l'historique associe a votre compte entreprise.</p>
+          <p class="text-sm text-on-surface-variant">Consultez vos forfaits actifs, leur durée et l'historique associé à votre compte entreprise.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
@@ -49,8 +49,8 @@
                 @endif
 
                 <div class="space-y-2 text-sm text-on-surface-variant">
-                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Active le {{ optional($userAbonnement->date_debut)->format('d/m/Y') ?? 'Non renseigne' }}</div>
-                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Se termine le {{ optional($userAbonnement->date_fin)->format('d/m/Y') ?? 'Non renseigne' }}</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Active le {{ optional($userAbonnement->date_debut)->format('d/m/Y') ?? 'À confirmer' }}</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Se termine le {{ optional($userAbonnement->date_fin)->format('d/m/Y') ?? 'À confirmer' }}</div>
                   <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree {{ $plan?->periode_formattee ?? 'non definie' }}</div>
                 </div>
               </div>
@@ -59,7 +59,7 @@
             <div class="md:col-span-2 lg:col-span-3 card-glow rounded-2xl p-10 text-center">
               <span class="material-symbols-outlined text-4xl text-outline mb-3">credit_card_off</span>
               <h3 class="font-bold text-primary mb-2">Aucun abonnement enregistre</h3>
-              <p class="text-sm text-on-surface-variant">Votre entreprise n'a pas encore de formule active ou archivee a afficher.</p>
+              <p class="text-sm text-on-surface-variant">Votre entreprise n'a pas encore de forfait actif ou archivé à afficher.</p>
             </div>
           @endforelse
         </div>

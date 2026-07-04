@@ -108,7 +108,7 @@
                 <div class="timeline-step {{ $applicationStatus !== 'en_attente' ? 'completed' : 'active' }} relative flex items-start gap-4 pb-8">
                   <div class="timeline-dot relative z-10 w-8 h-8 rounded-full {{ $applicationStatus !== 'en_attente' ? 'bg-secondary-container border-secondary-container' : 'bg-white border-secondary-container' }} border-2 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined {{ $applicationStatus !== 'en_attente' ? 'text-white' : 'text-secondary-container' }} text-sm">{{ $applicationStatus !== 'en_attente' ? 'check' : 'schedule' }}</span></div>
                   <div>
-                    <p class="font-bold text-primary text-sm">{{ $applicationStatus === 'accepted' ? 'Retour positif reçu' : ($applicationStatus === 'rejected' ? 'Retour recruteur reçu' : "Dossier en cours d'évaluation") }}</p>
+                    <p class="font-bold text-primary text-sm">{{ $applicationStatus === 'accepted' ? 'Retour positif reçu' : ($applicationStatus === 'rejected' ? 'Retour employeur reçu' : "Dossier en cours d'évaluation") }}</p>
                     <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'en_attente' ? "L'entreprise examine actuellement votre candidature." : "Le statut actuel de votre candidature est : {$applicationStatusLabel}." }}</p>
                   </div>
                 </div>
@@ -116,7 +116,7 @@
                   <div class="timeline-dot relative z-10 w-8 h-8 rounded-full {{ $applicationStatus === 'accepted' ? 'bg-white border-secondary-container' : 'bg-surface-container border-outline-variant/30' }} border-2 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined {{ $applicationStatus === 'accepted' ? 'text-secondary-container' : 'text-outline' }} text-sm">{{ $applicationStatus === 'accepted' ? 'event_available' : 'schedule' }}</span></div>
                   <div>
                     <p class="font-bold {{ $applicationStatus === 'accepted' ? 'text-primary' : 'text-outline' }} text-sm">Suite du recrutement</p>
-                    <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'accepted' ? 'Un entretien ou une prochaine étape peut maintenant être planifié.' : "Cette étape sera mise à jour dès qu'une action recruteur sera enregistrée." }}</p>
+                    <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'accepted' ? 'Un entretien ou une prochaine étape peut maintenant être planifié.' : "Cette étape sera mise à jour dès qu'une action employeur sera enregistrée." }}</p>
                   </div>
                 </div>
                 <div class="timeline-step relative flex items-start gap-4">
@@ -138,7 +138,7 @@
               <div class="p-6">
                 <div class="bg-surface-container-low rounded-xl p-6 text-sm text-on-surface-variant leading-relaxed max-h-64 overflow-y-auto">
                   <p class="font-bold text-primary text-base mb-3">{{ $candidateName }}</p>
-                  <p class="mb-3">{{ $candidateHeadline }} | {{ $cvProfile?->ville ?: 'Ville à renseigner' }} | {{ $candidate?->email ?: 'Email indisponible' }} | {{ $cvProfile?->telephone ?: ($candidate?->telephone ?: 'Téléphone à renseigner') }}</p>
+                  <p class="mb-3">{{ $candidateHeadline }} | {{ $cvProfile?->ville ?: 'Ville à compléter' }} | {{ $candidate?->email ?: 'Courriel indisponible' }} | {{ $cvProfile?->telephone ?: ($candidate?->telephone ?: 'Téléphone à compléter') }}</p>
                   <p class="font-bold text-primary mb-2">Résumé professionnel</p>
                   <p class="mb-4">{{ $cvProfile?->experiences->first()?->description ?: "Votre CV et vos expériences seront visibles ici lorsqu'elles sont disponibles." }}</p>
                   <p class="font-bold text-primary mb-2">Expérience</p>
@@ -146,7 +146,7 @@
                     <p class="mb-1"><strong>{{ $experience->poste }}</strong> — {{ $experience->entreprise ?: 'Entreprise non précisée' }}</p>
                     <p class="mb-3 text-xs">{{ $experience->periode ?: 'Période à compléter' }}</p>
                   @empty
-                    <p class="mb-3 text-xs">Aucune expérience renseignée dans le profil CV pour le moment.</p>
+                    <p class="mb-3 text-xs">Aucune expérience ajoutée dans le profil CV pour le moment.</p>
                   @endforelse
                   <p class="font-bold text-primary mb-2">Compétences</p>
                   <p>{{ $candidateSkills->isNotEmpty() ? $candidateSkills->implode(' • ') : 'Ajoutez des compétences dans votre profil pour enrichir ce dossier.' }}</p>
@@ -176,7 +176,7 @@
             <!-- Cover Letter -->
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de motivation</h2>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h2>
                 @if (! $letterPreviewUrl)
                 <span class="px-3 py-1 bg-surface-container text-outline text-[10px] font-black uppercase tracking-wider rounded-full">Optionnelle</span>
                 @endif
@@ -190,10 +190,10 @@
               <div class="p-6">
                 <div class="bg-surface-container-low rounded-xl p-6 text-sm text-on-surface-variant leading-relaxed max-h-48 overflow-y-auto" id="coverLetter">
                   @if ($letterPreviewUrl)
-                    <p>Une lettre de motivation est associée à cette candidature.</p>
+                    <p>Une lettre de présentation est associée à cette candidature.</p>
                     <p class="mt-3">Utilisez le bouton de prévisualisation pour ouvrir le document complet dans un nouvel onglet.</p>
                   @else
-                    <p>Aucune lettre de motivation n'a été jointe à cette candidature.</p>
+                    <p>Aucune lettre de présentation n'a été jointe à cette candidature.</p>
                     <p class="mt-3">Cette étape est optionnelle. Vous pouvez toujours préparer un autre CV ou consulter l'offre.</p>
                   @endif
                 </div>

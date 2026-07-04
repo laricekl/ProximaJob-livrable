@@ -403,7 +403,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Nom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="nom" required /></div>
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Prenom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="prenom_cv" required /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Email *</label><input type="email" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="email_cv" required /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Courriel *</label><input type="email" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="email_cv" required /></div>
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Telephone *</label><input type="tel" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="telephone_cv" required /></div>
                   <div class="md:col-span-2"><label class="block text-sm font-semibold text-primary mb-1.5">Adresse</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="adresse" /></div>
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Ville et province</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="ville" placeholder="Montreal (Quebec)" /></div>
@@ -836,7 +836,7 @@
       const summary = [
         ['Nom', formData.get('nom')],
         ['Prenom', formData.get('prenom_cv')],
-        ['Email', formData.get('email_cv')],
+        ['Courriel', formData.get('email_cv')],
         ['Telephone', formData.get('telephone_cv')],
         ['Ville', formData.get('ville')],
       ].filter(([, value]) => value);

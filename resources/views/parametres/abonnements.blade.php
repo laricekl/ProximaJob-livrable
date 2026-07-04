@@ -61,7 +61,7 @@
 </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32">
+  <main class="flex-grow pt-32" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
 
     <x-public-page-hero
       title="Abonnements Premium"
@@ -69,14 +69,14 @@
     />
 
     <!-- Features -->
-    <section class="py-20 px-4 md:px-10 bg-white">
+    <section class="py-20 px-4 md:px-10">
       <div class="max-w-6xl mx-auto">
         <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">Pourquoi nous choisir ?</h2>
         <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Une qualité différentielle pour votre recherche d'emploi ou votre recrutement.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
           <!-- Feature 1 -->
-          <div class="bg-white rounded-2xl p-8 shadow-sm border border-outline-variant/30 text-center premium-card">
+          <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-primary">trending_up</span>
             </div>
@@ -85,7 +85,7 @@
           </div>
 
           <!-- Feature 2 -->
-          <div class="bg-white rounded-2xl p-8 shadow-sm border border-outline-variant/30 text-center premium-card">
+          <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-secondary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-on-secondary-fixed-variant">workspace_premium</span>
             </div>
@@ -94,7 +94,7 @@
           </div>
 
           <!-- Feature 3 -->
-          <div class="bg-white rounded-2xl p-8 shadow-sm border border-outline-variant/30 text-center premium-card">
+          <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-tertiary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-on-tertiary-fixed">support_agent</span>
             </div>
@@ -106,10 +106,10 @@
     </section>
 
     <!-- Pricing · Cartes 3D -->
-    <section class="py-20 px-4 md:px-10 bg-surface-container-low/50">
+    <section class="py-20 px-4 md:px-10 bg-white/55">
       <div class="max-w-5xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">Choisissez votre formule</h2>
-        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Decouvrez nos offres adaptees a vos besoins</p>
+        <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">Choisissez votre forfait</h2>
+        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Découvrez nos offres adaptées a vos besoins</p>
 
         <div class="pricing-mobile grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
 
@@ -127,9 +127,9 @@
                 <p class="text-4xl font-bold text-primary">0<span class="text-lg text-outline">$</span></p>
                 <p class="text-xs text-outline mt-1">/mois</p>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Acces aux offres</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Accès aux offres</li>
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidature simple</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalise IA</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalisé IA</li>
                 </ul>
                 <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
               </div>
@@ -151,8 +151,8 @@
                 <p class="text-4xl font-bold text-primary">29<span class="text-lg text-outline">$</span></p>
                 <p class="text-xs text-outline mt-1">/mois</p>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitees</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalise par IA</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitées</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalisé par IA</li>
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Mise en avant du profil</li>
                 </ul>
                 <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Essai gratuit 7 jours</a>
@@ -176,7 +176,7 @@
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Tout Premium</li>
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> API dediee</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Multi-recruteurs</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Multi-employeurs</li>
                 </ul>
                 <a href="{{ route('contact') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
               </div>
@@ -185,18 +185,18 @@
 
         </div>
 
-        <p class="text-center text-sm text-outline mt-8">Annulation possible a tout moment. Essai gratuit de 7 jours pour la formule Premium.</p>
+        <p class="text-center text-sm text-outline mt-8">Annulation possible à tout moment. Essai gratuit de 7 jours pour le forfait Premium.</p>
       </div>
     </section>
 
     <!-- FAQ -->
-    <section class="py-20 px-4 md:px-10 bg-white">
+    <section class="py-20 px-4 md:px-10">
       <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-16">FAQ</h2>
 
         <div class="space-y-4">
           <!-- FAQ 1 -->
-          <div class="faq-item bg-white rounded-2xl border border-outline-variant/30 overflow-hidden">
+          <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">01</span>
@@ -207,12 +207,12 @@
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de ProximaJob, y compris la personnalisation de CV par IA, les candidatures illimitées, et la mise en avant de votre profil auprès des recruteurs.
+              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de ProximaJob, y compris la personnalisation de CV par IA, les candidatures illimitées, et la mise en avant de votre profil auprès des employeurs.
             </div>
           </div>
 
           <!-- FAQ 2 -->
-          <div class="faq-item bg-white rounded-2xl border border-outline-variant/30 overflow-hidden">
+          <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">02</span>
@@ -228,7 +228,7 @@
           </div>
 
           <!-- FAQ 3 -->
-          <div class="faq-item bg-white rounded-2xl border border-outline-variant/30 overflow-hidden">
+          <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">03</span>
@@ -244,7 +244,7 @@
           </div>
 
           <!-- FAQ 4 -->
-          <div class="faq-item bg-white rounded-2xl border border-outline-variant/30 overflow-hidden">
+          <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">04</span>
@@ -260,7 +260,7 @@
           </div>
 
           <!-- FAQ 5 -->
-          <div class="faq-item bg-white rounded-2xl border border-outline-variant/30 overflow-hidden">
+          <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">05</span>

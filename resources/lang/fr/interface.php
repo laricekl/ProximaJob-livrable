@@ -10,7 +10,7 @@ return [
     'home' => 'Accueil',
     'offers' => 'Offres',
     'resources' => 'Ressources',
-    'pricing' => 'Tarifs',
+    'pricing' => 'Forfaits',
     'contacts' => 'Contacts',
 
     'login' => 'Se connecter',
@@ -58,7 +58,7 @@ return [
     'max_performance' => 'Performance Maximale',
     'premium_service' => 'Service Premium',
     'premium_support' => 'Support Premium',
-    'choose_your_plan' => 'Choisissez votre formule',
+    'choose_your_plan' => 'Choisissez votre forfait',
     'discover_offers' => 'Découvrez nos offres adaptées à vos besoins',
     'basic_plan' => 'Formule Basique',
     'ideal_for_basic' => 'Idéal pour une recherche simple et efficace',

@@ -7,7 +7,7 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 class="text-2xl font-bold font-serif text-primary mb-2">Promotions</h1>
-            <p class="text-sm text-on-surface-variant">Suivez vos offres actives et les candidatures associees. Le module de promotion avancee pourra ensuite se brancher ici sans reutiliser de fausses donnees.</p>
+            <p class="text-sm text-on-surface-variant">Suivez vos offres actives et les candidatures associées. Le module de promotion avancée pourra ensuite se brancher ici sans réutiliser de fausses données.</p>
           </div>
           <a href="{{ route('entreprise.offres.create') }}" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center gap-2 shadow-lg shadow-secondary-container/20">
             <span class="material-symbols-outlined">add</span> Ajouter une offre
@@ -47,7 +47,7 @@
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
                     <td class="px-6 py-4">
                       <p class="font-semibold text-primary">{{ $offer->titre }}</p>
-                      <p class="text-xs text-on-surface-variant mt-1">{{ $offer->localisation ?? 'Localisation non renseignee' }}</p>
+                      <p class="text-xs text-on-surface-variant mt-1">{{ $offer->localisation ?? 'Localisation à confirmer' }}</p>
                     </td>
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->type?->nom ?? 'Offre' }}</td>
                     <td class="px-6 py-4">

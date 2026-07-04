@@ -8,11 +8,11 @@
       <x-brand-logo icon-class="w-11 md:w-14 h-auto" text-class="text-[15px] md:text-[18px] font-bold font-serif text-primary tracking-tight" />
     </a>
     <ul class="hidden lg:flex items-center gap-1">
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-slate-600' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('welcome') }}">Accueil</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-slate-600' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('offres') }}">Offres</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-slate-600' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('ressources') }}">Ressources</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-slate-600' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('abonnement') }}">Tarifs</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-slate-600' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('contact') }}">Contact</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-secondary-container' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('welcome') }}">Accueil</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-secondary-container' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('offres') }}">Offres</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-secondary-container' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('ressources') }}">Ressources</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-secondary-container' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('abonnement') }}">Forfaits</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-secondary-container' : 'font-medium text-slate-500' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('contact') }}">Contact</a></li>
     </ul>
     <div class="flex items-center gap-2 md:gap-3">
       <div class="hidden md:block">
@@ -79,7 +79,7 @@
         </a>
         <a href="{{ route('abonnement') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('abonnement') ? 'text-secondary-container' : '' }}">sell</span>
-          Tarifs
+          Forfaits
         </a>
         <a href="{{ route('contact') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-slate-600 hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('contact') ? 'text-secondary-container' : '' }}">mail</span>

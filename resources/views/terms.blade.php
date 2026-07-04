@@ -19,7 +19,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">2. Description du service</h2>
-            <p>ProximaJob est une plateforme de mise en relation entre candidats et recruteurs. Nous proposons des services de recherche d'emploi, de publication d'offres, de personnalisation de CV par intelligence artificielle et de gestion de candidatures.</p>
+            <p>ProximaJob est une plateforme de mise en relation entre candidats et employeurs. Nous proposons des services de recherche d'emploi, de publication d'offres, de personnalisation de CV par intelligence artificielle et de gestion de candidatures.</p>
           </div>
 
           <div>
@@ -29,7 +29,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">4. Abonnements et paiements</h2>
-            <p>Certains services sont payants. Les tarifs sont clairement indiqués avant tout achat. Les abonnements sont renouvelés automatiquement sauf annulation. Vous pouvez annuler à tout moment depuis votre compte.</p>
+            <p>Certains services sont payants. Les forfaits sont clairement indiqués avant tout achat. Les abonnements sont renouvelés automatiquement sauf annulation. Vous pouvez annuler à tout moment depuis votre compte.</p>
           </div>
 
           <div>
@@ -44,7 +44,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">7. Limitation de responsabilité</h2>
-            <p>ProximaJob ne peut être tenue responsable des dommages indirects liés à l'utilisation de la plateforme. Nous ne garantissons pas l'exactitude des offres d'emploi publiées par les recruteurs tiers.</p>
+            <p>ProximaJob ne peut être tenue responsable des dommages indirects liés à l'utilisation de la plateforme. Nous ne garantissons pas l'exactitude des offres d'emploi publiées par les employeurs tiers.</p>
           </div>
 
           <div>

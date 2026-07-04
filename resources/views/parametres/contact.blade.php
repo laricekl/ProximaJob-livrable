@@ -7,6 +7,16 @@
       box-shadow: 0 0 0 3px rgba(var(--pj-accent-rgb),0.1);
       outline: none;
     }
+    .contact-map-frame {
+      height: 20rem;
+    }
+    @media (min-width: 1024px) {
+      .contact-map-frame {
+        flex: 1 1 auto;
+        height: auto;
+        min-height: 20rem;
+      }
+    }
     @media (max-width: 767px) {
       main.pt-32 { padding-top: 6rem; }
       section.py-20 { padding: 2rem 1rem !important; }
@@ -31,12 +41,10 @@
 @endsection
 @section('content')
   @php
-    $contactPhone = $infos?->tel ?: '+1 234 567 890';
-    $contactEmail = $infos?->email ?: 'contact@proximajob.com';
-    $contactAddress = $infos?->localisation ?: 'Montreal, QC, Canada';
-    $mapEmbedUrl = $infos?->map_embed_url;
+    $mapLocation = $infos?->localisation ?: 'Montreal, QC, Canada';
+    $mapSearchUrl = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($mapLocation);
   @endphp
-  <main class="flex-grow pt-32">
+  <main class="flex-grow pt-32" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
 
     <x-public-page-hero
       title="Contactez-nous"
@@ -44,50 +52,29 @@
     />
 
     <!-- Contact + Form -->
-    <section class="py-20 px-4 md:px-10 bg-surface-container-low/50">
+    <section class="py-20 px-4 md:px-10">
       <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:items-stretch">
 
-          <!-- Infos contact -->
-          <div>
-            <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight mb-6">Vous grandirez, vous réussirez.</h2>
+          <!-- Presentation + Carte -->
+          <div class="flex flex-col">
+            <h2 class="text-3xl md:text-[2rem] xl:text-4xl font-bold font-serif text-primary leading-tight mb-6 lg:whitespace-nowrap">Vous grandirez, vous réussirez.</h2>
             <p class="text-on-surface-variant text-lg leading-relaxed mb-10">
               Notre algorithme intelligent analyse votre profil et vous propose automatiquement les offres d'emploi qui correspondent vraiment à vos compétences et aspirations.
             </p>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              <!-- Téléphone -->
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col items-start gap-3">
-                <div class="w-12 h-12 rounded-xl bg-secondary-fixed flex items-center justify-center">
-                  <span class="material-symbols-outlined text-on-secondary-fixed-variant">call</span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-primary text-sm">Téléphone</h4>
-                  <p class="text-on-surface-variant text-sm">{{ $contactPhone }}</p>
-                </div>
-              </div>
-
-              <!-- Email -->
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col items-start gap-3">
-                <div class="w-12 h-12 rounded-xl bg-tertiary-fixed flex items-center justify-center">
-                  <span class="material-symbols-outlined text-on-tertiary-fixed">mail</span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-primary text-sm">Envoyez-nous un email</h4>
-                  <p class="text-on-surface-variant text-sm">{{ $contactEmail }}</p>
-                </div>
-              </div>
-
-              <!-- Bureau -->
-              <div class="bg-white rounded-2xl p-6 shadow-sm border border-outline-variant/30 flex flex-col items-start gap-3 sm:col-span-2">
-                <div class="w-12 h-12 rounded-xl bg-primary-fixed flex items-center justify-center">
-                  <span class="material-symbols-outlined text-primary">location_on</span>
-                </div>
-                <div>
-                  <h4 class="font-bold text-primary text-sm">Bureau</h4>
-                  <p class="text-on-surface-variant text-sm">{{ $contactAddress }}</p>
-                </div>
-              </div>
+            <div class="contact-map-frame lg:flex-1 rounded-[2rem] overflow-hidden shadow-md border border-white bg-surface-container flex items-center justify-center">
+              <a href="{{ $mapSearchUrl }}" target="_blank" rel="noopener" class="relative block h-full w-full group" aria-label="Ouvrir la carte de localisation {{ $infos?->site_nom ?? 'ProximaJob' }}">
+                <img
+                  src="{{ asset('img/contact-map-montreal.png') }}"
+                  alt="Carte de localisation {{ $infos?->site_nom ?? 'ProximaJob' }}"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  loading="lazy"
+                />
+                <span class="absolute bottom-4 right-4 rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-primary shadow-md backdrop-blur-sm transition-colors group-hover:text-secondary-container">
+                  Ouvrir la carte
+                </span>
+              </a>
             </div>
           </div>
 
@@ -120,7 +107,7 @@
                 </div>
               </div>
               <div>
-                <label for="email" class="block text-sm font-semibold text-primary mb-2">Email</label>
+                <label for="email" class="block text-sm font-semibold text-primary mb-2">Courriel</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="votre@email.com"
                   class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('email') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                 @error('email')
@@ -142,29 +129,6 @@
             </form>
           </div>
 
-        </div>
-      </div>
-    </section>
-
-    <!-- Carte -->
-    <section class="py-20 px-4 md:px-10 bg-white">
-      <div class="max-w-6xl mx-auto">
-        <div class="rounded-[2rem] overflow-hidden shadow-lg border border-outline-variant/20 h-80 bg-surface-container flex items-center justify-center">
-          @if ($mapEmbedUrl)
-            <iframe
-              src="{{ $mapEmbedUrl }}"
-              class="h-full w-full border-0"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              allowfullscreen
-              title="Carte de localisation {{ $infos?->site_nom ?? 'ProximaJob' }}"
-            ></iframe>
-          @else
-            <div class="text-center text-outline">
-              <span class="material-symbols-outlined text-5xl mb-4">map</span>
-              <p class="text-sm font-medium">Carte intégrée ici</p>
-            </div>
-          @endif
         </div>
       </div>
     </section>

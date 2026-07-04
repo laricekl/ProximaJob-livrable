@@ -19,7 +19,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">2. Utilisation des données</h2>
-            <p>Vos données sont utilisées pour fournir et améliorer nos services, personnaliser votre expérience, faciliter la mise en relation avec les recruteurs, traiter vos candidatures et respecter nos obligations légales.</p>
+            <p>Vos données sont utilisées pour fournir et améliorer nos services, personnaliser votre expérience, faciliter la mise en relation avec les employeurs, traiter vos candidatures et respecter nos obligations légales.</p>
           </div>
 
           <div>
@@ -29,7 +29,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">4. Partage des données</h2>
-            <p>Vos informations peuvent être partagées avec les recruteurs lorsque vous postulez à une offre. Nous ne vendons pas vos données personnelles. Des données agrégées et anonymisées peuvent être utilisées à des fins statistiques.</p>
+            <p>Vos informations peuvent être partagées avec les employeurs lorsque vous postulez à une offre. Nous ne vendons pas vos données personnelles. Des données agrégées et anonymisées peuvent être utilisées à des fins statistiques.</p>
           </div>
 
           <div>

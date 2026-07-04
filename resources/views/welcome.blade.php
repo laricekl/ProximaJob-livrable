@@ -957,7 +957,7 @@
     <section class="home-deferred py-12 md:py-20 px-4 md:px-10">
       <div class="max-w-5xl mx-auto">
         <div class="reveal text-center mb-10 md:mb-16">
-          <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight mb-4">Choisissez votre formule</h2>
+          <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight mb-4">Choisissez votre forfait</h2>
           <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">Des solutions adaptees pour accelerer votre transition professionnelle.</p>
         </div>
 
@@ -1033,7 +1033,7 @@
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Tout Premium</li>
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> API dediee</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Multi-recruteurs</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Multi-employeurs</li>
                 </ul>
                 <a href="{{ route('entreprise.register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
               </div>

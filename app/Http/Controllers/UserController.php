@@ -134,16 +134,16 @@ class UserController extends Controller
                 ?? $user->candidateSector?->sector?->name
                 ?? 'Profil en recherche active',
             'location' => $cvProfile?->ville
-                ?: ($user->adresse ?: 'A renseigner'),
+                ?: ($user->adresse ?: 'À compléter'),
             'phone' => $cvProfile?->telephone
-                ?: ($user->telephone ?: 'A renseigner'),
+                ?: ($user->telephone ?: 'À compléter'),
             'experience_years' => $experienceYears,
             'skills' => $skillLabels->take(8),
             'skills_count' => $skillLabels->count(),
             'completion_percentage' => $user->profileCompletionPercentage(),
             'applications_count' => $user->postulations->count(),
             'pitch' => $latestExperience?->description
-                ?: 'Completez votre profil et votre CV pour mieux presenter votre parcours aux recruteurs.',
+                ?: 'Complétez votre profil et votre CV pour mieux présenter votre parcours aux employeurs.',
             'motivation' => $user->postulations
                 ->pluck('cover_letter')
                 ->filter()

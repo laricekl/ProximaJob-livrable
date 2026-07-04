@@ -784,9 +784,9 @@ select[readonly] {
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Email</label>
+                                <label class="form-label">Courriel</label>
                                 <input type="email" class="form-input" name="email" required value ="{{ auth()->user()->email ?? '' }}" readonly>
-                                <div class="error-message" id="email-error">Veuillez entrer une adresse email valide</div>
+                                <div class="error-message" id="email-error">Veuillez entrer une adresse courriel valide</div>
                             </div>
 
                             <div class="form-group">
@@ -845,7 +845,7 @@ select[readonly] {
                             </div>
 
                             <div class="upload-item">
-                                <label class="upload-label">Lettre de motivation <span class="text-xs text-outline">(optionnelle)</span></label>
+                                <label class="upload-label">Lettre de présentation <span class="text-xs text-outline">(optionnelle)</span></label>
                                 <div class="upload-area">
                                     <button type="button" class="upload-btn" onclick="triggerFileUpload('motivation')">Parcourir</button>
                                     <div class="upload-status empty" id="motivation-status">
@@ -853,7 +853,7 @@ select[readonly] {
                                     </div>
                                 </div>
                                 <input type="file" id="motivation-upload" name="motivation" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleFileUpload('motivation', this)">
-                                <div class="upload-error" id="motivation-upload-error">Format invalide pour la lettre de motivation</div>
+                                <div class="upload-error" id="motivation-upload-error">Format invalide pour la lettre de présentation</div>
                             </div>
                         </div>
 
@@ -927,7 +927,7 @@ select[readonly] {
                             </div>
                             <div class="summary-row">
                                 <div class="summary-item inline">
-                                    <span class="summary-label">Email:</span> <span class="summary-value" id="summary-email">-</span>
+                                    <span class="summary-label">Courriel:</span> <span class="summary-value" id="summary-email">-</span>
                                 </div>
                                 <div class="summary-item inline">
                                     <span class="summary-label">Téléphone:</span> <span class="summary-value" id="summary-telephone">-</span>
@@ -1377,7 +1377,7 @@ select[readonly] {
         }
 
         if (uploadedFiles.motivation) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> Lettre de motivation: ${uploadedFiles.motivation.name}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> Lettre de présentation: ${uploadedFiles.motivation.name}</li>`;
         }
          // Ajouter les documents supplémentaires au récapitulatif
         document.querySelectorAll('.additional-document').forEach(doc => {

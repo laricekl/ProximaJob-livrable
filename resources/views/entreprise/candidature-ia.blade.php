@@ -50,7 +50,7 @@
               <h3 class="text-lg font-bold font-serif text-primary mt-2 mb-3">{{ $offre->titre }}</h3>
               <p class="text-sm text-on-surface-variant line-clamp-3 mb-4">{{ \Illuminate\Support\Str::limit(strip_tags($offre->description ?? ''), 140) }}</p>
               <div class="space-y-2 mb-5 text-sm text-on-surface-variant">
-                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">location_on</span> {{ $offre->localisation ?? 'Non renseignée' }}</div>
+                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">location_on</span> {{ $offre->localisation ?? 'À confirmer' }}</div>
                 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">smart_toy</span> {{ $offre->autopostulations_count ?? 0 }} candidats matchés</div>
               </div>
               <div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">

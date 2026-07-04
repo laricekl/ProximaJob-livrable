@@ -309,11 +309,11 @@ class CandidatureController extends Controller
         ]);
             
     } catch (\Exception $e) {
-        Log::error('Erreur prévisualisation lettre de motivation', [
+        Log::error('Erreur prévisualisation lettre de présentation', [
             'candidature_id' => $candidatureId,
             'error' => $e->getMessage()
         ]);
-        abort(500, 'Erreur lors de l\'ouverture de la lettre de motivation');
+        abort(500, 'Erreur lors de l\'ouverture de la lettre de présentation');
     }
 }
  

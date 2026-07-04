@@ -6,8 +6,8 @@
   $publicFullName = $publicFullName !== '' ? $publicFullName : 'Profil candidat';
   $publicInitials = $publicUser->initials ?: 'PJ';
   $profileHeadline = $profileData['headline'] ?? 'Profil en recherche active';
-  $profileLocation = $profileData['location'] ?? 'A renseigner';
-  $profilePhone = $profileData['phone'] ?? 'A renseigner';
+  $profileLocation = $profileData['location'] ?? 'À compléter';
+  $profilePhone = $profileData['phone'] ?? 'À compléter';
   $profileExperienceYears = $profileData['experience_years'] ?? 0;
   $profileSkills = $profileData['skills'] ?? collect();
   $profileSkillsCount = $profileData['skills_count'] ?? 0;
@@ -16,7 +16,7 @@
   $profilePitch = $profileData['pitch'] ?? '';
   $profileMotivation = $profileData['motivation'] ?? '';
   $latestCvLabel = $profileData['latest_cv_label'] ?? null;
-  $isRecruiterPreview = request('preview') === 'recruteur';
+  $isRecruiterPreview = request('preview') === 'employeur';
   $editableAttr = $isRecruiterPreview ? 'false' : 'true';
 @endphp
 @section('styles')
@@ -50,13 +50,13 @@
     <section class="px-4 md:px-10 mb-6">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ $isRecruiterPreview ? 'Aperçu recruteur' : 'Mon profil candidat' }}</h1>
-          <p class="text-sm text-on-surface-variant mt-1">{{ $isRecruiterPreview ? 'Voici ce que le recruteur voit quand il consulte votre profil candidat.' : 'Ces informations enrichissent vos candidatures et aident les recruteurs à comprendre votre profil.' }}</p>
+          <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ $isRecruiterPreview ? 'Aperçu employeur' : 'Mon profil candidat' }}</h1>
+          <p class="text-sm text-on-surface-variant mt-1">{{ $isRecruiterPreview ? "Voici ce que l'employeur voit quand il consulte votre profil candidat." : 'Ces informations enrichissent vos candidatures et aident les employeurs à comprendre votre profil.' }}</p>
         </div>
         <div class="flex items-center gap-3">
-          <a href="{{ $isRecruiterPreview ? route('user.profil-public') : route('user.profil-public', ['preview' => 'recruteur']) }}" class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-secondary-container border border-secondary-container/30 rounded-full hover:bg-secondary-container/5 transition-colors">
+          <a href="{{ $isRecruiterPreview ? route('user.profil-public') : route('user.profil-public', ['preview' => 'employeur']) }}" class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-secondary-container border border-secondary-container/30 rounded-full hover:bg-secondary-container/5 transition-colors">
             <span class="material-symbols-outlined text-lg">{{ $isRecruiterPreview ? 'edit' : 'visibility' }}</span>
-            <span class="hidden sm:inline">{{ $isRecruiterPreview ? 'Retour édition' : 'Prévisualiser comme recruteur' }}</span>
+            <span class="hidden sm:inline">{{ $isRecruiterPreview ? 'Retour édition' : 'Prévisualiser comme employeur' }}</span>
           </a>
         </div>
       </div>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">mail</span>
-                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Email">{{ $publicUser->email ?? 'jean.dupont@email.com' }}</span>
+                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Courriel">{{ $publicUser->email ?? 'jean.dupont@email.com' }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">call</span>
@@ -178,7 +178,7 @@
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <div>
                   <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">auto_awesome</span> Mon pitch</h2>
-                  <p class="text-xs text-on-surface-variant mt-0.5">Présentez-vous en quelques phrases. C'est la première chose que les recruteurs lisent.</p>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Présentez-vous en quelques phrases. C'est la première chose que les employeurs lisent.</p>
                 </div>
                 <span class="char-count text-xs text-outline" data-target="pitchBio" data-max="500">0/500</span>
               </div>
@@ -232,7 +232,7 @@
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <div>
-                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de motivation</h2>
+                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h2>
                   <p class="text-xs text-on-surface-variant mt-0.5">Une lettre de base que vous pouvez joindre ou adapter selon l'offre.</p>
                 </div>
                 @unless ($isRecruiterPreview)
@@ -280,7 +280,7 @@
                       @endif
                     </div>
                   @empty
-                    <p class="text-sm text-on-surface-variant">Aucune experience n'est encore renseignee dans votre CV.</p>
+                    <p class="text-sm text-on-surface-variant">Aucune experience n'est encore indiquée dans votre CV.</p>
                   @endforelse
                 </div>
               </div>

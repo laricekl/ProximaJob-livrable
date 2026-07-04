@@ -53,7 +53,7 @@ test.describe('candidate area', () => {
     const response = await page.goto('/user/historique-candidatures_ia');
     await expectHealthyResponse(response, page);
 
-    await expect(page.locator('body')).toContainText(/Candidatures automatiques IA/i);
+    await expect(page.locator('body')).toContainText(/Candidatures IA/i);
     await expect(page.getByTestId('candidate-ai-history-filter-form')).toBeVisible();
     await expect(page.locator('body')).not.toContainText(/DataProd|DesignLab|InnovaGroup/i);
   });

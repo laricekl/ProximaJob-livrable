@@ -3,7 +3,7 @@
   'subtitle' => null,
 ])
 
-<section class="py-14 md:py-16 px-4 md:px-10 bg-primary text-white text-center">
+<section class="py-10 md:py-12 px-4 md:px-10 bg-primary text-white text-center">
   <div class="max-w-4xl mx-auto">
     <h1 class="text-4xl md:text-5xl font-bold font-serif leading-tight tracking-tight">{{ $title }}</h1>
     @if ($subtitle)

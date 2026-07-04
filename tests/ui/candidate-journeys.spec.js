@@ -22,7 +22,7 @@ test.describe('candidate A-Z journeys', () => {
     ]);
 
     await expect(page.locator('main h1').first()).toBeVisible();
-    await expect(page.locator('body')).toContainText(/Postuler maintenant|Se connecter pour postuler|Retour aux offres/i);
+    await expect(page.locator('body')).toContainText(/Postuler maintenant|Mettre à jour ma candidature|Préparer mon CV|Se connecter pour postuler|Retour aux offres/i);
     await expect(page.locator('body')).not.toContainText(/TechCorp|Développeur Full Stack passionné/i);
   });
 
@@ -60,7 +60,7 @@ test.describe('candidate A-Z journeys', () => {
       form.getByRole('button', { name: /Filtrer/i }).click(),
     ]);
 
-    await expect(page.locator('body')).toContainText(/Candidatures automatiques IA/i);
+    await expect(page.locator('body')).toContainText(/Candidatures IA/i);
     await expect(page.locator('body')).not.toContainText(/DataProd|DesignLab|InnovaGroup/i);
   });
 

@@ -83,13 +83,13 @@
               </div>
 
               <div class="flex flex-wrap gap-4 text-sm text-on-surface-variant mb-4">
-                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-outline">mail</span> {{ $postulation->user?->email ?? 'Non renseigné' }}</span>
-                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-outline">call</span> {{ $postulation->user?->telephone ?? 'Non renseigné' }}</span>
+                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-outline">mail</span> {{ $postulation->user?->email ?? 'À confirmer' }}</span>
+                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-outline">call</span> {{ $postulation->user?->telephone ?? 'À confirmer' }}</span>
                 @if ($postulation->cv)
                   <a href="{{ route('preview.cv-ia.ep', $postulation) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">picture_as_pdf</span> Voir le CV</a>
                 @endif
                 @if ($postulation->cover_letter || $postulation->lettre_motivation)
-                  <a href="{{ $postulation->cover_letter ? route('preview.letter-ia', $postulation) : route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">description</span> Voir la lettre de motivation</a>
+                  <a href="{{ $postulation->cover_letter ? route('preview.letter-ia', $postulation) : route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">description</span> Voir la lettre de présentation</a>
                 @endif
               </div>
 

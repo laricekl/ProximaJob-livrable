@@ -52,7 +52,7 @@
             @php
               $salary = ($offre->salaire_min || $offre->salaire_max)
                 ? number_format((float) $offre->salaire_min, 0, ',', ' ') . ' - ' . number_format((float) $offre->salaire_max, 0, ',', ' ') . ' $'
-                : 'Salaire non renseigne';
+                : 'Salaire à confirmer';
               $applications = $offre->postulations_count ?? $offre->postulations->count();
             @endphp
             <div class="card-glow rounded-2xl p-6 relative">
@@ -62,7 +62,7 @@
               <h3 class="text-lg font-bold font-serif text-primary mt-2 mb-3 pr-24">{{ $offre->titre }}</h3>
               <p class="text-sm text-on-surface-variant line-clamp-3 mb-4">{{ \Illuminate\Support\Str::limit(strip_tags($offre->description ?? $offre->missions ?? ''), 150) }}</p>
               <div class="space-y-2 mb-5 text-sm text-on-surface-variant">
-                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">location_on</span> {{ $offre->localisation ?? 'Non renseignee' }}</div>
+                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">location_on</span> {{ $offre->localisation ?? 'À confirmer' }}</div>
                 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">payments</span> {{ $salary }}</div>
                 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Publiee le {{ optional($offre->created_at)->format('d/m/Y') }}</div>
                 <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">groups</span> {{ $applications }} candidature{{ $applications > 1 ? 's' : '' }}</div>

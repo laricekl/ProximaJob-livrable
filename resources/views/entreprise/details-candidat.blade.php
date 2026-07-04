@@ -26,8 +26,8 @@
             <p class="text-on-surface-variant mb-4">{{ $candidat->candidateSector?->sector?->name ?? 'Profil candidat' }}</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-on-surface-variant mb-4">
               <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">mail</span> {{ $candidat->email }}</div>
-              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">call</span> {{ $candidat->telephone ?? 'Non renseigné' }}</div>
-              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">location_on</span> {{ $candidat->adresse ?? 'Non renseignée' }}</div>
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">call</span> {{ $candidat->telephone ?? 'À confirmer' }}</div>
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">location_on</span> {{ $candidat->adresse ?? 'À confirmer' }}</div>
               <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">work</span> {{ $candidat->experience_years }} ans d'expérience</div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
@@ -49,19 +49,19 @@
                 @forelse ($candidat->skills as $skill)
                   <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full">{{ $skill->name }}</span>
                 @empty
-                  <p class="text-sm text-on-surface-variant">Aucune compétence renseignée.</p>
+                  <p class="text-sm text-on-surface-variant">Aucune compétence ajoutée.</p>
                 @endforelse
               </div>
             </div>
 
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de motivation</h3>
+              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h3>
               @if ($letterUrl)
                 <a href="{{ $letterUrl }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                  <span class="material-symbols-outlined text-lg">visibility</span> Ouvrir la lettre de motivation
+                  <span class="material-symbols-outlined text-lg">visibility</span> Ouvrir la lettre de présentation
                 </a>
               @else
-                <p class="text-sm text-on-surface-variant">Aucune lettre de motivation disponible pour cette candidature.</p>
+                <p class="text-sm text-on-surface-variant">Aucune lettre de présentation disponible pour cette candidature.</p>
               @endif
             </div>
 
@@ -69,8 +69,8 @@
               <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">badge</span> Informations complémentaires</h3>
               <div class="space-y-3 text-sm text-on-surface-variant">
                 <p><span class="font-semibold text-primary">Inscription :</span> {{ optional($candidat->created_at)->format('d/m/Y') }}</p>
-                <p><span class="font-semibold text-primary">Secteur :</span> {{ $candidat->candidateSector?->sector?->name ?? 'Non renseigné' }}</p>
-                <p><span class="font-semibold text-primary">Diplôme :</span> {{ $candidat->candidateSector?->diplome?->nom_diplome ?? 'Non renseigné' }}</p>
+                <p><span class="font-semibold text-primary">Secteur :</span> {{ $candidat->candidateSector?->sector?->name ?? 'À confirmer' }}</p>
+                <p><span class="font-semibold text-primary">Diplôme :</span> {{ $candidat->candidateSector?->diplome?->nom_diplome ?? 'À confirmer' }}</p>
               </div>
             </div>
           </div>

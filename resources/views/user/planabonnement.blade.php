@@ -37,7 +37,7 @@
               <p class="yearly-price hidden text-[10px] text-outline line-through mt-0.5">119,88$</p>
               <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                 <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Acces aux fonctionnalites de base</li>
-                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Support par email</li>
+                <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Support par courriel</li>
                 <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> 5 GB de stockage</li>
                 <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> Fonctionnalites avancees</li>
               </ul>

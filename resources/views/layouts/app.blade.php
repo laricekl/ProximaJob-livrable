@@ -316,7 +316,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('abonnements') ? 'active' : '' }}"
-                            href="{{ route('abonnement') }}">Tarifs</a>
+                            href="{{ route('abonnement') }}">Forfaits</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ request()->is('contacts') ? 'active' : '' }}"
