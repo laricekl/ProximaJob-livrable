@@ -21,9 +21,7 @@ class EnsureDatabaseExists
             try {
                 $this->ensureUsableConnection();
 
-                if (!Schema::hasTable('migrations')) {
-                    Artisan::call('migrate', ['--force' => true]);
-                }
+                Artisan::call('migrate', ['--force' => true]);
 
                 if ($this->shouldSeedDemoData()) {
                     Artisan::call('db:seed', ['--force' => true]);
