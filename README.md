@@ -32,6 +32,7 @@ APP_DEBUG=false
 APP_URL=https://<ton-app>.laravel.cloud
 APP_LOCALE=fr
 APP_FAKER_LOCALE=fr_FR
+DEEPSEEK_API_KEY=sk-...
 DB_CONNECTION=sqlite
 DB_DATABASE=/var/www/html/storage/database.sqlite
 DB_HOST=
@@ -39,6 +40,7 @@ DB_HOST=
 
 **Critique :** `DB_HOST=` doit être vide pour éviter que le fallback MySQL ne prenne le dessus.  
 **Critique :** `DB_DATABASE` doit être un chemin absolu vers `storage/`.
+**Démo IA :** `DEEPSEEK_API_KEY` doit être configurée dans Laravel Cloud pour activer l'extraction CV avec DeepSeek en production. Ne jamais commiter la vraie clé.
 
 ### 3. Commandes build/deploy
 
