@@ -30,7 +30,7 @@
       </button>
       <div id="userDropdown" class="user-dropdown absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl border border-outline-variant/20 p-2 min-w-[220px] z-50">
         <div class="px-4 py-3 border-b border-outline-variant/10 mb-2"><p class="text-sm font-bold text-primary">{{ $candidateFullName }}</p><p class="text-xs text-outline">{{ auth()->user()->email ?? '' }}</p></div>
-        <a href="{{ route('user.profil-public') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ $isCandidateRoute('user.profil-public') ? 'text-secondary-container bg-secondary-container/5 font-semibold' : 'text-primary hover:bg-surface-container-low' }} transition-colors"><span class="material-symbols-outlined text-lg {{ $isCandidateRoute('user.profil-public') ? '' : 'text-outline' }}">public</span> Mon profil public</a>
+        <a href="{{ route('user.profil-public') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ $isCandidateRoute('user.profil-public') ? 'text-secondary-container bg-secondary-container/5 font-semibold' : 'text-primary hover:bg-surface-container-low' }} transition-colors"><span class="material-symbols-outlined text-lg {{ $isCandidateRoute('user.profil-public') ? '' : 'text-outline' }}">account_circle</span> Mon profil candidat</a>
         <a href="{{ route('profile.edit') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm {{ $isCandidateRoute('profile.edit') ? 'text-secondary-container bg-secondary-container/5 font-semibold' : 'text-primary hover:bg-surface-container-low' }} transition-colors"><span class="material-symbols-outlined text-lg {{ $isCandidateRoute('profile.edit') ? '' : 'text-outline' }}">settings</span> Paramètres</a>
         <a href="{{ route('user.abonnement') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-primary hover:bg-surface-container-low transition-colors"><span class="material-symbols-outlined text-lg text-outline">workspace_premium</span> Mon abonnement</a>
         <form method="POST" action="{{ route('logout') }}" class="mt-1 border-t border-outline-variant/10 pt-2">
@@ -51,7 +51,7 @@
       <a href="{{ route('user.home') }}" class="text-lg font-bold {{ $isCandidateRoute('user.home') ? 'text-primary' : 'text-slate-500' }}">Tableau de bord</a>
       <a href="{{ route('offres') }}" class="text-lg font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary' : 'text-slate-500' }}">Offres</a>
       <a href="{{ route('user.historiques') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary' : 'text-slate-500' }}">Candidatures</a>
-      <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-slate-500' }}">Profil public</a>
+      <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-slate-500' }}">Profil candidat</a>
       <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-slate-500' }}">Mon CV</a>
       <a href="{{ route('notifications.index') }}" class="text-lg font-semibold {{ $isCandidateRoute('notifications.index') ? 'text-primary' : 'text-slate-500' }}">Notifications</a>
       <div class="flex items-center justify-between gap-4">

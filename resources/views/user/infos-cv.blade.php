@@ -99,9 +99,6 @@
                       <button type="button" onclick="showPrincipalCvPreview()" class="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:text-secondary-container">
                         <span class="material-symbols-outlined text-sm">visibility</span> Voir
                       </button>
-                      <button type="button" onclick="showPrincipalPdfPreview()" class="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:text-secondary-container">
-                        <span class="material-symbols-outlined text-sm">picture_as_pdf</span> PDF
-                      </button>
                       <button type="button" onclick="openCvBuilder()" class="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:text-secondary-container">
                         <span class="material-symbols-outlined text-sm">edit</span> Modifier
                       </button>
@@ -158,13 +155,13 @@
                   <div class="min-w-0 flex-1">
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
-                        <p class="truncate text-sm font-bold text-primary">CV adapté</p>
-                        <p class="truncate text-[11px] text-on-surface-variant">{{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version personnalisée' }}</p>
+                        <p class="truncate text-sm font-bold text-primary">Version du CV</p>
+                        <p class="truncate text-[11px] text-on-surface-variant">{{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version enregistrée' }}</p>
                       </div>
-                      <button type="button" class="shrink-0 text-[11px] font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->nom_fichier ?: basename($generatedCv->chemin_fichier)) }}" data-file="{{ e(basename($generatedCv->chemin_fichier)) }}" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-download-url="{{ route('cv.personalization.download', ['filename' => basename($generatedCv->chemin_fichier)]) }}">Voir</button>
+                      <button type="button" class="shrink-0 text-[11px] font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->display_name) }}" data-file="Document PDF" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}">Voir</button>
                     </div>
-                    <p class="mt-1 line-clamp-2 text-[11px] font-semibold leading-4 text-primary">{{ $generatedCv->nom_fichier ?: basename($generatedCv->chemin_fichier) }}</p>
-                    <p class="mt-1 truncate text-[11px] leading-4 text-on-surface-variant">{{ basename($generatedCv->chemin_fichier) }}</p>
+                    <p class="mt-1 line-clamp-2 text-[11px] font-semibold leading-4 text-primary">{{ $generatedCv->display_name }}</p>
+                    <p class="mt-1 truncate text-[11px] leading-4 text-on-surface-variant">Document PDF</p>
                   </div>
                 </div>
               </div>
@@ -189,38 +186,30 @@
               <h2 id="previewTitle" class="mt-1 text-2xl font-bold font-serif text-primary">CV principal</h2>
             </div>
             <div id="principalPreviewActions" class="flex flex-wrap items-center gap-2">
-              @if ($existingProfile)
-                <button type="button" onclick="showPrincipalPdfPreview()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-primary ring-1 ring-outline-variant/20 transition-colors hover:bg-surface-container-low">
-                  <span class="material-symbols-outlined text-lg">picture_as_pdf</span> Voir PDF
-                </button>
-                <a href="{{ route('cv.principal.download') }}" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-primary ring-1 ring-outline-variant/20 transition-colors hover:bg-surface-container-low">
-                  <span class="material-symbols-outlined text-lg">download</span> Telecharger
-                </a>
-              @endif
               <button type="button" id="previewEditButton" onclick="openCvBuilder()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-container px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
                 <span class="material-symbols-outlined text-lg">edit_note</span> Modifier les informations
               </button>
             </div>
           </div>
 
-          <div id="generatedCvPreview" class="hidden">
+          <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
             <div class="mb-4 flex flex-col gap-3 rounded-xl border border-outline-variant/10 bg-surface-container-low p-4 sm:flex-row sm:items-center sm:justify-between">
               <div class="min-w-0">
-                <p id="generatedCvPreviewName" class="truncate text-sm font-bold text-primary"></p>
-                <p id="generatedCvPreviewFile" class="truncate text-xs text-on-surface-variant"></p>
+                <p id="generatedCvPreviewName" class="truncate text-sm font-bold text-primary">{{ $existingProfile ? 'CV principal' : '' }}</p>
+                <p id="generatedCvPreviewFile" class="truncate text-xs text-on-surface-variant">{{ $existingProfile ? 'Rendu PDF du profil' : '' }}</p>
               </div>
               <div class="flex shrink-0 flex-wrap items-center gap-2">
-                <a id="generatedCvOpenLink" href="#" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
+                <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=87' : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
                   <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
                 </a>
               </div>
             </div>
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" src="" class="h-[980px] w-full bg-white md:h-[1120px]" style="zoom: 0.87; -moz-transform: scale(0.87); -moz-transform-origin: top left;" title="Apercu du CV adapte"></iframe>
+              <iframe id="generatedCvFrame" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=87' : '' }}" class="h-[980px] w-full bg-white md:h-[1120px]" style="zoom: 0.87; -moz-transform: scale(0.87); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
             </div>
           </div>
 
-          <div id="principalCvPreview">
+          <div id="principalCvPreview" class="{{ $existingProfile ? 'hidden' : '' }}">
           @if ($existingProfile)
             <div class="space-y-6">
               <div class="mx-auto flex max-w-[820px] items-center justify-between px-1 text-xs font-bold uppercase tracking-[0.16em] text-outline">
@@ -296,46 +285,48 @@
                 @endif
               </div>
 
-              <div class="mx-auto flex max-w-[820px] items-center justify-between px-1 text-xs font-bold uppercase tracking-[0.16em] text-outline">
-                <span>Page 2</span>
-                <span>A4 apercu</span>
-              </div>
-              <div class="mx-auto min-h-[980px] max-w-[820px] rounded-lg border border-outline-variant/20 bg-white p-6 shadow-sm md:min-h-[1060px] md:p-10">
+              @if ($existingProfile->perfectionnements->isNotEmpty() || $existingProfile->benevolats->isNotEmpty())
+                <div class="mx-auto flex max-w-[820px] items-center justify-between px-1 text-xs font-bold uppercase tracking-[0.16em] text-outline">
+                  <span>Page 2</span>
+                  <span>A4 apercu</span>
+                </div>
+                <div class="mx-auto min-h-[980px] max-w-[820px] rounded-lg border border-outline-variant/20 bg-white p-6 shadow-sm md:min-h-[1060px] md:p-10">
 
-                @if ($existingProfile->perfectionnements->isNotEmpty())
-                  <div>
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Perfectionnement</h4>
-                    <div class="mt-3 space-y-3">
-                      @foreach ($existingProfile->perfectionnements as $perfectionnement)
-                        <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                          <div>
-                            <p class="font-bold text-primary">{{ $perfectionnement->formation }}</p>
-                            <p class="text-sm text-on-surface-variant">{{ $perfectionnement->etablissement }}</p>
+                  @if ($existingProfile->perfectionnements->isNotEmpty())
+                    <div>
+                      <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Perfectionnement</h4>
+                      <div class="mt-3 space-y-3">
+                        @foreach ($existingProfile->perfectionnements as $perfectionnement)
+                          <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                            <div>
+                              <p class="font-bold text-primary">{{ $perfectionnement->formation }}</p>
+                              <p class="text-sm text-on-surface-variant">{{ $perfectionnement->etablissement }}</p>
+                            </div>
+                            <p class="text-xs font-semibold text-outline">{{ $perfectionnement->annee }}</p>
                           </div>
-                          <p class="text-xs font-semibold text-outline">{{ $perfectionnement->annee }}</p>
-                        </div>
-                      @endforeach
+                        @endforeach
+                      </div>
                     </div>
-                  </div>
-                @endif
+                  @endif
 
-                @if ($existingProfile->benevolats->isNotEmpty())
-                  <div class="mt-6">
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Activites benevoles</h4>
-                    <div class="mt-3 space-y-3">
-                      @foreach ($existingProfile->benevolats as $benevolat)
-                        <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
-                          <div>
-                            <p class="font-bold text-primary">{{ $benevolat->role }}</p>
-                            <p class="text-sm text-on-surface-variant">{{ $benevolat->organisation }}</p>
+                  @if ($existingProfile->benevolats->isNotEmpty())
+                    <div class="mt-6">
+                      <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Activites benevoles</h4>
+                      <div class="mt-3 space-y-3">
+                        @foreach ($existingProfile->benevolats as $benevolat)
+                          <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
+                            <div>
+                              <p class="font-bold text-primary">{{ $benevolat->role }}</p>
+                              <p class="text-sm text-on-surface-variant">{{ $benevolat->organisation }}</p>
+                            </div>
+                            <p class="text-xs font-semibold text-outline">{{ $benevolat->periode }}</p>
                           </div>
-                          <p class="text-xs font-semibold text-outline">{{ $benevolat->periode }}</p>
-                        </div>
-                      @endforeach
+                        @endforeach
+                      </div>
                     </div>
-                  </div>
-                @endif
-              </div>
+                  @endif
+                </div>
+              @endif
             </div>
           @else
             <div class="rounded-xl border border-dashed border-outline-variant/30 bg-surface-container-low p-8 text-center">
@@ -663,43 +654,43 @@
     }
 
     function showPrincipalCvPreview() {
-      document.getElementById('previewTitle').textContent = 'CV principal';
-      document.getElementById('previewEditButton')?.classList.remove('hidden');
-      document.getElementById('principalPreviewActions')?.classList.remove('hidden');
-      document.getElementById('principalCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvPreview')?.classList.add('hidden');
-      document.getElementById('generatedCvFrame')?.setAttribute('src', '');
-      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      showPrincipalPdfPreview();
     }
 
     function freshPdfUrl(url) {
       if (!url) return '';
-      const separator = url.includes('?') ? '&' : '?';
-      return `${url}${separator}_preview=${Date.now()}`;
+      const [baseUrl, rawHash = ''] = url.split('#');
+      const separator = baseUrl.includes('?') ? '&' : '?';
+      const hashParts = rawHash
+        .split('&')
+        .map((part) => part.trim())
+        .filter((part) => part && !part.startsWith('zoom='));
+
+      hashParts.unshift('zoom=87');
+
+      return `${baseUrl}${separator}_preview=${Date.now()}#${hashParts.join('&')}`;
     }
 
     function showPrincipalPdfPreview() {
-      document.getElementById('previewTitle').textContent = 'CV principal PDF';
-      document.getElementById('previewEditButton')?.classList.add('hidden');
-      document.getElementById('principalPreviewActions')?.classList.add('hidden');
+      document.getElementById('previewTitle').textContent = 'CV principal';
+      document.getElementById('previewEditButton')?.classList.remove('hidden');
+      document.getElementById('principalPreviewActions')?.classList.remove('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
       document.getElementById('generatedCvPreviewName').textContent = 'CV principal';
       document.getElementById('generatedCvPreviewFile').textContent = 'Rendu PDF du profil';
       document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
-      document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}');
-      document.getElementById('generatedCvDownloadLink')?.setAttribute('href', '{{ route('cv.principal.download') }}');
+      document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=87');
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function showGeneratedCvPreview(button) {
-      const title = button.dataset.title || 'CV adapte';
+      const title = button.dataset.title || 'CV';
       const file = button.dataset.file || '';
       const previewUrl = button.dataset.previewUrl || '';
       const openUrl = button.dataset.openUrl || '#';
-      const downloadUrl = button.dataset.downloadUrl || '#';
 
-      document.getElementById('previewTitle').textContent = 'CV adapte';
+      document.getElementById('previewTitle').textContent = 'CV';
       document.getElementById('previewEditButton')?.classList.add('hidden');
       document.getElementById('principalPreviewActions')?.classList.add('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
@@ -708,7 +699,6 @@
       document.getElementById('generatedCvPreviewFile').textContent = file;
       document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl(previewUrl));
       document.getElementById('generatedCvOpenLink').setAttribute('href', openUrl);
-      document.getElementById('generatedCvDownloadLink')?.setAttribute('href', downloadUrl);
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 

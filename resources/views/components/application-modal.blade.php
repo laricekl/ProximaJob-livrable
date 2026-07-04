@@ -1,4 +1,24 @@
 
+@php
+    $candidateCvProfile = auth()->check() ? auth()->user()->cvProfile : null;
+    $generatedCvByOffer = $candidateCvProfile
+        ? $candidateCvProfile->cvGeneres()
+            ->whereNotNull('offre_id')
+            ->orderByDesc('date_generation')
+            ->get()
+            ->unique('offre_id')
+            ->mapWithKeys(fn ($cv) => [
+                (string) $cv->offre_id => [
+                    'id' => $cv->id,
+                    'name' => $cv->display_name,
+                    'file' => 'Document PDF',
+                    'previewUrl' => route('cv.personalization.preview', ['filename' => basename($cv->chemin_fichier), 'offre_id' => $cv->offre_id]),
+                ],
+            ])
+            ->all()
+        : [];
+@endphp
+
 <style>
 /* Styles pour le modal de candidature */
 .application-modal {
@@ -18,13 +38,13 @@
 }
 
 .application-modal .modal-dialog {
-    max-width: 800px;
+    max-width: 720px;
     width: 100%;
     margin: auto;
 }
 
 .application-modal .modal-content {
-    border-radius: 28px;
+    border-radius: 20px;
     border: 1px solid rgba(148, 163, 184, 0.18);
     overflow: hidden;
     background: rgba(255, 255, 255, 0.96);
@@ -34,22 +54,22 @@
 
 .application-modal .form-header {
     background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.92) 100%);
-    padding: 30px 40px 20px;
+    padding: 22px 28px 14px;
     border-bottom: 1px solid rgba(148, 163, 184, 0.18);
     position: relative;
 }
 
 .application-modal .close-btn {
     position: absolute;
-    top: 20px;
-    right: 30px;
+    top: 16px;
+    right: 20px;
     background: none;
     border: none;
     font-size: 24px;
     color: #64748b;
     cursor: pointer;
-    width: 42px;
-    height: 42px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -63,9 +83,9 @@
 }
 
 .application-modal .form-title {
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
     color: #0f172a;
     letter-spacing: -0.02em;
 }
@@ -74,8 +94,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 40px;
-    margin-bottom: 20px;
+    gap: 28px;
+    margin-bottom: 8px;
 }
 
 .application-modal .step {
@@ -86,15 +106,15 @@
 }
 
 .application-modal .step-circle {
-    width: 50px;
-    height: 50px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 18px;
-    margin-bottom: 8px;
+    font-size: 15px;
+    margin-bottom: 6px;
     position: relative;
     z-index: 2;
 }
@@ -111,7 +131,7 @@
 }
 
 .application-modal .step-label {
-    font-size: 14px;
+    font-size: 12px;
     color: #64748b;
     text-align: center;
     font-weight: 600;
@@ -120,16 +140,16 @@
 .application-modal .step:not(:last-child)::after {
     content: '';
     position: absolute;
-    top: 25px;
-    left: 65px;
-    width: 60px;
+    top: 19px;
+    left: 50px;
+    width: 50px;
     height: 2px;
     background: rgba(148, 163, 184, 0.28);
     z-index: 1;
 }
 
 .application-modal .form-content {
-    padding: 40px;
+    padding: 26px 28px;
     background: linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(248,250,252,0.92) 100%);
 }
 
@@ -145,10 +165,10 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 20px;
+    font-size: 17px;
     font-weight: 600;
     color: #0f172a;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
 }
 
 .application-modal .section-icon {
@@ -158,12 +178,12 @@
 .application-modal .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 14px;
+    margin-bottom: 14px;
 }
 
 .application-modal .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 14px;
 }
 
 .application-modal .form-group.full-width {
@@ -172,17 +192,17 @@
 
 .application-modal .form-label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-weight: 500;
     color: #0f172a;
 }
 
 .application-modal .form-input {
     width: 100%;
-    padding: 12px 16px;
+    padding: 10px 13px;
     border: 1px solid rgba(148, 163, 184, 0.35);
-    border-radius: 14px;
-    font-size: 16px;
+    border-radius: 12px;
+    font-size: 14px;
     transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
     background: rgba(255, 255, 255, 0.88);
     color: #0f172a;
@@ -195,11 +215,11 @@
 }
 
 .application-modal .subsection-title {
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
     color: #0f172a;
-    margin-bottom: 20px;
-    margin-top: 25px;
+    margin-bottom: 10px;
+    margin-top: 16px;
 }
 
 .application-modal .blue-background {
@@ -209,13 +229,15 @@
 
 .application-modal .upload-section {
     background: rgba(248, 250, 252, 0.84);
-    border-radius: 22px;
-    padding: 30px;
-    margin-bottom: 30px;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 14px;
 }
 
 .application-modal .upload-item {
-    margin-bottom: 25px;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
 }
 
 .application-modal .upload-item:last-child {
@@ -224,7 +246,7 @@
 
 .application-modal .upload-label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
     font-weight: 500;
     color: #0f172a;
 }
@@ -240,11 +262,11 @@
     background: #f97316;
     color: white;
     border: none;
-    padding: 11px 22px;
+    padding: 9px 15px;
     border-radius: 9999px;
     font-weight: 700;
     cursor: pointer;
-    font-size: 14px;
+    font-size: 12px;
     flex-shrink: 0;
     transition: all 0.2s ease;
 }
@@ -254,11 +276,17 @@
     transform: translateY(-1px);
 }
 
+.application-modal .upload-btn:disabled {
+    background: #0f766e;
+    cursor: default;
+    transform: none;
+}
+
 .application-modal .upload-status {
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 14px;
+    font-size: 12px;
     flex-grow: 1;
     justify-content: flex-end;
 }
@@ -269,6 +297,34 @@
 
 .application-modal .upload-status:not(.empty) {
     color: #0f766e;
+}
+
+.application-modal .generated-cv-choice {
+    display: none;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+    padding: 12px;
+    border: 1px solid rgba(47, 95, 143, 0.18);
+    border-radius: 14px;
+    background: rgba(47, 95, 143, 0.08);
+}
+
+.application-modal .generated-cv-choice.active {
+    display: flex;
+}
+
+.application-modal .generated-cv-choice.selected {
+    border-color: rgba(47, 125, 92, 0.45);
+    background: rgba(47, 125, 92, 0.1);
+}
+
+.application-modal .generated-cv-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
 }
 
 .application-modal .upload-status .check-circle {
@@ -286,9 +342,9 @@
 
 .application-modal .summary-section {
     background: rgba(248, 250, 252, 0.86);
-    border-radius: 22px;
-    padding: 25px;
-    margin-bottom: 25px;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
     border: 1px solid rgba(148, 163, 184, 0.14);
 }
 
@@ -307,8 +363,8 @@
 }
 
 .application-modal .summary-item {
-    font-size: 16px;
-    margin-bottom: 12px;
+    font-size: 14px;
+    margin-bottom: 8px;
 }
 
 .application-modal .summary-item.inline {
@@ -350,7 +406,7 @@
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    margin: 25px 0;
+    margin: 16px 0;
 }
 
 .application-modal .checkbox {
@@ -404,7 +460,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 30px;
+    padding-top: 18px;
     border-top: 1px solid rgba(148, 163, 184, 0.18);
 }
 
@@ -412,8 +468,8 @@
     background: transparent;
     color: #64748b;
     border: 1px solid rgba(148, 163, 184, 0.28);
-    padding: 12px 18px;
-    font-size: 16px;
+    padding: 10px 16px;
+    font-size: 14px;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -432,9 +488,9 @@
     background: #f97316;
     color: white;
     border: none;
-    padding: 12px 30px;
+    padding: 10px 22px;
     border-radius: 9999px;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     display: flex;
@@ -518,6 +574,22 @@
 .generate-btn:hover {
     background: rgba(249, 115, 22, 0.08);
     border-color: rgba(249, 115, 22, 0.45);
+}
+
+.application-modal .document-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.application-modal .compact-hint {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.45;
+    margin: 0;
 }
 
 /* Success Modal */
@@ -668,7 +740,7 @@ select[readonly] {
                 <button type="button" class="close-btn" data-bs-dismiss="modal" onclick="closeApplicationModal()" aria-label="Close">
                     <span class="material-symbols-outlined">close</span>
                 </button>
-                <h1 class="form-title">{{ __('interface.apply_now')}}</h1>
+                <h1 class="form-title" id="applicationModalTitle">{{ ($existingPostulation ?? null) && !in_array($existingPostulation->status, ['accepted', 'rejected'], true) ? 'Mettre à jour ma candidature' : __('interface.apply_now') }}</h1>
 
                 <!-- Progress Steps -->
                 <div class="progress-steps">
@@ -710,16 +782,18 @@ select[readonly] {
                             </div>
                         </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-input" name="email" required value ="{{ auth()->user()->email ?? '' }}" readonly>
-                            <div class="error-message" id="email-error">Veuillez entrer une adresse email valide</div>
-                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-input" name="email" required value ="{{ auth()->user()->email ?? '' }}" readonly>
+                                <div class="error-message" id="email-error">Veuillez entrer une adresse email valide</div>
+                            </div>
 
-                        <div class="form-group">
-                            <label class="form-label">Numéro de téléphone</label>
-                            <input type="tel" class="form-input" name="telephone" required value ="{{ auth()->user()->telephone ?? '' }}" readonly>
-                            <div class="error-message" id="telephone-error">Ce champ est obligatoire</div>
+                            <div class="form-group">
+                                <label class="form-label">Numéro de téléphone</label>
+                                <input type="tel" class="form-input" name="telephone" required value ="{{ auth()->user()->telephone ?? '' }}" readonly>
+                                <div class="error-message" id="telephone-error">Ce champ est obligatoire</div>
+                            </div>
                         </div>
 
                         <div class="form-group">
@@ -736,8 +810,18 @@ select[readonly] {
                             Documents requis
                         </div>
 
-                        <div class="subsection-title">
-                            Uploader mes documents
+                        <input type="hidden" id="generated-cv-id" name="generated_cv_id" value="">
+                        <div class="generated-cv-choice" id="generated-cv-choice">
+                            <div>
+                                <div class="upload-label">CV prêt pour cette offre</div>
+                                <div class="upload-status" id="generated-cv-status">
+                                    <span>Aucun CV sélectionné</span>
+                                </div>
+                            </div>
+                            <div class="generated-cv-actions">
+                                <button type="button" class="upload-btn" id="use-generated-cv-btn">Utiliser ce CV</button>
+                                <a href="#" target="_blank" rel="noopener" class="upload-btn" id="preview-generated-cv-link">Voir</a>
+                            </div>
                         </div>
 
                         <div class="upload-section blue-background">
@@ -751,10 +835,17 @@ select[readonly] {
                                 </div>
                                 <input type="file" id="cv-upload" name="cv" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleFileUpload('cv', this)">
                                 <div class="upload-error" id="cv-upload-error">Veuillez uploader votre CV</div>
+                                <div class="document-toolbar">
+                                    <p class="compact-hint">Utilisez un CV existant, importez un fichier, ou générez une version depuis votre CV principal.</p>
+                                    <button type="button" class="generate-btn" onclick="openCVGeneratorModal()">
+                                        <span class="material-symbols-outlined text-base">auto_awesome</span>
+                                        Générer
+                                    </button>
+                                </div>
                             </div>
 
                             <div class="upload-item">
-                                <label class="upload-label">Lettre de motivation (Format PDF ou DOC)</label>
+                                <label class="upload-label">Lettre de motivation <span class="text-xs text-outline">(optionnelle)</span></label>
                                 <div class="upload-area">
                                     <button type="button" class="upload-btn" onclick="triggerFileUpload('motivation')">Parcourir</button>
                                     <div class="upload-status empty" id="motivation-status">
@@ -762,26 +853,26 @@ select[readonly] {
                                     </div>
                                 </div>
                                 <input type="file" id="motivation-upload" name="motivation" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleFileUpload('motivation', this)">
-                                <div class="upload-error" id="motivation-upload-error">Veuillez uploader votre lettre de motivation</div>
+                                <div class="upload-error" id="motivation-upload-error">Format invalide pour la lettre de motivation</div>
                             </div>
                         </div>
 
-                <div class="subsection-title">
-                    Autres documents (optionnels)
-                </div>
+                        <div class="subsection-title">
+                            Documents optionnels
+                        </div>
 
-                <div class="upload-section blue-background" id="additional-documents-section">
-                    <div id="additional-documents-container">
-                        <!-- Les documents seront ajoutés dynamiquement ici -->
-                    </div>
-                    
-                    <div class="text-center mt-3">
-                        <button type="button" class="generate-btn" id="add-document-btn">
-                            <span class="material-symbols-outlined text-base">add</span>
-                            Ajouter un document
-                        </button>
-                    </div>
-                </div>
+                        <div class="upload-section blue-background" id="additional-documents-section">
+                            <div id="additional-documents-container">
+                                <!-- Les documents seront ajoutés dynamiquement ici -->
+                            </div>
+
+                            <div class="text-center mt-3">
+                                <button type="button" class="generate-btn" id="add-document-btn">
+                                    <span class="material-symbols-outlined text-base">add</span>
+                                    Ajouter un document
+                                </button>
+                            </div>
+                        </div>
 
                     <!-- Template caché pour les nouveaux documents -->
                     <template id="document-template">
@@ -814,22 +905,6 @@ select[readonly] {
                         </div>
                     </template>
 
-
-                        <div class="divider">
-                            <span>OU</span>
-                        </div>
-
-                        <div class="cv-generator blue-background">
-                            <div class="cv-generator-icon">
-                                <span class="material-symbols-outlined">auto_awesome</span>
-                            </div>
-                            <h3>Générer un CV automatiquement</h3>
-                            <p>Créez un CV professionnel en quelques minutes avec notre assistant de création.</p>
-                            <button type="button" class="generate-btn" onclick="openCVGeneratorModal()">
-                                <span class="material-symbols-outlined text-base">add</span>
-                                Générer mon CV
-                            </button>
-                        </div>
                         <div id="cvGeneratorModalContainer"></div>
                     </div>
 
@@ -901,8 +976,8 @@ select[readonly] {
         <div class="success-icon">
             <span class="material-symbols-outlined">check</span>
         </div>
-        <h2 class="success-title">Candidature réussie !</h2>
-        <p class="success-message">
+        <h2 class="success-title" id="successModalTitle">Candidature réussie !</h2>
+        <p class="success-message" id="successModalMessage">
            Votre candidature a été envoyée avec succès!. Veuillez consulter votre mail.
         </p>
         <button class="close-modal-btn" onclick="closeSuccessModal()">Fermer</button>
@@ -921,6 +996,11 @@ select[readonly] {
         cv: null,
         motivation: null
     };
+    const generatedCvByOffer = @json($generatedCvByOffer);
+    const existingApplicationStatus = @json(($existingPostulation ?? null)?->status);
+    const isApplicationUpdate = Boolean(existingApplicationStatus && !['accepted', 'rejected'].includes(existingApplicationStatus));
+    let selectedGeneratedCv = null;
+    let successReloadTimer = null;
     
     // Rendre currentStep accessible globalement
     window.currentStep = currentStep;
@@ -980,6 +1060,7 @@ select[readonly] {
 
         resetForm();
         document.getElementById('offre_id').value = resolvedOffreId;
+        updateGeneratedCvChoice(resolvedOffreId);
 
         if (modal) {
             modal.show();
@@ -1010,6 +1091,7 @@ select[readonly] {
         currentStep = 1;
         formData = {};
         uploadedFiles = { cv: null, motivation: null };
+        selectedGeneratedCv = null;
         updateStep();
 
         document.getElementById('applicationForm').reset();
@@ -1022,6 +1104,62 @@ select[readonly] {
         document.getElementById('cv-status').classList.add('empty');
         document.getElementById('motivation-status').innerHTML = '<span>Aucun fichier sélectionné</span>';
         document.getElementById('motivation-status').classList.add('empty');
+        document.getElementById('generated-cv-id').value = '';
+        document.getElementById('generated-cv-choice').classList.remove('active', 'selected');
+    }
+
+    function updateGeneratedCvChoice(offreId) {
+        const choice = document.getElementById('generated-cv-choice');
+        const status = document.getElementById('generated-cv-status');
+        const previewLink = document.getElementById('preview-generated-cv-link');
+        const useButton = document.getElementById('use-generated-cv-btn');
+        const generatedCv = generatedCvByOffer[String(offreId)] || null;
+
+        selectedGeneratedCv = null;
+        document.getElementById('generated-cv-id').value = '';
+        choice.classList.remove('active', 'selected');
+        useButton.disabled = false;
+        useButton.innerHTML = 'Utiliser ce CV';
+
+        if (!generatedCv) {
+            status.innerHTML = '<span>Aucun CV sélectionné</span>';
+            previewLink.setAttribute('href', '#');
+            return;
+        }
+
+        choice.classList.add('active');
+        choice.dataset.cvId = generatedCv.id;
+        choice.dataset.cvName = generatedCv.name;
+        status.innerHTML = `<span>${generatedCv.name}</span><span class="text-xs text-outline">Document PDF</span>`;
+        previewLink.setAttribute('href', generatedCv.previewUrl);
+        selectGeneratedCvForApplication();
+    }
+
+    function selectGeneratedCvForApplication() {
+        const choice = document.getElementById('generated-cv-choice');
+        if (!choice?.dataset.cvId) return;
+
+        selectedGeneratedCv = {
+            id: choice.dataset.cvId,
+            name: choice.dataset.cvName || 'CV',
+        };
+        document.getElementById('generated-cv-id').value = selectedGeneratedCv.id;
+        choice.classList.add('selected');
+        const useButton = document.getElementById('use-generated-cv-btn');
+        useButton.disabled = true;
+        useButton.innerHTML = '<span class="material-symbols-outlined text-base">check</span> Sélectionné';
+
+        uploadedFiles.cv = null;
+        document.getElementById('cv-upload').value = '';
+        const statusDiv = document.getElementById('cv-status');
+        statusDiv.innerHTML = `
+            <div class="check-circle">
+                <span class="material-symbols-outlined text-[12px]">check</span>
+            </div>
+            <span>${selectedGeneratedCv.name}</span>
+        `;
+        statusDiv.classList.remove('empty');
+        document.getElementById('cv-upload-error').classList.remove('show');
     }
 
     // Navigation des étapes
@@ -1070,7 +1208,7 @@ select[readonly] {
         prevBtn.style.display = currentStep > 1 ? 'flex' : 'none';
 
         if (currentStep === 3) {
-            nextBtn.innerHTML = '<span class="material-symbols-outlined text-lg">check</span> Finaliser la candidature';
+            nextBtn.innerHTML = `<span class="material-symbols-outlined text-lg">check</span> ${isApplicationUpdate ? 'Mettre à jour la candidature' : 'Finaliser la candidature'}`;
             updateSummary();
         } else {
             nextBtn.innerHTML = 'Suivant <span class="material-symbols-outlined text-lg">arrow_forward</span>';
@@ -1151,19 +1289,11 @@ select[readonly] {
             let isValid = true;
 
             const cvError = document.getElementById('cv-upload-error');
-            if (!uploadedFiles.cv) {
+            if (!uploadedFiles.cv && !selectedGeneratedCv) {
                 cvError.classList.add('show');
                 isValid = false;
             } else {
                 cvError.classList.remove('show');
-            }
-
-            const motivationError = document.getElementById('motivation-upload-error');
-            if (!uploadedFiles.motivation) {
-                motivationError.classList.add('show');
-                isValid = false;
-            } else {
-                motivationError.classList.remove('show');
             }
 
             return isValid;
@@ -1208,6 +1338,14 @@ select[readonly] {
 
         // Si le fichier est valide
         uploadedFiles[type] = file;
+        if (type === 'cv') {
+            selectedGeneratedCv = null;
+            document.getElementById('generated-cv-id').value = '';
+            document.getElementById('generated-cv-choice').classList.remove('selected');
+            const useButton = document.getElementById('use-generated-cv-btn');
+            useButton.disabled = false;
+            useButton.innerHTML = 'Utiliser ce CV';
+        }
         const statusDiv = document.getElementById(`${type}-status`);
         statusDiv.innerHTML = `
             <div class="check-circle">
@@ -1234,6 +1372,8 @@ select[readonly] {
 
         if (uploadedFiles.cv) {
             docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${uploadedFiles.cv.name}</li>`;
+        } else if (selectedGeneratedCv) {
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${selectedGeneratedCv.name}</li>`;
         }
 
         if (uploadedFiles.motivation) {
@@ -1265,15 +1405,17 @@ async function submitApplication() {
         formDataToSend.append('offre_id', offreId);
 
         // Ajouter les fichiers principaux
-        if (!uploadedFiles.cv) {
+        if (!uploadedFiles.cv && !selectedGeneratedCv) {
             throw new Error("Veuillez uploader votre CV");
         }
-        if (!uploadedFiles.motivation) {
-            throw new Error("Veuillez uploader votre lettre de motivation");
+        if (selectedGeneratedCv) {
+            formDataToSend.append('generated_cv_id', selectedGeneratedCv.id);
+        } else {
+            formDataToSend.append('cv', uploadedFiles.cv);
         }
-
-        formDataToSend.append('cv', uploadedFiles.cv);
-        formDataToSend.append('motivation', uploadedFiles.motivation);
+        if (uploadedFiles.motivation) {
+            formDataToSend.append('motivation', uploadedFiles.motivation);
+        }
 
         // Ajouter les documents supplémentaires
         const additionalDocs = document.querySelectorAll('.additional-document');
@@ -1365,6 +1507,13 @@ async function submitApplication() {
 }
     // Afficher la modal de succès
     function showSuccessModal() {
+        document.getElementById('successModalTitle').textContent = isApplicationUpdate
+            ? 'Candidature mise à jour'
+            : 'Candidature réussie !';
+        document.getElementById('successModalMessage').textContent = isApplicationUpdate
+            ? 'Votre dossier de candidature a été mis à jour avec succès.'
+            : 'Votre candidature a été envoyée avec succès.';
+
         const applicationModalElement = document.getElementById('applicationModal');
         const applicationModal = resolveBootstrapModal(applicationModalElement);
         if (applicationModal) {
@@ -1376,19 +1525,28 @@ async function submitApplication() {
         setTimeout(() => {
             document.getElementById('successModal').classList.add('active');
             document.body.style.overflow = 'hidden';
+            successReloadTimer = window.setTimeout(() => {
+                window.location.reload();
+            }, 1400);
         }, 300);
     }
 
     // Fermer la modal de succès
     function closeSuccessModal() {
+        if (successReloadTimer) {
+            window.clearTimeout(successReloadTimer);
+            successReloadTimer = null;
+        }
         document.getElementById('successModal').classList.remove('active');
         document.body.style.overflow = 'auto';
+        window.location.reload();
     }
 
     // Vérifier si on doit ouvrir le modal au chargement
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('successModal').classList.remove('active');
         document.body.style.overflow = 'auto';
+        document.getElementById('use-generated-cv-btn')?.addEventListener('click', selectGeneratedCvForApplication);
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('openModal') === 'true') {

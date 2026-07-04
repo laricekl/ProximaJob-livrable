@@ -20,6 +20,7 @@ use App\Models\Offre;
 use App\Models\Notification;
 use App\Models\User;
 use App\Models\AutresDoc;
+use App\Models\CvGenere;
 
 class CandidatureController extends Controller
 {
@@ -46,12 +47,15 @@ class CandidatureController extends Controller
     {
         $validated = $request->validate([
             'offre_id' => ['required', Rule::exists('offres', 'id')->where('status', 'active')],
-            'cv' => 'required|file|mimes:pdf,doc,docx|max:2048',
-            'motivation' => 'required|file|mimes:pdf,doc,docx|max:2048',
+            'cv' => 'nullable|required_without:generated_cv_id|file|mimes:pdf,doc,docx|max:2048',
+            'generated_cv_id' => 'nullable|integer',
+            'motivation' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
             'additional_docs' => 'nullable|array',
             'additional_docs.*.intitule' => 'required_if:additional_docs.*.file,!=,null|string|max:255',
             'additional_docs.*.description' => 'nullable|string|max:500',
             'additional_docs.*.file' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
+        ], [
+            'cv.required_without' => 'Veuillez joindre votre CV.',
         ]);
 
         try {
@@ -67,7 +71,10 @@ class CandidatureController extends Controller
         $storagePath = "candidatures/{$userId}/{$offreId}";
 
         // Gestion des fichiers principaux
-        $cvPath = $this->storeFile($request->file('cv'), $storagePath, "cv_{$uniqueId}");
+        $generatedCv = $this->resolveGeneratedCvForApplication($request->integer('generated_cv_id'), $offreId, $userId);
+        $cvPath = $generatedCv
+            ? $generatedCv->chemin_fichier
+            : $this->storeFile($request->file('cv'), $storagePath, "cv_{$uniqueId}");
         $motivationPath = $this->storeFile($request->file('motivation'), $storagePath, "motivation_{$uniqueId}");
 
 
@@ -89,7 +96,8 @@ class CandidatureController extends Controller
                 $existingCandidature->update([
                     'cv' => $cvPath,
                     'lettre_motivation' => $motivationPath,
-                    'status' => 'en_attente'
+                    'status' => 'en_attente',
+                    'autopostulation' => (bool) $generatedCv,
                 ]);
                 $candidature = $existingCandidature;
             } else {
@@ -99,7 +107,7 @@ class CandidatureController extends Controller
                     'cv' => $cvPath,
                     'lettre_motivation' => $motivationPath,
                     'status' => 'en_attente',
-                    'autopostulation' => false,
+                    'autopostulation' => (bool) $generatedCv,
                     'application_date' => now(),
                 ]);
             }
@@ -171,6 +179,25 @@ class CandidatureController extends Controller
     }
 
  
+    private function resolveGeneratedCvForApplication(?int $generatedCvId, int $offreId, int $userId): ?CvGenere
+    {
+        if (!$generatedCvId) {
+            return null;
+        }
+
+        $generatedCv = CvGenere::query()
+            ->whereKey($generatedCvId)
+            ->where('offre_id', $offreId)
+            ->whereHas('cvProfile', fn ($query) => $query->where('user_id', $userId))
+            ->first();
+
+        if (!$generatedCv || !Storage::disk('public')->exists($generatedCv->chemin_fichier)) {
+            throw new \RuntimeException('Le CV généré sélectionné est introuvable pour cette offre.');
+        }
+
+        return $generatedCv;
+    }
+
     private function storeFile($file, $path, $namePrefix)
 {
     if (!$file || !$file->isValid()) {

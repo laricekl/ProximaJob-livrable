@@ -6,6 +6,7 @@ use App\Jobs\AutoMatchingJob;
 use App\Models\AutresDoc;
 use App\Models\CandidateSector;
 use App\Models\CvExperience;
+use App\Models\CvGenere;
 use App\Models\CvProfile;
 use App\Models\Notification;
 use App\Models\Postulation;
@@ -70,7 +71,7 @@ class CandidateActionsTest extends TestCase
         ]);
     }
 
-    public function test_candidate_application_requires_cv_and_motivation_files(): void
+    public function test_candidate_application_requires_cv_file(): void
     {
         $candidate = $this->createCandidate();
         $offer = $this->createOfferFor();
@@ -78,9 +79,140 @@ class CandidateActionsTest extends TestCase
         $this->actingAs($candidate)
             ->postJson(route('candidatures.store'), ['offre_id' => $offer->id])
             ->assertUnprocessable()
-            ->assertJsonValidationErrors(['cv', 'motivation'])
-            ->assertJsonPath('errors.cv.0', 'Veuillez joindre votre CV.')
-            ->assertJsonPath('errors.motivation.0', 'Veuillez joindre votre lettre de motivation.');
+            ->assertJsonValidationErrors(['cv'])
+            ->assertJsonMissingValidationErrors(['motivation'])
+            ->assertJsonPath('errors.cv.0', 'Veuillez joindre votre CV.');
+    }
+
+    public function test_candidate_can_submit_application_without_motivation_letter(): void
+    {
+        $candidate = $this->createCandidate();
+        $offer = $this->createOfferFor();
+
+        $this->actingAs($candidate)->postJson(route('candidatures.store'), [
+            'offre_id' => $offer->id,
+            'cv' => UploadedFile::fake()->create('cv.pdf', 64, 'application/pdf'),
+        ])
+            ->assertOk()
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('postulations', [
+            'user_id' => $candidate->id,
+            'offre_id' => $offer->id,
+            'lettre_motivation' => null,
+            'status' => 'en_attente',
+        ]);
+    }
+
+    public function test_candidate_can_apply_with_generated_cv_for_offer(): void
+    {
+        Storage::fake('public');
+
+        $candidate = $this->createCandidate();
+        $enterprise = $this->createEnterprise();
+        $offer = $this->createOfferFor($enterprise);
+        $cvProfile = CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => $candidate->name,
+            'prenom' => $candidate->prenom,
+            'email' => $candidate->email,
+        ]);
+        $generatedPath = 'personalized-cvs/cv_perso_test.pdf';
+
+        Storage::disk('public')->put($generatedPath, 'pdf-content');
+
+        $generatedCv = CvGenere::create([
+            'cv_profile_id' => $cvProfile->id,
+            'offre_id' => $offer->id,
+            'nom_fichier' => 'CV adapte - QA',
+            'chemin_fichier' => $generatedPath,
+        ]);
+
+        $this->actingAs($candidate)->postJson(route('candidatures.store'), [
+            'offre_id' => $offer->id,
+            'generated_cv_id' => $generatedCv->id,
+            'motivation' => UploadedFile::fake()->create('motivation.pdf', 64, 'application/pdf'),
+        ])
+            ->assertOk()
+            ->assertJson(['success' => true]);
+
+        $this->assertDatabaseHas('postulations', [
+            'user_id' => $candidate->id,
+            'offre_id' => $offer->id,
+            'cv' => $generatedPath,
+            'autopostulation' => true,
+            'status' => 'en_attente',
+        ]);
+    }
+
+    public function test_candidate_can_open_ai_application_from_ai_history(): void
+    {
+        $candidate = $this->createCandidate();
+        $offer = $this->createOfferFor();
+
+        $postulation = Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $offer->id,
+            'cv' => 'personalized-cvs/cv_test.pdf',
+            'autopostulation' => true,
+            'status' => 'en_attente',
+        ]);
+        $notification = Notification::create([
+            'user_id' => $candidate->id,
+            'role' => 'candidat',
+            'title' => 'Nouvelle candidature assistée par IA',
+            'message' => 'Votre profil a été proposé pour cette offre.',
+            'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
+            'type' => 'matching',
+            'is_read' => false,
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('user.historiques_ia'))
+            ->assertOk()
+            ->assertSee('Nouveau')
+            ->assertSee('aria-label="Voir les détails"', false)
+            ->assertSee(route('user.detail-candidature', ['id' => $postulation->id]), false);
+
+        $this->actingAs($candidate)
+            ->get(route('user.detail-candidature', ['id' => $postulation->id]))
+            ->assertOk()
+            ->assertSee('Candidature assistée par IA')
+            ->assertSee(route('user.historiques_ia'), false);
+
+        $this->assertTrue($notification->fresh()->is_read);
+    }
+
+    public function test_candidate_can_preview_ai_application_documents(): void
+    {
+        Storage::fake('public');
+
+        $candidate = $this->createCandidate();
+        $offer = $this->createOfferFor();
+        $cvPath = 'personalized-cvs/cv_test.pdf';
+        $letterPath = 'cover-letters/letter_test.pdf';
+
+        Storage::disk('public')->put($cvPath, 'cv-content');
+        Storage::disk('public')->put($letterPath, 'letter-content');
+
+        $postulation = Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $offer->id,
+            'cv' => $cvPath,
+            'cover_letter' => $letterPath,
+            'autopostulation' => true,
+            'status' => 'en_attente',
+        ]);
+
+        $this->actingAs($candidate)
+            ->get(route('preview.cv-ia', $postulation))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
+
+        $this->actingAs($candidate)
+            ->get(route('preview.letter-ia', $postulation))
+            ->assertOk()
+            ->assertHeader('Content-Type', 'application/pdf');
     }
 
     public function test_candidate_cannot_apply_to_inactive_offer(): void
@@ -311,7 +443,7 @@ class CandidateActionsTest extends TestCase
             ->assertSee('Analyste Produit')
             ->assertSee('Studio Horizon')
             ->assertSee('Quebec')
-            ->assertSee('Postulation candidate manuelle');
+            ->assertSee('Candidature envoyée par le candidat');
     }
 
     public function test_candidate_can_generate_preview_and_download_a_personalized_cv_without_gemini(): void
@@ -367,7 +499,7 @@ class CandidateActionsTest extends TestCase
 
         $this->assertDatabaseHas('cv_generes', [
             'cv_profile_id' => $candidate->cvProfile->id,
-            'nom_fichier' => 'CV adapte - Developpeuse Laravel - Entreprise QA',
+            'nom_fichier' => 'CV - Camille Martin',
             'chemin_fichier' => $files[0],
         ]);
 

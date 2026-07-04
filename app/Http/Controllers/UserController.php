@@ -18,6 +18,7 @@ use App\Models\UserAbonnement;
 use App\Models\CvProfile;
 use App\Models\Abonnement;   
 use App\Models\SiteSetting;  
+use App\Models\Notification;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -80,6 +81,15 @@ class UserController extends Controller
         if (!$postulation) {
             return redirect()->route('user.historiques')
                 ->with('error', 'Aucune candidature trouvée.');
+        }
+
+        if ($postulation->autopostulation) {
+            Notification::where('user_id', Auth::id())
+                ->where('role', 'candidat')
+                ->where('type', 'matching')
+                ->where('link', route('user.detail-candidature', ['id' => $postulation->id], false))
+                ->where('is_read', false)
+                ->update(['is_read' => true]);
         }
 
         return view('user.detail-candidature', compact('postulation'));
@@ -269,9 +279,22 @@ class UserController extends Controller
         }
 
         $postulations = $query->paginate(10);
+        $newAiPostulationIds = Notification::where('user_id', Auth::id())
+            ->where('role', 'candidat')
+            ->where('type', 'matching')
+            ->where('is_read', false)
+            ->where('link', 'like', '%/user/detail-candidature?id=%')
+            ->pluck('link')
+            ->map(function ($link) {
+                preg_match('/[?&]id=(\d+)/', (string) $link, $matches);
+
+                return isset($matches[1]) ? (int) $matches[1] : null;
+            })
+            ->filter()
+            ->values();
 
        
-        return view("user.historique-candidatures-ia" , compact('postulations'));
+        return view("user.historique-candidatures-ia" , compact('postulations', 'newAiPostulationIds'));
     }
 
     
@@ -289,8 +312,14 @@ public function jobdetails($slug)
             'skills.skill' // Ajouter cette ligne pour charger les compétences
         ])->where('slug', $slug)
           ->firstOrFail();     
+
+        $existingPostulation = auth()->check()
+            ? Postulation::where('user_id', auth()->id())
+                ->where('offre_id', $offre->id)
+                ->first()
+            : null;
         
-        return view('user.details', compact('offre'));
+        return view('user.details', compact('offre', 'existingPostulation'));
         
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         abort(404, 'Offre non trouvée');

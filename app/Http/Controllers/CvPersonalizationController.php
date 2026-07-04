@@ -93,6 +93,7 @@ class CvPersonalizationController extends Controller
             'sections_present' => 'nullable|boolean',
             'sections' => 'nullable|array',
             'sections.*' => 'in:software,languages,perfectionnements,benevolats',
+            'offre_id' => ['nullable', 'integer', 'exists:offres,id'],
         ]);
 
         try {
@@ -114,8 +115,10 @@ class CvPersonalizationController extends Controller
             }
 
             // Rediriger vers la prévisualisation
-            return redirect()->route('cv.personalization.preview', ['filename' => $result['filename']])
-                ->with('success', 'CV personnalisé généré avec succès !');
+            return redirect()->route('cv.personalization.preview', array_filter([
+                'filename' => $result['filename'],
+                'offre_id' => $request->integer('offre_id') ?: null,
+            ]))->with('success', 'CV personnalisé généré avec succès !');
 
         } catch (\Exception $e) {
             return back()->with('error', 'Erreur lors de la génération : ' . $e->getMessage());
@@ -145,7 +148,7 @@ class CvPersonalizationController extends Controller
     /**
      * Prévisualise le CV généré
      */
-    public function previewCV($filename)
+    public function previewCV(Request $request, $filename)
     {
         $filePath = 'personalized-cvs/' . $filename;
         
@@ -154,8 +157,16 @@ class CvPersonalizationController extends Controller
         }
 
         $fileUrl = route('cv.personalization.inline', ['filename' => $filename]);
+        $returnToApplicationUrl = null;
+
+        if ($request->filled('offre_id')) {
+            $offer = Offre::whereKey($request->integer('offre_id'))->first();
+            $returnToApplicationUrl = $offer
+                ? route('job_details', $offer) . '?openModal=true'
+                : null;
+        }
         
-        return view('cv.preview', compact('fileUrl', 'filename'));
+        return view('cv.preview', compact('fileUrl', 'filename', 'returnToApplicationUrl'));
     }
 
     /**
@@ -169,10 +180,11 @@ class CvPersonalizationController extends Controller
             abort(404);
         }
 
-        // Éviter la double extension .pdf.pdf
-        $downloadName = str_ends_with($filename, '.pdf')
-            ? "CV_Personnalise_{$filename}"
-            : "CV_Personnalise_{$filename}.pdf";
+        $user = Auth::user();
+        $candidateName = $user
+            ? str($user->prenom.' '.$user->name)->squish()->ascii()->replaceMatches('/[^A-Za-z0-9]+/', '_')->trim('_')
+            : 'candidat';
+        $downloadName = 'CV_'.$candidateName.'.pdf';
 
         return Storage::disk('public')->download($filePath, $downloadName);
     }
@@ -183,7 +195,7 @@ class CvPersonalizationController extends Controller
     private function createVirtualOffer(Request $request): \stdClass
     {
         $offer = new \stdClass();
-        $offer->id = 'virtual_' . uniqid();
+        $offer->id = $request->integer('offre_id') ?: 'virtual_' . uniqid();
         $offer->titre = $request->offer_title;
         $offer->poste = $request->offer_title;
         $offer->description = $request->offer_details;

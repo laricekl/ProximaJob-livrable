@@ -30,8 +30,8 @@
           $cvProfile = $candidate?->cvProfile;
           $statusLabels = [
             'en_attente' => 'En cours',
-            'accepted' => 'Acceptee',
-            'rejected' => 'Refusee',
+            'accepted' => 'Acceptée',
+            'rejected' => 'Refusée',
           ];
           $statusBadge = [
             'en_attente' => 'bg-blue-50 text-blue-700',
@@ -50,9 +50,12 @@
           }
           $salaryRange = $offre && ($offre->salaire_min || $offre->salaire_max)
             ? trim(($offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', ' ') : '?') . ' - ' . ($offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', ' ') : '?') . ' $')
-            : 'Salaire non precise';
+            : 'Salaire non précisé';
+          $historyRoute = $postulation?->autopostulation ? route('user.historiques_ia') : route('user.historiques');
+          $applicationSourceLabel = $postulation?->autopostulation ? 'Candidature assistée par IA' : 'Candidature envoyée par le candidat';
+          $personalizationUrl = $offre ? route('cv.personalization.form', ['offre_id' => $offre->id]) : route('cv.personalization.form');
         @endphp
-        <a href="{{ route('user.historiques') }}" class="inline-flex items-center gap-2 text-sm text-secondary-container font-semibold hover:underline mb-4">
+        <a href="{{ $historyRoute }}" class="inline-flex items-center gap-2 text-sm text-secondary-container font-semibold hover:underline mb-4">
           <span class="material-symbols-outlined text-lg">arrow_back</span> Retour aux candidatures
         </a>
 
@@ -74,9 +77,9 @@
                 <span class="material-symbols-outlined text-lg">description</span> Dossier candidat actif
               </span>
               <span class="text-outline">•</span>
-              <span class="text-on-surface-variant">Postule le {{ $postulation?->created_at?->format('d M Y') ?? 'date indisponible' }}</span>
+              <span class="text-on-surface-variant">Postulé le {{ $postulation?->created_at?->format('d M Y') ?? 'date indisponible' }}</span>
               <span class="text-outline">•</span>
-              <span class="text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">manage_search</span> {{ $postulation?->autopostulation ? 'Postulation automatique IA' : 'Postulation candidate manuelle' }}</span>
+              <span class="text-on-surface-variant flex items-center gap-1"><span class="material-symbols-outlined text-sm">manage_search</span> {{ $applicationSourceLabel }}</span>
             </div>
           </div>
         </div>
@@ -99,13 +102,13 @@
                   <div class="timeline-dot relative z-10 w-8 h-8 rounded-full bg-secondary-container border-2 border-secondary-container flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-white text-sm">check</span></div>
                   <div>
                     <p class="font-bold text-primary text-sm">Candidature envoyée</p>
-                    <p class="text-xs text-outline mt-0.5">{{ $postulation?->created_at?->format('d M Y \\a\\ H:i') ?? 'Date indisponible' }} • {{ $postulation?->autopostulation ? 'Postulation automatique IA' : 'Postulation manuelle' }}</p>
+                    <p class="text-xs text-outline mt-0.5">{{ $postulation?->created_at?->format('d M Y \\a\\ H:i') ?? 'Date indisponible' }} • {{ $applicationSourceLabel }}</p>
                   </div>
                 </div>
                 <div class="timeline-step {{ $applicationStatus !== 'en_attente' ? 'completed' : 'active' }} relative flex items-start gap-4 pb-8">
                   <div class="timeline-dot relative z-10 w-8 h-8 rounded-full {{ $applicationStatus !== 'en_attente' ? 'bg-secondary-container border-secondary-container' : 'bg-white border-secondary-container' }} border-2 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined {{ $applicationStatus !== 'en_attente' ? 'text-white' : 'text-secondary-container' }} text-sm">{{ $applicationStatus !== 'en_attente' ? 'check' : 'schedule' }}</span></div>
                   <div>
-                    <p class="font-bold text-primary text-sm">{{ $applicationStatus === 'accepted' ? 'Retour positif recu' : ($applicationStatus === 'rejected' ? 'Retour recruteur recu' : 'Dossier en cours d evaluation') }}</p>
+                    <p class="font-bold text-primary text-sm">{{ $applicationStatus === 'accepted' ? 'Retour positif reçu' : ($applicationStatus === 'rejected' ? 'Retour recruteur reçu' : "Dossier en cours d'évaluation") }}</p>
                     <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'en_attente' ? "L'entreprise examine actuellement votre candidature." : "Le statut actuel de votre candidature est : {$applicationStatusLabel}." }}</p>
                   </div>
                 </div>
@@ -113,40 +116,40 @@
                   <div class="timeline-dot relative z-10 w-8 h-8 rounded-full {{ $applicationStatus === 'accepted' ? 'bg-white border-secondary-container' : 'bg-surface-container border-outline-variant/30' }} border-2 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined {{ $applicationStatus === 'accepted' ? 'text-secondary-container' : 'text-outline' }} text-sm">{{ $applicationStatus === 'accepted' ? 'event_available' : 'schedule' }}</span></div>
                   <div>
                     <p class="font-bold {{ $applicationStatus === 'accepted' ? 'text-primary' : 'text-outline' }} text-sm">Suite du recrutement</p>
-                    <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'accepted' ? 'Un entretien ou une prochaine etape peut maintenant etre planifie.' : 'Cette etape sera mise a jour des qu une action recruteur sera enregistree.' }}</p>
+                    <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'accepted' ? 'Un entretien ou une prochaine étape peut maintenant être planifié.' : "Cette étape sera mise à jour dès qu'une action recruteur sera enregistrée." }}</p>
                   </div>
                 </div>
                 <div class="timeline-step relative flex items-start gap-4">
                   <div class="timeline-dot relative z-10 w-8 h-8 rounded-full bg-surface-container border-2 border-outline-variant/30 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-outline text-sm">calendar_today</span></div>
                   <div>
                     <p class="font-bold text-outline text-sm">Entretien</p>
-                    <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'accepted' ? 'A confirmer avec l entreprise' : 'En attente' }}</p>
+                    <p class="text-xs text-outline mt-0.5">{{ $applicationStatus === 'accepted' ? "À confirmer avec l'entreprise" : 'En attente' }}</p>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- AI Generated CV -->
+            <!-- Application CV -->
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">auto_awesome</span> CV généré par l'IA</h2>
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-wider rounded-full">Personnalisé pour cette offre</span>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> CV de candidature</h2>
+                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-wider rounded-full">Document joint</span>
               </div>
               <div class="p-6">
                 <div class="bg-surface-container-low rounded-xl p-6 text-sm text-on-surface-variant leading-relaxed max-h-64 overflow-y-auto">
                   <p class="font-bold text-primary text-base mb-3">{{ $candidateName }}</p>
-                  <p class="mb-3">{{ $candidateHeadline }} | {{ $cvProfile?->ville ?: 'Ville a renseigner' }} | {{ $candidate?->email ?: 'Email indisponible' }} | {{ $cvProfile?->telephone ?: ($candidate?->telephone ?: 'Telephone a renseigner') }}</p>
+                  <p class="mb-3">{{ $candidateHeadline }} | {{ $cvProfile?->ville ?: 'Ville à renseigner' }} | {{ $candidate?->email ?: 'Email indisponible' }} | {{ $cvProfile?->telephone ?: ($candidate?->telephone ?: 'Téléphone à renseigner') }}</p>
                   <p class="font-bold text-primary mb-2">Résumé professionnel</p>
-                  <p class="mb-4">{{ $cvProfile?->experiences->first()?->description ?: 'Votre CV et vos experiences personnalisees seront visibles ici lorsqu elles sont disponibles.' }}</p>
+                  <p class="mb-4">{{ $cvProfile?->experiences->first()?->description ?: "Votre CV et vos expériences seront visibles ici lorsqu'elles sont disponibles." }}</p>
                   <p class="font-bold text-primary mb-2">Expérience</p>
                   @forelse (($cvProfile?->experiences ?? collect())->take(2) as $experience)
-                    <p class="mb-1"><strong>{{ $experience->poste }}</strong> — {{ $experience->entreprise ?: 'Entreprise non precisee' }}</p>
-                    <p class="mb-3 text-xs">{{ $experience->periode ?: 'Periode a completer' }}</p>
+                    <p class="mb-1"><strong>{{ $experience->poste }}</strong> — {{ $experience->entreprise ?: 'Entreprise non précisée' }}</p>
+                    <p class="mb-3 text-xs">{{ $experience->periode ?: 'Période à compléter' }}</p>
                   @empty
-                    <p class="mb-3 text-xs">Aucune experience renseignee dans le profil CV pour le moment.</p>
+                    <p class="mb-3 text-xs">Aucune expérience renseignée dans le profil CV pour le moment.</p>
                   @endforelse
                   <p class="font-bold text-primary mb-2">Compétences</p>
-                  <p>{{ $candidateSkills->isNotEmpty() ? $candidateSkills->implode(' • ') : 'Ajoutez des competences dans votre profil pour enrichir ce dossier.' }}</p>
+                  <p>{{ $candidateSkills->isNotEmpty() ? $candidateSkills->implode(' • ') : 'Ajoutez des compétences dans votre profil pour enrichir ce dossier.' }}</p>
                 </div>
                 <div class="flex items-center gap-3 mt-4">
                   @if ($cvPreviewUrl)
@@ -165,28 +168,33 @@
                   @endif
                 </div>
                 @if (! $cvPreviewUrl && ! $letterPreviewUrl)
-                <p class="mt-3 text-xs text-outline">Aucun fichier associe a cette candidature n'est disponible en previsualisation pour le moment.</p>
+                <p class="mt-3 text-xs text-outline">Aucun fichier associé à cette candidature n'est disponible en prévisualisation pour le moment.</p>
                 @endif
               </div>
             </div>
 
-            <!-- AI Generated Cover Letter -->
+            <!-- Cover Letter -->
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de motivation générée</h2>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de motivation</h2>
+                @if (! $letterPreviewUrl)
+                <span class="px-3 py-1 bg-surface-container text-outline text-[10px] font-black uppercase tracking-wider rounded-full">Optionnelle</span>
+                @endif
+                @if ($letterPreviewUrl)
                 <button class="copy-btn flex items-center gap-1 text-xs font-bold text-secondary-container hover:underline">
                   <span class="material-symbols-outlined text-sm">content_copy</span> Copier
                   <span class="copy-feedback text-green-600 text-xs">✓ Copié</span>
                 </button>
+                @endif
               </div>
               <div class="p-6">
                 <div class="bg-surface-container-low rounded-xl p-6 text-sm text-on-surface-variant leading-relaxed max-h-48 overflow-y-auto" id="coverLetter">
                   @if ($letterPreviewUrl)
-                    <p>Une lettre de motivation est associee a cette candidature.</p>
-                    <p class="mt-3">Utilisez le bouton de previsualisation pour ouvrir le document complet dans un nouvel onglet.</p>
+                    <p>Une lettre de motivation est associée à cette candidature.</p>
+                    <p class="mt-3">Utilisez le bouton de prévisualisation pour ouvrir le document complet dans un nouvel onglet.</p>
                   @else
-                    <p>Aucune lettre de motivation previsualisable n'est disponible pour cette candidature.</p>
-                    <p class="mt-3">Vous pouvez retourner sur l'offre ou regenerer un dossier personnalise depuis votre espace candidat.</p>
+                    <p>Aucune lettre de motivation n'a été jointe à cette candidature.</p>
+                    <p class="mt-3">Cette étape est optionnelle. Vous pouvez toujours préparer un autre CV ou consulter l'offre.</p>
                   @endif
                 </div>
               </div>
@@ -207,7 +215,7 @@
                 </svg>
                 <span class="absolute inset-0 flex items-center justify-center text-base font-bold text-primary">{{ $applicationStatusLabel }}</span>
               </div>
-              <p class="text-sm text-on-surface-variant">{{ $applicationStatus === 'accepted' ? "L'entreprise a donne une suite positive a votre candidature." : ($applicationStatus === 'rejected' ? 'Le dossier a recu une reponse negative.' : 'Votre candidature est toujours en cours de traitement.') }}</p>
+              <p class="text-sm text-on-surface-variant">{{ $applicationStatus === 'accepted' ? "L'entreprise a donné une suite positive à votre candidature." : ($applicationStatus === 'rejected' ? 'Le dossier a reçu une réponse négative.' : 'Votre candidature est toujours en cours de traitement.') }}</p>
             </div>
 
             <!-- Offer summary -->
@@ -215,8 +223,8 @@
               <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">Détails de l'offre</h3>
               <div class="space-y-3 text-sm">
                 <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">business</span><span class="text-on-surface-variant">{{ $offre?->entreprise->company_name ?? 'Entreprise indisponible' }}</span></div>
-                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">location_on</span><span class="text-on-surface-variant">{{ $offre?->localisation ?? 'Localisation non precisee' }}</span></div>
-                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">schedule</span><span class="text-on-surface-variant">{{ $offre?->type->nom ?? 'Type non precise' }}</span></div>
+                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">location_on</span><span class="text-on-surface-variant">{{ $offre?->localisation ?? 'Localisation non précisée' }}</span></div>
+                <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">schedule</span><span class="text-on-surface-variant">{{ $offre?->type->nom ?? 'Type non précisé' }}</span></div>
                 <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">payments</span><span class="text-on-surface-variant">{{ $salaryRange }}</span></div>
                 <div class="flex items-center gap-3"><span class="material-symbols-outlined text-outline text-lg">calendar_today</span><span class="text-on-surface-variant">Publiée le {{ $offre?->created_at?->format('d M Y') ?? 'date indisponible' }}</span></div>
               </div>
@@ -230,18 +238,18 @@
                 @forelse ($candidateSkills as $skill)
                   <span class="rounded-full bg-secondary-container/10 px-3 py-1.5 text-xs font-semibold text-secondary-container">{{ $skill }}</span>
                 @empty
-                  <p class="text-sm text-on-surface-variant">Aucune competence n'est encore rattachee au profil candidat.</p>
+                  <p class="text-sm text-on-surface-variant">Aucune compétence n'est encore rattachée au profil candidat.</p>
                 @endforelse
               </div>
             </div>
 
             <!-- Actions -->
             <div class="card-glow rounded-2xl p-6 space-y-3">
-              <a href="{{ route('cv.personalization.form') }}" class="flex items-center justify-center gap-2 w-full py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                <span class="material-symbols-outlined text-lg">auto_awesome</span> Revoir mon dossier CV
+              <a href="{{ $personalizationUrl }}" class="flex items-center justify-center gap-2 w-full py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                <span class="material-symbols-outlined text-lg">auto_awesome</span> Préparer un autre CV
               </a>
-              <a href="{{ route('user.historiques') }}" class="flex items-center justify-center gap-2 w-full py-3 border-2 border-outline-variant/30 text-primary text-sm font-bold rounded-xl hover:bg-surface-container-low transition-colors">
-                <span class="material-symbols-outlined text-lg">list_alt</span> Retour a l'historique
+              <a href="{{ $historyRoute }}" class="flex items-center justify-center gap-2 w-full py-3 border-2 border-outline-variant/30 text-primary text-sm font-bold rounded-xl hover:bg-surface-container-low transition-colors">
+                <span class="material-symbols-outlined text-lg">list_alt</span> Retour à l'historique
               </a>
             </div>
 

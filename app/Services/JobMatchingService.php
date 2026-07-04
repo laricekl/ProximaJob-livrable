@@ -534,10 +534,11 @@ class JobMatchingService
         Notification::create([
             'user_id' => $candidateId,  
             'role' => 'candidat',
-            'title' => 'Candidature Automatique',
-            'message' => 'Votre profil a été proposé pour l\'offre "' . $offer->titre . '"',
-            'link' => "/user/historique-candidature_ia",
+            'title' => 'Nouvelle candidature assistée par IA',
+            'message' => 'Votre profil a été proposé pour l\'offre "' . $offer->titre . '" chez ' . ($offer->entreprise?->company_name ?? 'l\'entreprise') . '. Consultez le dossier envoyé.',
+            'link' => "/user/detail-candidature?id={$postulation->id}",
             'is_read' => false,
+            'type' => 'matching',
         ]);
 
         // Notification pour l'ENTREPRISE
@@ -602,14 +603,15 @@ class JobMatchingService
                 ->setPaper('a4')
                 ->setOption('dpi', 150)
                 ->setOption('defaultFont', 'Arial');
-            $filename = 'cv_perso_' . $cvProfile->id . '_' . $offer->id . '_' . time() . '.pdf';
+            $filename = 'cv_' . $cvProfile->id . '_' . $offer->id . '_' . time() . '.pdf';
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
 
             CvGenere::create([
                 'cv_profile_id' => $cvProfile->id,
-                'nom_fichier' => $this->generatedCvLabel($offer),
+                'offre_id' => $offer->id,
+                'nom_fichier' => $this->generatedCvLabel($cvProfile),
                 'chemin_fichier' => $filePath,
             ]);
             
@@ -666,7 +668,7 @@ class JobMatchingService
 
             CvGenere::create([
                 'cv_profile_id' => $cvProfile->id,
-                'nom_fichier' => $this->generatedCvLabel($offer),
+                'nom_fichier' => $this->generatedCvLabel($cvProfile),
                 'chemin_fichier' => $filePath,
             ]);
             
@@ -1402,14 +1404,15 @@ private function normalizePromptList(array|string|null $value): array
                 ->setOption('dpi', 150)
                 ->setOption('defaultFont', 'Arial');
 
-            $filename = 'cv_perso_' . $userId . '_' . time() . '.pdf';
+            $filename = 'cv_' . $userId . '_' . time() . '.pdf';
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
 
             CvGenere::create([
                 'cv_profile_id' => $cvProfile->id,
-                'nom_fichier' => $this->generatedCvLabel($virtualOffer),
+                'offre_id' => is_numeric($virtualOffer->id ?? null) ? (int) $virtualOffer->id : null,
+                'nom_fichier' => $this->generatedCvLabel($cvProfile),
                 'chemin_fichier' => $filePath,
             ]);
 
@@ -1791,21 +1794,16 @@ private function buildCoverLetterPrompt(CvProfile $cvProfile, Offre $offer): str
         $data = [
             'cvProfile' => $cvProfile,
             'offer' => $offer,
-            'personalized_note' => "CV adapté pour : " . $offer->titre
+            'personalized_note' => null,
         ];
 
         return view('cv.fallback-template', $data)->render();
     }
 
-    private function generatedCvLabel($offer): string
+    private function generatedCvLabel(CvProfile $cvProfile): string
     {
-        $title = trim((string) ($offer->titre ?? $offer->poste ?? 'Offre'));
-        $company = trim((string) ($offer->entreprise->name ?? $offer->entreprise->company_name ?? ''));
-        $label = 'CV adapte - '.$title;
-
-        if ($company !== '') {
-            $label .= ' - '.$company;
-        }
+        $fullName = trim(($cvProfile->prenom ?? '').' '.($cvProfile->nom ?? ''));
+        $label = trim('CV'.($fullName !== '' ? ' - '.$fullName : ''));
 
         return mb_substr($label, 0, 500);
     }

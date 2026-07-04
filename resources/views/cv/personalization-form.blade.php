@@ -26,6 +26,9 @@
           <div class="p-8">
             <form class="space-y-6" action="{{ route('cv.personalization.generate') }}" method="POST">
               @csrf
+              @if ($selectedOffer)
+                <input type="hidden" name="offre_id" value="{{ $selectedOffer->id }}">
+              @endif
               <div>
                 <label class="block text-sm font-semibold text-primary mb-2" for="offer_title">Poste vise <span class="text-secondary-container">*</span></label>
                 <input type="text" id="offer_title" name="offer_title" list="recent-offers" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="Ex: Developpeur Full Stack Senior" value="{{ old('offer_title', $selectedOffer->titre ?? '') }}" required />

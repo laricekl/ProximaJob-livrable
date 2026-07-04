@@ -13,6 +13,7 @@ class CvGenere extends Model
 
     protected $fillable = [
         'cv_profile_id',
+        'offre_id',
         'nom_fichier',
         'chemin_fichier'
     ];
@@ -24,6 +25,13 @@ class CvGenere extends Model
     public function cvProfile()
     {
         return $this->belongsTo(CvProfile::class);
+    }
+
+    public function getDisplayNameAttribute(): string
+    {
+        $fullName = trim(($this->cvProfile?->prenom ?? '').' '.($this->cvProfile?->nom ?? ''));
+
+        return trim('CV'.($fullName !== '' ? ' - '.$fullName : ''));
     }
 
     // Accessor pour l'URL du fichier

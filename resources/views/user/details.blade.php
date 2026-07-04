@@ -101,18 +101,45 @@
               <p class="text-xs text-on-surface-variant mb-5">{{ $offre->salary_type ?? 'Selon experience' }}</p>
 
               @auth
-                <button type="button" onclick="handleApplyClick({{ $offre->id }})" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 mb-3 flex items-center justify-center gap-2">
-                  <span class="material-symbols-outlined text-lg">send</span> Postuler maintenant
-                </button>
+                @php
+                  $applicationStatus = $existingPostulation?->status;
+                  $canUpdateApplication = $existingPostulation && !in_array($applicationStatus, ['accepted', 'rejected'], true);
+                  $isFinalApplication = $existingPostulation && in_array($applicationStatus, ['accepted', 'rejected'], true);
+                  $applicationButtonLabel = $canUpdateApplication ? 'Mettre à jour ma candidature' : 'Postuler maintenant';
+                  $applicationButtonIcon = $canUpdateApplication ? 'edit_document' : 'send';
+                  $finalApplicationLabel = $applicationStatus === 'accepted' ? 'Candidature acceptée' : 'Candidature refusée';
+                @endphp
+
+                @if ($isFinalApplication)
+                  <button type="button" disabled class="w-full py-3.5 bg-surface-container-low text-outline font-bold rounded-xl mb-3 flex items-center justify-center gap-2 cursor-not-allowed">
+                    <span class="material-symbols-outlined text-lg">lock</span> {{ $finalApplicationLabel }}
+                  </button>
+                  <p class="mb-3 text-xs leading-5 text-on-surface-variant">Cette candidature a déjà reçu une décision finale.</p>
+                @else
+                  <button type="button" onclick="handleApplyClick({{ $offre->id }})" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 mb-3 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">{{ $applicationButtonIcon }}</span> {{ $applicationButtonLabel }}
+                  </button>
+                  @if ($canUpdateApplication)
+                    <p class="mb-3 text-xs leading-5 text-on-surface-variant">Vous avez déjà postulé. Les nouveaux documents remplaceront votre dossier en attente.</p>
+                  @endif
+                @endif
               @else
                 <a href="{{ route('login') }}" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 mb-3 flex items-center justify-center gap-2">
                   <span class="material-symbols-outlined text-lg">login</span> Se connecter pour postuler
                 </a>
               @endauth
 
-              <a href="{{ auth()->check() ? route('cv.personalization.form') : route('register') }}" class="w-full py-3 bg-white border border-outline-variant/30 text-primary font-bold rounded-xl hover:bg-surface-container-low transition-all flex items-center justify-center gap-2">
-                <span class="material-symbols-outlined text-lg">auto_awesome</span> Personnaliser mon CV
-              </a>
+              @auth
+                @if (!($isFinalApplication ?? false))
+                  <a href="{{ route('cv.personalization.form', ['offre_id' => $offre->id]) }}" class="w-full py-3 bg-white border border-outline-variant/30 text-primary font-bold rounded-xl hover:bg-surface-container-low transition-all flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">auto_awesome</span> Préparer mon CV
+                  </a>
+                @endif
+              @else
+                <a href="{{ route('register') }}" class="w-full py-3 bg-white border border-outline-variant/30 text-primary font-bold rounded-xl hover:bg-surface-container-low transition-all flex items-center justify-center gap-2">
+                  <span class="material-symbols-outlined text-lg">auto_awesome</span> Préparer mon CV
+                </a>
+              @endauth
 
               <hr class="my-5 border-outline-variant/10" />
 
