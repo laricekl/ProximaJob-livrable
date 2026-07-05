@@ -101,4 +101,71 @@
     </section>
 
   </main>
+
+  <script>
+    // Toggle Mensuel / Annuel
+    const monthlyBtn = document.getElementById('monthlyBtn');
+    const yearlyBtn = document.getElementById('yearlyBtn');
+    const monthlyPrices = document.querySelectorAll('.monthly-price');
+    const yearlyPrices = document.querySelectorAll('.yearly-price');
+
+    if (monthlyBtn && yearlyBtn) {
+      monthlyBtn.addEventListener('click', () => {
+        monthlyBtn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+        monthlyBtn.classList.remove('text-outline');
+        yearlyBtn.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+        yearlyBtn.classList.add('text-outline');
+        monthlyPrices.forEach(el => el.classList.remove('hidden'));
+        yearlyPrices.forEach(el => el.classList.add('hidden'));
+      });
+
+      yearlyBtn.addEventListener('click', () => {
+        yearlyBtn.classList.add('bg-white', 'text-primary', 'shadow-sm');
+        yearlyBtn.classList.remove('text-outline');
+        monthlyBtn.classList.remove('bg-white', 'text-primary', 'shadow-sm');
+        monthlyBtn.classList.add('text-outline');
+        yearlyPrices.forEach(el => el.classList.remove('hidden'));
+        monthlyPrices.forEach(el => el.classList.add('hidden'));
+      });
+    }
+
+    // Souscrire à un plan
+    document.querySelectorAll('.card-3d-content button').forEach(button => {
+      button.addEventListener('click', async () => {
+        const planName = button.textContent.replace('Choisir ', '').trim();
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+
+        if (!csrfToken) return;
+
+        button.disabled = true;
+        button.textContent = 'Patientez...';
+
+        try {
+          const response = await fetch('/user/plan-souscrire', {
+            method: 'POST',
+            headers: {
+              'X-CSRF-TOKEN': csrfToken,
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ plan: planName }),
+          });
+
+          const data = await response.json();
+
+          if (data.success) {
+            window.location.href = '/user/abonnement';
+          } else {
+            alert(data.message || "Erreur lors de la souscription.");
+            button.disabled = false;
+            button.textContent = 'Choisir ' + planName;
+          }
+        } catch (error) {
+          alert("Impossible de finaliser la souscription. Veuillez réessayer.");
+          button.disabled = false;
+          button.textContent = 'Choisir ' + planName;
+        }
+      });
+    });
+  </script>
 @endsection

@@ -102,15 +102,15 @@ class VerifyEmailController extends Controller
         return redirect()->route('welcome')->with('info_alert', 'Votre email est déjà vérifié. Votre compte est en attente de validation administrative.');
     }
 
-    // Vérifier l'email
-    $user->update([
-        'email_verified_at' => now(),
-        'status' => 'pending',
-        'is_active' => true
-    ]);
-
     // SI C'EST UN CANDIDAT
     if ($user->hasRole('candidat')) {
+        // Vérifier l'email et activer le compte
+        $user->update([
+            'email_verified_at' => now(),
+            'status' => 'Actif',
+            'is_active' => true
+        ]);
+
         // Connecter l'utilisateur automatiquement
         Auth::login($user);
         
@@ -122,7 +122,14 @@ class VerifyEmailController extends Controller
     }
     
     // SINON (C'EST UNE ENTREPRISE)
-    
+
+    // Vérifier l'email pour l'entreprise (reste en attente de validation admin)
+    $user->update([
+        'email_verified_at' => now(),
+        'status' => 'pending',
+        'is_active' => true
+    ]);
+
     // Mettre à jour l'entreprise
     $entreprise = Entreprise::where('user_id', $user->id)->first();
     if ($entreprise) {

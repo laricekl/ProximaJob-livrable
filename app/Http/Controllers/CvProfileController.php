@@ -20,7 +20,7 @@ class CvProfileController extends Controller
      */
      
 
-    /**
+    
  public function store(Request $request)
 {
     $userId = auth()->id();

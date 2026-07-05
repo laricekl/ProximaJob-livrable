@@ -56,7 +56,7 @@ test.describe('Demo Public', () => {
     await expectHealthyResponse(response, page);
     await expect(page.locator('h1, h2').first()).toBeVisible();
     await expect(page.getByLabel(/nom/i).first()).toBeVisible();
-    await expect(page.getByLabel(/adresse e-mail|email/i).first()).toBeVisible();
+    await expect(page.getByLabel(/adresse e-mail|email|courriel/i).first()).toBeVisible();
     await expect(page.getByLabel(/message/i).first()).toBeVisible();
     await expectFooterVisible(page);
   });
