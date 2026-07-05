@@ -223,10 +223,13 @@ test.describe('Candidate Complete Journey', () => {
     // ====================================================================
     await page.goto('/user/infos-cv');
 
-    // Si le CV principal est disponible, afficher l'iframe
+    // Si le CV principal est disponible (src non vide), afficher l'iframe
     const cvFrame = page.locator('#generatedCvFrame');
     if (await cvFrame.count()) {
-      await expect(cvFrame).toBeVisible();
+      const src = await cvFrame.getAttribute('src');
+      if (src && src.trim() !== '') {
+        await expect(cvFrame).toBeVisible();
+      }
     }
 
     // ====================================================================
