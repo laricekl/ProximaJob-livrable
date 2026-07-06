@@ -380,18 +380,19 @@
                   </div>
                 </div>
               </div>
-              <div class="mt-2 sm:mt-0 flex items-center justify-between sm:justify-end gap-3 relative z-10 sm:flex-shrink-0">
-                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
-                <span class="text-sm font-bold text-primary/70 whitespace-nowrap text-right">
+              <div class="mt-2 sm:mt-0 flex items-center gap-2 relative z-10 sm:flex-shrink-0">
+                <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
+                <span class="text-xs font-bold text-primary/70 whitespace-nowrap">
                   @if ($offre->salaire_min || $offre->salaire_max)
-                    {{ $offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', '') : '?' }} $ – {{ $offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', '') : '?' }} $
+                    {{ $offre->salaire_min ? floor($offre->salaire_min / 1000) . 'k' : '?' }}$ – {{ $offre->salaire_max ? floor($offre->salaire_max / 1000) . 'k' : '?' }}$
                   @else
                     Salaire à confirmer
                   @endif
                 </span>
-                <div class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm group-hover:bg-secondary-container/10 group-hover:border-secondary-container/40 transition-colors" title="Voir les détails" aria-label="Voir les détails">
-                  <span class="material-symbols-outlined text-lg">visibility</span>
-                </div>
+                <span class="text-[10px] text-outline whitespace-nowrap">{{ $offre->salary_type ?? '' }}</span>
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm group-hover:bg-secondary-container/10 transition-colors" title="Voir les détails" aria-label="Voir les détails">
+                  <span class="material-symbols-outlined text-base">visibility</span>
+                </span>
               </div>
             </a>
             @empty
