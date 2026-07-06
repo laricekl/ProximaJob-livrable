@@ -1,4 +1,4 @@
-@extends('layouts.guest')
+@extends(auth()->check() ? (auth()->user()->hasRole('entreprise') ? 'layouts.entreprise' : 'layouts.candidat') : 'layouts.guest')
 @section('title', 'Offres')
 @section('styles')
   <style>
