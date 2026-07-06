@@ -382,9 +382,9 @@
               </div>
               <div class="mt-2 sm:mt-0 flex items-center justify-between sm:justify-end gap-3 relative z-10 sm:flex-shrink-0">
                 <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
-                <span class="text-sm font-bold text-primary/70 whitespace-nowrap min-w-32 text-right">
+                <span class="text-sm font-bold text-primary/70 whitespace-nowrap text-right">
                   @if ($offre->salaire_min || $offre->salaire_max)
-                    {{ $offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', ' ') : '?' }} - {{ $offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', ' ') : '?' }} $
+                    {{ $offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', '') : '?' }} $ – {{ $offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', '') : '?' }} $
                   @else
                     Salaire à confirmer
                   @endif
