@@ -56,14 +56,6 @@
             <h1 class="mt-2 text-3xl font-bold font-serif text-primary">Construire mon CV</h1>
             <p class="mt-2 max-w-2xl text-sm text-on-surface-variant">Remplissez ici votre CV de base. La personnalisation par offre utilise ces informations pour générer une version adaptée à un poste précis.</p>
           </div>
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
-            <button type="button" onclick="openCvBuilder()" class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-white border border-outline-variant/10 text-sm font-semibold text-primary hover:bg-surface-container-low transition-colors">
-              <span class="material-symbols-outlined text-lg">edit_note</span> Modifier le CV principal
-            </button>
-            <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-secondary-container text-sm font-bold text-white hover:bg-secondary transition-colors">
-              <span class="material-symbols-outlined text-lg">auto_awesome</span> Adapter a une offre
-            </a>
-          </div>
         </div>
 
         <div id="cvLayout" class="mb-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
@@ -95,17 +87,6 @@
                       <span class="shrink-0 rounded-full bg-secondary-container/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary-container">Actif</span>
                     </div>
                     <p class="mt-1 line-clamp-2 text-[11px] leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
-                    <div class="mt-2 flex flex-wrap items-center gap-2">
-                      <button type="button" onclick="showPrincipalCvPreview()" class="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:text-secondary-container">
-                        <span class="material-symbols-outlined text-sm">visibility</span> Voir
-                      </button>
-                      <button type="button" onclick="openCvBuilder()" class="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:text-secondary-container">
-                        <span class="material-symbols-outlined text-sm">edit</span> Modifier
-                      </button>
-                      <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-secondary-container hover:text-secondary">
-                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -185,17 +166,20 @@
               <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Apercu</p>
               <h2 id="previewTitle" class="mt-1 text-2xl font-bold font-serif text-primary">CV principal</h2>
             </div>
-            <div id="principalPreviewActions" class="flex flex-wrap items-center gap-2">
-              <button type="button" id="previewEditButton" onclick="openCvBuilder()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-container px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
-                <span class="material-symbols-outlined text-lg">edit_note</span> Modifier les informations
-              </button>
-              <button type="button" id="toggleSidebarBtn" onclick="toggleSidebar()" class="inline-flex items-center justify-center gap-2 rounded-xl border border-outline-variant/20 bg-white px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-surface-container-low">
-                <span class="material-symbols-outlined text-lg" id="toggleSidebarIcon">fullscreen</span> Plein ecran
-              </button>
-            </div>
           </div>
 
           <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
+            <div class="mb-3 flex items-center justify-end gap-2">
+              <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low border border-outline-variant/20">
+                <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
+              </a>
+              <a href="{{ $existingProfile ? route('cv.principal.download') : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-secondary-container px-3 py-2 text-xs font-bold text-white hover:bg-secondary transition-colors">
+                <span class="material-symbols-outlined text-sm">download</span> Telecharger
+              </a>
+              <button type="button" onclick="toggleSidebar()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-outline-variant/20 bg-white px-2.5 py-2 text-xs font-semibold text-primary hover:bg-surface-container-low">
+                <span class="material-symbols-outlined text-sm" id="toggleSidebarIcon">fullscreen</span>
+              </button>
+            </div>
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
               <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[1050px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
             </div>
