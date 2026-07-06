@@ -66,7 +66,7 @@
           </div>
         </div>
 
-        <div class="mb-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
+        <div id="cvLayout" class="mb-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
         <aside class="min-w-0 rounded-2xl border border-outline-variant/10 bg-white p-4 md:p-5 lg:sticky lg:top-28">
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="min-w-0">
@@ -188,6 +188,9 @@
             <div id="principalPreviewActions" class="flex flex-wrap items-center gap-2">
               <button type="button" id="previewEditButton" onclick="openCvBuilder()" class="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-container px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
                 <span class="material-symbols-outlined text-lg">edit_note</span> Modifier les informations
+              </button>
+              <button type="button" id="toggleSidebarBtn" onclick="toggleSidebar()" class="inline-flex items-center justify-center gap-2 rounded-xl border border-outline-variant/20 bg-white px-4 py-3 text-sm font-semibold text-primary transition-colors hover:bg-surface-container-low">
+                <span class="material-symbols-outlined text-lg" id="toggleSidebarIcon">fullscreen</span> Plein ecran
               </button>
             </div>
           </div>
@@ -1088,5 +1091,20 @@
         });
       });
     });
+    function toggleSidebar() {
+      const grid = document.getElementById('cvLayout');
+      const aside = grid?.querySelector('aside');
+      const icon = document.getElementById('toggleSidebarIcon');
+      const expanded = aside?.style.display === 'none';
+      if (expanded) {
+        aside.style.display = '';
+        grid.style.gridTemplateColumns = '';
+        icon.textContent = 'fullscreen';
+      } else {
+        aside.style.display = 'none';
+        grid.style.gridTemplateColumns = '1fr';
+        icon.textContent = 'fullscreen_exit';
+      }
+    }
   </script>
 @endsection
