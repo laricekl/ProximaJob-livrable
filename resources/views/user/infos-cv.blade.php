@@ -199,8 +199,11 @@
                 <p id="generatedCvPreviewFile" class="truncate text-xs text-on-surface-variant">{{ $existingProfile ? 'Rendu PDF du profil' : '' }}</p>
               </div>
               <div class="flex shrink-0 flex-wrap items-center gap-2">
-                <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=87' : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
+                <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=87' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
                   <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
+                </a>
+                <a href="{{ $existingProfile ? route('cv.principal.download') : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-secondary-container px-3 py-2 text-xs font-bold text-white hover:bg-secondary transition-colors">
+                  <span class="material-symbols-outlined text-sm">download</span> Telecharger
                 </a>
               </div>
             </div>
