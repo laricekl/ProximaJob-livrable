@@ -196,20 +196,6 @@
           </div>
 
           <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
-            <div class="mb-4 flex flex-col gap-3 rounded-xl border border-outline-variant/10 bg-surface-container-low p-4 sm:flex-row sm:items-center sm:justify-between">
-              <div class="min-w-0">
-                <p id="generatedCvPreviewName" class="truncate text-sm font-bold text-primary">{{ $existingProfile ? 'CV principal' : '' }}</p>
-                <p id="generatedCvPreviewFile" class="truncate text-xs text-on-surface-variant">{{ $existingProfile ? 'Rendu PDF du profil' : '' }}</p>
-              </div>
-              <div class="flex shrink-0 flex-wrap items-center gap-2">
-                <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=95' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
-                  <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
-                </a>
-                <a href="{{ $existingProfile ? route('cv.principal.download') : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-secondary-container px-3 py-2 text-xs font-bold text-white hover:bg-secondary transition-colors">
-                  <span class="material-symbols-outlined text-sm">download</span> Telecharger
-                </a>
-              </div>
-            </div>
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
               <iframe id="generatedCvFrame" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=95' : '' }}" class="h-[1050px] w-full bg-white md:h-[1120px]" style="zoom: 0.95; -moz-transform: scale(0.95); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
             </div>
