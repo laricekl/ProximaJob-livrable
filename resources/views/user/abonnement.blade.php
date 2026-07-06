@@ -1,176 +1,128 @@
 @extends('layouts.candidat')
-@section('title', 'Abonnement')
+@section('title', 'Mon abonnement')
 @section('content')
   <main class="flex-grow pt-32">
 
-    <!-- En-tete -->
-    <section class="py-12 px-4 md:px-10 bg-white">
-      <div class="max-w-7xl mx-auto">
-        <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight mb-2">Historique d'Abonnements</h1>
-        <p class="text-on-surface-variant">Retrouvez ici l'historique de tous vos abonnements</p>
+    <section class="py-12 px-4 md:px-10">
+      <div class="max-w-5xl mx-auto">
 
-        <div class="flex flex-wrap items-center gap-3 mt-8">
-          <div class="flex gap-1 bg-surface-container rounded-xl p-1.5">
-            <button class="filter-tab px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-primary shadow-sm" data-filter="all">Tous les abonnements</button>
-            <button class="filter-tab px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-primary" data-filter="active">Actifs</button>
-            <button class="filter-tab px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-primary" data-filter="expired">Expires</button>
-          </div>
-          <a href="{{ route('plan.abonnement') }}" class="px-5 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors flex items-center gap-2 shadow-sm">
-            <span class="material-symbols-outlined text-lg">add</span> Nouvel Abonnement
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Grille d'abonnements -->
-    <section class="py-10 px-4 md:px-10">
-      <div class="max-w-7xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="subscriptionsGrid">
-
-          <!-- Carte Premium Active -->
-          <div class="subscription-item" data-status="active">
-            <div class="subscription-card card-glow border-l-4 border-l-secondary-container rounded-2xl p-6 h-full flex flex-col">
-              <div class="flex justify-between items-start mb-3">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">Actif</span>
-                <span class="text-xl font-bold text-primary">29,99 $ CAD</span>
-              </div>
-              <h3 class="font-bold text-primary text-lg mb-4">Abonnement Premium</h3>
-              <div class="space-y-2 text-sm text-on-surface-variant flex-grow">
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Date d'activation : <strong class="text-primary ml-auto">15 Janvier 2026</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Date d'expiration : <strong class="text-primary ml-auto">15 Janvier 2027</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree : <strong class="text-primary ml-auto">247 jours</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">credit_card</span> Paiement : <strong class="text-primary ml-auto">Carte Visa &bull;&bull;&bull;&bull; 4242</strong></p>
-              </div>
-              <div class="flex items-center gap-3 mt-5 pt-4 border-t border-outline-variant/10">
-                <button class="flex-1 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors">Renouveler</button>
-                <button class="text-sm font-semibold text-outline hover:text-primary transition-colors underline">Voir details</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Carte Standard Expiree -->
-          <div class="subscription-item" data-status="expired">
-            <div class="subscription-card card-glow border-l-4 border-l-secondary-container/50 rounded-2xl p-6 h-full flex flex-col">
-              <div class="flex justify-between items-start mb-3">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">Expire</span>
-                <span class="text-xl font-bold text-primary">14,99 $ CAD</span>
-              </div>
-              <h3 class="font-bold text-primary text-lg mb-4">Abonnement Standard</h3>
-              <div class="space-y-2 text-sm text-on-surface-variant flex-grow">
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Date d'activation : <strong class="text-primary ml-auto">10 Mars 2025</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Date d'expiration : <strong class="text-primary ml-auto">10 Mars 2026</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree : <strong class="text-primary ml-auto">1 an</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">credit_card</span> Paiement : <strong class="text-primary ml-auto">PayPal</strong></p>
-              </div>
-              <div class="flex items-center gap-3 mt-5 pt-4 border-t border-outline-variant/10">
-                <button class="flex-1 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors">Renouveler</button>
-                <button class="text-sm font-semibold text-outline hover:text-primary transition-colors underline">Voir details</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Carte Standard Expiree 2 -->
-          <div class="subscription-item" data-status="expired">
-            <div class="subscription-card card-glow border-l-4 border-l-secondary-container/50 rounded-2xl p-6 h-full flex flex-col">
-              <div class="flex justify-between items-start mb-3">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">Expire</span>
-                <span class="text-xl font-bold text-primary">14,99 $ CAD</span>
-              </div>
-              <h3 class="font-bold text-primary text-lg mb-4">Abonnement Standard</h3>
-              <div class="space-y-2 text-sm text-on-surface-variant flex-grow">
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Date d'activation : <strong class="text-primary ml-auto">05 Janvier 2025</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Date d'expiration : <strong class="text-primary ml-auto">05 Janvier 2026</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree : <strong class="text-primary ml-auto">1 an</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">credit_card</span> Paiement : <strong class="text-primary ml-auto">Carte Debit</strong></p>
-              </div>
-              <div class="flex items-center gap-3 mt-5 pt-4 border-t border-outline-variant/10">
-                <button class="flex-1 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors">Renouveler</button>
-                <button class="text-sm font-semibold text-outline hover:text-primary transition-colors underline">Voir details</button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cartes supplementaires -->
-          <div class="subscription-item" data-status="expired">
-            <div class="subscription-card card-glow border-l-4 border-l-secondary-container/50 rounded-2xl p-6 h-full flex flex-col">
-              <div class="flex justify-between items-start mb-3">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">Expire</span>
-                <span class="text-xl font-bold text-primary">14,99 $ CAD</span>
-              </div>
-              <h3 class="font-bold text-primary text-lg mb-4">Abonnement Standard</h3>
-              <div class="space-y-2 text-sm text-on-surface-variant flex-grow">
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Date d'activation : <strong class="text-primary ml-auto">02 Nov 2024</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Date d'expiration : <strong class="text-primary ml-auto">02 Nov 2025</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree : <strong class="text-primary ml-auto">1 an</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">credit_card</span> Paiement : <strong class="text-primary ml-auto">PayPal</strong></p>
-              </div>
-              <div class="flex items-center gap-3 mt-5 pt-4 border-t border-outline-variant/10">
-                <button class="flex-1 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors">Renouveler</button>
-                <button class="text-sm font-semibold text-outline hover:text-primary transition-colors underline">Voir details</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="subscription-item" data-status="expired">
-            <div class="subscription-card card-glow border-l-4 border-l-secondary-container/50 rounded-2xl p-6 h-full flex flex-col">
-              <div class="flex justify-between items-start mb-3">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">Expire</span>
-                <span class="text-xl font-bold text-primary">14,99 $ CAD</span>
-              </div>
-              <h3 class="font-bold text-primary text-lg mb-4">Abonnement Standard</h3>
-              <div class="space-y-2 text-sm text-on-surface-variant flex-grow">
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Date d'activation : <strong class="text-primary ml-auto">18 Aout 2024</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Date d'expiration : <strong class="text-primary ml-auto">18 Aout 2025</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree : <strong class="text-primary ml-auto">1 an</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">credit_card</span> Paiement : <strong class="text-primary ml-auto">PayPal</strong></p>
-              </div>
-              <div class="flex items-center gap-3 mt-5 pt-4 border-t border-outline-variant/10">
-                <button class="flex-1 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors">Renouveler</button>
-                <button class="text-sm font-semibold text-outline hover:text-primary transition-colors underline">Voir details</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="subscription-item" data-status="expired">
-            <div class="subscription-card card-glow border-l-4 border-l-secondary-container/50 rounded-2xl p-6 h-full flex flex-col">
-              <div class="flex justify-between items-start mb-3">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">Expire</span>
-                <span class="text-xl font-bold text-primary">14,99 $ CAD</span>
-              </div>
-              <h3 class="font-bold text-primary text-lg mb-4">Abonnement Standard</h3>
-              <div class="space-y-2 text-sm text-on-surface-variant flex-grow">
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Date d'activation : <strong class="text-primary ml-auto">03 Avril 2024</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Date d'expiration : <strong class="text-primary ml-auto">03 Avril 2025</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree : <strong class="text-primary ml-auto">1 an</strong></p>
-                <p class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">credit_card</span> Paiement : <strong class="text-primary ml-auto">PayPal</strong></p>
-              </div>
-              <div class="flex items-center gap-3 mt-5 pt-4 border-t border-outline-variant/10">
-                <button class="flex-1 py-2.5 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors">Renouveler</button>
-                <button class="text-sm font-semibold text-outline hover:text-primary transition-colors underline">Voir details</button>
-              </div>
-            </div>
-          </div>
-
+        <div class="mb-8">
+          <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Abonnement</p>
+          <h1 class="mt-2 text-3xl font-bold font-serif text-primary">Mon abonnement</h1>
         </div>
 
-        <!-- Pagination -->
-        <div class="flex items-center justify-between mt-8 card-glow rounded-2xl px-6 py-4">
-          <p class="text-xs text-on-surface-variant" id="paginationInfo">Affichage de 1 a 9 sur 9 abonnements</p>
-          <div class="flex items-center gap-1">
-            <button class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold text-outline hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
-            <button class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-primary text-white">1</button>
-            <button class="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold text-outline hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
-          </div>
-        </div>
+        @if ($userAbonnement)
+          {{-- Abonnement actif --}}
+          <div class="grid gap-6 lg:grid-cols-3">
+            <div class="lg:col-span-2 space-y-6">
+              <div class="card-glow rounded-2xl overflow-hidden border-l-4 border-l-secondary-container">
+                <div class="p-6 md:p-8">
+                  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+                    <div>
+                      <span class="inline-flex px-3 py-1 bg-green-50 text-green-700 text-[10px] font-black uppercase tracking-widest rounded-full">Actif</span>
+                      <h2 class="mt-2 text-xl font-bold text-primary">{{ $userAbonnement->abonnement->nom ?? 'Abonnement' }}</h2>
+                    </div>
+                    <div class="text-right">
+                      <p class="text-3xl font-bold text-primary">{{ number_format($userAbonnement->abonnement->montant ?? 0, 2, ',', ' ') }} $</p>
+                      <p class="text-xs text-outline">/{{ $userAbonnement->abonnement->duree ?? 'mois' }}</p>
+                    </div>
+                  </div>
 
-        <!-- Aide -->
-        <div class="mt-8 bg-gradient-to-br from-secondary-container/10 to-secondary-container/5 rounded-2xl p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div>
-            <h3 class="text-lg font-bold text-secondary-container mb-1">Besoin d'aide avec vos abonnements ?</h3>
-            <p class="text-sm text-secondary-container">Notre equipe est la pour vous aider avec toutes vos questions.</p>
+                  <div class="grid grid-cols-2 gap-4 p-4 rounded-xl bg-surface-container-low/50">
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Debut</p>
+                      <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_debut ? \Carbon\Carbon::parse($userAbonnement->date_debut)->translatedFormat('d M Y') : '—' }}</p>
+                    </div>
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Expiration</p>
+                      <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_fin ? \Carbon\Carbon::parse($userAbonnement->date_fin)->translatedFormat('d M Y') : '—' }}</p>
+                    </div>
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Jours restants</p>
+                      <p class="text-sm font-semibold {{ $userAbonnement->date_fin && \Carbon\Carbon::parse($userAbonnement->date_fin)->diffInDays(now()) < 7 ? 'text-red-500' : 'text-primary' }}">
+                        {{ $userAbonnement->date_fin ? \Carbon\Carbon::parse($userAbonnement->date_fin)->diffInDays(now()) : '—' }} jours
+                      </p>
+                    </div>
+                    <div>
+                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Statut</p>
+                      <p class="text-sm font-semibold text-green-600">{{ $userAbonnement->status }}</p>
+                    </div>
+                  </div>
+
+                  <div class="mt-6 flex flex-wrap gap-3">
+                    <a href="{{ route('plan.abonnement') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                      <span class="material-symbols-outlined text-lg">upgrade</span> Changer de plan
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div class="card-glow rounded-2xl p-6">
+                <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2">
+                  <span class="material-symbols-outlined text-secondary-container text-lg">star</span> Avantages inclus
+                </h3>
+                <ul class="space-y-3">
+                  <li class="flex items-center gap-2 text-sm text-on-surface-variant">
+                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> CV personnalises par IA
+                  </li>
+                  <li class="flex items-center gap-2 text-sm text-on-surface-variant">
+                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Matching automatique
+                  </li>
+                  <li class="flex items-center gap-2 text-sm text-on-surface-variant">
+                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Candidatures illimitees
+                  </li>
+                  <li class="flex items-center gap-2 text-sm text-on-surface-variant">
+                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Support prioritaire
+                  </li>
+                  <li class="flex items-center gap-2 text-sm text-on-surface-variant">
+                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Statistiques de profil
+                  </li>
+                </ul>
+              </div>
+
+              <div class="rounded-2xl bg-gradient-to-br from-secondary-container/10 to-secondary-container/5 p-6">
+                <p class="text-xs font-semibold text-secondary-container mb-2">Besoin d'aide ?</p>
+                <p class="text-sm text-on-surface-variant mb-3">Notre equipe est disponible pour vos questions.</p>
+                <a href="{{ route('contact') }}" class="text-sm font-bold text-secondary-container hover:underline">Contacter le support →</a>
+              </div>
+            </div>
           </div>
-          <button class="px-6 py-3 bg-secondary-container text-white text-sm font-semibold rounded-xl hover:bg-secondary transition-colors shadow-sm flex-shrink-0">Contacter le support</button>
-        </div>
+        @else
+          {{-- Aucun abonnement actif --}}
+          <div class="card-glow rounded-2xl overflow-hidden">
+            <div class="p-8 md:p-12 text-center">
+              <div class="w-16 h-16 mx-auto rounded-2xl bg-surface-container-low flex items-center justify-center mb-5">
+                <span class="material-symbols-outlined text-3xl text-outline">workspace_premium</span>
+              </div>
+              <h2 class="text-xl font-bold font-serif text-primary mb-2">Aucun abonnement actif</h2>
+              <p class="text-on-surface-variant max-w-md mx-auto mb-6">Souscrivez a un plan pour acceder aux CV personnalises par IA, au matching automatique et a toutes les fonctionnalites premium.</p>
+              <a href="{{ route('plan.abonnement') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors shadow-lg shadow-secondary-container/20">
+                <span class="material-symbols-outlined text-lg">rocket_launch</span> Voir les plans
+              </a>
+            </div>
+          </div>
+
+          <div class="mt-8 grid gap-4 sm:grid-cols-3">
+            <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
+              <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">auto_awesome</span>
+              <p class="text-sm font-semibold text-primary">CV personnalises</p>
+              <p class="text-xs text-on-surface-variant mt-1">Generes par IA pour chaque offre</p>
+            </div>
+            <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
+              <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">psychology</span>
+              <p class="text-sm font-semibold text-primary">Matching intelligent</p>
+              <p class="text-xs text-on-surface-variant mt-1">Trouvez les offres faites pour vous</p>
+            </div>
+            <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
+              <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">support_agent</span>
+              <p class="text-sm font-semibold text-primary">Support prioritaire</p>
+              <p class="text-xs text-on-surface-variant mt-1">Assistance rapide et dedicate</p>
+            </div>
+          </div>
+        @endif
+
       </div>
     </section>
 
