@@ -31,7 +31,7 @@
                   <div class="grid grid-cols-2 gap-4 p-4 rounded-xl bg-surface-container-low/50">
                     <div>
                       <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Debut</p>
-                      <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_debut ? \Carbon\Carbon::parse($userAbonnement->date_debut)->translatedFormat('d M Y') : '—' }}</p>
+                      <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_debut ? $userAbonnement->date_debut->translatedFormat('d M Y') : '—' }}</p>
                     </div>
                     <div>
                       <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Expiration</p>
@@ -39,8 +39,14 @@
                     </div>
                     <div>
                       <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Jours restants</p>
-                      <p class="text-sm font-semibold {{ $userAbonnement->date_fin && \Carbon\Carbon::parse($userAbonnement->date_fin)->diffInDays(now()) < 7 ? 'text-red-500' : 'text-primary' }}">
-                        {{ $userAbonnement->date_fin ? \Carbon\Carbon::parse($userAbonnement->date_fin)->diffInDays(now()) : '—' }} jours
+                      @php
+                        $joursRestants = $userAbonnement->date_fin ? (int) ceil(now()->diffInDays($userAbonnement->date_fin, false)) : null;
+                      @endphp
+                      <p class="text-sm font-semibold {{ $joursRestants !== null && $joursRestants < 0 ? 'text-red-500' : ($joursRestants !== null && $joursRestants <= 7 ? 'text-amber-600' : 'text-primary') }}">
+                        @if ($joursRestants === null) —
+                        @elseif ($joursRestants < 0) Expiré depuis {{ abs($joursRestants) }} jours
+                        @else {{ $joursRestants }} jours
+                        @endif
                       </p>
                     </div>
                     <div>
