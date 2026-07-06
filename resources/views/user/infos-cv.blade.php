@@ -87,6 +87,11 @@
                       <span class="shrink-0 rounded-full bg-secondary-container/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary-container">Actif</span>
                     </div>
                     <p class="mt-1 line-clamp-2 text-[11px] leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
+                    <div class="mt-2 flex flex-wrap items-center gap-2">
+                      <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-secondary-container hover:text-secondary">
+                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter a une offre
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
