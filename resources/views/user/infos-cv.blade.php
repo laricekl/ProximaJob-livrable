@@ -1,6 +1,9 @@
 @extends('layouts.candidat')
 @section('title', 'Mon CV principal')
 @section('content')
+<style>
+  .hide-scrollbar::-webkit-scrollbar { display: none; width: 0; height: 0; }
+</style>
   @php
     $uploadedCvPath = auth()->user()?->cv;
     $generatedCvs = $existingProfile?->cvGeneres ?? collect();
@@ -197,7 +200,7 @@
 
           <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=95' : '' }}" class="h-[1050px] w-full bg-white md:h-[1120px]" style="zoom: 0.95; -moz-transform: scale(0.95); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
+              <iframe id="generatedCvFrame" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=95' : '' }}" class="h-[1200px] w-full bg-white md:h-[1300px] hide-scrollbar" style="zoom: 0.95; -moz-transform: scale(0.95); -moz-transform-origin: top left; scrollbar-width: none; -ms-overflow-style: none;" title="Apercu du CV"></iframe>
             </div>
           </div>
 
