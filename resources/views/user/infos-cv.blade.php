@@ -166,10 +166,7 @@
               <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Apercu</p>
               <h2 id="previewTitle" class="mt-1 text-2xl font-bold font-serif text-primary">CV principal</h2>
             </div>
-          </div>
-
-          <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
-            <div class="mb-3 flex items-center justify-end gap-2">
+            <div class="flex items-center gap-2">
               <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low border border-outline-variant/20">
                 <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
               </a>
@@ -180,6 +177,9 @@
                 <span class="material-symbols-outlined text-sm" id="toggleSidebarIcon">fullscreen</span>
               </button>
             </div>
+          </div>
+
+          <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
               <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[1050px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
             </div>
