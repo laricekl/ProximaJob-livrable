@@ -49,7 +49,7 @@
   <main class="flex-grow pt-32 pb-16">
 
     <section class="py-8 px-4 md:px-10">
-      <div class="max-w-6xl mx-auto">
+      <div class="max-w-7xl mx-auto">
         <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
             <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">CV principal</p>
@@ -199,7 +199,7 @@
                 <p id="generatedCvPreviewFile" class="truncate text-xs text-on-surface-variant">{{ $existingProfile ? 'Rendu PDF du profil' : '' }}</p>
               </div>
               <div class="flex shrink-0 flex-wrap items-center gap-2">
-                <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=87' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
+                <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=95' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low">
                   <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
                 </a>
                 <a href="{{ $existingProfile ? route('cv.principal.download') : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-secondary-container px-3 py-2 text-xs font-bold text-white hover:bg-secondary transition-colors">
@@ -208,7 +208,7 @@
               </div>
             </div>
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=87' : '' }}" class="h-[980px] w-full bg-white md:h-[1120px]" style="zoom: 0.87; -moz-transform: scale(0.87); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
+              <iframe id="generatedCvFrame" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=95' : '' }}" class="h-[1050px] w-full bg-white md:h-[1120px]" style="zoom: 0.95; -moz-transform: scale(0.95); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
             </div>
           </div>
 
@@ -669,7 +669,7 @@
         .map((part) => part.trim())
         .filter((part) => part && !part.startsWith('zoom='));
 
-      hashParts.unshift('zoom=87');
+      hashParts.unshift('zoom=95');
 
       return `${baseUrl}${separator}_preview=${Date.now()}#${hashParts.join('&')}`;
     }
@@ -683,7 +683,7 @@
       document.getElementById('generatedCvPreviewName').textContent = 'CV principal';
       document.getElementById('generatedCvPreviewFile').textContent = 'Rendu PDF du profil';
       document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
-      document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=87');
+      document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=95');
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
