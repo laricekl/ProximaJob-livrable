@@ -226,7 +226,8 @@ export async function assertCandidateHistoryContains(page, offerTitle, expectedS
 
   const row = page.locator('tbody tr').filter({ hasText: offerTitle }).first();
   await expect(row).toBeVisible();
-  await expect(row).toContainText(expectedStatusPattern);
+  // Le statut est affiché en icône avec aria-label
+  await expect(row.locator('[aria-label]').first()).toHaveAttribute('aria-label', expectedStatusPattern);
 }
 
 export async function assertCandidateNotificationContains(page, offerTitle, expectedStatusSnippet) {

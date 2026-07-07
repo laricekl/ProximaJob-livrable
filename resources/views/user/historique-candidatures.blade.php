@@ -149,12 +149,8 @@
                     <td class="px-6 py-4 align-middle text-on-surface-variant">{{ $postulation->offre?->entreprise?->company_name ?? 'Entreprise indisponible' }}</td>
                     <td class="px-4 py-4 align-middle text-center text-on-surface-variant hidden md:table-cell">{{ optional($postulation->created_at)->translatedFormat('d M Y') }}</td>
                     <td class="px-4 py-4 align-middle text-center">
-                      @php
-                        $statusLabel = $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? ''));
-                      @endphp
-                      <span class="mx-auto inline-flex items-center gap-1.5 {{ $statusStyles[$postulation->status] ?? 'bg-surface-container text-primary' }} rounded-full px-3 py-1 shadow-sm ring-1 ring-black/5" title="{{ $statusLabel }}" aria-label="{{ $statusLabel }}">
+                      <span class="mx-auto inline-flex h-8 w-8 items-center justify-center {{ $statusStyles[$postulation->status] ?? 'bg-surface-container text-primary' }} rounded-full shadow-sm ring-1 ring-black/5" title="{{ $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? '')) }}" aria-label="{{ $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? '')) }}">
                         <span class="material-symbols-outlined text-base">{{ $postulation->status === 'accepted' ? 'check_circle' : ($postulation->status === 'rejected' ? 'cancel' : 'hourglass_empty') }}</span>
-                        <span class="text-xs font-semibold hidden sm:inline">{{ $statusLabel }}</span>
                       </span>
                     </td>
                     <td class="px-4 py-4 align-middle text-center">
