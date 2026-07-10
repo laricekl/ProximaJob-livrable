@@ -47,23 +47,10 @@
     </form>
 
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-widest text-outline">Actifs</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($activeSubscriptions) }}</p>
-      </div>
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-widest text-outline">Expirés</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($expiredSubscriptions) }}</p>
-      </div>
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-widest text-outline">À renouveler</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($toRenew) }}</p>
-      </div>
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-widest text-outline">Revenu mensuel</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format((float) $monthlyRevenue, 0, ',', ' ') }}€</p>
-      </div>
-    </div>
+      <x-admin.stat-card label="Actifs" :value="number_format($activeSubscriptions)" />
+      <x-admin.stat-card label="Expirés" :value="number_format($expiredSubscriptions)" />
+      <x-admin.stat-card label="À renouveler" :value="number_format($toRenew)" />
+      <x-admin.stat-card label="Revenu mensuel" :value="number_format((float) $monthlyRevenue, 0, ',', ' ').'€'" />
 
     <div class="card-glow overflow-hidden rounded-2xl">
       <div class="flex items-center justify-between border-b border-outline-variant/10 px-6 py-4">

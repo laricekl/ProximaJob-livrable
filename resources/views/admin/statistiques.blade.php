@@ -4,26 +4,10 @@
 @section('content')
   <div class="space-y-8">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-wider text-outline">Entreprises</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($entrepriseStats['count']) }}</p>
-        <p class="mt-1 text-xs font-semibold text-success">{{ $entrepriseStats['monthlyGrowth'] >= 0 ? '↑' : '↓' }} {{ abs($entrepriseStats['monthlyGrowth']) }}% vs mois dernier</p>
-      </div>
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-wider text-outline">Offres</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($offreStats['count']) }}</p>
-        <p class="mt-1 text-xs font-semibold text-success">{{ $offreStats['monthlyGrowth'] >= 0 ? '↑' : '↓' }} {{ abs($offreStats['monthlyGrowth']) }}% vs mois dernier</p>
-      </div>
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-wider text-outline">Nouveaux inscrits</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ array_sum($userChartData['data']) }}</p>
-        <p class="mt-1 text-xs font-semibold text-success">Année {{ $userChartData['currentYear'] }}</p>
-      </div>
-      <div class="card-glow rounded-2xl p-5">
-        <p class="text-xs font-bold uppercase tracking-wider text-outline">Candidatures</p>
-        <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($totalPostulations) }}</p>
-        <p class="mt-1 text-xs font-semibold text-success">Toutes périodes confondues</p>
-      </div>
+      <x-admin.stat-card label="Entreprises" :value="number_format($entrepriseStats['count'])" :hint="($entrepriseStats['monthlyGrowth'] >= 0 ? '↑ ' : '↓ ').abs($entrepriseStats['monthlyGrowth']).'% vs mois dernier'" />
+      <x-admin.stat-card label="Offres" :value="number_format($offreStats['count'])" :hint="($offreStats['monthlyGrowth'] >= 0 ? '↑ ' : '↓ ').abs($offreStats['monthlyGrowth']).'% vs mois dernier'" />
+      <x-admin.stat-card label="Nouveaux inscrits" :value="array_sum($userChartData['data'])" :hint="'Année '.$userChartData['currentYear']" />
+      <x-admin.stat-card label="Candidatures" :value="number_format($totalPostulations)" hint="Toutes périodes confondues" />
     </div>
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">

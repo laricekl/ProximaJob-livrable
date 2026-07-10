@@ -2,10 +2,7 @@
 @section('title', 'Newsletter')
 @section('page-title', 'Newsletter')
 @section('content')
-
-@if (session('success'))
-  <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep mb-6"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
-@endif
+<x-admin.flash />
 
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 

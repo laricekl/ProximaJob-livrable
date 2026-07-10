@@ -3,20 +3,10 @@
 @section('page-title', 'Catégories')
 
 @section('content')
+<x-admin.flash />
 <div class="space-y-6">
 
   {{-- Messages flash --}}
-  @if (session('success'))
-    <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep">
-      <span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}
-    </div>
-  @endif
-  @if (session('error'))
-    <div class="flex items-center gap-2 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep">
-      <span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}
-    </div>
-  @endif
-
   {{-- Barre de recherche + bouton création --}}
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <form method="GET" action="{{ route('admin.categories.index') }}" class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">

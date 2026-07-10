@@ -2,14 +2,8 @@
 @section('title', 'Diplômes')
 @section('page-title', 'Diplômes')
 @section('content')
+<x-admin.flash />
 <div class="space-y-6">
-  @if (session('success'))
-    <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
-  @endif
-  @if (session('error'))
-    <div class="flex items-center gap-2 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep"><span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}</div>
-  @endif
-
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
     <form method="GET" class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
       <div class="relative flex-1 sm:max-w-sm">

@@ -7,11 +7,7 @@
     $currentFavicon = $settings->favicon_url;
   @endphp
   <div class="space-y-6">
-    @if (session('success'))
-      <div class="rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-dark">
-        {{ session('success') }}
-      </div>
-    @endif
+    <x-admin.flash />
 
     @if ($errors->any())
       <div class="rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-dark">
