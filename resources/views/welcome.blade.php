@@ -729,15 +729,15 @@
         <div class="hero-reveal hero-reveal--4 mt-6 md:mt-10 max-w-xl mx-auto grid grid-cols-3 gap-2 md:gap-4">
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
             <p class="text-xl md:text-3xl font-bold text-primary font-serif">1 200<span class="text-secondary-container">+</span></p>
-            <p class="text-[10px] md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Emplois</p>
+            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Emplois</p>
           </div>
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
             <p class="text-xl md:text-3xl font-bold text-primary font-serif">32<span class="text-secondary-container">k</span></p>
-            <p class="text-[10px] md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Utilisateurs</p>
+            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Utilisateurs</p>
           </div>
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
             <p class="text-xl md:text-3xl font-bold text-primary font-serif">170<span class="text-secondary-container">+</span></p>
-            <p class="text-[10px] md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Entreprises</p>
+            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Entreprises</p>
           </div>
         </div>
 
@@ -765,8 +765,8 @@
                   <div class="overflow-hidden flex-shrink min-w-0">
                     <div id="spotlight2-text" class="space-y-1 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] w-full sm:w-[280px]" style="transform: translateX(0);">
                       <div class="flex items-center gap-3">
-                        <span class="px-2 py-0.5 rounded bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-wider border border-secondary-container/20">Partenaire Élite</span>
-                        <span class="text-[10px] text-primary/40 font-medium italic">Solution recrutement</span>
+                        <span class="px-2 py-0.5 rounded bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-wider border border-secondary-container/20">Partenaire Élite</span>
+                        <span class="text-2xs text-primary/40 font-medium italic">Solution recrutement</span>
                       </div>
                       <h3 class="text-xl md:text-2xl font-bold text-primary" id="spotlight2-name">ProximaJob Entreprise</h3>
                       <p class="text-primary/60 text-sm italic font-medium" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."</p>
@@ -811,7 +811,7 @@
         </div>
         <div class="w-full lg:w-2/5 space-y-6 text-left">
           <span
-            class="inline-block px-3 py-1 rounded-full bg-primary-container text-white text-[10px] md:text-xs uppercase tracking-widest">L'Excellence
+            class="inline-block px-3 py-1 rounded-full bg-primary-container text-white text-2xs md:text-xs uppercase tracking-widest">L'Excellence
             au service de votre carrière</span>
           <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight">
             Bien plus qu'un portail,<br /><span class="text-secondary-container italic">votre concierge dédié.</span>
@@ -931,7 +931,7 @@
             </div>
             <div class="mt-3 sm:mt-0 flex items-center gap-3 md:gap-4 relative z-10">
               <span
-                class="px-3 md:px-4 py-1 md:py-1.5 bg-green-50 text-green-700 text-[10px] md:text-[11px] font-black uppercase tracking-widest rounded-full">{{ $offre->type->nom ?? 'Offre' }}</span>
+                class="px-3 md:px-4 py-1 md:py-1.5 bg-success-light text-success-dark text-2xs md:text-xs font-black uppercase tracking-widest rounded-full">{{ $offre->type->nom ?? 'Offre' }}</span>
               <div
                 class="flex items-center gap-1 text-secondary-container font-bold text-sm opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500">
                 Détails <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
@@ -997,7 +997,7 @@
                 <span class="card-3d-orbit card-3d-orbit--3" style="background: rgba(255,255,255,0.58);"></span>
               </div>
               <div class="card-3d-glass"></div>
-              <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[11px] font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
+              <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
               <div class="card-3d-content text-center">
                 <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Premium</p>
                 <div class="flex items-baseline justify-center gap-0.5">

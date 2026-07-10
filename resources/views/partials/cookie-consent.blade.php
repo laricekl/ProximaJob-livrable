@@ -315,7 +315,7 @@
               <h3 class="text-sm font-bold text-primary">Cookies nécessaires</h3>
               <p class="mt-1 text-sm text-on-surface-variant">Connexion, sécurité, navigation, choix de langue et mémorisation de votre consentement.</p>
             </div>
-            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">Actifs</span>
+            <span class="rounded-full bg-success-light px-3 py-1 text-xs font-bold text-success-dark">Actifs</span>
           </div>
         </article>
 

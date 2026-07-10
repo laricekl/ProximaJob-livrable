@@ -5,7 +5,7 @@
     $statusStyles = [
       'en_attente' => 'bg-secondary-container/10 text-secondary-container',
       'accepted' => 'bg-secondary-fixed text-on-secondary-fixed-variant',
-      'rejected' => 'bg-red-50 text-red-600',
+      'rejected' => 'bg-error-light text-error',
     ];
 
     $statusLabels = [
@@ -114,7 +114,7 @@
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="rejected">
-                    <button type="submit" class="px-5 py-2.5 bg-white border border-red-200 text-red-600 text-sm font-bold rounded-xl hover:bg-red-50 transition-colors flex items-center gap-2">
+                    <button type="submit" class="px-5 py-2.5 bg-white border border-error-light text-error text-sm font-bold rounded-xl hover:bg-error-light transition-colors flex items-center gap-2">
                       <span class="material-symbols-outlined text-lg">close</span> Rejeter
                     </button>
                   </form>

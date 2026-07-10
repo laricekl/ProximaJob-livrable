@@ -110,7 +110,7 @@
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="rejected">
-                    <button type="submit" class="flex items-center justify-center gap-2 w-full px-5 py-3 border border-red-200 text-red-600 text-sm font-bold rounded-xl hover:bg-red-50 transition-colors">
+                    <button type="submit" class="flex items-center justify-center gap-2 w-full px-5 py-3 border border-error-light text-error text-sm font-bold rounded-xl hover:bg-error-light transition-colors">
                       <span class="material-symbols-outlined text-lg">close</span> Refuser le candidat
                     </button>
                   </form>

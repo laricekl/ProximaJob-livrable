@@ -82,7 +82,7 @@
           <div class="bg-secondary-fixed/30 rounded-[2rem] p-8 md:p-10">
             <h3 class="font-bold text-xl text-primary mb-8">Envoyez-nous un message</h3>
             @if (session('success'))
-              <div class="mb-6 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700">
+              <div class="mb-6 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm font-medium text-success-dark">
                 {{ session('success') }}
               </div>
             @endif
@@ -94,7 +94,7 @@
                   <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="Votre nom"
                     class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('name') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                   @error('name')
-                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-xs text-error">{{ $message }}</p>
                   @enderror
                 </div>
                 <div>
@@ -102,7 +102,7 @@
                   <input type="text" id="firstname" name="firstname" value="{{ old('firstname') }}" placeholder="Votre prénom"
                     class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('firstname') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                   @error('firstname')
-                    <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                    <p class="mt-1 text-xs text-error">{{ $message }}</p>
                   @enderror
                 </div>
               </div>
@@ -111,7 +111,7 @@
                 <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="votre@email.com"
                   class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('email') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                 @error('email')
-                  <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-xs text-error">{{ $message }}</p>
                 @enderror
               </div>
               <div>
@@ -119,7 +119,7 @@
                 <textarea id="message" name="message" rows="5" placeholder="Votre message..."
                   class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('message') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none resize-none">{{ old('message') }}</textarea>
                 @error('message')
-                  <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+                  <p class="mt-1 text-xs text-error">{{ $message }}</p>
                 @enderror
               </div>
               <button type="submit" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 flex items-center justify-center gap-2">

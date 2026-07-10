@@ -34,9 +34,9 @@
             'rejected' => 'Refusée',
           ];
           $statusBadge = [
-            'en_attente' => 'bg-blue-50 text-blue-700',
-            'accepted' => 'bg-emerald-50 text-emerald-700',
-            'rejected' => 'bg-red-50 text-red-700',
+            'en_attente' => 'bg-blue-50 text-info-dark',
+            'accepted' => 'bg-success-light text-success-dark',
+            'rejected' => 'bg-error-light text-error-dark',
           ];
           $applicationStatus = $postulation?->status ?? 'en_attente';
           $applicationStatusLabel = $statusLabels[$applicationStatus] ?? ucfirst(str_replace('_', ' ', $applicationStatus));
@@ -70,7 +70,7 @@
                 <h1 class="text-2xl font-bold font-serif text-primary">{{ $offre?->poste ?: 'Votre candidature' }}</h1>
                 <p class="text-on-surface-variant mt-1">{{ $offre?->entreprise->company_name ?? 'Entreprise' }} • {{ $offre?->localisation ?? 'Localisation a confirmer' }} • {{ $offre?->type->nom ?? 'Offre' }}</p>
               </div>
-              <span class="self-start px-4 py-1.5 {{ $statusBadge[$applicationStatus] ?? 'bg-surface-container text-primary' }} text-[10px] font-black uppercase tracking-widest rounded-full whitespace-nowrap">{{ $applicationStatusLabel }}</span>
+              <span class="self-start px-4 py-1.5 {{ $statusBadge[$applicationStatus] ?? 'bg-surface-container text-primary' }} text-2xs font-black uppercase tracking-widest rounded-full whitespace-nowrap">{{ $applicationStatusLabel }}</span>
             </div>
             <div class="flex flex-wrap items-center gap-4 text-sm">
               <span class="flex items-center gap-1.5 text-secondary-container font-bold">
@@ -133,7 +133,7 @@
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> CV de candidature</h2>
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-wider rounded-full">Document joint</span>
+                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-wider rounded-full">Document joint</span>
               </div>
               <div class="p-6">
                 <div class="bg-surface-container-low rounded-xl p-6 text-sm text-on-surface-variant leading-relaxed max-h-64 overflow-y-auto">
@@ -178,12 +178,12 @@
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h2>
                 @if (! $letterPreviewUrl)
-                <span class="px-3 py-1 bg-surface-container text-outline text-[10px] font-black uppercase tracking-wider rounded-full">Optionnelle</span>
+                <span class="px-3 py-1 bg-surface-container text-outline text-2xs font-black uppercase tracking-wider rounded-full">Optionnelle</span>
                 @endif
                 @if ($letterPreviewUrl)
                 <button class="copy-btn flex items-center gap-1 text-xs font-bold text-secondary-container hover:underline">
                   <span class="material-symbols-outlined text-sm">content_copy</span> Copier
-                  <span class="copy-feedback text-green-600 text-xs">✓ Copié</span>
+                  <span class="copy-feedback text-success text-xs">✓ Copié</span>
                 </button>
                 @endif
               </div>

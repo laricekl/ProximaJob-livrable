@@ -15,13 +15,13 @@
         </div>
 
         @if (session('success'))
-          <div class="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-800" role="status">
+          <div class="mt-6 rounded-2xl border border-success-light bg-success-light px-5 py-4 text-sm font-semibold text-success-deep" role="status">
             {{ session('success') }}
           </div>
         @endif
 
         @if (session('error'))
-          <div class="mt-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm font-semibold text-red-800" role="alert">
+          <div class="mt-6 rounded-2xl border border-error-light bg-error-light px-5 py-4 text-sm font-semibold text-error-deep" role="alert">
             {{ session('error') }}
           </div>
         @endif
@@ -40,7 +40,7 @@
               placeholder="vous@entreprise.com"
             />
             @error('email')
-              <p class="mt-2 text-sm font-medium text-red-600">{{ $message }}</p>
+              <p class="mt-2 text-sm font-medium text-error">{{ $message }}</p>
             @enderror
           </div>
 

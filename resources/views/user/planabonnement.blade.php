@@ -37,14 +37,14 @@
               </div>
               <div class="card-3d-glass"></div>
               @if ($isPopular)
-                <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[11px] font-bold text-white bg-secondary-container shadow-lg">Le plus populaire</span>
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">Le plus populaire</span>
               @endif
               <div class="card-3d-content text-center">
                 <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>
                 <p class="text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abo->montant, 2, ',', ' '), '0'), ',') }}<span class="text-lg text-outline">€</span></p>
                 <p class="text-xs text-outline mt-1">/{{ $abo->duree }} jour(s)</p>
                 @if ($abo->description)
-                  <p class="text-[10px] text-outline/60 mt-1">{{ $abo->description }}</p>
+                  <p class="text-2xs text-outline/60 mt-1">{{ $abo->description }}</p>
                 @endif
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                   @foreach ($fonctionnalites as $fct)

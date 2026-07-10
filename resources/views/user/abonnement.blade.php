@@ -19,7 +19,7 @@
                 <div class="p-6 md:p-8">
                   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <div>
-                      <span class="inline-flex px-3 py-1 bg-green-50 text-green-700 text-[10px] font-black uppercase tracking-widest rounded-full">Actif</span>
+                      <span class="inline-flex px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">Actif</span>
                       <h2 class="mt-2 text-xl font-bold text-primary">{{ $userAbonnement->abonnement->nom ?? 'Abonnement' }}</h2>
                     </div>
                     <div class="text-right">
@@ -30,19 +30,19 @@
 
                   <div class="grid grid-cols-2 gap-4 p-4 rounded-xl bg-surface-container-low/50">
                     <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Debut</p>
+                      <p class="text-2xs font-bold uppercase tracking-wide text-outline">Debut</p>
                       <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_debut ? $userAbonnement->date_debut->translatedFormat('d M Y') : '—' }}</p>
                     </div>
                     <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Expiration</p>
+                      <p class="text-2xs font-bold uppercase tracking-wide text-outline">Expiration</p>
                       <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_fin ? \Carbon\Carbon::parse($userAbonnement->date_fin)->translatedFormat('d M Y') : '—' }}</p>
                     </div>
                     <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Jours restants</p>
+                      <p class="text-2xs font-bold uppercase tracking-wide text-outline">Jours restants</p>
                       @php
                         $joursRestants = $userAbonnement->date_fin ? (int) ceil(now()->diffInDays($userAbonnement->date_fin, false)) : null;
                       @endphp
-                      <p class="text-sm font-semibold {{ $joursRestants !== null && $joursRestants < 0 ? 'text-red-500' : ($joursRestants !== null && $joursRestants <= 7 ? 'text-amber-600' : 'text-primary') }}">
+                      <p class="text-sm font-semibold {{ $joursRestants !== null && $joursRestants < 0 ? 'text-error' : ($joursRestants !== null && $joursRestants <= 7 ? 'text-warning' : 'text-primary') }}">
                         @if ($joursRestants === null) —
                         @elseif ($joursRestants < 0) Expiré depuis {{ abs($joursRestants) }} jours
                         @else {{ $joursRestants }} jours
@@ -50,8 +50,8 @@
                       </p>
                     </div>
                     <div>
-                      <p class="text-[10px] font-bold uppercase tracking-wide text-outline">Statut</p>
-                      <p class="text-sm font-semibold text-green-600">{{ $userAbonnement->status }}</p>
+                      <p class="text-2xs font-bold uppercase tracking-wide text-outline">Statut</p>
+                      <p class="text-sm font-semibold text-success">{{ $userAbonnement->status }}</p>
                     </div>
                   </div>
 
@@ -71,19 +71,19 @@
                 </h3>
                 <ul class="space-y-3">
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> CV personnalises par IA
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> CV personnalises par IA
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Matching automatique
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> Matching automatique
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Candidatures illimitees
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> Candidatures illimitees
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Support prioritaire
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> Support prioritaire
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-green-500 text-base">check_circle</span> Statistiques de profil
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> Statistiques de profil
                   </li>
                 </ul>
               </div>

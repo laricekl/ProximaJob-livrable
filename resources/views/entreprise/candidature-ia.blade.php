@@ -44,7 +44,7 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           @forelse ($offres as $offre)
             <div class="card-glow rounded-2xl p-6 relative">
-              <span class="absolute top-4 right-4 px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-[11px] font-bold uppercase tracking-wider rounded-full">
+              <span class="absolute top-4 right-4 px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-xs font-bold uppercase tracking-wider rounded-full">
                 {{ $offre->type?->name ?? 'Offre' }}
               </span>
               <h3 class="text-lg font-bold font-serif text-primary mt-2 mb-3">{{ $offre->titre }}</h3>

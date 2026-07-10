@@ -65,7 +65,7 @@
               <h2 class="text-lg font-bold font-serif text-primary">Mes CV</h2>
               <p class="mt-1 text-xs leading-5 text-on-surface-variant">CV principal, source et versions générées.</p>
             </div>
-            <div class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface-container-low px-2.5 py-1 text-[11px] font-semibold text-outline">
+            <div class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface-container-low px-2.5 py-1 text-xs font-semibold text-outline">
               <span class="material-symbols-outlined text-base">folder_open</span>
               {{ ($existingProfile ? 1 : 0) + ($uploadedCvPath ? 1 : 0) + $generatedCvs->count() }} document(s)
             </div>
@@ -84,11 +84,11 @@
                         <p class="truncate text-sm font-bold text-primary">CV principal</p>
                         <p class="truncate text-xs font-semibold text-on-surface-variant">{{ trim(($existingProfile->prenom ?? '') . ' ' . ($existingProfile->nom ?? '')) ?: 'CV candidat' }}</p>
                       </div>
-                      <span class="shrink-0 rounded-full bg-secondary-container/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-secondary-container">Actif</span>
+                      <span class="shrink-0 rounded-full bg-secondary-container/10 px-2 py-0.5 text-2xs font-bold uppercase tracking-wide text-secondary-container">Actif</span>
                     </div>
-                    <p class="mt-1 line-clamp-2 text-[11px] leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
+                    <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-2">
-                      <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-1 text-[11px] font-bold text-secondary-container hover:text-secondary">
+                      <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-1 text-xs font-bold text-secondary-container hover:text-secondary">
                         <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter a une offre
                       </a>
                     </div>
@@ -106,23 +106,23 @@
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
                         <p class="truncate text-sm font-bold text-primary">CV source</p>
-                        <p class="break-all text-[11px] font-semibold leading-4 text-on-surface-variant">{{ $uploadedCvPath ? basename($uploadedCvPath) : 'Aucun fichier' }}</p>
+                        <p class="break-all text-xs font-semibold leading-4 text-on-surface-variant">{{ $uploadedCvPath ? basename($uploadedCvPath) : 'Aucun fichier' }}</p>
                       </div>
                       @if ($uploadedCvPath)
-                        <a href="{{ asset($uploadedCvPath) }}" target="_blank" rel="noopener" class="shrink-0 text-[11px] font-bold text-secondary-container hover:text-secondary">Ouvrir</a>
+                        <a href="{{ asset($uploadedCvPath) }}" target="_blank" rel="noopener" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary">Ouvrir</a>
                       @endif
                     </div>
-                    <p class="mt-1 line-clamp-2 text-[11px] leading-4 text-on-surface-variant">{{ $uploadedCvPath ? 'Source pour remplir le CV principal.' : 'PDF, DOCX, DOC ou TXT.' }}</p>
+                    <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $uploadedCvPath ? 'Source pour remplir le CV principal.' : 'PDF, DOCX, DOC ou TXT.' }}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-2">
                       <form id="sourceCvUploadForm" class="contents" enctype="multipart/form-data">
-                        <label class="inline-flex cursor-pointer items-center gap-1 text-[11px] font-bold text-primary hover:text-secondary-container">
+                        <label class="inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-primary hover:text-secondary-container">
                           <span class="material-symbols-outlined text-sm">upload_file</span>
                           <span>{{ $uploadedCvPath ? 'Remplacer' : 'Importer' }}</span>
                           <input type="file" name="cv" accept=".pdf,.doc,.docx,.txt" class="hidden" onchange="uploadSourceCv(this.form)">
                         </label>
                       </form>
                       @if ($uploadedCvPath)
-                        <button type="button" id="importUploadedCvBtn" class="inline-flex items-center gap-1 text-[11px] font-bold text-secondary-container hover:text-secondary" onclick="importUploadedCv()">
+                        <button type="button" id="importUploadedCvBtn" class="inline-flex items-center gap-1 text-xs font-bold text-secondary-container hover:text-secondary" onclick="importUploadedCv()">
                           <span class="material-symbols-outlined text-sm">magic_button</span>
                           Analyser
                         </button>
@@ -142,12 +142,12 @@
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
                         <p class="truncate text-sm font-bold text-primary">Version du CV</p>
-                        <p class="truncate text-[11px] text-on-surface-variant">{{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version enregistrée' }}</p>
+                        <p class="truncate text-xs text-on-surface-variant">{{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version enregistrée' }}</p>
                       </div>
-                      <button type="button" class="shrink-0 text-[11px] font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->display_name) }}" data-file="Document PDF" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}">Voir</button>
+                      <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->display_name) }}" data-file="Document PDF" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}">Voir</button>
                     </div>
-                    <p class="mt-1 line-clamp-2 text-[11px] font-semibold leading-4 text-primary">{{ $generatedCv->display_name }}</p>
-                    <p class="mt-1 truncate text-[11px] leading-4 text-on-surface-variant">Document PDF</p>
+                    <p class="mt-1 line-clamp-2 text-xs font-semibold leading-4 text-primary">{{ $generatedCv->display_name }}</p>
+                    <p class="mt-1 truncate text-xs leading-4 text-on-surface-variant">Document PDF</p>
                   </div>
                 </div>
               </div>
@@ -161,7 +161,7 @@
             @endforelse
           </div>
 
-          <p class="mt-3 text-[11px] leading-4 text-outline">La personnalisation part toujours du CV principal.</p>
+          <p class="mt-3 text-xs leading-4 text-outline">La personnalisation part toujours du CV principal.</p>
           <p id="cvImportStatus" class="mt-3 hidden rounded-xl border border-secondary-container/20 bg-secondary-container/10 px-4 py-3 text-sm font-semibold text-secondary-container"></p>
         </aside>
 
@@ -942,9 +942,9 @@
       const status = document.getElementById('cvImportStatus');
       if (!status) return;
       status.textContent = message;
-      status.classList.remove('hidden', 'border-red-200', 'bg-red-50', 'text-red-700', 'border-secondary-container/20', 'bg-secondary-container/10', 'text-secondary-container');
+      status.classList.remove('hidden', 'border-error-light', 'bg-error-light', 'text-error-dark', 'border-secondary-container/20', 'bg-secondary-container/10', 'text-secondary-container');
       status.classList.add(...(isError
-        ? ['border-red-200', 'bg-red-50', 'text-red-700']
+        ? ['border-error-light', 'bg-error-light', 'text-error-dark']
         : ['border-secondary-container/20', 'bg-secondary-container/10', 'text-secondary-container']
       ));
       status.scrollIntoView({ behavior: 'smooth', block: 'center' });

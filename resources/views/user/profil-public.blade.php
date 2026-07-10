@@ -114,19 +114,19 @@
               <div class="grid grid-cols-2 gap-4">
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-primary">{{ $profileExperienceYears }}</p>
-                  <p class="text-[10px] text-outline uppercase tracking-wider mt-1">ans d'exp.</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">ans d'exp.</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-primary">{{ $profileSkillsCount }}</p>
-                  <p class="text-[10px] text-outline uppercase tracking-wider mt-1">compétences</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">compétences</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-secondary-container">{{ $profileCompletion }}%</p>
-                  <p class="text-[10px] text-outline uppercase tracking-wider mt-1">complétude</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">complétude</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-primary">{{ $profileApplicationsCount }}</p>
-                  <p class="text-[10px] text-outline uppercase tracking-wider mt-1">candidatures</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">candidatures</p>
                 </div>
               </div>
             </div>
@@ -309,7 +309,7 @@
                       <div class="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary-container">description</span></div>
                       <div>
                         <p class="text-sm font-semibold text-primary">{{ $latestCvLabel }}</p>
-                        <p class="text-[10px] text-outline">CV deja ajoute a votre compte</p>
+                        <p class="text-2xs text-outline">CV deja ajoute a votre compte</p>
                       </div>
                     </div>
                     <div class="flex items-center gap-2">

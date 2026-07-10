@@ -25,7 +25,7 @@
       </div>
 
       @if ($errors->any())
-        <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+        <div class="mb-6 rounded-2xl border border-error-light bg-error-light px-5 py-4 text-sm text-error-dark">
           <p class="font-bold mb-2">Le formulaire contient des erreurs.</p>
           <ul class="space-y-1">
             @foreach ($errors->all() as $error)
@@ -36,7 +36,7 @@
       @endif
 
       @if (session('error'))
-        <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+        <div class="mb-6 rounded-2xl border border-error-light bg-error-light px-5 py-4 text-sm text-error-dark">
           {{ session('error') }}
         </div>
       @endif

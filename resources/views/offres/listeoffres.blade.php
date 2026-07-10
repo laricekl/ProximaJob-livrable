@@ -235,7 +235,7 @@
 
             <div class="flex items-center justify-between mb-6">
               <h3 class="font-bold text-primary text-sm uppercase tracking-wide">Filtres</h3>
-              <a href="{{ route('offres') }}" class="text-[10px] font-bold uppercase tracking-wider text-secondary-container hover:underline">Réinitialiser</a>
+              <a href="{{ route('offres') }}" class="text-2xs font-bold uppercase tracking-wider text-secondary-container hover:underline">Réinitialiser</a>
             </div>
 
             <!-- Type de contrat -->
@@ -378,7 +378,7 @@
                 </div>
               </div>
               <div class="mt-2 sm:mt-0 flex items-center gap-2 relative z-10 sm:flex-shrink-0">
-                <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
+                <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
                 <span class="text-xs font-bold text-primary/70 whitespace-nowrap">
                   @if ($offre->salaire_min || $offre->salaire_max)
                     {{ $offre->salaire_min ? floor($offre->salaire_min / 1000) . 'k' : '?' }}$ – {{ $offre->salaire_max ? floor($offre->salaire_max / 1000) . 'k' : '?' }}$
@@ -386,7 +386,7 @@
                     Salaire à confirmer
                   @endif
                 </span>
-                <span class="text-[10px] text-outline whitespace-nowrap">{{ $offre->salary_type ?? '' }}</span>
+                <span class="text-2xs text-outline whitespace-nowrap">{{ $offre->salary_type ?? '' }}</span>
                 <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm group-hover:bg-secondary-container/10 transition-colors" title="Voir les détails" aria-label="Voir les détails">
                   <span class="material-symbols-outlined text-base">visibility</span>
                 </span>

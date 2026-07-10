@@ -47,19 +47,19 @@
         </div>
 
         @if (session('success') || session('status'))
-          <div class="mb-6 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800" role="status">
+          <div class="mb-6 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm font-semibold text-success-deep" role="status">
             {{ session('success') ?? session('status') }}
           </div>
         @endif
 
         @if (session('error'))
-          <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-800" role="alert">
+          <div class="mb-6 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm font-semibold text-error-deep" role="alert">
             {{ session('error') }}
           </div>
         @endif
 
         @if ($errors->any())
-          <div class="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
+          <div class="mb-6 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep" role="alert">
             <p class="font-semibold">Connexion impossible :</p>
             <ul class="mt-2 list-disc space-y-1 pl-5">
               @foreach ($errors->all() as $error)

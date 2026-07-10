@@ -100,7 +100,7 @@
           <!-- Ressource 1 - Document -->
           <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="document" data-title="Guide de rédaction de CV" data-description="Apprenez à créer un CV qui attire l'attention des employeurs">
             <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">description</span> Document
               </span>
               <span class="text-xs text-outline">Ajouté le 12 Mai 2025</span>
@@ -115,7 +115,7 @@
           <!-- Ressource 2 - Vidéo -->
           <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="video" data-title="Préparer son entretien d'embauche" data-description="Les conseils pour réussir votre entretien et décrocher le poste">
             <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">play_circle</span> Vidéo
               </span>
               <span class="text-xs text-outline">Ajouté le 10 Mai 2025</span>
@@ -130,7 +130,7 @@
           <!-- Ressource 3 - Lien -->
           <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="lien" data-title="Portail officiel de l'emploi" data-description="Accédez au portail gouvernemental pour plus d'opportunités">
             <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">link</span> Lien utile
               </span>
               <span class="text-xs text-outline">Ajouté le 08 Mai 2025</span>
@@ -145,7 +145,7 @@
           <!-- Ressource 4 - Document -->
           <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="document" data-title="Modèle de lettre de présentation" data-description="Des modèles prêts à l'emploi pour votre candidature">
             <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">description</span> Document
               </span>
               <span class="text-xs text-outline">Ajouté le 05 Mai 2025</span>
@@ -160,7 +160,7 @@
           <!-- Ressource 5 - Vidéo -->
           <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="video" data-title="Optimiser son profil LinkedIn" data-description="Comment mettre en valeur votre profil professionnel en ligne">
             <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">play_circle</span> Vidéo
               </span>
               <span class="text-xs text-outline">Ajouté le 02 Mai 2025</span>
@@ -175,7 +175,7 @@
           <!-- Ressource 6 - Lien -->
           <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="lien" data-title="Calculateur de salaire" data-description="Estimez votre salaire selon votre secteur et expérience">
             <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">link</span> Lien utile
               </span>
               <span class="text-xs text-outline">Ajouté le 28 Avr 2025</span>

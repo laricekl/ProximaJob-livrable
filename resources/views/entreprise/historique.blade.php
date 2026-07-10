@@ -46,7 +46,7 @@
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
                     <td class="px-6 py-4 font-semibold text-primary">{{ $offre->titre }}</td>
                     <td class="hidden sm:table-cell px-6 py-4">
-                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-[11px] font-bold rounded-full">
+                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-xs font-bold rounded-full">
                         {{ $offre->type?->nom ?? 'Offre' }}
                       </span>
                     </td>
@@ -57,7 +57,7 @@
                       </a>
                     </td>
                     <td class="px-6 py-4">
-                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-[11px] font-semibold rounded-full">
+                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">
                         {{ ucfirst($offre->status ?? 'active') }}
                       </span>
                     </td>

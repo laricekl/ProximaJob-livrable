@@ -36,13 +36,13 @@
         </div>
 
         @if (session('success'))
-          <div class="mb-8 rounded-2xl border border-green-200 bg-green-50 px-5 py-4 text-sm text-green-700">
+          <div class="mb-8 rounded-2xl border border-success-light bg-success-light px-5 py-4 text-sm text-success-dark">
             {{ session('success') }}
           </div>
         @endif
 
         @if ($errors->any())
-          <div class="mb-8 rounded-2xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-700">
+          <div class="mb-8 rounded-2xl border border-error-light bg-error-light px-5 py-4 text-sm text-error-dark">
             {{ $errors->first() }}
           </div>
         @endif
@@ -56,7 +56,7 @@
               $applications = $offre->postulations_count ?? $offre->postulations->count();
             @endphp
             <div class="card-glow rounded-2xl p-6 relative">
-              <span class="absolute top-4 right-4 px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-[11px] font-bold uppercase tracking-wider rounded-full">
+              <span class="absolute top-4 right-4 px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-xs font-bold uppercase tracking-wider rounded-full">
                 {{ $offre->type?->nom ?? $offre->employment_type ?? 'Offre' }}
               </span>
               <h3 class="text-lg font-bold font-serif text-primary mt-2 mb-3 pr-24">{{ $offre->titre }}</h3>
@@ -77,7 +77,7 @@
                   <form method="POST" action="{{ route('offres.destroy', $offre->id) }}" onsubmit="return confirm('Supprimer cette offre ?');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="w-9 h-9 rounded-lg bg-surface-container-low hover:bg-red-50 transition-colors flex items-center justify-center text-outline hover:text-red-600" title="Supprimer"><span class="material-symbols-outlined text-lg">delete</span></button>
+                    <button type="submit" class="w-9 h-9 rounded-lg bg-surface-container-low hover:bg-error-light transition-colors flex items-center justify-center text-outline hover:text-error" title="Supprimer"><span class="material-symbols-outlined text-lg">delete</span></button>
                   </form>
                 </div>
               </div>

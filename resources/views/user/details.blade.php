@@ -46,11 +46,11 @@
                   <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary leading-tight">{{ $offre->titre }}</h1>
                   <p class="text-on-surface-variant mt-1">{{ $companyName }} • {{ $offre->localisation ?? 'Localisation à confirmer' }}</p>
                   <div class="flex flex-wrap items-center gap-2 mt-3">
-                    <span class="px-3 py-1 bg-green-50 text-green-700 text-[10px] font-black uppercase tracking-widest rounded-full">{{ $contractType }}</span>
+                    <span class="px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">{{ $contractType }}</span>
                     @if ($offre->remote_work)
-                      <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">{{ $offre->remote_work }}</span>
+                      <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-widest rounded-full">{{ $offre->remote_work }}</span>
                     @endif
-                    <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-[10px] font-black uppercase tracking-widest rounded-full">{{ ucfirst($offre->status ?? 'active') }}</span>
+                    <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-widest rounded-full">{{ ucfirst($offre->status ?? 'active') }}</span>
                   </div>
                 </div>
               </div>

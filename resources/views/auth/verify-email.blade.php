@@ -15,7 +15,7 @@
         </div>
 
         @if (session('status') === 'verification-link-sent')
-          <div class="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-4 text-sm font-semibold text-emerald-800" role="status">
+          <div class="mt-8 rounded-2xl border border-success-light bg-success-light px-5 py-4 text-sm font-semibold text-success-deep" role="status">
             Un nouveau lien de verification vient d'etre envoye a votre adresse e-mail.
           </div>
         @endif

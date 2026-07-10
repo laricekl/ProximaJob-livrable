@@ -51,7 +51,7 @@
                     </td>
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->type?->nom ?? 'Offre' }}</td>
                     <td class="px-6 py-4">
-                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-[11px] font-semibold rounded-full">{{ ucfirst($offer->status ?? 'active') }}</span>
+                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">{{ ucfirst($offer->status ?? 'active') }}</span>
                     </td>
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->postulations_count ?? 0 }}</td>
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->autopostulations_count ?? 0 }}</td>

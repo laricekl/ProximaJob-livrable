@@ -137,7 +137,7 @@
                     <td class="px-4 py-4 align-middle text-center text-on-surface-variant hidden md:table-cell">{{ optional($postulation->created_at)->translatedFormat('d M Y') }}</td>
                     <td class="px-4 py-4 align-middle text-center">
                       @php
-                        $statusColors = ['en_attente' => 'bg-amber-100 text-amber-700', 'accepted' => 'bg-green-100 text-green-700', 'rejected' => 'bg-red-100 text-red-700', 'entretien' => 'bg-blue-100 text-blue-700'];
+                        $statusColors = ['en_attente' => 'bg-warning-light text-warning-dark', 'accepted' => 'bg-success-light text-success-dark', 'rejected' => 'bg-error-light text-error-dark', 'entretien' => 'bg-info-light text-info-dark'];
                         $statusLabels = ['en_attente' => 'En attente', 'accepted' => 'Acceptée', 'rejected' => 'Refusée', 'entretien' => 'Entretien'];
                         $statusLabel = $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? ''));
                         $statusIcon = $postulation->status === 'accepted' ? 'check_circle' : ($postulation->status === 'rejected' ? 'cancel' : 'hourglass_empty');

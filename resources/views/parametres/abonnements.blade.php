@@ -120,7 +120,7 @@
                 </div>
                 <div class="card-3d-glass"></div>
                 @if ($isPopular)
-                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[11px] font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
                 @endif
                 <div class="card-3d-content text-center">
                   <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>

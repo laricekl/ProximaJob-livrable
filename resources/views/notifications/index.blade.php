@@ -14,7 +14,7 @@
       return match ($type) {
           'matching' => ['icon' => 'auto_awesome', 'iconBg' => 'bg-secondary-container/10', 'iconColor' => 'text-secondary-container', 'badge' => 'Matching IA'],
           'application' => ['icon' => 'send', 'iconBg' => 'bg-blue-50', 'iconColor' => 'text-blue-600', 'badge' => 'Candidatures'],
-          'message' => ['icon' => 'chat', 'iconBg' => 'bg-green-50', 'iconColor' => 'text-green-600', 'badge' => 'Messages'],
+          'message' => ['icon' => 'chat', 'iconBg' => 'bg-success-light', 'iconColor' => 'text-success', 'badge' => 'Messages'],
           default => ['icon' => 'info', 'iconBg' => 'bg-surface-container', 'iconColor' => 'text-outline', 'badge' => 'Système'],
       };
   };
@@ -75,11 +75,11 @@
                       @unless ($notification->is_read)
                         <span class="w-2 h-2 rounded-full bg-secondary-container flex-shrink-0 unread-dot"></span>
                       @endunless
-                      <span class="px-2 py-0.5 rounded-full bg-surface-container-low text-[10px] font-bold uppercase tracking-wider text-outline">{{ $meta['badge'] }}</span>
+                      <span class="px-2 py-0.5 rounded-full bg-surface-container-low text-2xs font-bold uppercase tracking-wider text-outline">{{ $meta['badge'] }}</span>
                     </div>
                     <p class="text-sm text-on-surface-variant">{{ $notification->message }}</p>
                     <div class="flex flex-wrap items-center gap-3 mt-3">
-                      <span class="text-[11px] text-outline">{{ $notification->created_at?->diffForHumans() }}</span>
+                      <span class="text-xs text-outline">{{ $notification->created_at?->diffForHumans() }}</span>
                       @if ($notification->link)
                         <a href="{{ $notification->link }}" class="text-xs font-bold text-secondary-container hover:underline">Ouvrir</a>
                       @endif

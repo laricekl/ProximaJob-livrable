@@ -35,7 +35,7 @@
               $plan = $userAbonnement->abonnement;
               $isActive = $userAbonnement->status === 'Actif';
             @endphp
-            <div class="card-glow rounded-2xl overflow-hidden border-l-4 {{ $isActive ? 'border-l-green-500' : 'border-l-outline-variant' }}">
+            <div class="card-glow rounded-2xl overflow-hidden border-l-4 {{ $isActive ? 'border-l-success' : 'border-l-outline-variant' }}">
               <div class="p-6">
                 <div class="flex justify-between items-start mb-4 gap-3">
                   <span class="px-3 py-1 {{ $userAbonnement->status_color }} text-xs font-semibold rounded-full">{{ $userAbonnement->status }}</span>

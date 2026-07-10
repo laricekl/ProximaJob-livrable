@@ -5,7 +5,7 @@
     $statusStyles = [
       'en_attente' => 'bg-secondary-container/10 text-secondary-container',
       'accepted' => 'bg-secondary-fixed text-on-secondary-fixed-variant',
-      'rejected' => 'bg-red-50 text-red-600',
+      'rejected' => 'bg-error-light text-error',
     ];
 
     $statusLabels = [
@@ -153,7 +153,7 @@
                       <div class="flex flex-wrap items-center gap-2">
                         <span>{{ $postulation->offre?->titre ?? 'Offre supprimée' }}</span>
                         @if ($isNewAiApplication)
-                          <span class="px-2 py-0.5 rounded-full bg-secondary-container text-white text-[10px] font-black uppercase tracking-wider">Nouveau</span>
+                          <span class="px-2 py-0.5 rounded-full bg-secondary-container text-white text-2xs font-black uppercase tracking-wider">Nouveau</span>
                         @endif
                       </div>
                     </td>
