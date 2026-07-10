@@ -26,16 +26,16 @@
     <form method="POST" action="{{ route('admin.diplomes.store') }}" class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       @csrf
       <div>
-        <label for="nom_diplome" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
+        <label for="nom_diplome" class="block text-sm font-semibold text-primary mb-1.5">Nom</label>
         <input type="text" id="nom_diplome" name="nom_diplome" value="{{ old('nom_diplome') }}" class="w-full rounded-xl border @error('nom_diplome') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: Baccalauréat en informatique" required/>
         @error('nom_diplome')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
-        <label for="sigle" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Sigle</label>
+        <label for="sigle" class="block text-sm font-semibold text-primary mb-1.5">Sigle</label>
         <input type="text" id="sigle" name="sigle" value="{{ old('sigle') }}" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: B.Sc., DEC..."/>
       </div>
       <div>
-        <label for="niveau_education" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Niveau</label>
+        <label for="niveau_education" class="block text-sm font-semibold text-primary mb-1.5">Niveau</label>
         <select id="niveau_education" name="niveau_education" class="w-full rounded-xl border @error('niveau_education') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required>
           <option value="">— Choisir —</option>
           @foreach ($niveaux as $val => $label)
@@ -45,15 +45,15 @@
         @error('niveau_education')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
-        <label for="duree_annees" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Durée (années)</label>
+        <label for="duree_annees" class="block text-sm font-semibold text-primary mb-1.5">Durée (années)</label>
         <input type="number" id="duree_annees" name="duree_annees" value="{{ old('duree_annees') }}" step="0.5" min="0" max="15" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: 3"/>
       </div>
       <div>
-        <label for="nom_anglais" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom anglais</label>
+        <label for="nom_anglais" class="block text-sm font-semibold text-primary mb-1.5">Nom anglais</label>
         <input type="text" id="nom_anglais" name="nom_anglais" value="{{ old('nom_anglais') }}" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: Bachelor of Computer Science"/>
       </div>
       <div class="sm:col-span-3 flex justify-end">
-        <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-secondary-container transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
+        <button type="submit" class="rounded-xl bg-secondary-container text-white px-4 py-2.5 text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
       </div>
     </form>
   </div>
@@ -98,14 +98,14 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="5" class="px-6 py-10 text-center text-sm text-outline">Aucun diplôme.</td></tr>
+            <tr><td colspan="5" class="px-6 py-10 text-center text-sm text-outline">@if($search || $niveau) Aucun diplôme ne correspond aux filtres. @else Aucun diplôme pour le moment. Créez le premier ci-dessus ! @endif</td></tr>
           @endforelse
         </tbody>
       </table>
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $diplomes->firstItem() ?? 0 }}-{{ $diplomes->lastItem() ?? 0 }} sur {{ $diplomes->total() }} diplômes</span>
-      {{ $diplomes->links() }}
+      {{ $diplomes->withQueryString()->links('components.pagination.admin-pagination') }}
     </div>
   </div>
 </div>

@@ -107,7 +107,7 @@
       </div>
       <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
         <span class="text-outline">{{ $abonnements->firstItem() ?? 0 }}-{{ $abonnements->lastItem() ?? 0 }} sur {{ $abonnements->total() }} abonnements</span>
-        {{ $abonnements->links() }}
+        {{ $abonnements->withQueryString()->links('components.pagination.admin-pagination') }}
       </div>
     </div>
   </div>

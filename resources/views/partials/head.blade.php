@@ -76,5 +76,15 @@
   #sidebarOverlay:not(.fade-in) { opacity: 0; }
   .user-dropdown { opacity: 0; visibility: hidden; transform: translateY(-4px); transition: all 0.2s ease; }
   .user-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
+  /* Scroll shadow indicator for overflow-x-auto tables */
+  .overflow-x-auto {
+    background: linear-gradient(to right, white 30%, rgba(255,255,255,0)),
+                linear-gradient(to right, rgba(255,255,255,0), white 70%) 100% 0,
+                linear-gradient(to right, rgba(0,0,0,0.06), rgba(0,0,0,0)),
+                linear-gradient(to right, rgba(0,0,0,0), rgba(0,0,0,0.06)) 100% 0;
+    background-repeat: no-repeat;
+    background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
 </style>
 @yield('styles')

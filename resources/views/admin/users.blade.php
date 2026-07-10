@@ -129,7 +129,7 @@
         <span class="text-outline">
           {{ $users->firstItem() ?? 0 }}-{{ $users->lastItem() ?? 0 }} sur {{ $users->total() }} utilisateurs
         </span>
-        {{ $users->links() }}
+        {{ $users->withQueryString()->links('components.pagination.admin-pagination') }}
       </div>
     </div>
   </div>

@@ -33,7 +33,7 @@
     <form method="POST" action="{{ route('admin.categories.store') }}" class="flex flex-col gap-3 sm:flex-row sm:items-end">
       @csrf
       <div class="flex-1">
-        <label for="nom" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
+        <label for="nom" class="block text-sm font-semibold text-primary mb-1.5">Nom</label>
         <input
           type="text"
           id="nom"
@@ -125,7 +125,7 @@
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $categories->firstItem() ?? 0 }}-{{ $categories->lastItem() ?? 0 }} sur {{ $categories->total() }} catégories</span>
-      {{ $categories->links() }}
+      {{ $categories->withQueryString()->links('components.pagination.admin-pagination') }}
     </div>
   </div>
 

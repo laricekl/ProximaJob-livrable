@@ -20,11 +20,11 @@
     <form method="POST" action="{{ route('admin.types-offres.store') }}" class="flex flex-col gap-3 sm:flex-row sm:items-end">
       @csrf
       <div class="flex-1">
-        <label for="nom" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
+        <label for="nom" class="block text-sm font-semibold text-primary mb-1.5">Nom</label>
         <input type="text" id="nom" name="nom" value="{{ old('nom') }}" class="w-full rounded-xl border @error('nom') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: CDI, CDD, Stage..." required/>
         @error('nom')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
-      <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-secondary-container transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
+      <button type="submit" class="rounded-xl bg-secondary-container text-white px-4 py-2.5 text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
     </form>
   </div>
 
@@ -69,7 +69,7 @@
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $types->firstItem() ?? 0 }}-{{ $types->lastItem() ?? 0 }} sur {{ $types->total() }} types</span>
-      {{ $types->links() }}
+      {{ $types->withQueryString()->links('components.pagination.admin-pagination') }}
     </div>
   </div>
 </div>

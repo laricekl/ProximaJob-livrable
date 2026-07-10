@@ -20,12 +20,12 @@
     <form method="POST" action="{{ route('admin.skills.store') }}" class="grid grid-cols-1 gap-3 sm:grid-cols-4">
       @csrf
       <div class="sm:col-span-2">
-        <label for="name" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
+        <label for="name" class="block text-sm font-semibold text-primary mb-1.5">Nom</label>
         <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full rounded-xl border @error('name') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: PHP, Gestion de projet..." required/>
         @error('name')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
-        <label for="category" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Catégorie</label>
+        <label for="category" class="block text-sm font-semibold text-primary mb-1.5">Catégorie</label>
         <select id="category" name="category" class="w-full rounded-xl border @error('category') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required>
           <option value="">— Choisir —</option>
           <option value="technique" @selected(old('category') == 'technique')>Technique</option>
@@ -38,7 +38,7 @@
         @error('category')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
-        <label for="importance_level" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Importance</label>
+        <label for="importance_level" class="block text-sm font-semibold text-primary mb-1.5">Importance</label>
         <select id="importance_level" name="importance_level" class="w-full rounded-xl border @error('importance_level') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required>
           @foreach ([1=>'1 - Basique',2=>'2 - Utile',3=>'3 - Important',4=>'4 - Très important',5=>'5 - Essentiel'] as $val => $label)
             <option value="{{ $val }}" @selected(old('importance_level', '3') == $val)>{{ $label }}</option>
@@ -47,7 +47,7 @@
         @error('importance_level')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div class="sm:col-span-4 flex justify-end">
-        <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-secondary-container transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
+        <button type="submit" class="rounded-xl bg-secondary-container text-white px-4 py-2.5 text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
       </div>
     </form>
   </div>
@@ -100,14 +100,14 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="4" class="px-6 py-10 text-center text-sm text-outline">Aucune compétence.</td></tr>
+            <tr><td colspan="4" class="px-6 py-10 text-center text-sm text-outline">@if($search) Aucune compétence ne correspond à « {{ $search }} ». @else Aucune compétence pour le moment. Créez la première ci-dessus ! @endif</td></tr>
           @endforelse
         </tbody>
       </table>
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $skills->firstItem() ?? 0 }}-{{ $skills->lastItem() ?? 0 }} sur {{ $skills->total() }} compétences</span>
-      {{ $skills->links() }}
+      {{ $skills->withQueryString()->links('components.pagination.admin-pagination') }}
     </div>
   </div>
 </div>

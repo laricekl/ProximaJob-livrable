@@ -20,16 +20,16 @@
     <form method="POST" action="{{ route('admin.secteurs.store') }}" class="grid grid-cols-1 gap-3 sm:grid-cols-3">
       @csrf
       <div>
-        <label for="name" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
+        <label for="name" class="block text-sm font-semibold text-primary mb-1.5">Nom</label>
         <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full rounded-xl border @error('name') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: Technologies de l'information" required/>
         @error('name')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
-        <label for="scian_code" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Code SCIAN</label>
+        <label for="scian_code" class="block text-sm font-semibold text-primary mb-1.5">Code SCIAN</label>
         <input type="text" id="scian_code" name="scian_code" value="{{ old('scian_code') }}" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: 5415"/>
       </div>
       <div>
-        <label for="parent_id" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Parent</label>
+        <label for="parent_id" class="block text-sm font-semibold text-primary mb-1.5">Parent</label>
         <select id="parent_id" name="parent_id" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">— Aucun (racine) —</option>
           @foreach ($parents as $parent)
@@ -38,7 +38,7 @@
         </select>
       </div>
       <div class="sm:col-span-3 flex justify-end">
-        <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-secondary-container transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
+        <button type="submit" class="rounded-xl bg-secondary-container text-white px-4 py-2.5 text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
       </div>
     </form>
   </div>
@@ -84,14 +84,14 @@
               </td>
             </tr>
           @empty
-            <tr><td colspan="4" class="px-6 py-10 text-center text-sm text-outline">Aucun secteur.</td></tr>
+            <tr><td colspan="4" class="px-6 py-10 text-center text-sm text-outline">@if($search) Aucun secteur ne correspond à « {{ $search }} ». @else Aucun secteur pour le moment. Créez le premier ci-dessus ! @endif</td></tr>
           @endforelse
         </tbody>
       </table>
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $secteurs->firstItem() ?? 0 }}-{{ $secteurs->lastItem() ?? 0 }} sur {{ $secteurs->total() }} secteurs</span>
-      {{ $secteurs->links() }}
+      {{ $secteurs->withQueryString()->links('components.pagination.admin-pagination') }}
     </div>
   </div>
 </div>
