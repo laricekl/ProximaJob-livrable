@@ -58,7 +58,7 @@
         </div>
         <div class="flex h-48 items-end gap-1 px-1">
           @foreach ($userChartData['data'] as $value)
-            <div class="chart-bar flex-1 cursor-pointer rounded-t-md bg-secondary-container/90" style="height: {{ max(8, ($value / $userMax) * 100) }}%"></div>
+            <div class="chart-bar flex-1 rounded-t-md bg-secondary-container/90" style="height: {{ max(8, ($value / $userMax) * 100) }}%"></div>
           @endforeach
         </div>
         <div class="mt-3 flex justify-between text-2xs font-semibold uppercase tracking-wider text-outline">
@@ -74,7 +74,7 @@
         </div>
         <div class="flex h-48 items-end gap-1 px-1">
           @foreach ($offerChartData['data'] as $value)
-            <div class="chart-bar flex-1 cursor-pointer rounded-t-md bg-secondary-container/70" style="height: {{ max(8, ($value / $offerMax) * 100) }}%"></div>
+            <div class="chart-bar flex-1 rounded-t-md bg-secondary-container/70" style="height: {{ max(8, ($value / $offerMax) * 100) }}%"></div>
           @endforeach
         </div>
         <div class="mt-3 flex justify-between text-2xs font-semibold uppercase tracking-wider text-outline">
@@ -108,7 +108,7 @@
                     <div class="flex items-center gap-3">
                       <div class="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-container/20 text-xs font-bold text-secondary-container">{{ $user->initials }}</div>
                       <div>
-                        <p class="font-semibold text-primary">{{ trim($user->name . ' ' . ($user->prenom ?? '')) }}</p>
+                        <a href="{{ route('admin.users.show', $user) }}" class="font-semibold text-primary hover:text-secondary-container transition-colors">{{ trim($user->name . ' ' . ($user->prenom ?? '')) }}</a>
                         <p class="text-xs text-outline">{{ $user->email }}</p>
                       </div>
                     </div>

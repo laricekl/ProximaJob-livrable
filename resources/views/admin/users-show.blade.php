@@ -76,7 +76,13 @@
               <tbody class="divide-y divide-outline-variant/5">
                 @forelse ($recentApplications as $postulation)
                   <tr class="transition-colors hover:bg-surface-container-low/30">
-                    <td class="px-6 py-3 font-semibold text-primary">{{ $postulation->offre->poste ?? 'Offre indisponible' }}</td>
+                    <td class="px-6 py-3 font-semibold text-primary">
+                      @if($postulation->offre)
+                        <a href="{{ route('job_infos', $postulation->offre) }}" class="hover:text-secondary-container transition-colors">{{ $postulation->offre->poste }}</a>
+                      @else
+                        Offre indisponible
+                      @endif
+                    </td>
                     <td class="px-6 py-3 text-on-surface-variant">{{ $postulation->offre->entreprise->company_name ?? 'Entreprise inconnue' }}</td>
                     <td class="px-6 py-3">
                       <x-admin.status-badge :label="$postulation->status ?? 'En attente'" color="bg-info-light text-info-dark" />

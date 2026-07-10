@@ -9,14 +9,27 @@
 
     <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
       @forelse ($abonnementSummaries->take(3) as $abonnement)
-        <div class="card-glow rounded-2xl p-6 text-center {{ $abonnement->populaire ? 'ring-2 ring-secondary-container' : '' }}">
+        <div class="card-glow rounded-2xl p-6 text-center {{ $abonnement->populaire ? 'ring-2 ring-secondary-container' : '' }}" x-data="{ editing: false }">
           <p class="mb-2 text-xs font-bold uppercase tracking-widest {{ $abonnement->populaire ? 'text-secondary-container' : 'text-outline' }}">{{ $abonnement->nom }}</p>
           <p class="mb-4 text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abonnement->montant, 2, ',', ' '), '0'), ',') }}€<span class="text-sm font-normal text-outline">/{{ $abonnement->duree }}</span></p>
           <p class="mb-2 text-sm text-on-surface-variant">{{ number_format($abonnement->users_count) }} utilisateurs</p>
           <div class="mb-4 h-2 w-full rounded-full bg-surface-container">
             <div class="h-2 rounded-full bg-secondary-container" style="width: {{ max(3, ($abonnement->users_count / $summaryMax) * 100) }}%"></div>
           </div>
-          <button class="w-full rounded-xl {{ $abonnement->populaire ? 'bg-secondary-container text-white hover:bg-secondary' : 'bg-secondary-container/10 text-secondary-container hover:bg-secondary-container/20' }} py-2.5 text-sm font-bold transition-colors">Modifier</button>
+          <button @click="editing = !editing" type="button" class="w-full rounded-xl {{ $abonnement->populaire ? 'bg-secondary-container text-white hover:bg-secondary' : 'bg-secondary-container/10 text-secondary-container hover:bg-secondary-container/20' }} py-2.5 text-sm font-bold transition-colors">Modifier</button>
+          {{-- Edit form (hidden by default) --}}
+          <form x-show="editing" x-cloak method="POST" action="{{ route('admin.abonnements.update', $abonnement) }}" class="mt-3 space-y-2 border-t border-outline-variant/10 pt-3">
+            @csrf @method('PUT')
+            <input type="text" name="nom" value="{{ $abonnement->nom }}" class="w-full rounded-lg border border-outline-variant/20 bg-white/70 px-3 py-1.5 text-xs focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Nom" />
+            <div class="flex gap-2">
+              <input type="number" name="montant" value="{{ $abonnement->montant }}" step="0.01" min="0" class="flex-1 rounded-lg border border-outline-variant/20 bg-white/70 px-3 py-1.5 text-xs focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Prix" />
+              <input type="number" name="duree" value="{{ $abonnement->duree }}" min="1" class="w-20 rounded-lg border border-outline-variant/20 bg-white/70 px-3 py-1.5 text-xs focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Jours" />
+            </div>
+            <div class="flex gap-2">
+              <button type="submit" class="flex-1 rounded-lg bg-success px-3 py-1.5 text-xs font-bold text-white hover:bg-success-dark transition-colors">Enregistrer</button>
+              <button type="button" @click="editing = false" class="rounded-lg border border-outline-variant/20 px-3 py-1.5 text-xs text-outline hover:text-primary transition-colors">Annuler</button>
+            </div>
+          </form>
         </div>
       @empty
         <div class="card-glow rounded-2xl p-6 text-sm text-outline md:col-span-3">Aucun abonnement disponible pour le moment.</div>
@@ -51,6 +64,7 @@
       <x-admin.stat-card label="Expirés" :value="number_format($expiredSubscriptions)" />
       <x-admin.stat-card label="À renouveler" :value="number_format($toRenew)" />
       <x-admin.stat-card label="Revenu mensuel" :value="number_format((float) $monthlyRevenue, 0, ',', ' ').'€'" />
+    </div>
 
     <div class="card-glow overflow-hidden rounded-2xl">
       <div class="flex items-center justify-between border-b border-outline-variant/10 px-6 py-4">
@@ -81,7 +95,7 @@
                       {{ $subscriber?->initials ?? 'NA' }}
                     </div>
                     <div>
-                      <p class="font-semibold text-primary">{{ trim(($subscriber->name ?? '') . ' ' . ($subscriber->prenom ?? '')) ?: ($subscriber->entreprise->company_name ?? 'Utilisateur') }}</p>
+                      <a href="{{ $subscriber ? route('admin.users.show', $subscriber) : '#' }}" class="font-semibold text-primary hover:text-secondary-container transition-colors">{{ trim(($subscriber->name ?? '') . ' ' . ($subscriber->prenom ?? '')) ?: ($subscriber->entreprise->company_name ?? 'Utilisateur') }}</a>
                       @if ($subscriber?->entreprise?->company_name)
                         <p class="text-xs text-outline">{{ $subscriber->entreprise->company_name }}</p>
                       @endif

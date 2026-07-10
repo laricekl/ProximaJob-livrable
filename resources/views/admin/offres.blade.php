@@ -61,7 +61,13 @@
                     @endif
                   </p>
                 </td>
-                <td class="hidden px-6 py-3 text-outline md:table-cell">{{ $offer->entreprise->company_name ?? 'Entreprise inconnue' }}</td>
+                <td class="hidden px-6 py-3 text-outline md:table-cell">
+                  @if($offer->entreprise)
+                    <a href="{{ route('admin.users.show', $offer->entreprise->user_id) }}" class="hover:text-secondary-container transition-colors">{{ $offer->entreprise->company_name }}</a>
+                  @else
+                    Entreprise inconnue
+                  @endif
+                </td>
                 <td class="hidden px-6 py-3 sm:table-cell">
                   <x-admin.status-badge
                     :label="$offer->categorie->nom ?? 'Non classée'"
@@ -127,7 +133,7 @@
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
       document.querySelectorAll('.js-admin-offer-action').forEach((button) => {
-        button.addEventListener('click', async () => {
+        button.addEventListener('click', async () => { const action = button.dataset.url.includes('deactivate') ? 'désactiver' : 'réactiver'; if (!confirm('Confirmer la ' + action + ' de cette offre ?')) return;
           try {
             const response = await fetch(button.dataset.url, {
               method: button.dataset.method || 'POST',

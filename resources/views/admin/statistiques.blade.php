@@ -64,7 +64,13 @@
           <tbody class="divide-y divide-outline-variant/5">
             @forelse ($topEntreprises as $entreprise)
               <tr class="transition-colors hover:bg-surface-container-low/30">
-                <td class="px-6 py-3 font-semibold text-primary">{{ $entreprise['company_name'] }}</td>
+                <td class="px-6 py-3 font-semibold text-primary">
+                  @if(!empty($entreprise['user_id']))
+                    <a href="{{ route('admin.users.show', $entreprise['user_id']) }}" class="hover:text-secondary-container transition-colors">{{ $entreprise['company_name'] }}</a>
+                  @else
+                    {{ $entreprise['company_name'] }}
+                  @endif
+                </td>
                 <td class="px-6 py-3">{{ $entreprise['offers_count'] }}</td>
                 <td class="hidden px-6 py-3 sm:table-cell">{{ $entreprise['applications_count'] }}</td>
                 <td class="hidden px-6 py-3 sm:table-cell"><span class="font-bold text-secondary-container">{{ $entreprise['matching_rate'] }}%</span></td>

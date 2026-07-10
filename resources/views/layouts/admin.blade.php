@@ -87,6 +87,9 @@
             <span class="material-symbols-outlined text-sm text-outline">expand_more</span>
           </button>
           <div id="userDropdown" class="user-dropdown absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl border border-outline-variant/20 p-2 min-w-[180px] z-50">
+            <a href="{{ route('profile.edit') }}" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-primary hover:bg-surface-container-low transition-colors">
+              <span class="material-symbols-outlined text-lg">person</span> Mon profil
+            </a>
             <form method="POST" action="{{ route('logout') }}">
               @csrf
               <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-secondary-container hover:bg-secondary-container/5 transition-colors">
