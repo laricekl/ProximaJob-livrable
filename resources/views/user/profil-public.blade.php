@@ -154,10 +154,10 @@
                 <div>
                   <label class="block text-xs font-semibold text-outline mb-1.5">Type de contrat recherché</label>
                   <div class="flex flex-wrap gap-2">
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>Permanent</span></label>
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>Temporaire</span></label>
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>Contractuel</span></label>
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>Stage</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>Permanent</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>Temporaire</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>Contractuel</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>Stage</span></label>
                   </div>
                 </div>
                 @unless ($isRecruiterPreview)

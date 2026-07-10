@@ -1,7 +1,7 @@
 <section class="w-full px-4 pb-4 md:px-10 md:pb-6">
   <div class="max-w-6xl mx-auto rounded-[24px] border border-white/50 bg-white/65 backdrop-blur-sm shadow-[0_18px_40px_rgba(15,23,42,0.06)] px-5 py-5 md:px-7 md:py-6">
     <div class="flex flex-col items-center text-center">
-      <p class="text-xs font-black uppercase tracking-[0.22em] text-slate-400">Pour aller plus loin</p>
+      <p class="text-xs font-black uppercase tracking-[0.22em] text-outline">Pour aller plus loin</p>
       <h2 class="mt-2 text-xl md:text-2xl font-serif font-bold text-primary">Un espace simple pour connecter talents et entreprises.</h2>
       <p class="mt-2 max-w-2xl text-sm md:text-base text-on-surface-variant">Parcourez les offres, publiez vos besoins et avancez avec des outils pensés pour chaque étape du recrutement.</p>
 

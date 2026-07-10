@@ -198,7 +198,7 @@
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @foreach ($diplomes->take(8) as $diplome)
                   <label class="flex items-center gap-3 px-4 py-3 bg-white/70 backdrop-blur-sm border border-outline-variant/20 rounded-xl text-sm cursor-pointer hover:border-secondary-container/30 transition-colors">
-                    <input type="checkbox" name="diplomes[{{ $loop->index }}][id]" value="{{ $diplome->id }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" @checked(collect(old('diplomes', []))->pluck('id')->contains($diplome->id)) />
+                    <input type="checkbox" name="diplomes[{{ $loop->index }}][id]" value="{{ $diplome->id }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @checked(collect(old('diplomes', []))->pluck('id')->contains($diplome->id)) />
                     <input type="hidden" name="diplomes[{{ $loop->index }}][obligatoire]" value="1" />
                     <span>{{ $diplome->nom_diplome }}</span>
                   </label>
@@ -211,7 +211,7 @@
               <div class="flex flex-wrap gap-3">
                 @foreach (['Télétravail', 'Assurance collective', 'Prime', 'Budget formation', 'Horaires flexibles'] as $benefit)
                   <label class="flex items-center gap-2 px-4 py-2.5 bg-white/70 backdrop-blur-sm border border-outline-variant/20 rounded-xl text-sm cursor-pointer hover:border-secondary-container/30 transition-colors">
-                    <input type="checkbox" name="benefits[]" value="{{ $benefit }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" @checked(in_array($benefit, old('benefits', []), true)) />
+                    <input type="checkbox" name="benefits[]" value="{{ $benefit }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @checked(in_array($benefit, old('benefits', []), true)) />
                     <span>{{ $benefit }}</span>
                   </label>
                 @endforeach
