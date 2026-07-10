@@ -29,7 +29,7 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="name" class="block text-sm font-semibold text-primary mb-2">Nom *</label>
-                <input type="text" id="name" name="name" placeholder="Nom" required
+                <input type="text" id="name" value="{{ old('name') }}" name="name" placeholder="Nom" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
@@ -42,12 +42,12 @@
             <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail *</label>
-                <input type="email" id="email" name="email" placeholder="votre@email.com" required
+                <input type="email" id="email" value="{{ old('email') }}" name="email" placeholder="votre@email.com" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
                 <label for="telephone" class="block text-sm font-semibold text-primary mb-2">Téléphone *</label>
-                <input type="tel" id="telephone" name="telephone" placeholder="+1 XX XX XX XX"
+                <input type="tel" id="telephone" required value="{{ old('telephone') }}" name="telephone" placeholder="+1 XX XX XX XX"
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
             </div>
@@ -62,7 +62,7 @@
 
             <div>
               <label for="company_name" class="block text-sm font-semibold text-primary mb-2">Nom de l'entreprise *</label>
-              <input type="text" id="company_name" name="company_name" placeholder="Nom de votre entreprise" required
+              <input type="text" id="company_name" value="{{ old('company_name') }}" name="company_name" placeholder="Nom de votre entreprise" required
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
 
@@ -74,14 +74,14 @@
               </div>
               <div>
                 <label for="neq" class="block text-sm font-semibold text-primary mb-2">NEQ *</label>
-                <input type="text" id="neq" name="neq" placeholder="N° NEQ" required
+                <input type="text" id="neq" value="{{ old('neq') }}" name="neq" placeholder="N° NEQ" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
             </div>
 
             <div class="mt-4">
               <label for="adresse" class="block text-sm font-semibold text-primary mb-2">Adresse *</label>
-              <input type="text" id="adresse" name="adresse" placeholder="Adresse de l'entreprise"
+              <input type="text" id="adresse" required value="{{ old('adresse') }}" name="adresse" placeholder="Adresse de l'entreprise"
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
 

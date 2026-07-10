@@ -23,7 +23,7 @@
         </a>
 
         <h1 class="text-2xl font-bold font-serif text-primary mb-2">Candidatures pour : {{ $offre->titre }}</h1>
-        <div class="bg-secondary-container/10/70 backdrop-blur-md border border-secondary-container/20/50 rounded-2xl p-5 mb-8 inline-block">
+        <div class="bg-secondary-container/10 backdrop-blur-md border border-secondary-container/20 rounded-2xl p-5 mb-8 inline-block">
           <p class="text-2xl font-bold text-primary">{{ $postulations->total() }} candidatures reçues</p>
         </div>
 
@@ -89,7 +89,7 @@
                   <a href="{{ route('preview.cv-ia.ep', $postulation) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">picture_as_pdf</span> Voir le CV</a>
                 @endif
                 @if ($postulation->cover_letter || $postulation->lettre_motivation)
-                  <a href="{{ $postulation->cover_letter ? route('preview.letter-ia', $postulation) : route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">description</span> Voir la lettre de présentation</a>
+                  <a href="{{ $postulation->cover_letter ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) : route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">description</span> Voir la lettre de présentation</a>
                 @endif
               </div>
 

@@ -73,7 +73,7 @@
                 Renvoyer l'e-mail
               </button>
               <a href="{{ route('login') }}" class="block w-full rounded-xl border border-outline-variant/30 px-5 py-3 text-center text-sm font-semibold text-outline transition-colors hover:border-outline hover:text-on-surface-variant">
-                Retour a la connexion
+                Retour à la connexion
               </a>
             </form>
           </aside>

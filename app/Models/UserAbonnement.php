@@ -40,10 +40,10 @@ class UserAbonnement extends Model
         public function getStatusColorAttribute()
     {
         return match ($this->status) {
-            'Actif' => 'bg-green-100 text-green-700',
-            'Expiré' => 'bg-red-100 text-red-700',
-            'En attente' => 'bg-yellow-100 text-yellow-700',
-            default => 'bg-gray-100 text-gray-700',
+            'Actif' => 'bg-success-light text-success-dark',
+            'Expiré' => 'bg-error-light text-error-dark',
+            'En attente' => 'bg-warning-light text-warning-dark',
+            default => 'bg-surface-container text-on-surface-variant',
         };
     }
 }

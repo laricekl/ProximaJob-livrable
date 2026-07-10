@@ -6,7 +6,7 @@
     $expiredSubscriptions = $userAbonnements->getCollection()->where('status', 'Expiré')->count();
   @endphp
 
-  <main class="flex-grow pt-32 pb-16">
+  <div>
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-7xl mx-auto">
         <div class="mb-8">
@@ -17,7 +17,7 @@
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div class="card-glow rounded-2xl p-6">
             <p class="text-2xl font-bold text-primary">{{ $userAbonnements->total() }}</p>
-            <p class="text-sm text-on-surface-variant mt-1">Abonnements trouves</p>
+            <p class="text-sm text-on-surface-variant mt-1">Abonnements trouvés</p>
           </div>
           <div class="card-glow rounded-2xl p-6">
             <p class="text-2xl font-bold text-secondary-container">{{ $activeSubscriptions }}</p>
@@ -25,7 +25,7 @@
           </div>
           <div class="card-glow rounded-2xl p-6">
             <p class="text-2xl font-bold text-primary">{{ $expiredSubscriptions }}</p>
-            <p class="text-sm text-on-surface-variant mt-1">Abonnements expires</p>
+            <p class="text-sm text-on-surface-variant mt-1">Abonnements expirés</p>
           </div>
         </div>
 
@@ -51,7 +51,7 @@
                 <div class="space-y-2 text-sm text-on-surface-variant">
                   <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">calendar_today</span> Active le {{ optional($userAbonnement->date_debut)->format('d/m/Y') ?? 'À confirmer' }}</div>
                   <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Se termine le {{ optional($userAbonnement->date_fin)->format('d/m/Y') ?? 'À confirmer' }}</div>
-                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Duree {{ $plan?->periode_formattee ?? 'non definie' }}</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Durée {{ $plan?->periode_formattee ?? 'non définie' }}</div>
                 </div>
               </div>
             </div>
@@ -69,5 +69,5 @@
         </div>
       </div>
     </section>
-  </main>
+  </div>
 @endsection

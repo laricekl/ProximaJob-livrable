@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte entreprise validé - Proximalob</title>
+    <title>Compte entreprise validé - ProximaJob</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -211,7 +211,7 @@
             </div>
 
             <div class="message">
-                <p>Votre profil d'entreprise est maintenant <strong>actif</strong> et vous avez accès à toutes les fonctionnalités de la plateforme Proximalob.</p>
+                <p>Votre profil d'entreprise est maintenant <strong>actif</strong> et vous avez accès à toutes les fonctionnalités de la plateforme ProximaJob.</p>
             </div>
  
 
@@ -233,7 +233,7 @@
 
             <!-- Bouton d'action principal -->
             <div style="text-align: center;">
-                <a href="proximajob.com/login" class="button">Se connecter maintenant</a>
+                <a href="https://proximajob.com/login" class="button">Se connecter maintenant</a>
             </div>
 
           
@@ -247,20 +247,20 @@
             </div>
 
             <div class="message">
-                <p style="font-size: 15px;">Merci de votre confiance et bienvenue sur <strong>Proximalob</strong> !</p>
+                <p style="font-size: 15px;">Merci de votre confiance et bienvenue sur <strong>ProximaJob</strong> !</p>
             </div>
 
             <p style="margin-top: 30px; color: #6b7280;">
                 Cordialement,<br>
-                <strong style="color: #059669;">L'équipe Proximalob</strong>
+                <strong style="color: #059669;">L'équipe ProximaJob</strong>
             </p>
         </div>
 
         <!-- Pied de page -->
         <div class="footer">
-            <p style="margin: 0 0 5px 0;"><strong>Proximalob</strong></p>
+            <p style="margin: 0 0 5px 0;"><strong>ProximaJob</strong></p>
             <p style="margin: 0 0 15px 0; color: #059669; font-weight: 500;">La plateforme de recrutement de proximité</p>
-            <p style="margin: 0;">&copy; {{ date('Y') }} Proximalob. Tous droits réservés.</p>
+            <p style="margin: 0;">&copy; {{ date('Y') }} ProximaJob. Tous droits réservés.</p>
             <p style="margin: 5px 0 0 0; font-size: 12px; color: #9ca3af;">
                 Cet email a été envoyé automatiquement, merci de ne pas y répondre directement.
             </p>

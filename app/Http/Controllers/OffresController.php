@@ -758,10 +758,13 @@ class OffresController extends Controller
             }
         }
 
-        return response()->json([
-            'success' => true,
-            'offre' => $offreData
-        ]);
+        // Retourner la vue d'édition avec les données
+        $types = TypeOffre::all();
+        $secteurs = Sector::where('is_active', true)->orderBy('name')->get();
+        $diplomes = Diplome::where('statut', 'ACTIF')->orderBy('nom_diplome')->get();
+        $skills = Skill::where('is_active', true)->orderBy('category')->orderBy('name')->get();
+
+        return view('entreprise.create-offre', compact('offre', 'types', 'secteurs', 'diplomes', 'skills'));
 
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         return response()->json([

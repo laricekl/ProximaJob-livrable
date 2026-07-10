@@ -6,7 +6,7 @@
     $initials = strtoupper(substr($candidat->prenom ?? '', 0, 1) . substr($candidat->name ?? '', 0, 1));
     $cvUrl = $postulation?->cv ? route('preview.cv-ia.ep', $postulation) : null;
     $letterUrl = $postulation?->cover_letter
-      ? route('preview.letter-ia', $postulation)
+      ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation'])
       : ($postulation?->lettre_motivation ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) : null);
   @endphp
 
