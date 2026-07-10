@@ -14,23 +14,16 @@
     .faq-item.active .faq-icon { transform: rotate(45deg); }
     @media (max-width: 767px) {
       main.pt-32 { padding-top: 5rem !important; }
-
-      /* Hero */
       section.py-24 { padding: 2rem 1rem !important; }
       .text-5xl { font-size: 1.75rem !important; }
       .text-white\/70.text-lg { font-size: 0.8rem; }
-
-      /* Features */
       section.py-20 { padding: 1.5rem 1rem !important; }
       .text-3xl { font-size: 1.35rem !important; }
-
       .premium-card { padding: 14px !important; border-radius: 12px; }
       .premium-card .w-16.h-16 { width: 36px; height: 36px; border-radius: 8px; margin-bottom: 8px; }
       .premium-card .text-3xl { font-size: 20px; }
       .premium-card h3 { font-size: 15px; margin-bottom: 2px; }
       .premium-card .text-sm.leading-relaxed { font-size: 11px; }
-
-      /* Pricing - 3D cards */
       .pricing-mobile { gap: 10px; }
       .pricing-mobile .card-3d-parent { height: auto !important; filter: none; }
       .pricing-mobile .card-3d-inner { border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
@@ -43,16 +36,12 @@
       .pricing-mobile .card-3d-content a.mt-5 { margin-top: 10px; padding: 8px 0; font-size: 12px; }
       .pricing-mobile .absolute.-top-3 { top: -8px; font-size: 9px; padding: 2px 10px; }
       .pricing-mobile .text-center.text-sm.mt-8 { font-size: 10px; margin-top: 12px; }
-
-      /* FAQ */
       .faq-item .faq-question { padding: 12px !important; }
       .faq-item .faq-question span { font-size: 11px; }
       .faq-item .faq-answer { padding: 0 12px 12px 46px !important; font-size: 11px; }
       .faq-item .w-8.h-8 { width: 26px; height: 26px; font-size: 10px; }
       .faq-question .gap-4 { gap: 8px; }
       section .mb-16 { margin-bottom: 1.25rem; }
-
-      /* Footer */
       footer nav.gap-4 { gap: 12px; }
       footer .text-\[9px\] { font-size: 8px; }
       footer .text-\[8px\] { font-size: 7px; }
@@ -75,7 +64,6 @@
         <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Une qualité différentielle pour votre recherche d'emploi ou votre recrutement.</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
-          <!-- Feature 1 -->
           <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-primary">trending_up</span>
@@ -83,8 +71,6 @@
             <h3 class="font-bold text-xl text-primary mb-3">Performance Maximale</h3>
             <p class="text-on-surface-variant text-sm leading-relaxed">Profitez de notre réseau avancé de candidats pré-qualifiés pour vous proposer les meilleures opportunités.</p>
           </div>
-
-          <!-- Feature 2 -->
           <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-secondary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-on-secondary-fixed-variant">workspace_premium</span>
@@ -92,8 +78,6 @@
             <h3 class="font-bold text-xl text-primary mb-3">Service Premium</h3>
             <p class="text-on-surface-variant text-sm leading-relaxed">Bénéficiez de services avancés sur le recrutement de votre main-d'oeuvre avec un accompagnement dédié.</p>
           </div>
-
-          <!-- Feature 3 -->
           <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-tertiary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-on-tertiary-fixed">support_agent</span>
@@ -105,83 +89,71 @@
       </div>
     </section>
 
-    <!-- Pricing · Cartes 3D -->
+    <!-- Pricing · Cartes 3D dynamiques -->
     <section class="py-20 px-4 md:px-10 bg-white/55">
       <div class="max-w-5xl mx-auto">
         <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">Choisissez votre forfait</h2>
-        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Découvrez nos offres adaptées a vos besoins</p>
+        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Découvrez nos offres adaptées à vos besoins</p>
 
-        <div class="pricing-mobile grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
+        <div class="pricing-mobile grid grid-cols-1 md:grid-cols-{{ min(count($abonnements), 3) }} gap-3 md:gap-6">
 
-          <!-- Gratuit -->
-          <div class="card-3d-parent">
-            <div class="card-3d-inner" style="--card-grad: linear-gradient(135deg, #f5f0eb, #e8e0d5);">
-              <div class="card-3d-logo" aria-hidden="true">
-                <span class="card-3d-orbit card-3d-orbit--1"></span>
-                <span class="card-3d-orbit card-3d-orbit--2"></span>
-                <span class="card-3d-orbit card-3d-orbit--3"></span>
-              </div>
-              <div class="card-3d-glass"></div>
-              <div class="card-3d-content text-center">
-                <p class="text-xs font-bold text-outline uppercase tracking-wide mb-1">Gratuit</p>
-                <p class="text-4xl font-bold text-primary">0<span class="text-lg text-outline">$</span></p>
-                <p class="text-xs text-outline mt-1">/mois</p>
-                <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Accès aux offres</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidature simple</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalisé IA</li>
-                </ul>
-                <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
+          @foreach ($abonnements as $abo)
+            @php
+              $gradients = [
+                'default' => 'linear-gradient(135deg, #f5f0eb, #e8e0d5)',
+                'orange'  => 'linear-gradient(135deg, #fff5eb, #f5e0cc)',
+                'blue'    => 'linear-gradient(135deg, #f0f4ff, #dce6f5)',
+                'vert'    => 'linear-gradient(135deg, #edf7f0, #d0e8d5)',
+                'violet'  => 'linear-gradient(135deg, #f5f0ff, #e5dcf5)',
+              ];
+              $gradient = $gradients[$abo->couleur] ?? $gradients['default'];
+              $isPopular = !empty($abo->populaire);
+              $fonctionnalites = $abo->fonctionnalites()->orderBy('ordre')->get();
+              $isFree = (float) $abo->montant === 0.0;
+            @endphp
+            <div class="card-3d-parent">
+              <div class="card-3d-inner" style="--card-grad: {{ $gradient }};">
+                <div class="card-3d-logo" aria-hidden="true">
+                  <span class="card-3d-orbit card-3d-orbit--1" @if($isPopular) style="background: rgba(255,255,255,0.35);" @endif></span>
+                  <span class="card-3d-orbit card-3d-orbit--2" @if($isPopular) style="background: rgba(255,255,255,0.45);" @endif></span>
+                  <span class="card-3d-orbit card-3d-orbit--3" @if($isPopular) style="background: rgba(255,255,255,0.58);" @endif></span>
+                </div>
+                <div class="card-3d-glass"></div>
+                @if ($isPopular)
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[11px] font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
+                @endif
+                <div class="card-3d-content text-center">
+                  <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>
+                  <p class="text-4xl font-bold text-primary">
+                    @if ($isFree)
+                      0
+                    @else
+                      {{ rtrim(rtrim(number_format((float) $abo->montant, 2, ',', ' '), '0'), ',') }}
+                    @endif
+                    <span class="text-lg text-outline">€</span>
+                  </p>
+                  <p class="text-xs text-outline mt-1">/{{ $abo->duree }} jour(s)</p>
+                  <ul class="mt-4 space-y-2 text-xs text-outline text-left">
+                    @foreach ($fonctionnalites as $fct)
+                      <li class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-sm {{ $fct->actif ? 'text-secondary-container' : 'text-outline-variant' }}">
+                          {{ $fct->actif ? 'check' : 'close' }}
+                        </span>
+                        {{ $fct->nom }}
+                      </li>
+                    @endforeach
+                  </ul>
+                  @if ($isFree)
+                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
+                  @elseif ($isPopular)
+                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Essai gratuit 7 jours</a>
+                  @else
+                    <a href="{{ route('contact') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
+                  @endif
+                </div>
               </div>
             </div>
-          </div>
-
-          <!-- Premium (recommande) -->
-          <div class="card-3d-parent">
-            <div class="card-3d-inner" style="--card-grad: linear-gradient(135deg, #fff5eb, #f5e0cc);">
-              <div class="card-3d-logo" aria-hidden="true">
-                <span class="card-3d-orbit card-3d-orbit--1" style="background: rgba(255,255,255,0.35);"></span>
-                <span class="card-3d-orbit card-3d-orbit--2" style="background: rgba(255,255,255,0.45);"></span>
-                <span class="card-3d-orbit card-3d-orbit--3" style="background: rgba(255,255,255,0.58);"></span>
-              </div>
-              <div class="card-3d-glass"></div>
-              <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-[11px] font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
-              <div class="card-3d-content text-center">
-                <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Premium</p>
-                <p class="text-4xl font-bold text-primary">29<span class="text-lg text-outline">$</span></p>
-                <p class="text-xs text-outline mt-1">/mois</p>
-                <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitées</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalisé par IA</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Mise en avant du profil</li>
-                </ul>
-                <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Essai gratuit 7 jours</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Entreprise -->
-          <div class="card-3d-parent">
-            <div class="card-3d-inner" style="--card-grad: linear-gradient(135deg, #f0f4ff, #dce6f5);">
-              <div class="card-3d-logo" aria-hidden="true">
-                <span class="card-3d-orbit card-3d-orbit--1" style="background: rgba(255,255,255,0.32);"></span>
-                <span class="card-3d-orbit card-3d-orbit--2" style="background: rgba(255,255,255,0.42);"></span>
-                <span class="card-3d-orbit card-3d-orbit--3" style="background: rgba(255,255,255,0.55);"></span>
-              </div>
-              <div class="card-3d-glass"></div>
-              <div class="card-3d-content text-center">
-                <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Entreprise</p>
-                <p class="text-4xl font-bold text-primary">99<span class="text-lg text-outline">$</span></p>
-                <p class="text-xs text-outline mt-1">/mois</p>
-                <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Tout Premium</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> API dediee</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Multi-employeurs</li>
-                </ul>
-                <a href="{{ route('contact') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
-              </div>
-            </div>
-          </div>
+          @endforeach
 
         </div>
 
@@ -193,9 +165,7 @@
     <section class="py-20 px-4 md:px-10">
       <div class="max-w-3xl mx-auto">
         <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-16">FAQ</h2>
-
         <div class="space-y-4">
-          <!-- FAQ 1 -->
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
@@ -210,8 +180,6 @@
               Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de ProximaJob, y compris la personnalisation de CV par IA, les candidatures illimitées, et la mise en avant de votre profil auprès des employeurs.
             </div>
           </div>
-
-          <!-- FAQ 2 -->
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
@@ -226,8 +194,6 @@
               Oui, vous pouvez annuler votre abonnement à tout moment. Après annulation, vous conservez l'accès aux fonctionnalités Premium jusqu'à la fin de votre période de facturation en cours.
             </div>
           </div>
-
-          <!-- FAQ 3 -->
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
@@ -242,8 +208,6 @@
               L'essai gratuit vous donne accès à toutes les fonctionnalités Premium pendant 7 jours. Aucun frais ne vous sera facturé pendant cette période. Vous pouvez annuler avant la fin de l'essai sans être débité.
             </div>
           </div>
-
-          <!-- FAQ 4 -->
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
@@ -258,8 +222,6 @@
               Nous acceptons les cartes de crédit (Visa, Mastercard), les cartes de débit, ainsi que les paiements via PayPal et les services de mobile money selon votre région.
             </div>
           </div>
-
-          <!-- FAQ 5 -->
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">

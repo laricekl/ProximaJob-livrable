@@ -31,6 +31,16 @@
         </ul>
       </div>
       <div>
+        <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
+        <ul class="space-y-0.5">
+          <li><a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.categories*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">category</span> Catégories</a></li>
+          <li><a href="{{ route('admin.types-offres.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.types-offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work_history</span> Types d'offres</a></li>
+          <li><a href="{{ route('admin.secteurs.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.secteurs*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">business</span> Secteurs</a></li>
+          <li><a href="{{ route('admin.skills.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.skills*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bolt</span> Compétences</a></li>
+          <li><a href="{{ route('admin.diplomes.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.diplomes*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">school</span> Diplômes</a></li>
+        </ul>
+      </div>
+      <div>
         <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Communication</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.statistiques') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> Statistiques</a></li>

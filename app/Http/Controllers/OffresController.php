@@ -82,10 +82,20 @@ class OffresController extends Controller
 
         if (!empty($experience)) {
             $query->where(function($q) use ($experience) {
+                // Mappe les valeurs du front (junior/intermediaire/senior)
+                // vers des patterns LIKE qui matchent le texte libre en BDD
                 foreach ($experience as $level) {
-                    $q->orWhere('experience', 'LIKE', '%'.$level.'%')
-                      ->orWhere('annee_experience', 'LIKE', '%'.$level.'%')
-                      ->orWhere('required_experience', 'LIKE', '%'.$level.'%');
+                    $patterns = match($level) {
+                        'junior' => ['0-1', '1 an', 'débutant', 'junior', 'non exig', 'non_exig'],
+                        'intermediaire' => ['2-3', '3 an', '4-5', 'intermédiaire', 'intermediaire'],
+                        'senior' => ['5 an', 'senior', 'expert', 'confirmé', '5+'],
+                        default => [$level]
+                    };
+                    foreach ($patterns as $pattern) {
+                        $q->orWhere('experience', 'LIKE', '%'.$pattern.'%')
+                          ->orWhere('annee_experience', 'LIKE', '%'.$pattern.'%')
+                          ->orWhere('required_experience', 'LIKE', '%'.$pattern.'%');
+                    }
                 }
             });
         }
@@ -228,7 +238,7 @@ class OffresController extends Controller
         'sector' => 'required|exists:sectors,id',
        // 'employment_type' => 'required|string',
         'remote_work' => ['required', 'string', Rule::in(['Présentiel', 'Hybride', 'Télétravail'])],
-        'job_category' => ['required', 'string', Rule::in(['informatique', 'marketing', 'finance', 'rh', 'sante'])],
+        'job_category' => ['required', 'string', 'max:255'],
         'salary_type' => ['required', 'string', Rule::in(['annuel', 'mensuel', 'journalier', 'horaire'])],
         'salary_min' => 'nullable|numeric|min:0',
         'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
@@ -301,7 +311,7 @@ class OffresController extends Controller
             }
         }
 
-        $categoryId = Categorie::firstOrCreate(['nom' => 'Technologie'])->id;
+        $categoryId = Categorie::firstOrCreate(['nom' => $request->job_category])->id;
 
         // Créer l'offre
         $offre = Offre::create([
@@ -467,7 +477,7 @@ class OffresController extends Controller
         'sector' => 'required|exists:sectors,id',
         'employment_type' => 'nullable|string',
         'remote_work' => ['required', 'string', Rule::in(['Présentiel', 'Hybride', 'Télétravail'])],
-        'job_category' => ['required', 'string', Rule::in(['informatique', 'marketing', 'finance', 'rh', 'sante'])],
+        'job_category' => ['required', 'string', 'max:255'],
         'salary_type' => ['required', 'string', Rule::in(['annuel', 'mensuel', 'journalier', 'horaire'])],
         'salary_min' => 'nullable|numeric|min:0',
         'salary_max' => 'nullable|numeric|min:0|gte:salary_min',

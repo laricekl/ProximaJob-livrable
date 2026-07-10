@@ -244,6 +244,48 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
     Route::get('/abonnements/{abonnement}/fonctionnalites', [AdminController::class, 'getFonctionnalites'])->name('admin.abonnements.fonctionnalites');
     Route::put('/abonnements/{abonnement}', [AdminController::class, 'abonupdate'])->name('admin.abonnements.update');
     Route::delete('/abonnements/{abonnement}', [AdminController::class, 'abondestroy'])->name('admin.abonnements.destroy');
+
+    // Routes pour les référentiels (catégories, types d'offres, secteurs, skills, diplômes)
+    Route::resource('categories', \App\Http\Controllers\Admin\CategorieController::class)
+        ->except(['show', 'create', 'edit'])
+        ->names([
+            'index'   => 'admin.categories.index',
+            'store'   => 'admin.categories.store',
+            'update'  => 'admin.categories.update',
+            'destroy' => 'admin.categories.destroy',
+        ]);
+    Route::resource('types-offres', \App\Http\Controllers\Admin\TypeOffreController::class)
+        ->except(['show', 'create', 'edit'])
+        ->names([
+            'index'   => 'admin.types-offres.index',
+            'store'   => 'admin.types-offres.store',
+            'update'  => 'admin.types-offres.update',
+            'destroy' => 'admin.types-offres.destroy',
+        ]);
+    Route::resource('secteurs', \App\Http\Controllers\Admin\SectorController::class)
+        ->except(['show', 'create', 'edit'])
+        ->names([
+            'index'   => 'admin.secteurs.index',
+            'store'   => 'admin.secteurs.store',
+            'update'  => 'admin.secteurs.update',
+            'destroy' => 'admin.secteurs.destroy',
+        ]);
+    Route::resource('skills', \App\Http\Controllers\Admin\SkillController::class)
+        ->except(['show', 'create', 'edit'])
+        ->names([
+            'index'   => 'admin.skills.index',
+            'store'   => 'admin.skills.store',
+            'update'  => 'admin.skills.update',
+            'destroy' => 'admin.skills.destroy',
+        ]);
+    Route::resource('diplomes', \App\Http\Controllers\Admin\DiplomeController::class)
+        ->except(['show', 'create', 'edit'])
+        ->names([
+            'index'   => 'admin.diplomes.index',
+            'store'   => 'admin.diplomes.store',
+            'update'  => 'admin.diplomes.update',
+            'destroy' => 'admin.diplomes.destroy',
+        ]);
 });
 
 

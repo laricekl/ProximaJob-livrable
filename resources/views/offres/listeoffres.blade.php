@@ -272,16 +272,16 @@
               <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">Mode de travail</h4>
               <div class="space-y-2">
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input name="remote_work[]" value="presentiel" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('presentiel', $remoteWork)) />
+                  <input name="remote_work[]" value="Présentiel" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('Présentiel', $remoteWork)) />
                   <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Présentiel</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input name="remote_work[]" value="hybride" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('hybride', $remoteWork)) />
+                  <input name="remote_work[]" value="Hybride" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('Hybride', $remoteWork)) />
                   <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Hybride</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
-                  <input name="remote_work[]" value="distanciel" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('distanciel', $remoteWork)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Distanciel</span>
+                  <input name="remote_work[]" value="Télétravail" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('Télétravail', $remoteWork)) />
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Télétravail</span>
                 </label>
               </div>
             </div>

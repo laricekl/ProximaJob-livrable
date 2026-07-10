@@ -385,31 +385,54 @@ public function jobdetails($slug)
 
  
     /**
-     * Souscrire à un abonnement (version simplifiée pour tests)
+     * Souscrire à un abonnement
      */
     public function souscrire(Request $request)
     {
         $user = Auth::user();
-        
+
+        // Vérifier que l'abonnement existe
+        $abonnement = Abonnement::where('actif', true)->find($request->abonnement_id);
+
+        if (!$abonnement) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Plan d\'abonnement invalide.'
+            ], 422);
+        }
+
         try {
-            // Créer l'enregistrement dans user_abonnements
+            // Vérifier si l'utilisateur a déjà un abonnement actif
+            $existing = UserAbonnement::where('user_id', $user->id)
+                ->where('status', 'Actif')
+                ->first();
+
+            if ($existing) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vous avez déjà un abonnement actif.'
+                ], 422);
+            }
+
+            // Créer l'abonnement
             UserAbonnement::create([
-                'user_id' => $user->id,
-                'abonnement_id' => 2, // ID fixe pour les tests
-                'date_debut' => Carbon::now(),
-                'date_fin' => Carbon::now()->addDays(30),
-                'status' => 'Actif'
+                'user_id'       => $user->id,
+                'abonnement_id' => $abonnement->id,
+                'date_debut'    => Carbon::now(),
+                'date_fin'      => Carbon::now()->addDays((int) $abonnement->duree),
+                'status'        => 'Actif'
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Abonnement souscrit avec succès !'
+                'message' => 'Abonnement « ' . $abonnement->nom . ' » souscrit avec succès !'
             ]);
 
         } catch (\Exception $e) {
+            \Log::error('Erreur souscription: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la souscription : ' . $e->getMessage()
+                'message' => 'Erreur lors de la souscription. Veuillez réessayer.'
             ], 500);
         }
     }
