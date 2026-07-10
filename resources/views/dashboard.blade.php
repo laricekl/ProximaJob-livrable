@@ -2,13 +2,6 @@
 @section('title', 'Dashboard')
 @section('content')
   <main class="flex-grow pt-32 bg-white">
-    @php
-      $statusLabels = [
-        'en_attente' => 'En attente',
-        'accepted' => 'Retenue',
-        'rejected' => 'Refusée',
-      ];
-    @endphp
 
     <!-- Hero Dashboard -->
     <section class="py-12 px-4 md:px-10 bg-white">
@@ -141,7 +134,7 @@
                     <p class="text-xs text-on-surface-variant">{{ $application->offre->poste ?? $application->offre->titre ?? 'Offre' }} chez {{ $application->offre->entreprise->company_name ?? 'Entreprise' }}</p>
                     <div class="mt-1 flex items-center gap-2">
                       <p class="text-[10px] text-outline">{{ optional($application->created_at)->diffForHumans() }}</p>
-                      <span class="px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 text-[10px] font-bold uppercase tracking-wider">{{ $statusLabels[$application->status] ?? ucfirst($application->status) }}</span>
+                      <x-application-status :status="$application->status" />
                     </div>
                   </div>
                 </div>

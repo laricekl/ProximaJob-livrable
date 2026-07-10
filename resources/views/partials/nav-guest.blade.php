@@ -3,7 +3,7 @@
 @endphp
 
 <header class="fixed top-0 w-full z-50 flex justify-center py-3 md:py-5 px-4 md:px-10">
-  <nav class="flex justify-between items-center max-w-7xl w-full bg-white/90 backdrop-blur-xl rounded-full px-3 md:px-6 h-12 md:h-16 shadow-sm border border-black/5 transition-all duration-300">
+  <nav class="flex justify-between items-center max-w-7xl w-full nav-glass rounded-full px-3 md:px-6 h-12 md:h-16 transition-all duration-300">
     <a href="{{ route('welcome') }}" class="group flex-shrink-0">
       <x-brand-logo icon-class="w-11 md:w-14 h-auto" text-class="text-[15px] md:text-[18px] font-bold font-serif text-primary tracking-tight" />
     </a>

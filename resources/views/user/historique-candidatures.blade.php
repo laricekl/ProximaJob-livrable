@@ -1,19 +1,6 @@
 @extends('layouts.candidat')
 @section('title', 'Candidatures')
 @section('content')
-  @php
-    $statusStyles = [
-      'en_attente' => 'bg-secondary-container/10 text-secondary-container',
-      'accepted' => 'bg-secondary-fixed text-on-secondary-fixed-variant',
-      'rejected' => 'bg-red-50 text-red-600',
-    ];
-
-    $statusLabels = [
-      'en_attente' => 'En attente',
-      'accepted' => 'Acceptée',
-      'rejected' => 'Refusée',
-    ];
-  @endphp
 
   <main class="flex-grow pt-32 bg-surface-container-low/40">
     <section class="px-4 md:px-10 pt-6 md:pt-8 pb-8">
@@ -149,8 +136,14 @@
                     <td class="px-6 py-4 align-middle text-on-surface-variant">{{ $postulation->offre?->entreprise?->company_name ?? 'Entreprise indisponible' }}</td>
                     <td class="px-4 py-4 align-middle text-center text-on-surface-variant hidden md:table-cell">{{ optional($postulation->created_at)->translatedFormat('d M Y') }}</td>
                     <td class="px-4 py-4 align-middle text-center">
-                      <span class="mx-auto inline-flex h-8 w-8 items-center justify-center {{ $statusStyles[$postulation->status] ?? 'bg-surface-container text-primary' }} rounded-full shadow-sm ring-1 ring-black/5" title="{{ $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? '')) }}" aria-label="{{ $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? '')) }}">
-                        <span class="material-symbols-outlined text-base">{{ $postulation->status === 'accepted' ? 'check_circle' : ($postulation->status === 'rejected' ? 'cancel' : 'hourglass_empty') }}</span>
+                      @php
+                        $statusColors = ['en_attente' => 'bg-amber-100 text-amber-700', 'accepted' => 'bg-green-100 text-green-700', 'rejected' => 'bg-red-100 text-red-700', 'entretien' => 'bg-blue-100 text-blue-700'];
+                        $statusLabels = ['en_attente' => 'En attente', 'accepted' => 'Acceptée', 'rejected' => 'Refusée', 'entretien' => 'Entretien'];
+                        $statusLabel = $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? ''));
+                        $statusIcon = $postulation->status === 'accepted' ? 'check_circle' : ($postulation->status === 'rejected' ? 'cancel' : 'hourglass_empty');
+                      @endphp
+                      <span class="mx-auto inline-flex h-8 w-8 items-center justify-center {{ $statusColors[$postulation->status] ?? 'bg-surface-container text-primary' }} rounded-full shadow-sm ring-1 ring-black/5" title="{{ $statusLabel }}" aria-label="{{ $statusLabel }}">
+                        <span class="material-symbols-outlined text-base">{{ $statusIcon }}</span>
                       </span>
                     </td>
                     <td class="px-4 py-4 align-middle text-center">

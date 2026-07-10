@@ -339,7 +339,6 @@ class OffresController extends Controller
             'langues' => $request->languages_data,
             'required_experience' => $request->required_experience,
             'education_level' => $request->education_level,
-            'annee_experience' => $request->required_experience,
             'criteres' => $request->otherCriteria,
             
             // Description
@@ -580,7 +579,6 @@ class OffresController extends Controller
             'langues' => $request->languages_data,
             'required_experience' => $request->required_experience,
             'education_level' => $request->education_level,
-            'annee_experience' => $request->required_experience,
             'criteres' => $request->otherCriteria,
             
             // Description

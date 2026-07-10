@@ -131,7 +131,7 @@ Route::prefix('user')
    });
 
    
-    Route::middleware(['auth'])->group(function () {
+    Route::middleware(['auth', 'candidate.access'])->group(function () {
     Route::redirect('/cv/create', '/user/infos-cv')->name('cv.create');
     Route::post('/cv/store', [CvProfileController::class, 'store'])->name('cv.store');
     Route::post('/cv/upload-source', [CvProfileController::class, 'uploadSourceCv'])->name('cv.upload-source');
@@ -205,6 +205,7 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
     Route::get("/Gestion/abonnements",[AdminController::class, 'abonnements'])->name("admin.abonnements");
     Route::get("/Gestion/statistiques",[AdminController::class, 'statistiques'])->name("admin.statistiques");
     Route::get("/Gestion/newsletters",[AdminController::class, 'newsletters'])->name("admin.newsletters");
+    Route::post("/Gestion/newsletters",[AdminController::class, 'newsletterStore'])->name("admin.newsletters.store");
     Route::get("/Gestion/parametres",[AdminController::class, 'parametres'])->name("admin.parametres");
     Route::get('/chart-data', [AdminController::class, 'getChartData'])->name('admin.chart-data');
     Route::get('/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');

@@ -567,10 +567,59 @@ public function abonnements(Request $request)
          ));
     }
 
-    public function newsletters() 
+    public function newsletters()
     {
-        
-        return view("admin.newsletters" );
+        $campagnes = \App\Models\NewsletterCampagne::latest()->take(20)->get();
+        return view("admin.newsletters", compact('campagnes'));
+    }
+
+    public function newsletterStore(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'sujet'    => 'required|string|max:255',
+            'contenu'  => 'required|string',
+            'audience' => 'required|in:tous,candidats,entreprises,premium',
+            'action'   => 'required|in:brouillon,envoyer',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->route('admin.newsletters')
+                ->withErrors($validator)->withInput();
+        }
+
+        $statut = $request->action === 'envoyer' ? 'envoyee' : 'brouillon';
+        $envoyeeLe = $request->action === 'envoyer' ? now() : null;
+
+        // Compter les destinataires selon l'audience
+        $count = 0;
+        switch ($request->audience) {
+            case 'candidats':
+                $count = User::role('candidat')->count();
+                break;
+            case 'entreprises':
+                $count = User::role('entreprise')->count();
+                break;
+            case 'premium':
+                $count = UserAbonnement::where('status', 'Actif')->distinct('user_id')->count();
+                break;
+            default:
+                $count = User::count();
+        }
+
+        \App\Models\NewsletterCampagne::create([
+            'sujet'               => $request->sujet,
+            'contenu'             => $request->contenu,
+            'audience'            => $request->audience,
+            'statut'              => $statut,
+            'envoyee_le'          => $envoyeeLe,
+            'destinataires_count' => $count,
+        ]);
+
+        $message = $statut === 'envoyee'
+            ? 'Newsletter « ' . $request->sujet . ' » envoyée à ' . number_format($count) . ' destinataires.'
+            : 'Newsletter « ' . $request->sujet . ' » sauvegardée en brouillon.';
+
+        return redirect()->route('admin.newsletters')->with('success', $message);
     }
 
     public function parametres()

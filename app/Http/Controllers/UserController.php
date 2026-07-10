@@ -49,7 +49,7 @@ class UserController extends Controller
             'applications_count' => (clone $applicationsQuery)->count(),
             'interviews_count' => (clone $applicationsQuery)->where('status', 'accepted')->count(),
             'auto_applications_count' => (clone $applicationsQuery)->where('autopostulation', true)->count(),
-            'profile_views_count' => $user->unreadNotifications()->count(),
+            'unread_notifications_count' => $user->unreadNotifications()->count(),
         ];
 
         $recentApplications = (clone $applicationsQuery)

@@ -38,6 +38,52 @@
           </div>
         </div>
 
+        <!-- Informations professionnelles -->
+        <div class="card-glow rounded-2xl overflow-hidden">
+          <div class="px-8 py-5 border-b border-outline-variant/10">
+            <h2 class="text-xl font-bold font-serif text-primary">Informations professionnelles</h2>
+            <p class="text-sm text-on-surface-variant mt-0.5">Complétez votre profil pour améliorer votre matching avec les offres.</p>
+          </div>
+          <div class="p-8">
+            <form class="space-y-5" method="POST" action="{{ route('user.profile.update') }}" enctype="multipart/form-data">
+              @csrf
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-sm font-semibold text-primary mb-1.5" for="prenom">Prénom</label>
+                  <input type="text" id="prenom" name="prenom" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" value="{{ old('prenom', $user->prenom) }}" />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-primary mb-1.5" for="telephone">Téléphone</label>
+                  <input type="text" id="telephone" name="telephone" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" value="{{ old('telephone', $user->telephone) }}" />
+                </div>
+                <div class="md:col-span-2">
+                  <label class="block text-sm font-semibold text-primary mb-1.5" for="adresse">Adresse</label>
+                  <input type="text" id="adresse" name="adresse" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" value="{{ old('adresse', $user->adresse) }}" />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-primary mb-1.5" for="salary_expectation_min">Salaire minimum souhaité</label>
+                  <input type="number" id="salary_expectation_min" name="salary_expectation_min" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" value="{{ old('salary_expectation_min', $user->salary_expectation_min) }}" min="0" step="1000" />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-primary mb-1.5" for="experience_years">Années d'expérience</label>
+                  <input type="number" id="experience_years" name="experience_years" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" value="{{ old('experience_years', $user->experience_years) }}" min="0" max="50" />
+                </div>
+                <div>
+                  <label class="block text-sm font-semibold text-primary mb-1.5" for="cv_file">CV (PDF, DOC)</label>
+                  <input type="file" id="cv_file" name="cv" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" accept=".pdf,.doc,.docx" />
+                  @if ($user->cv)
+                    <p class="text-xs text-outline mt-1">CV actuel : {{ basename($user->cv) }}</p>
+                  @endif
+                </div>
+              </div>
+              <div class="flex items-center gap-4 pt-2">
+                <button type="submit" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all">Enregistrer</button>
+                <span id="proSaved" class="text-sm text-secondary-container font-medium hidden">Profil professionnel mis à jour.</span>
+              </div>
+            </form>
+          </div>
+        </div>
+
         <!-- Mot de passe -->
         <div class="card-glow rounded-2xl overflow-hidden">
           <div class="px-8 py-5 border-b border-outline-variant/10">
