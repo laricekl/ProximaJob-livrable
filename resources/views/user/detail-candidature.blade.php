@@ -181,9 +181,9 @@
                 <span class="px-3 py-1 bg-surface-container text-outline text-2xs font-black uppercase tracking-wider rounded-full">Optionnelle</span>
                 @endif
                 @if ($letterPreviewUrl)
-                <button class="copy-btn flex items-center gap-1 text-xs font-bold text-secondary-container hover:underline">
+                <button type="button" onclick="const t=this.closest('.card-glow').querySelector('.letter-content')?.innerText;if(t){navigator.clipboard.writeText(t);this.querySelector('.copy-feedback').classList.remove('hidden');setTimeout(()=>this.querySelector('.copy-feedback').classList.add('hidden'),2000)}" class="copy-btn flex items-center gap-1 text-xs font-bold text-secondary-container hover:underline">
                   <span class="material-symbols-outlined text-sm">content_copy</span> Copier
-                  <span class="copy-feedback text-success text-xs">✓ Copié</span>
+                  <span class="copy-feedback hidden text-success text-xs">✓ Copié</span>
                 </button>
                 @endif
               </div>

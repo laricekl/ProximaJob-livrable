@@ -32,11 +32,12 @@
           @error('contenu')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 
+        <input type="hidden" name="action" id="newsletter-action" value="">
         <div class="flex flex-wrap items-center gap-3">
-          <button type="submit" name="action" onclick="this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Envoi...'" value="envoyer" class="flex items-center gap-2 rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
+          <button type="submit" onclick="document.getElementById('newsletter-action').value='envoyer';this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Envoi...'" class="flex items-center gap-2 rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
             <span class="material-symbols-outlined text-lg">send</span> Envoyer
           </button>
-          <button type="submit" name="action" onclick="this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Envoi...'" value="brouillon" class="flex items-center gap-2 rounded-xl border border-outline-variant/30 px-6 py-3 text-sm font-semibold transition-colors hover:bg-surface-container-low">
+          <button type="submit" onclick="document.getElementById('newsletter-action').value='brouillon';this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Enregistrement...'" class="flex items-center gap-2 rounded-xl border border-outline-variant/30 px-6 py-3 text-sm font-semibold transition-colors hover:bg-surface-container-low">
             <span class="material-symbols-outlined text-lg">draft</span> Brouillon
           </button>
         </div>

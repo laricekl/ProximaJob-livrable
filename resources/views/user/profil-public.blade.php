@@ -161,9 +161,13 @@
                   </div>
                 </div>
                 @unless ($isRecruiterPreview)
-                <button class="w-full py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-                  <span class="material-symbols-outlined text-lg">save</span> Enregistrer
-                </button>
+                <form method="POST" action="{{ route('user.profile.update') }}">
+                  @csrf
+                  <input type="hidden" name="salary_expectation_min" id="sidebar-salaire">
+                  <button type="submit" onclick="document.getElementById('sidebar-salaire').value=this.closest('.space-y-5').querySelector('input[type=number]').value" class="w-full py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">save</span> Enregistrer
+                  </button>
+                </form>
                 @endunless
               </div>
             </div>
@@ -185,12 +189,13 @@
               <div class="p-6">
                 <textarea id="pitchBio" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Ex. Coordonnateur administratif avec 4 ans d'expérience, reconnu pour structurer les suivis, améliorer les processus et soutenir les équipes dans leurs priorités." maxlength="500" @readonly($isRecruiterPreview)>{{ $profilePitch }}</textarea>
                 @unless ($isRecruiterPreview)
-                <div class="flex justify-end mt-3">
-                  <button class="save-section flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                <form method="POST" action="{{ route('user.profile.update') }}" class="flex justify-end mt-3">
+                  @csrf
+                  <input type="hidden" name="pitch" :value="document.getElementById('pitchBio')?.value">
+                  <button type="submit" onclick="this.form.querySelector('[name=pitch]').value=document.getElementById('pitchBio').value" class="flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                     <span class="material-symbols-outlined text-lg">save</span> Enregistrer
-                    <span class="save-feedback text-white text-xs">✓ Sauvegardé</span>
                   </button>
-                </div>
+                </form>
                 @endunless
               </div>
             </div>
@@ -244,8 +249,10 @@
               <div class="p-6">
                 <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Rédigez une lettre de base que vous pourrez adapter pour une offre précise. Cette étape reste optionnelle." @readonly($isRecruiterPreview)>{{ $profileMotivation }}</textarea>
                 @unless ($isRecruiterPreview)
-                <div class="flex justify-end mt-3">
-                  <button class="save-section flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                <form method="POST" action="{{ route('user.profile.update') }}" class="flex justify-end mt-3">
+                  @csrf
+                  <input type="hidden" name="motivation">
+                  <button type="submit" onclick="this.form.querySelector('[name=motivation]').value=document.getElementById('pitchMotivation').value" class="flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                     <span class="material-symbols-outlined text-lg">save</span> Enregistrer
                     <span class="save-feedback text-white text-xs">✓ Sauvegardé</span>
                   </button>
@@ -335,4 +342,57 @@
     </section>
 
   </main>
+@endsection
+
+@section('scripts')
+<script>
+  (() => {
+    const addBtn = document.getElementById('addSkillBtn');
+    const inputRow = document.getElementById('skillInputRow');
+    const skillInput = document.getElementById('skillInput');
+    const confirmBtn = document.getElementById('skillAddConfirm');
+    const cancelBtn = document.getElementById('skillAddCancel');
+    const skillTags = document.getElementById('skillTags');
+
+    if (addBtn && inputRow) {
+      addBtn.addEventListener('click', () => {
+        inputRow.classList.remove('hidden');
+        skillInput?.focus();
+      });
+    }
+
+    if (cancelBtn && inputRow) {
+      cancelBtn.addEventListener('click', () => {
+        inputRow.classList.add('hidden');
+        if (skillInput) skillInput.value = '';
+      });
+    }
+
+    if (confirmBtn && skillInput && skillTags) {
+      confirmBtn.addEventListener('click', async () => {
+        const skill = skillInput.value.trim();
+        if (!skill) return;
+
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.content;
+        try {
+          const resp = await fetch('{{ route('user.profile.update') }}', {
+            method: 'POST',
+            headers: { 'X-CSRF-TOKEN': csrf, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({ skills: [skill], _method: 'PUT' })
+          });
+          if (resp.ok) {
+            const tag = document.createElement('span');
+            tag.className = 'skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors';
+            tag.innerHTML = skill + ' <span class="material-symbols-outlined text-sm">close</span>';
+            skillTags.insertBefore(tag, addBtn);
+            skillInput.value = '';
+            inputRow.classList.add('hidden');
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    }
+  })();
+</script>
 @endsection
