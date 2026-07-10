@@ -836,7 +836,7 @@
             </div>
           </div>
           <a href="{{ route('offres') }}"
-            class="inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full hover:bg-slate-800 transition-all shadow-xl group">
+            class="inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-container transition-all shadow-xl group">
             <span class="font-semibold">Découvrir votre potentiel</span>
             <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
           </a>
@@ -946,7 +946,7 @@
         </div>
         <div class="mt-10 text-center">
           <a href="{{ route('offres') }}"
-            class="px-6 md:px-8 py-3 rounded-full border border-primary text-primary text-sm md:text-base font-semibold hover:bg-slate-50 transition-colors inline-block min-h-[44px]">Parcourir
+            class="px-6 md:px-8 py-3 rounded-full border border-primary text-primary text-sm md:text-base font-semibold hover:bg-surface-container-low transition-colors inline-block min-h-[44px]">Parcourir
             toutes les offres</a>
         </div>
       </div>

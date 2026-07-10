@@ -16,14 +16,15 @@
           </p>
         </div>
 
-        <form class="space-y-5" action="{{ route('login') }}" method="POST">
+        <form class="space-y-5" action="{{ route('password.confirm') }}" method="POST">
+          @csrf
           <div>
             <label for="password" class="block text-sm font-semibold text-primary mb-2">Mot de passe</label>
             <input type="password" id="password" name="password" placeholder="••••••••" required
               class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
           </div>
 
-          <button type="submit" class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-xl flex items-center justify-center gap-2">
+          <button type="submit" class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-container transition-all shadow-xl flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-lg">lock</span>
             Confirmer
           </button>
@@ -32,5 +33,4 @@
       </div>
     </div>
   </main>
-@csrf
 @endsection

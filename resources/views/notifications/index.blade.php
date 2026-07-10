@@ -13,7 +13,7 @@
   $notificationMeta = function ($type) {
       return match ($type) {
           'matching' => ['icon' => 'auto_awesome', 'iconBg' => 'bg-secondary-container/10', 'iconColor' => 'text-secondary-container', 'badge' => 'Matching IA'],
-          'application' => ['icon' => 'send', 'iconBg' => 'bg-blue-50', 'iconColor' => 'text-blue-600', 'badge' => 'Candidatures'],
+          'application' => ['icon' => 'send', 'iconBg' => 'bg-info-light', 'iconColor' => 'text-info', 'badge' => 'Candidatures'],
           'message' => ['icon' => 'chat', 'iconBg' => 'bg-success-light', 'iconColor' => 'text-success', 'badge' => 'Messages'],
           default => ['icon' => 'info', 'iconBg' => 'bg-surface-container', 'iconColor' => 'text-outline', 'badge' => 'Système'],
       };

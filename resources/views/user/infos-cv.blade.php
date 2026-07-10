@@ -326,7 +326,7 @@
         <div id="cv-builder" class="hidden flex-col md:flex-row gap-0 card-glow rounded-2xl overflow-hidden scroll-mt-32">
 
           <!-- Sidebar -->
-          <aside class="md:w-80 flex-shrink-0 bg-gradient-to-b from-primary-container to-slate-800 text-white p-8">
+          <aside class="md:w-80 flex-shrink-0 bg-gradient-to-b from-primary-container to-primary-container text-white p-8">
             <div class="mb-8">
               <div class="w-full bg-white/20 rounded-full h-2 mb-3 overflow-hidden">
                 <div class="bg-white/80 h-full rounded-full transition-all duration-300" id="progressFill" style="width:12.5%"></div>

@@ -33,7 +33,7 @@
             </label>
           </div>
 
-          <button type="submit" class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:bg-slate-800 transition-all shadow-xl flex items-center justify-center gap-2">
+          <button type="submit" class="w-full py-3.5 bg-primary text-white font-bold rounded-xl hover:bg-primary-container transition-all shadow-xl flex items-center justify-center gap-2">
             <span class="material-symbols-outlined text-lg">login</span>
             Se connecter
           </button>

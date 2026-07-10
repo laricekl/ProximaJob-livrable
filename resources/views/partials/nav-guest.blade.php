@@ -46,7 +46,7 @@
   <div id="mobile-menu" class="fixed inset-0 z-40 lg:hidden pointer-events-none">
     <div id="menu-overlay" class="absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-300"></div>
     <div id="menu-panel" class="absolute top-0 right-0 w-72 max-w-[85vw] h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col">
-      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-outline-variant/20">
         <a href="{{ route('welcome') }}" class="flex items-center gap-2">
           <x-brand-logo icon-class="w-12 h-auto" text-class="text-[15px] font-bold font-serif text-primary tracking-tight" />
         </a>
@@ -65,29 +65,29 @@
       @endguest
 
       <nav class="flex-1 px-3 pt-3 pb-4 space-y-1 overflow-y-auto">
-        <a href="{{ route('welcome') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-on-surface hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
+        <a href="{{ route('welcome') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('welcome') ? 'text-secondary-container' : '' }}">home</span>
           Accueil
         </a>
-        <a href="{{ route('offres') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-on-surface hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
+        <a href="{{ route('offres') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'text-secondary-container' : '' }}">work</span>
           Offres
         </a>
-        <a href="{{ route('ressources') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-on-surface hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
+        <a href="{{ route('ressources') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('ressources') ? 'text-secondary-container' : '' }}">menu_book</span>
           Ressources
         </a>
-        <a href="{{ route('abonnement') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-on-surface hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
+        <a href="{{ route('abonnement') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('abonnement') ? 'text-secondary-container' : '' }}">sell</span>
           Forfaits
         </a>
-        <a href="{{ route('contact') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-primary bg-slate-50' : 'font-medium text-on-surface hover:bg-slate-50 hover:text-secondary-container transition-colors' }}">
+        <a href="{{ route('contact') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('contact') ? 'text-secondary-container' : '' }}">mail</span>
           Contact
         </a>
       </nav>
 
-      <div class="px-5 py-4 border-t border-slate-100">
+      <div class="px-5 py-4 border-t border-outline-variant/20">
         <div class="mb-4 flex items-center justify-between">
           <span class="text-xs font-black uppercase tracking-widest text-outline">Langue</span>
           @include('components.language-selector')
