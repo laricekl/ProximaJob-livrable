@@ -96,10 +96,7 @@
         font-size: 17px;
       }
       .offres-jobs h4 {
-        font-size: 13px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-size: 14px;
       }
       .offres-jobs .text-sm {
         font-size: 10px;
@@ -112,7 +109,7 @@
       }
       .offres-jobs .px-4 {
         padding: 2px 7px;
-        font-size: 7px;
+        font-size: 11px;
       }
       .offres-jobs .opacity-0 {
         display: none;
@@ -149,7 +146,7 @@
         font-size: 8px;
       }
       footer .text-\[8px\] {
-        font-size: 7px;
+        font-size: 11px;
       }
       footer .text-\[10px\] {
         font-size: 9px;

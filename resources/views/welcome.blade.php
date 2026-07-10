@@ -265,8 +265,7 @@
         top: -4px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 7px;
-        padding: 1px 6px;
+        font-size: 11px;
         white-space: nowrap;
         display: block;
         text-align: center;
@@ -293,7 +292,7 @@
         width: 100%;
       }
       .card-3d-content ul li {
-        font-size: 8px;
+        font-size: 12px;
         padding: 1px 0;
         display: flex;
         align-items: center;
@@ -310,11 +309,11 @@
       .card-3d-content a {
         margin: auto 0 0 0 !important;
         width: 100%;
-        padding: 7px 6px;
-        font-size: 10px;
+        padding: 12px 16px;
+        font-size: 13px;
         text-align: center;
         border-radius: 999px;
-        min-height: 34px;
+        min-height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -373,7 +372,7 @@
         font-size: 12px;
       }
       #spotlight2-text .text-\[10px\] {
-        font-size: 8px;
+        font-size: 12px;
       }
       .spotlight-content a {
         padding: 10px 20px;

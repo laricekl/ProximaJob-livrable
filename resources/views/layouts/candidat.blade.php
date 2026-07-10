@@ -7,7 +7,9 @@
 
   @include('partials.nav-candidat')
 
-  @yield('content')
+  <div class="flex-grow pt-24 md:pt-32">
+    @yield('content')
+  </div>
 
   @include('partials.footer')
   @include('partials.cookie-consent')

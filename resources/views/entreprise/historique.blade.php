@@ -34,8 +34,8 @@
               <thead>
                 <tr class="border-b border-outline-variant/10 bg-surface-container-low/50">
                   <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Poste</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Type</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Date publication</th>
+                  <th class="hidden sm:table-cell px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Type</th>
+                  <th class="hidden md:table-cell px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Date publication</th>
                   <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Candidatures</th>
                   <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Statut</th>
                   <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider text-right">Actions</th>
@@ -45,12 +45,12 @@
                 @forelse ($offres as $offre)
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
                     <td class="px-6 py-4 font-semibold text-primary">{{ $offre->titre }}</td>
-                    <td class="px-6 py-4">
+                    <td class="hidden sm:table-cell px-6 py-4">
                       <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-[11px] font-bold rounded-full">
                         {{ $offre->type?->nom ?? 'Offre' }}
                       </span>
                     </td>
-                    <td class="px-6 py-4 text-on-surface-variant">{{ optional($offre->created_at)->format('d/m/Y') }}</td>
+                    <td class="hidden md:table-cell px-6 py-4 text-on-surface-variant">{{ optional($offre->created_at)->format('d/m/Y') }}</td>
                     <td class="px-6 py-4">
                       <a href="{{ route('entreprise.offres.candidatures', $offre) }}" class="text-secondary-container font-semibold hover:underline">
                         {{ $offre->postulations_count ?? 0 }}

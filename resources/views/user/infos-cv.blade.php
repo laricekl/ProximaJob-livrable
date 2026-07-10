@@ -186,7 +186,7 @@
 
           <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[1050px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
+              <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
             </div>
           </div>
 
