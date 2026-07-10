@@ -10,7 +10,7 @@
   @foreach ($locales as $locale => $label)
     <button
       type="button"
-      class="language-switcher__option rounded-full px-3 py-1.5 text-xs font-black tracking-wider transition-all {{ $currentLocale === $locale ? 'bg-secondary-container text-white shadow-sm' : 'text-slate-500 hover:bg-slate-100 hover:text-primary' }}"
+      class="language-switcher__option rounded-full px-3 py-1.5 text-xs font-black tracking-wider transition-all {{ $currentLocale === $locale ? 'bg-secondary-container text-white shadow-sm' : 'text-on-surface-variant hover:bg-surface-container hover:text-primary' }}"
       data-locale="{{ $locale }}"
       aria-pressed="{{ $currentLocale === $locale ? 'true' : 'false' }}"
     >

@@ -14,7 +14,7 @@
 
                 <div class="flex gap-1 mt-6 bg-surface-container rounded-xl p-1.5 w-fit">
                   <a href="{{ route('user.historiques') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-primary shadow-sm transition-all">Candidatures manuelles</a>
-                  <a href="{{ route('user.historiques_ia') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-slate-500 hover:text-primary transition-all">Candidatures IA</a>
+                  <a href="{{ route('user.historiques_ia') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-primary transition-all">Candidatures IA</a>
                 </div>
               </div>
 

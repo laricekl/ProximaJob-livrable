@@ -14,7 +14,9 @@
           <p class="text-on-surface-variant text-sm">Choisissez un nouveau mot de passe sécurisé.</p>
         </div>
 
-        <form class="space-y-5" action="{{ route('login') }}" method="POST">
+        <form class="space-y-5" action="{{ route('password.store') }}" method="POST">
+          @csrf
+          <input type="hidden" name="token" value="{{ request()->route('token') }}">
           <div>
             <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail</label>
             <input type="email" id="email" name="email" placeholder="votre@email.com" required
@@ -46,5 +48,4 @@
       </div>
     </div>
   </main>
-@csrf
 @endsection

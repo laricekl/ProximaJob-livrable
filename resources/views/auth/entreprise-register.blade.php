@@ -13,7 +13,7 @@
 
         <!-- Switch Rôle -->
         <div class="flex bg-surface-container rounded-xl p-1.5 mb-8">
-          <a href="{{ route('register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-slate-500 hover:text-primary text-center">Chercheur d'emploi</a>
+          <a href="{{ route('register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-on-surface-variant hover:text-primary text-center">Chercheur d'emploi</a>
           <span class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-white text-primary shadow-sm text-center">Entreprise</span>
         </div>
 

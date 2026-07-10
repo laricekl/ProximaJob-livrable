@@ -33,14 +33,14 @@
           <a
             href="{{ route('login', ['role' => 'candidat']) }}"
             id="btn-candidat"
-            class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-center {{ $isEntrepriseLogin ? 'text-slate-500 hover:text-primary' : 'bg-white text-primary shadow-sm' }}"
+            class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-center {{ $isEntrepriseLogin ? 'text-on-surface-variant hover:text-primary' : 'bg-white text-primary shadow-sm' }}"
           >
             Chercheur d'emploi
           </a>
           <a
             href="{{ route('login', ['role' => 'entreprise']) }}"
             id="btn-entreprise"
-            class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-center {{ $isEntrepriseLogin ? 'bg-white text-primary shadow-sm' : 'text-slate-500 hover:text-primary' }}"
+            class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-center {{ $isEntrepriseLogin ? 'bg-white text-primary shadow-sm' : 'text-on-surface-variant hover:text-primary' }}"
           >
             Entreprise
           </a>

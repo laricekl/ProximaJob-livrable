@@ -728,15 +728,15 @@
         <!-- Stats -->
         <div class="hero-reveal hero-reveal--4 mt-6 md:mt-10 max-w-xl mx-auto grid grid-cols-3 gap-2 md:gap-4">
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
-            <p class="text-xl md:text-3xl font-bold text-primary font-serif">1 200<span class="text-secondary-container">+</span></p>
+            <p class="text-xl md:text-3xl font-bold text-primary font-serif">{{ number_format($totalOffres, 0, ',', ' ') }}<span class="text-secondary-container">+</span></p>
             <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Emplois</p>
           </div>
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
-            <p class="text-xl md:text-3xl font-bold text-primary font-serif">32<span class="text-secondary-container">k</span></p>
+            <p class="text-xl md:text-3xl font-bold text-primary font-serif">{{ $totalUtilisateurs >= 1000 ? round($totalUtilisateurs/1000, 1).'k' : number_format($totalUtilisateurs, 0, ',', ' ') }}</p>
             <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Utilisateurs</p>
           </div>
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
-            <p class="text-xl md:text-3xl font-bold text-primary font-serif">170<span class="text-secondary-container">+</span></p>
+            <p class="text-xl md:text-3xl font-bold text-primary font-serif">{{ number_format($totalEntreprises, 0, ',', ' ') }}<span class="text-secondary-container">+</span></p>
             <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Entreprises</p>
           </div>
         </div>
@@ -774,7 +774,7 @@
                   </div>
                 </div>
 
-                <a href="{{ route('offres.publies') }}" id="spotlight2-link" class="whitespace-nowrap bg-primary text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-secondary-container transition-all shadow-lg hover:shadow-secondary-container/20 active:scale-95 spotlight-cta flex-shrink-0">
+                <a href="{{ route('offres') }}" id="spotlight2-link" class="whitespace-nowrap bg-primary text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-secondary-container transition-all shadow-lg hover:shadow-secondary-container/20 active:scale-95 spotlight-cta flex-shrink-0">
                   Decouvrir
                 </a>
               </div>
@@ -1165,10 +1165,10 @@
       if (!textEl || !nameEl) return;
 
       const partners2 = [
-        { name: 'ProximaJob Entreprise', quote: '"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."', icon: 'workspace_premium', link: 'entreprise-offres.html' },
-        { name: 'TechRecruit',             quote: '"L\'IA au coeur du matching — 10 000 recrutements par an."',                icon: 'precision_manufacturing',   link: 'offres.html' },
-        { name: 'BuildTeam',               quote: '"Des equipes sur-mesure en moins de 48h. La qualite avant la quantite."',  icon: 'groups',                   link: 'offres.html' },
-        { name: 'ScaleUp RH',              quote: '"Accelerez votre croissance avec nos solutions RH nouvelle generation."',   icon: 'trending_up',              link: 'offres.html' }
+        { name: 'ProximaJob Entreprise', quote: '"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."', icon: 'workspace_premium', link: '{{ route('offres') }}' },
+        { name: 'TechRecruit',             quote: '"L\'IA au coeur du matching — 10 000 recrutements par an."',                icon: 'precision_manufacturing',   link: '{{ route('offres') }}' },
+        { name: 'BuildTeam',               quote: '"Des equipes sur-mesure en moins de 48h. La qualite avant la quantite."',  icon: 'groups',                   link: '{{ route('offres') }}' },
+        { name: 'ScaleUp RH',              quote: '"Accelerez votre croissance avec nos solutions RH nouvelle generation."',   icon: 'trending_up',              link: '{{ route('offres') }}' }
       ];
 
       let idx = 0;

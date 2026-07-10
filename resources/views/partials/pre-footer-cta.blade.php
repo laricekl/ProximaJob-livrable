@@ -3,7 +3,7 @@
     <div class="flex flex-col items-center text-center">
       <p class="text-xs font-black uppercase tracking-[0.22em] text-slate-400">Pour aller plus loin</p>
       <h2 class="mt-2 text-xl md:text-2xl font-serif font-bold text-primary">Un espace simple pour connecter talents et entreprises.</h2>
-      <p class="mt-2 max-w-2xl text-sm md:text-base text-slate-500">Parcourez les offres, publiez vos besoins et avancez avec des outils pensés pour chaque étape du recrutement.</p>
+      <p class="mt-2 max-w-2xl text-sm md:text-base text-on-surface-variant">Parcourez les offres, publiez vos besoins et avancez avec des outils pensés pour chaque étape du recrutement.</p>
 
       <div class="mt-5 flex flex-wrap items-center justify-center gap-3">
         <a href="{{ route('offres') }}" class="inline-flex items-center justify-center rounded-full border border-primary/10 bg-white/80 px-5 py-3 text-sm font-semibold text-primary hover:border-secondary-container/30 hover:text-secondary-container transition-colors">

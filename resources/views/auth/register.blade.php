@@ -28,7 +28,7 @@
         <!-- Switch Rôle -->
         <div class="flex bg-surface-container rounded-xl p-1.5 mb-8">
           <button id="btn-candidat" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-white text-primary shadow-sm">Chercheur d'emploi</button>
-          <a href="{{ route('entreprise.register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-slate-500 hover:text-primary text-center">Entreprise</a>
+          <a href="{{ route('entreprise.register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-on-surface-variant hover:text-primary text-center">Entreprise</a>
         </div>
 
         @if (session('success'))

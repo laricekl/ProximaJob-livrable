@@ -10,16 +10,16 @@
       <x-brand-logo icon-class="w-11 md:w-14 h-auto" text-class="text-[15px] md:text-[18px] font-bold font-serif text-primary tracking-tight" />
     </a>
     <ul class="hidden lg:flex items-center gap-8">
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.home') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.home') }}">Tableau de bord</a></li>
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('offres') }}">Offres</a></li>
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('user.historiques') }}">Candidatures</a></li>
-      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary font-bold' : 'text-slate-500' }} hover:text-secondary-container transition-colors" href="{{ route('infos.cv') }}">Mon CV</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.home') ? 'text-primary font-bold' : 'text-on-surface-variant' }} hover:text-secondary-container transition-colors" href="{{ route('user.home') }}">Tableau de bord</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary font-bold' : 'text-on-surface-variant' }} hover:text-secondary-container transition-colors" href="{{ route('offres') }}">Offres</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary font-bold' : 'text-on-surface-variant' }} hover:text-secondary-container transition-colors" href="{{ route('user.historiques') }}">Candidatures</a></li>
+      <li><a class="nav-link relative text-sm font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary font-bold' : 'text-on-surface-variant' }} hover:text-secondary-container transition-colors" href="{{ route('infos.cv') }}">Mon CV</a></li>
     </ul>
     <div class="flex items-center gap-4 relative">
       <div class="hidden md:block">
         @include('components.language-selector')
       </div>
-      <a href="{{ route('notifications.index') }}" class="relative transition-colors {{ $isCandidateRoute('notifications.index') ? 'text-secondary-container' : 'text-slate-500 hover:text-primary' }}" aria-label="Notifications">
+      <a href="{{ route('notifications.index') }}" class="relative transition-colors {{ $isCandidateRoute('notifications.index') ? 'text-secondary-container' : 'text-on-surface-variant hover:text-primary' }}" aria-label="Notifications">
         <span class="material-symbols-outlined" @if($isCandidateRoute('notifications.index')) style="font-variation-settings:'FILL' 1" @endif>notifications</span>
         <span class="absolute -top-1 -right-1 w-2 h-2 bg-secondary-container rounded-full"></span>
       </a>
@@ -51,12 +51,12 @@
       <button onclick="document.getElementById('menu-overlay').click()" class="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-full bg-surface-container-low text-primary hover:bg-surface-container transition-colors" aria-label="Fermer le menu">
         <span class="material-symbols-outlined text-xl">close</span>
       </button>
-      <a href="{{ route('user.home') }}" class="text-lg font-bold {{ $isCandidateRoute('user.home') ? 'text-primary' : 'text-slate-500' }}">Tableau de bord</a>
-      <a href="{{ route('offres') }}" class="text-lg font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary' : 'text-slate-500' }}">Offres</a>
-      <a href="{{ route('user.historiques') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary' : 'text-slate-500' }}">Candidatures</a>
-      <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-slate-500' }}">Profil candidat</a>
-      <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-slate-500' }}">Mon CV</a>
-      <a href="{{ route('notifications.index') }}" class="text-lg font-semibold {{ $isCandidateRoute('notifications.index') ? 'text-primary' : 'text-slate-500' }}">Notifications</a>
+      <a href="{{ route('user.home') }}" class="text-lg font-bold {{ $isCandidateRoute('user.home') ? 'text-primary' : 'text-on-surface-variant' }}">Tableau de bord</a>
+      <a href="{{ route('offres') }}" class="text-lg font-semibold {{ $isCandidateRoute('offres', 'job_details', 'job_infos') ? 'text-primary' : 'text-on-surface-variant' }}">Offres</a>
+      <a href="{{ route('user.historiques') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.historiques', 'user.historiques_ia') ? 'text-primary' : 'text-on-surface-variant' }}">Candidatures</a>
+      <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-on-surface-variant' }}">Profil candidat</a>
+      <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-on-surface-variant' }}">Mon CV</a>
+      <a href="{{ route('notifications.index') }}" class="text-lg font-semibold {{ $isCandidateRoute('notifications.index') ? 'text-primary' : 'text-on-surface-variant' }}">Notifications</a>
       <div class="flex items-center justify-between gap-4">
         <span class="text-xs font-black uppercase tracking-widest text-outline">Langue</span>
         @include('components.language-selector')

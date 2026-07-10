@@ -92,7 +92,7 @@
                 <div>
                   <label for="name" class="block text-sm font-semibold text-primary mb-2">Nom</label>
                   <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="Votre nom"
-                    class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('name') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
+                    class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('name') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                   @error('name')
                     <p class="mt-1 text-xs text-error">{{ $message }}</p>
                   @enderror
@@ -100,7 +100,7 @@
                 <div>
                   <label for="firstname" class="block text-sm font-semibold text-primary mb-2">Prénom</label>
                   <input type="text" id="firstname" name="firstname" value="{{ old('firstname') }}" placeholder="Votre prénom"
-                    class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('firstname') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
+                    class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('firstname') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                   @error('firstname')
                     <p class="mt-1 text-xs text-error">{{ $message }}</p>
                   @enderror
@@ -109,7 +109,7 @@
               <div>
                 <label for="email" class="block text-sm font-semibold text-primary mb-2">Courriel</label>
                 <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="votre@email.com"
-                  class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('email') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
+                  class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('email') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                 @error('email')
                   <p class="mt-1 text-xs text-error">{{ $message }}</p>
                 @enderror
@@ -117,7 +117,7 @@
               <div>
                 <label for="message" class="block text-sm font-semibold text-primary mb-2">Message</label>
                 <textarea id="message" name="message" rows="5" placeholder="Votre message..."
-                  class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('message') ? 'border-red-400' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none resize-none">{{ old('message') }}</textarea>
+                  class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('message') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none resize-none">{{ old('message') }}</textarea>
                 @error('message')
                   <p class="mt-1 text-xs text-error">{{ $message }}</p>
                 @enderror
