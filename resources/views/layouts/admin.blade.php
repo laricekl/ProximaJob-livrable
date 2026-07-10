@@ -59,7 +59,7 @@
       </div>
     </nav>
     <div class="px-3 py-4 border-t border-white/10">
-      <form method="POST" action="{{ route('logout') }}">
+      <form method="POST" action="{{ route('logout') }}" onsubmit="if(window.innerWidth<1024)closeSidebar()">
         @csrf
         <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-secondary-container hover:bg-white/5 transition-colors">
           <span class="material-symbols-outlined text-lg">logout</span> Déconnexion

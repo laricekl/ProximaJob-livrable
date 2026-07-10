@@ -16,7 +16,7 @@
           <option value="{{ $val }}" @selected($niveau === $val)>{{ $label }}</option>
         @endforeach
       </select>
-      <button type="submit" class="rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-secondary">Filtrer</button>
+      <button type="submit" onclick="this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Patientez...'" class="rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-secondary">Filtrer</button>
       @if ($search || $niveau)<a href="{{ route('admin.diplomes.index') }}" class="rounded-xl border border-outline-variant/20 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-surface-container-low">Réinitialiser</a>@endif
     </form>
   </div>
@@ -53,7 +53,7 @@
         <input type="text" id="nom_anglais" name="nom_anglais" value="{{ old('nom_anglais') }}" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: Bachelor of Computer Science"/>
       </div>
       <div class="sm:col-span-3 flex justify-end">
-        <button type="submit" class="rounded-xl bg-secondary-container text-white px-4 py-2.5 text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
+        <button type="submit" onclick="this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Patientez...'" class="rounded-xl bg-secondary-container text-white px-4 py-2.5 text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
       </div>
     </form>
   </div>
