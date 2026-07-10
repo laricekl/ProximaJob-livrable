@@ -8,7 +8,7 @@
     <form method="GET" class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
       <div class="relative flex-1 sm:max-w-sm">
         <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-lg">search</span>
-        <input type="text" name="search" value="{{ $search }}" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Rechercher par nom ou catégorie..."/>
+        <input type="text" name="search" value="{{ $search }}" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Rechercher par nom ou catégorie..."/>
       </div>
       <button type="submit" class="rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-secondary">Filtrer</button>
       @if ($search)<a href="{{ route('admin.skills.index') }}" class="rounded-xl border border-outline-variant/20 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-surface-container-low">Réinitialiser</a>@endif
@@ -21,12 +21,12 @@
       @csrf
       <div class="sm:col-span-2">
         <label for="name" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
-        <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full rounded-xl border @error('name') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: PHP, Gestion de projet..." required/>
+        <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full rounded-xl border @error('name') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: PHP, Gestion de projet..." required/>
         @error('name')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
         <label for="category" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Catégorie</label>
-        <select id="category" name="category" class="w-full rounded-xl border @error('category') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" required>
+        <select id="category" name="category" class="w-full rounded-xl border @error('category') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required>
           <option value="">— Choisir —</option>
           <option value="technique" @selected(old('category') == 'technique')>Technique</option>
           <option value="transversale" @selected(old('category') == 'transversale')>Transversale</option>
@@ -39,7 +39,7 @@
       </div>
       <div>
         <label for="importance_level" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Importance</label>
-        <select id="importance_level" name="importance_level" class="w-full rounded-xl border @error('importance_level') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" required>
+        <select id="importance_level" name="importance_level" class="w-full rounded-xl border @error('importance_level') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required>
           @foreach ([1=>'1 - Basique',2=>'2 - Utile',3=>'3 - Important',4=>'4 - Très important',5=>'5 - Essentiel'] as $val => $label)
             <option value="{{ $val }}" @selected(old('importance_level', '3') == $val)>{{ $label }}</option>
           @endforeach
@@ -68,13 +68,13 @@
                 <span x-show="!editing" class="font-semibold text-primary">{{ $skill->name }}</span>
                 <form x-show="editing" method="POST" action="{{ route('admin.skills.update', $skill) }}" class="flex flex-wrap items-center gap-2" x-cloak>
                   @csrf @method('PUT')
-                  <input type="text" name="name" value="{{ $skill->name }}" class="w-36 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-0" required/>
-                  <select name="category" class="w-28 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-2 text-sm focus:border-secondary-container/50 focus:ring-0">
+                  <input type="text" name="name" value="{{ $skill->name }}" class="w-36 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required/>
+                  <select name="category" class="w-28 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-2 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
                     @foreach(['technique'=>'Technique','transversale'=>'Transversale','numerique'=>'Numérique','linguistique'=>'Linguistique','gestion'=>'Gestion','commercial'=>'Commercial'] as $val => $label)
                       <option value="{{ $val }}" @selected($skill->category == $val)>{{ $label }}</option>
                     @endforeach
                   </select>
-                  <select name="importance_level" class="w-24 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-2 text-sm focus:border-secondary-container/50 focus:ring-0">
+                  <select name="importance_level" class="w-24 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-2 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
                     @for ($i = 1; $i <= 5; $i++)<option value="{{ $i }}" @selected($skill->importance_level == $i)>{{ $i }}</option>@endfor
                   </select>
                   <button type="submit" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
@@ -91,10 +91,10 @@
               </td>
               <td class="px-6 py-3 text-right">
                 <div class="flex items-center justify-end gap-1">
-                  <button @click="editing = !editing" class="rounded-lg p-1.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
+                  <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
                   <form method="POST" action="{{ route('admin.skills.destroy', $skill) }}" onsubmit="return confirm('Supprimer « {{ $skill->name }} » ?')">
                     @csrf @method('DELETE')
-                    <button class="rounded-lg p-1.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+                    <button class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
                   </form>
                 </div>
               </td>

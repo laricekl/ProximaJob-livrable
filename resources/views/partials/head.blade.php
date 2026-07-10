@@ -71,5 +71,10 @@
   }
   .sidebar { transition: transform 0.3s ease; }
   @media (max-width: 1023px) { .sidebar { transform: translateX(-100%); } .sidebar.open { transform: translateX(0); } }
+  #sidebarOverlay { transition: opacity 0.3s ease; }
+  #sidebarOverlay.fade-in { opacity: 1; }
+  #sidebarOverlay:not(.fade-in) { opacity: 0; }
+  .user-dropdown { opacity: 0; visibility: hidden; transform: translateY(-4px); transition: all 0.2s ease; }
+  .user-dropdown.active { opacity: 1; visibility: visible; transform: translateY(0); }
 </style>
 @yield('styles')

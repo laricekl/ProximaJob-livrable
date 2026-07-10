@@ -11,18 +11,18 @@
             type="text"
             name="search"
             value="{{ request('search') }}"
-            class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0"
+            class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30"
             placeholder="Rechercher un utilisateur..."
           />
         </div>
-        <select name="role" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+        <select name="role" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">Tous les rôles</option>
           <option value="candidat" @selected(request('role') === 'candidat')>Candidat</option>
           <option value="entreprise" @selected(request('role') === 'entreprise')>Entreprise</option>
           <option value="admin" @selected(request('role') === 'admin')>Admin</option>
           <option value="Marketing" @selected(request('role') === 'Marketing')>Marketing</option>
         </select>
-        <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+        <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">Tous les statuts</option>
           <option value="Actif" @selected(request('status') === 'Actif')>Actif</option>
           <option value="Suspendu" @selected(request('status') === 'Suspendu')>Suspendu</option>

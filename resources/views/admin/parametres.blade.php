@@ -33,10 +33,10 @@
           @csrf
           <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
             <x-admin.form-field label="Nom du site" name="site_nom">
-              <input id="site_nom" name="site_nom" type="text" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" value="{{ old('site_nom', $settings->site_nom) }}" />
+              <input id="site_nom" name="site_nom" type="text" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" value="{{ old('site_nom', $settings->site_nom) }}" />
             </x-admin.form-field>
             <x-admin.form-field label="Fuseau horaire" name="timezone">
-              <select id="timezone" name="timezone" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+              <select id="timezone" name="timezone" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
                 @foreach ($timezones as $value => $label)
                   <option value="{{ $value }}" @selected(old('timezone', $settings->timezone) === $value)>{{ $label }}</option>
                 @endforeach
@@ -45,10 +45,10 @@
           </div>
           <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
             <x-admin.form-field label="Email de contact" name="email">
-              <input id="email" name="email" type="email" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" value="{{ old('email', $settings->email) }}" />
+              <input id="email" name="email" type="email" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" value="{{ old('email', $settings->email) }}" />
             </x-admin.form-field>
             <x-admin.form-field label="Téléphone" name="tel">
-              <input id="tel" name="tel" type="text" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" value="{{ old('tel', $settings->tel) }}" />
+              <input id="tel" name="tel" type="text" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" value="{{ old('tel', $settings->tel) }}" />
             </x-admin.form-field>
           </div>
           <button class="rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">Enregistrer</button>
@@ -137,15 +137,15 @@
           <input type="hidden" name="timezone" value="{{ old('timezone', $settings->timezone) }}">
 
           <x-admin.form-field label="Adresse ou localisation" name="localisation">
-            <input id="localisation" name="localisation" type="text" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" value="{{ old('localisation', $settings->localisation) }}" />
+            <input id="localisation" name="localisation" type="text" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" value="{{ old('localisation', $settings->localisation) }}" />
           </x-admin.form-field>
 
           <x-admin.form-field label="Lien d’integration Google Maps" name="map_embed_url">
-            <textarea id="map_embed_url" name="map_embed_url" rows="4" class="w-full resize-none rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">{{ old('map_embed_url', $settings->map_embed_url) }}</textarea>
+            <textarea id="map_embed_url" name="map_embed_url" rows="4" class="w-full resize-none rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">{{ old('map_embed_url', $settings->map_embed_url) }}</textarea>
           </x-admin.form-field>
 
           <x-admin.form-field label="Zoom de la carte" name="map_zoom">
-            <input id="map_zoom" name="map_zoom" type="number" min="1" max="20" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" value="{{ old('map_zoom', $settings->map_zoom ?? 15) }}" />
+            <input id="map_zoom" name="map_zoom" type="number" min="1" max="20" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" value="{{ old('map_zoom', $settings->map_zoom ?? 15) }}" />
           </x-admin.form-field>
 
           <button class="rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">Mettre a jour le contact</button>

@@ -11,18 +11,18 @@
             type="text"
             name="search"
             value="{{ request('search') }}"
-            class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0"
+            class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30"
             placeholder="Rechercher une offre..."
           />
         </div>
-        <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+        <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">Tous les statuts</option>
           <option value="active" @selected(request('status') === 'active')>Publiée</option>
           <option value="desactive" @selected(request('status') === 'desactive')>Désactivée</option>
           <option value="brouillon" @selected(request('status') === 'brouillon')>Brouillon</option>
           <option value="expire" @selected(request('status') === 'expire')>Expirée</option>
         </select>
-        <select name="entreprise_id" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+        <select name="entreprise_id" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">Toutes les entreprises</option>
           @foreach ($entreprises as $entreprise)
             <option value="{{ $entreprise->id }}" @selected((string) request('entreprise_id') === (string) $entreprise->id)>{{ $entreprise->company_name }}</option>

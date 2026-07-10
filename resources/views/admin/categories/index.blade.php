@@ -16,7 +16,7 @@
           type="text"
           name="search"
           value="{{ $search }}"
-          class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0"
+          class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30"
           placeholder="Rechercher une catégorie..."
         />
       </div>
@@ -39,7 +39,7 @@
           id="nom"
           name="nom"
           value="{{ old('nom') }}"
-          class="w-full rounded-xl border @error('nom') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0"
+          class="w-full rounded-xl border @error('nom') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30"
           placeholder="Ex: Informatique, Marketing, Santé..."
           required
         />
@@ -79,7 +79,7 @@
                     type="text"
                     name="nom"
                     value="{{ $categorie->nom }}"
-                    class="w-48 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-0"
+                    class="w-48 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30"
                     required
                   />
                   <button type="submit" class="text-success hover:text-success-deep" title="Enregistrer">
@@ -96,14 +96,14 @@
               <td class="hidden px-6 py-3 text-outline md:table-cell">{{ $categorie->created_at->format('d/m/Y') }}</td>
               <td class="px-6 py-3 text-right">
                 <div class="flex items-center justify-end gap-1">
-                  <button @click="editing = !editing" class="rounded-lg p-1.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors" title="Modifier">
-                    <span class="material-symbols-outlined text-base">edit</span>
+                  <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors" title="Modifier">
+                    <span class="material-symbols-outlined text-lg">edit</span>
                   </button>
                   <form method="POST" action="{{ route('admin.categories.destroy', $categorie) }}" onsubmit="return confirm('Supprimer « {{ $categorie->nom }} » ?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="rounded-lg p-1.5 text-outline hover:bg-error-light hover:text-error transition-colors" title="Supprimer">
-                      <span class="material-symbols-outlined text-base">delete</span>
+                    <button type="submit" class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors" title="Supprimer">
+                      <span class="material-symbols-outlined text-lg">delete</span>
                     </button>
                   </form>
                 </div>

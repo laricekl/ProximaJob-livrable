@@ -9,11 +9,11 @@
 ])
 
 @if ($tag === 'a')
-  <a href="{{ $href }}" title="{{ $label }}" {{ $attributes->merge(['class' => "flex h-8 w-8 items-center justify-center rounded-lg transition-colors {$hover}"]) }}>
+  <a href="{{ $href }}" title="{{ $label }}" aria-label="{{ $label }}" {{ $attributes->merge(['class' => "inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors {$hover}"]) }}>
     <span class="material-symbols-outlined text-lg {{ $color }}">{{ $icon }}</span>
   </a>
 @else
-  <button type="{{ $type }}" title="{{ $label }}" {{ $attributes->merge(['class' => "flex h-8 w-8 items-center justify-center rounded-lg transition-colors {$hover}"]) }}>
+  <button type="{{ $type }}" title="{{ $label }}" aria-label="{{ $label }}" {{ $attributes->merge(['class' => "inline-flex h-11 w-11 items-center justify-center rounded-lg transition-colors {$hover}"]) }}>
     <span class="material-symbols-outlined text-lg {{ $color }}">{{ $icon }}</span>
   </button>
 @endif

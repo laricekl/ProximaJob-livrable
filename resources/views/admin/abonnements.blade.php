@@ -25,13 +25,13 @@
 
     <form method="GET" action="{{ route('admin.abonnements') }}" class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
-        <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+        <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">Tous les statuts</option>
           <option value="active" @selected(request('status') === 'active')>Actifs</option>
           <option value="expired" @selected(request('status') === 'expired')>Expirés</option>
           <option value="pending" @selected(request('status') === 'pending')>En attente</option>
         </select>
-        <select name="plan" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+        <select name="plan" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
           <option value="">Tous les plans</option>
           @foreach ($plans as $planId => $planName)
             <option value="{{ $planId }}" @selected((string) request('plan') === (string) $planId)>{{ $planName }}</option>

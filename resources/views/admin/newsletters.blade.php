@@ -12,13 +12,13 @@
       @csrf
       <div class="space-y-5">
         <x-admin.form-field label="Sujet" name="sujet" :required="true">
-          <input id="sujet" name="sujet" type="text" value="{{ old('sujet') }}" class="w-full rounded-xl border @error('sujet') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: Les offres de la semaine — {{ now()->format('d/m/Y') }}" />
+          <input id="sujet" name="sujet" type="text" value="{{ old('sujet') }}" class="w-full rounded-xl border @error('sujet') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: Les offres de la semaine — {{ now()->format('d/m/Y') }}" />
           @error('sujet')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
           <x-admin.form-field label="Audience" name="audience">
-            <select id="audience" name="audience" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0">
+            <select id="audience" name="audience" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
               <option value="tous">Tous les utilisateurs</option>
               <option value="candidats" @selected(old('audience') == 'candidats')>Candidats uniquement</option>
               <option value="entreprises" @selected(old('audience') == 'entreprises')>Entreprises uniquement</option>
@@ -28,7 +28,7 @@
         </div>
 
         <x-admin.form-field label="Contenu" name="contenu" :required="true">
-          <textarea id="contenu" name="contenu" rows="10" class="w-full resize-none rounded-xl border @error('contenu') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Rédigez votre newsletter...">{{ old('contenu') }}</textarea>
+          <textarea id="contenu" name="contenu" rows="10" class="w-full resize-none rounded-xl border @error('contenu') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Rédigez votre newsletter...">{{ old('contenu') }}</textarea>
           @error('contenu')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 

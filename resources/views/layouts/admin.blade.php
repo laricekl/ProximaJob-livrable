@@ -16,41 +16,45 @@
       </a>
     </div>
     <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-6">
+      {{-- Close button (mobile) --}}
+      <button onclick="closeSidebar()" class="lg:hidden w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm text-white/60 hover:bg-white/10 hover:text-white transition-colors mb-2" aria-label="Fermer le menu">
+        <span class="material-symbols-outlined text-lg">close</span> Fermer
+      </button>
       <div>
-        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Principal</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Principal</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">dashboard</span> Tableau de bord</a></li>
+          <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">dashboard</span> Tableau de bord</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Gestion</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Gestion</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.users*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">group</span> Utilisateurs</a></li>
-          <li><a href="{{ route('admin.offres') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work</span> Offres</a></li>
-          <li><a href="{{ route('admin.abonnements') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.abonnements*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">credit_card</span> Abonnements</a></li>
+          <li><a href="{{ route('admin.users') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.users*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">group</span> Utilisateurs</a></li>
+          <li><a href="{{ route('admin.offres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work</span> Offres</a></li>
+          <li><a href="{{ route('admin.abonnements') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.abonnements*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">credit_card</span> Abonnements</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.categories*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">category</span> Catégories</a></li>
-          <li><a href="{{ route('admin.types-offres.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.types-offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work_history</span> Types d'offres</a></li>
-          <li><a href="{{ route('admin.secteurs.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.secteurs*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">business</span> Secteurs</a></li>
-          <li><a href="{{ route('admin.skills.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.skills*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bolt</span> Compétences</a></li>
-          <li><a href="{{ route('admin.diplomes.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.diplomes*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">school</span> Diplômes</a></li>
+          <li><a href="{{ route('admin.categories.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.categories*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">category</span> Catégories</a></li>
+          <li><a href="{{ route('admin.types-offres.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.types-offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work_history</span> Types d'offres</a></li>
+          <li><a href="{{ route('admin.secteurs.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.secteurs*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">business</span> Secteurs</a></li>
+          <li><a href="{{ route('admin.skills.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.skills*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bolt</span> Compétences</a></li>
+          <li><a href="{{ route('admin.diplomes.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.diplomes*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">school</span> Diplômes</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Communication</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Communication</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.statistiques') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> Statistiques</a></li>
-          <li><a href="{{ route('admin.newsletters') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> Newsletter</a></li>
+          <li><a href="{{ route('admin.statistiques') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> Statistiques</a></li>
+          <li><a href="{{ route('admin.newsletters') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> Newsletter</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Configuration</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Configuration</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.parametres') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> Paramètres</a></li>
+          <li><a href="{{ route('admin.parametres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> Paramètres</a></li>
         </ul>
       </div>
     </nav>
@@ -72,13 +76,13 @@
     <header class="sticky top-0 z-30 bg-white/75 backdrop-blur-xl border-b border-white/40 shadow-sm">
       <div class="flex items-center justify-between px-4 md:px-6 py-3">
         <div class="flex items-center gap-4">
-          <button id="menuBtn" class="lg:hidden text-primary hover:text-secondary-container transition-colors p-1" onclick="openSidebar()">
+          <button id="menuBtn" class="lg:hidden text-primary hover:text-secondary-container transition-colors p-2.5" onclick="openSidebar()" aria-expanded="false" aria-controls="sidebar" aria-label="Menu de navigation">
             <span class="material-symbols-outlined">menu</span>
           </button>
           <h1 class="text-xl font-bold font-serif text-primary">@yield('page-title', 'Administration')</h1>
         </div>
         <div class="flex items-center gap-3 relative">
-          <button id="userBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+          <button id="userBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity" aria-haspopup="true" aria-expanded="false" aria-label="Menu utilisateur">
             <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-white text-xs font-bold">{{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}{{ strtoupper(substr(auth()->user()->prenom ?? 'D', 0, 1)) }}</div>
             <span class="material-symbols-outlined text-sm text-outline">expand_more</span>
           </button>
@@ -113,10 +117,53 @@
   <script>
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
-    function openSidebar() { sidebar.classList.add('open'); overlay.classList.remove('hidden'); }
-    function closeSidebar() { sidebar.classList.remove('open'); overlay.classList.add('hidden'); }
-    document.getElementById('userBtn').addEventListener('click', () => document.getElementById('userDropdown').classList.toggle('active'));
-    document.addEventListener('click', (e) => { if (!e.target.closest('#userBtn') && !e.target.closest('#userDropdown')) document.getElementById('userDropdown').classList.remove('active'); });
+    const menuBtn = document.getElementById('menuBtn');
+
+    function openSidebar() {
+      sidebar.classList.add('open');
+      overlay.classList.remove('hidden');
+      overlay.classList.add('fade-in');
+      menuBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+      sidebar.querySelector('a')?.focus();
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      overlay.classList.add('hidden');
+      overlay.classList.remove('fade-in');
+      menuBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+      menuBtn.focus();
+    }
+
+    // Close sidebar when clicking a nav link (mobile)
+    sidebar.querySelectorAll('.sidebar-link').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth < 1024) closeSidebar();
+      });
+    });
+
+    // Escape key closes sidebar
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    });
+
+    // User dropdown
+    const userBtn = document.getElementById('userBtn');
+    const userDropdown = document.getElementById('userDropdown');
+    userBtn.addEventListener('click', () => {
+      const isOpen = userDropdown.classList.toggle('active');
+      userBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#userBtn') && !e.target.closest('#userDropdown')) {
+        userDropdown.classList.remove('active');
+        userBtn.setAttribute('aria-expanded', 'false');
+      }
+    });
   </script>
   @include('partials.cookie-consent')
   @yield('scripts')
