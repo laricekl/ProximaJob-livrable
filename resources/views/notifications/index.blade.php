@@ -174,7 +174,7 @@
           const card = button.closest('.notif-item');
 
           try {
-            await postJson(`/notifications/${button.dataset.id}/mark-as-read`);
+            await postJson('{{ url('/notifications') }}/' + button.dataset.id + '/mark-as-read');
             markCardAsRead(card);
           } catch (error) {
             console.error(error);
@@ -184,7 +184,7 @@
 
       markAllButton?.addEventListener('click', async () => {
         try {
-          await postJson('/notifications/mark-all-read');
+          await postJson('{{ url('/notifications/mark-all-read') }}');
           document.querySelectorAll('.notif-item[data-read="0"]').forEach(markCardAsRead);
         } catch (error) {
           console.error(error);

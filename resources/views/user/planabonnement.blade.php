@@ -86,7 +86,7 @@
         button.textContent = 'Patientez...';
 
         try {
-          const response = await fetch('/user/plan-souscrire', {
+          const response = await fetch('{{ route('abonnements.souscrire') }}', {
             method: 'POST',
             headers: {
               'X-CSRF-TOKEN': csrfToken,
@@ -99,7 +99,7 @@
           const data = await response.json();
 
           if (data.success) {
-            window.location.href = '/user/abonnement';
+            window.location.href = '{{ route('user.abonnement') }}';
           } else {
             alert(data.message || "Erreur lors de la souscription.");
             button.disabled = false;

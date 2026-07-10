@@ -57,6 +57,8 @@
       <a href="{{ route('user.profil-public') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.profil-public') ? 'text-primary' : 'text-on-surface-variant' }}">Profil candidat</a>
       <a href="{{ route('infos.cv') }}" class="text-lg font-semibold {{ $isCandidateRoute('infos.cv', 'cv.personalization.form', 'cv.personalization.preview', 'preview.cv-ia', 'preview.letter-ia', 'profile.edit') ? 'text-primary' : 'text-on-surface-variant' }}">Mon CV</a>
       <a href="{{ route('notifications.index') }}" class="text-lg font-semibold {{ $isCandidateRoute('notifications.index') ? 'text-primary' : 'text-on-surface-variant' }}">Notifications</a>
+      <a href="{{ route('user.abonnement') }}" class="text-lg font-semibold {{ $isCandidateRoute('user.abonnement', 'plan.abonnement') ? 'text-primary' : 'text-on-surface-variant' }}">Mon abonnement</a>
+      <a href="{{ route('profile.edit') }}" class="text-lg font-semibold {{ $isCandidateRoute('profile.edit') ? 'text-primary' : 'text-on-surface-variant' }}">Paramètres</a>
       <div class="flex items-center justify-between gap-4">
         <span class="text-xs font-black uppercase tracking-widest text-outline">Langue</span>
         @include('components.language-selector')

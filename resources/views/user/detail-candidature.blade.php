@@ -34,7 +34,7 @@
             'rejected' => 'Refusée',
           ];
           $statusBadge = [
-            'en_attente' => 'bg-blue-50 text-info-dark',
+            'en_attente' => 'bg-info-light text-info-dark',
             'accepted' => 'bg-success-light text-success-dark',
             'rejected' => 'bg-error-light text-error-dark',
           ];
@@ -61,8 +61,8 @@
 
         <!-- Offer header card -->
         <div class="card-glow rounded-2xl p-6 md:p-8 flex flex-col sm:flex-row items-start gap-6">
-          <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-purple-50 flex items-center justify-center flex-shrink-0">
-            <span class="material-symbols-outlined text-purple-600 text-3xl">code</span>
+          <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-secondary-container text-3xl">code</span>
           </div>
           <div class="flex-1 w-full">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">

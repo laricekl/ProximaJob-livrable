@@ -65,7 +65,7 @@
                 <span class="material-symbols-outlined text-secondary-container">visibility</span>
               </div>
               <div>
-                <div class="text-2xl font-bold text-primary">{{ $dashboardStats['profile_views_count'] }}</div>
+                <div class="text-2xl font-bold text-primary">{{ $dashboardStats['unread_notifications_count'] }}</div>
                 <div class="text-xs text-on-surface-variant">Notifications non lues</div>
               </div>
             </div>
