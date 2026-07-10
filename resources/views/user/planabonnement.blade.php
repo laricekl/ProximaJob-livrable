@@ -4,8 +4,9 @@
   <main class="flex-grow pt-32">
 
     <!-- Hero -->
-    <section class="py-16 px-4 md:px-10 text-center">
+    <section class="pt-16 pb-8 px-4 md:px-10 text-center">
       <div class="max-w-3xl mx-auto">
+        <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-4">&larr; Retour au tableau de bord</a>
         <h1 class="text-4xl md:text-5xl font-bold font-serif text-primary leading-tight mb-4">Choisissez votre Plan</h1>
         <p class="text-lg text-on-surface-variant mb-10">Trouvez l'abonnement parfait pour vos besoins</p>
       </div>

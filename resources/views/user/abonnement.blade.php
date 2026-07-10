@@ -6,6 +6,7 @@
     <section class="py-12 px-4 md:px-10">
       <div class="max-w-5xl mx-auto">
 
+        <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-4">&larr; Retour au tableau de bord</a>
         <div class="mb-8">
           <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Abonnement</p>
           <h1 class="mt-2 text-3xl font-bold font-serif text-primary">Mon abonnement</h1>
@@ -23,7 +24,7 @@
                       <h2 class="mt-2 text-xl font-bold text-primary">{{ $userAbonnement->abonnement->nom ?? 'Abonnement' }}</h2>
                     </div>
                     <div class="text-right">
-                      <p class="text-3xl font-bold text-primary">{{ number_format($userAbonnement->abonnement->montant ?? 0, 2, ',', ' ') }} $</p>
+                      <p class="text-3xl font-bold text-primary">{{ number_format($userAbonnement->abonnement->montant ?? 0, 2, ',', ' ') }} €</p>
                       <p class="text-xs text-outline">/{{ $userAbonnement->abonnement->duree ?? 'mois' }}</p>
                     </div>
                   </div>

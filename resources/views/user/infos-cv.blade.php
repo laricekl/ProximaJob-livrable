@@ -417,7 +417,8 @@
                       <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addCompetence()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une competence</button>
                     </div>
                     <div id="competences-container" class="space-y-4">
-                      <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="0">
+                      <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
+                        <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
                         <label class="block text-sm font-semibold text-primary mb-1.5">Competence specifique</label>
                         <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="3" name="competences[0][description]" placeholder="Comptabilite generale : comptes clients, comptes fournisseurs, paie, facturation, conciliation bancaire"></textarea>
                       </div>
@@ -441,7 +442,8 @@
                     <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addExperience()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une experience</button>
                   </div>
                   <div id="experiences-container" class="space-y-5">
-                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="0">
+                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][periode]" placeholder="2004-2017" required /></div>
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Poste *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][poste]" placeholder="Adjointe administrative" required /></div>
@@ -468,7 +470,8 @@
                     <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addFormation()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une formation</button>
                   </div>
                   <div id="formations-container" class="space-y-5">
-                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="0">
+                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][periode]" placeholder="1995-1998" /></div>
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Diplome *</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][diplome]" required><option value="">Selectionner un diplome</option>@foreach ($diplomes as $diplome)<option value="{{ $diplome->id }}">{{ $diplome->nom_diplome }}</option>@endforeach</select></div>
@@ -494,7 +497,8 @@
                     <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addPerfectionnement()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter un perfectionnement</button>
                   </div>
                   <div id="perfectionnements-container" class="space-y-5">
-                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="0">
+                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Annee</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][annee]" placeholder="2003" /></div>
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Formation</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][formation]" placeholder="Actualisation en bureautique" /></div>
@@ -520,7 +524,8 @@
                     <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addLangue()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une langue</button>
                   </div>
                   <div id="langues-container" class="space-y-5">
-                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="0">
+                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Langue</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[0][nom]" placeholder="Francais" /></div>
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Niveau</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[0][niveau]"><option value="">Selectionner</option><option value="Langue maternelle">Langue maternelle</option><option value="Courant">Courant</option><option value="Intermédiaire">Intermediaire</option><option value="Notions de base">Notions de base</option><option value="Connaissances de base">Connaissances de base</option></select></div>
@@ -545,7 +550,8 @@
                     <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addBenevolat()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une activite benevole</button>
                   </div>
                   <div id="benevolats-container" class="space-y-5">
-                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="0">
+                    <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][periode]" placeholder="2008-2009" /></div>
                         <div><label class="block text-sm font-semibold text-primary mb-1.5">Role / Activite</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][role]" placeholder="Benevole lors d'activites-benefice au profit de Leucan" /></div>
@@ -745,7 +751,8 @@
 
     function addCompetence() {
       addRepeatableItem('competences-container', (index) => `
-        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="${index}">
+        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
           <label class="block text-sm font-semibold text-primary mb-1.5">Competence specifique</label>
           <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="3" name="competences[${index}][description]"></textarea>
         </div>
@@ -754,7 +761,8 @@
 
     function addExperience() {
       addRepeatableItem('experiences-container', (index) => `
-        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="${index}">
+        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][periode]" required /></div>
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Poste *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][poste]" required /></div>
@@ -767,7 +775,8 @@
 
     function addFormation() {
       addRepeatableItem('formations-container', (index) => `
-        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="${index}">
+        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][periode]" /></div>
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Diplome *</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][diplome]" required><option value="">Selectionner un diplome</option>@foreach ($diplomes as $diplome)<option value="{{ $diplome->id }}">{{ $diplome->nom_diplome }}</option>@endforeach</select></div>
@@ -779,7 +788,8 @@
 
     function addPerfectionnement() {
       addRepeatableItem('perfectionnements-container', (index) => `
-        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="${index}">
+        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Annee</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][annee]" /></div>
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Formation</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][formation]" /></div>
@@ -791,7 +801,8 @@
 
     function addLangue() {
       addRepeatableItem('langues-container', (index) => `
-        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="${index}">
+        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Langue</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[${index}][nom]" /></div>
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Niveau</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[${index}][niveau]"><option value="">Selectionner</option><option value="Langue maternelle">Langue maternelle</option><option value="Courant">Courant</option><option value="Intermédiaire">Intermediaire</option><option value="Notions de base">Notions de base</option><option value="Connaissances de base">Connaissances de base</option></select></div>
@@ -802,7 +813,8 @@
 
     function addBenevolat() {
       addRepeatableItem('benevolats-container', (index) => `
-        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10" data-index="${index}">
+        <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][periode]" /></div>
             <div><label class="block text-sm font-semibold text-primary mb-1.5">Role / Activite</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][role]" /></div>

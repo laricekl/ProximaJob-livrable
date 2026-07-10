@@ -222,3 +222,47 @@
 
   </main>
 @endsection
+@section('scripts')
+  <script>
+    (function() {
+      const tabs = document.querySelectorAll('.filter-tab');
+      const cards = document.querySelectorAll('.resource-item');
+      const searchInput = document.getElementById('searchInput');
+      const noResults = document.getElementById('noResults');
+      let activeFilter = 'all';
+
+      function updateVisibility() {
+        const query = (searchInput?.value || '').toLowerCase();
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const type = card.getAttribute('data-type') || '';
+          const title = (card.getAttribute('data-title') || '').toLowerCase();
+          const desc = (card.getAttribute('data-description') || '').toLowerCase();
+          const matchesFilter = activeFilter === 'all' || type === activeFilter;
+          const matchesSearch = !query || title.includes(query) || desc.includes(query);
+          const visible = matchesFilter && matchesSearch;
+          card.style.display = visible ? '' : 'none';
+          if (visible) visibleCount++;
+        });
+
+        if (noResults) {
+          noResults.classList.toggle('hidden', visibleCount > 0);
+        }
+      }
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+          tabs.forEach(t => t.classList.remove('active', 'bg-primary', 'text-white'));
+          this.classList.add('active', 'bg-primary', 'text-white');
+          activeFilter = this.getAttribute('data-filter') || 'all';
+          updateVisibility();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', updateVisibility);
+      }
+    })();
+  </script>
+@endsection

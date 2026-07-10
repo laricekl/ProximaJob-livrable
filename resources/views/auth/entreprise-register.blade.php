@@ -19,6 +19,13 @@
 
         <form class="space-y-5" action="{{ route('register.entreprise') }}" method="POST" enctype="multipart/form-data">
           @csrf
+
+          @if ($errors->any())
+            <div class="rounded-2xl border border-error-light bg-error-light px-5 py-4 text-sm text-error-dark">
+              <p class="font-bold mb-1">Veuillez corriger les erreurs suivantes :</p>
+              <p>{{ $errors->first() }}</p>
+            </div>
+          @endif
           <!-- Section: Info responsable -->
           <div class="pb-4 border-b border-outline-variant/20">
             <h3 class="font-bold text-primary text-sm flex items-center gap-2 mb-5">

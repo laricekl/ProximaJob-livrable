@@ -860,45 +860,29 @@
           </a>
         </div>
         <div class="cat-grid-mobile grid grid-cols-1 md:grid-cols-3 gap-6">
-          <a href="{{ route('offres') }}"
-            class="reveal group bg-white rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/30" style="transition-delay: 0s">
+          @php
+            $catIcons = ['router', 'hotel', 'school'];
+            $catBgs = ['bg-primary-fixed', 'bg-secondary-fixed', 'bg-tertiary-fixed'];
+            $catDelays = ['0s', '0.1s', '0.2s'];
+          @endphp
+          @forelse ($categoriesWithCount->take(3) as $index => $category)
+          <a href="{{ route('offres', ['categories' => [$category->id]]) }}"
+            class="reveal group bg-white rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/30" style="transition-delay: {{ $catDelays[$index] ?? '0s' }}">
             <div
-              class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-primary-fixed flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform">
-              <span class="material-symbols-outlined text-xl md:text-2xl" style="font-variation-settings:'FILL' 1">router</span>
+              class="w-12 h-12 md:w-14 md:h-14 rounded-xl {{ $catBgs[$index] ?? 'bg-primary-fixed' }} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-xl md:text-2xl" style="font-variation-settings:'FILL' 1">{{ $catIcons[$index] ?? 'work' }}</span>
             </div>
-            <h3 class="font-bold text-lg md:text-xl text-primary mb-2">Télécommunications</h3>
-            <p class="text-on-surface-variant text-sm mb-4">Ingénieurs réseaux, techniciens fibre, chefs de projet
-              télécom.</p>
+            <h3 class="font-bold text-lg md:text-xl text-primary mb-2">{{ $category->nom }}</h3>
+            <p class="text-on-surface-variant text-sm mb-4">{{ $category->description ?? 'Découvrez les offres dans ce secteur.' }}</p>
             <div class="flex items-center gap-2 text-sm text-secondary-container font-semibold">
-              <span>420 postes ouverts</span><span class="material-symbols-outlined text-lg">north_east</span>
+              <span>{{ $category->offres_count }} poste{{ $category->offres_count > 1 ? 's' : '' }} ouvert{{ $category->offres_count > 1 ? 's' : '' }}</span><span class="material-symbols-outlined text-lg">north_east</span>
             </div>
           </a>
-          <a href="{{ route('offres') }}"
-            class="reveal group bg-white rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/30" style="transition-delay: 0.1s">
-            <div
-              class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-secondary-fixed flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform">
-              <span class="material-symbols-outlined text-xl md:text-2xl" style="font-variation-settings:'FILL' 1">hotel</span>
-            </div>
-            <h3 class="font-bold text-lg md:text-xl text-primary mb-2">Hôtels & Tourisme</h3>
-            <p class="text-on-surface-variant text-sm mb-4">Réceptionnistes, directeurs d'hébergement, guides
-              touristiques.</p>
-            <div class="flex items-center gap-2 text-sm text-secondary-container font-semibold">
-              <span>156 postes ouverts</span><span class="material-symbols-outlined text-lg">north_east</span>
-            </div>
-          </a>
-          <a href="{{ route('offres') }}"
-            class="reveal group bg-white rounded-2xl p-5 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 border border-outline-variant/30" style="transition-delay: 0.2s">
-            <div
-              class="w-12 h-12 md:w-14 md:h-14 rounded-xl bg-tertiary-fixed flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform">
-              <span class="material-symbols-outlined text-xl md:text-2xl" style="font-variation-settings:'FILL' 1">school</span>
-            </div>
-            <h3 class="font-bold text-lg md:text-xl text-primary mb-2">Éducation</h3>
-            <p class="text-on-surface-variant text-sm mb-4">Enseignants, formateurs, personnel administratif scolaire.
-            </p>
-            <div class="flex items-center gap-2 text-sm text-secondary-container font-semibold">
-              <span>89 postes ouverts</span><span class="material-symbols-outlined text-lg">north_east</span>
-            </div>
-          </a>
+          @empty
+          <div class="col-span-full rounded-2xl border border-dashed border-outline-variant/30 bg-surface-container-low p-6 text-sm text-on-surface-variant text-center">
+            Aucune catégorie disponible pour le moment.
+          </div>
+          @endforelse
         </div>
       </div>
     </section>

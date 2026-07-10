@@ -21,7 +21,9 @@
       </div>
       <a href="{{ route('notifications.index') }}" class="relative transition-colors {{ $isCandidateRoute('notifications.index') ? 'text-secondary-container' : 'text-on-surface-variant hover:text-primary' }}" aria-label="Notifications">
         <span class="material-symbols-outlined" @if($isCandidateRoute('notifications.index')) style="font-variation-settings:'FILL' 1" @endif>notifications</span>
+        @if (auth()->user()->unreadNotifications()->count() > 0)
         <span class="absolute -top-1 -right-1 w-2 h-2 bg-secondary-container rounded-full"></span>
+        @endif
       </a>
       <button id="userBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
         <div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-white text-xs font-bold">{{ $candidateInitials }}</div>

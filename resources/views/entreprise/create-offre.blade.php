@@ -51,22 +51,24 @@
           <div class="p-6 md:p-8 space-y-5">
             <div>
               <label for="jobTitle" class="block text-sm font-semibold text-primary mb-1.5">Titre du poste <span class="text-secondary-container">*</span></label>
-              <input id="jobTitle" name="jobTitle" type="text" value="{{ old('jobTitle') }}" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary placeholder:text-outline transition-all" placeholder="Ex: Développeur Full Stack Senior" required />
+              <input id="jobTitle" name="jobTitle" type="text" value="{{ old('jobTitle') }}" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary placeholder:text-outline transition-all {{ $errors->has('jobTitle') ? 'border-error' : '' }}" placeholder="Ex: Développeur Full Stack Senior" required />
+              @error('jobTitle') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label for="contractType" class="block text-sm font-semibold text-primary mb-1.5">Type de contrat <span class="text-secondary-container">*</span></label>
-                <select id="contractType" name="contractType" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all" required>
+                <select id="contractType" name="contractType" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all {{ $errors->has('contractType') ? 'border-error' : '' }}" required>
                   <option value="">Choisir...</option>
                   @foreach ($contractTypes as $contractType)
                     <option value="{{ $contractType->id }}" @selected(old('contractType') == $contractType->id)>{{ $contractType->nom }}</option>
                   @endforeach
                 </select>
+                @error('contractType') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
               <div>
                 <label for="sector" class="block text-sm font-semibold text-primary mb-1.5">Secteur d'activité <span class="text-secondary-container">*</span></label>
-                <select id="sector" name="sector" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all" required>
+                <select id="sector" name="sector" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all {{ $errors->has('sector') ? 'border-error' : '' }}" required>
                   <option value="">Choisir...</option>
                   @forelse ($sectors as $sector)
                     <option value="{{ $sector->id }}" @selected(old('sector') == $sector->id)>{{ $sector->name }}</option>
@@ -74,43 +76,48 @@
                     <option value="" disabled>Aucun secteur disponible pour le moment</option>
                   @endforelse
                 </select>
+                @error('sector') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div>
                 <label for="location" class="block text-sm font-semibold text-primary mb-1.5">Lieu de travail <span class="text-secondary-container">*</span></label>
-                <input id="location" name="location" type="text" value="{{ old('location') }}" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary placeholder:text-outline transition-all" placeholder="Ex: Montréal, QC" required />
+                <input id="location" name="location" type="text" value="{{ old('location') }}" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary placeholder:text-outline transition-all {{ $errors->has('location') ? 'border-error' : '' }}" placeholder="Ex: Montréal, QC" required />
+              @error('location') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
               <div>
                 <label for="remote_work" class="block text-sm font-semibold text-primary mb-1.5">Mode de travail <span class="text-secondary-container">*</span></label>
-                <select id="remote_work" name="remote_work" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all" required>
+                <select id="remote_work" name="remote_work" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all {{ $errors->has('remote_work') ? 'border-error' : '' }}" required>
                   <option value="Présentiel" @selected(old('remote_work') === 'Présentiel')>Présentiel</option>
                   <option value="Hybride" @selected(old('remote_work') === 'Hybride')>Hybride</option>
                   <option value="Télétravail" @selected(old('remote_work') === 'Télétravail')>Télétravail</option>
                 </select>
+                @error('remote_work') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
               <div>
                 <label for="job_category" class="block text-sm font-semibold text-primary mb-1.5">Catégorie <span class="text-secondary-container">*</span></label>
-                <select id="job_category" name="job_category" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all" required>
+                <select id="job_category" name="job_category" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all {{ $errors->has('job_category') ? 'border-error' : '' }}" required>
                   <option value="informatique" @selected(old('job_category') === 'informatique')>Informatique & Technologie</option>
                   <option value="marketing" @selected(old('job_category') === 'marketing')>Marketing & Communication</option>
                   <option value="finance" @selected(old('job_category') === 'finance')>Finance & Comptabilité</option>
                   <option value="rh" @selected(old('job_category') === 'rh')>Ressources humaines</option>
                   <option value="sante" @selected(old('job_category') === 'sante')>Santé</option>
                 </select>
+                @error('job_category') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label for="salary_type" class="block text-sm font-semibold text-primary mb-1.5">Type de rémunération <span class="text-secondary-container">*</span></label>
-                <select id="salary_type" name="salary_type" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all" required>
+                <select id="salary_type" name="salary_type" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all {{ $errors->has('salary_type') ? 'border-error' : '' }}" required>
                   <option value="annuel" @selected(old('salary_type') === 'annuel')>Annuel</option>
                   <option value="mensuel" @selected(old('salary_type') === 'mensuel')>Mensuel</option>
                   <option value="journalier" @selected(old('salary_type') === 'journalier')>Journalier</option>
                   <option value="horaire" @selected(old('salary_type') === 'horaire')>Horaire</option>
                 </select>
+                @error('salary_type') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
               <div>
                 <label for="start_date" class="block text-sm font-semibold text-primary mb-1.5">Date d'entrée <span class="text-secondary-container">*</span></label>
@@ -164,7 +171,8 @@
               </div>
               <div>
                 <label for="endDate" class="block text-sm font-semibold text-primary mb-1.5">Date d'expiration <span class="text-secondary-container">*</span></label>
-                <input id="endDate" name="endDate" type="date" value="{{ old('endDate') }}" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all" required />
+                <input id="endDate" name="endDate" type="date" value="{{ old('endDate') }}" class="input-glass w-full px-4 py-3 rounded-xl text-sm text-primary transition-all {{ $errors->has('endDate') ? 'border-error' : '' }}" required />
+                @error('endDate') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
             </div>
 

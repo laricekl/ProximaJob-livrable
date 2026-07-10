@@ -235,7 +235,7 @@
 
             <div class="flex items-center justify-between mb-6">
               <h3 class="font-bold text-primary text-sm uppercase tracking-wide">Filtres</h3>
-              <a href="{{ route('offres') }}" class="text-2xs font-bold uppercase tracking-wider text-secondary-container hover:underline">Réinitialiser</a>
+              <a href="{{ route('offres', request('sort') ? ['sort' => request('sort')] : []) }}" class="text-2xs font-bold uppercase tracking-wider text-secondary-container hover:underline">Réinitialiser</a>
             </div>
 
             <!-- Type de contrat -->

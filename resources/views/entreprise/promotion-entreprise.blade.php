@@ -7,11 +7,19 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 class="text-2xl font-bold font-serif text-primary mb-2">Promotions</h1>
-            <p class="text-sm text-on-surface-variant">Suivez vos offres actives et les candidatures associées. Le module de promotion avancée pourra ensuite se brancher ici sans réutiliser de fausses données.</p>
+            <p class="text-sm text-on-surface-variant">Suivez vos offres actives et les candidatures associées.</p>
           </div>
           <a href="{{ route('entreprise.offres.create') }}" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center gap-2 shadow-lg shadow-secondary-container/20">
             <span class="material-symbols-outlined">add</span> Ajouter une offre
           </a>
+        </div>
+
+        <div class="mb-8 rounded-2xl bg-gradient-to-r from-secondary-container/10 to-secondary-container/5 border border-secondary-container/20 px-6 py-5 flex items-center gap-4">
+          <span class="material-symbols-outlined text-3xl text-secondary-container flex-shrink-0">rocket_launch</span>
+          <div>
+            <p class="text-lg font-bold font-serif text-primary">Module de promotion — Bientôt disponible</p>
+            <p class="text-sm text-on-surface-variant">Boostez vos offres et attirez plus de talents.</p>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
@@ -64,8 +72,10 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="6" class="px-6 py-10 text-center text-on-surface-variant">
-                      Aucune offre n'est encore disponible pour alimenter le suivi promotionnel.
+                    <td colspan="6" class="px-6 py-12 text-center">
+                      <span class="material-symbols-outlined text-4xl text-outline mb-3 block">campaign</span>
+                      <h3 class="font-bold text-primary mb-1">Aucune offre à promouvoir</h3>
+                      <p class="text-sm text-on-surface-variant">Publiez votre première offre pour commencer à suivre ses performances.</p>
                     </td>
                   </tr>
                 @endforelse
