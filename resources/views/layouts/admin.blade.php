@@ -17,13 +17,13 @@
     </div>
     <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-6">
       <div>
-        <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Principal</h3>
+        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Principal</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">dashboard</span> Tableau de bord</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Gestion</h3>
+        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Gestion</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.users') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.users*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">group</span> Utilisateurs</a></li>
           <li><a href="{{ route('admin.offres') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work</span> Offres</a></li>
@@ -31,7 +31,7 @@
         </ul>
       </div>
       <div>
-        <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
+        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.categories*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">category</span> Catégories</a></li>
           <li><a href="{{ route('admin.types-offres.index') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.types-offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work_history</span> Types d'offres</a></li>
@@ -41,14 +41,14 @@
         </ul>
       </div>
       <div>
-        <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Communication</h3>
+        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Communication</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.statistiques') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> Statistiques</a></li>
           <li><a href="{{ route('admin.newsletters') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> Newsletter</a></li>
         </ul>
       </div>
       <div>
-        <h3 class="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Configuration</h3>
+        <h3 class="text-2xs font-bold text-white/40 uppercase tracking-widest mb-2 px-3">Configuration</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.parametres') }}" class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> Paramètres</a></li>
         </ul>

@@ -4,7 +4,7 @@
 @section('content')
 
 @if (session('success'))
-  <div class="flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800 mb-6"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
+  <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep mb-6"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
 @endif
 
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
@@ -15,8 +15,8 @@
       @csrf
       <div class="space-y-5">
         <x-admin.form-field label="Sujet" name="sujet" :required="true">
-          <input id="sujet" name="sujet" type="text" value="{{ old('sujet') }}" class="w-full rounded-xl border @error('sujet') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: Les offres de la semaine — {{ now()->format('d/m/Y') }}" />
-          @error('sujet')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+          <input id="sujet" name="sujet" type="text" value="{{ old('sujet') }}" class="w-full rounded-xl border @error('sujet') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: Les offres de la semaine — {{ now()->format('d/m/Y') }}" />
+          @error('sujet')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -31,8 +31,8 @@
         </div>
 
         <x-admin.form-field label="Contenu" name="contenu" :required="true">
-          <textarea id="contenu" name="contenu" rows="10" class="w-full resize-none rounded-xl border @error('contenu') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Rédigez votre newsletter...">{{ old('contenu') }}</textarea>
-          @error('contenu')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+          <textarea id="contenu" name="contenu" rows="10" class="w-full resize-none rounded-xl border @error('contenu') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-3 text-sm transition-all focus:border-secondary-container/50 focus:ring-0" placeholder="Rédigez votre newsletter...">{{ old('contenu') }}</textarea>
+          @error('contenu')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 
         <div class="flex flex-wrap items-center gap-3">
@@ -54,8 +54,8 @@
         <div class="p-4 transition-colors hover:bg-surface-container-low/30">
           <div class="flex items-center justify-between">
             <p class="text-sm font-semibold text-primary">{{ $campagne->sujet }}</p>
-            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold
-              {{ $campagne->statut === 'envoyee' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700' }}">
+            <span class="inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-bold
+              {{ $campagne->statut === 'envoyee' ? 'bg-success-light text-success-dark' : 'bg-warning-light text-warning-dark' }}">
               {{ $campagne->statut === 'envoyee' ? 'Envoyée' : 'Brouillon' }}
             </span>
           </div>

@@ -4,10 +4,10 @@
 @section('content')
 <div class="space-y-6">
   @if (session('success'))
-    <div class="flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
+    <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
   @endif
   @if (session('error'))
-    <div class="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}</div>
+    <div class="flex items-center gap-2 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep"><span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}</div>
   @endif
 
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -27,8 +27,8 @@
       @csrf
       <div class="flex-1">
         <label for="nom" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
-        <input type="text" id="nom" name="nom" value="{{ old('nom') }}" class="w-full rounded-xl border @error('nom') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: CDI, CDD, Stage..." required/>
-        @error('nom')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+        <input type="text" id="nom" name="nom" value="{{ old('nom') }}" class="w-full rounded-xl border @error('nom') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: CDI, CDD, Stage..." required/>
+        @error('nom')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-secondary-container transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
     </form>
@@ -51,7 +51,7 @@
                 <form x-show="editing" method="POST" action="{{ route('admin.types-offres.update', $type) }}" class="flex items-center gap-2" x-cloak>
                   @csrf @method('PUT')
                   <input type="text" name="nom" value="{{ $type->nom }}" class="w-48 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-0" required/>
-                  <button type="submit" class="text-green-600 hover:text-green-800"><span class="material-symbols-outlined text-lg">check</span></button>
+                  <button type="submit" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
                   <button type="button" @click="editing = false" class="text-outline hover:text-primary"><span class="material-symbols-outlined text-lg">close</span></button>
                 </form>
               </td>
@@ -62,7 +62,7 @@
                   <button @click="editing = !editing" class="rounded-lg p-1.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
                   <form method="POST" action="{{ route('admin.types-offres.destroy', $type) }}" onsubmit="return confirm('Supprimer « {{ $type->nom }} » ?')">
                     @csrf @method('DELETE')
-                    <button class="rounded-lg p-1.5 text-outline hover:bg-red-50 hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+                    <button class="rounded-lg p-1.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
                   </form>
                 </div>
               </td>

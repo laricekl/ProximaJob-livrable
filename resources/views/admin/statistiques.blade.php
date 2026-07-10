@@ -7,22 +7,22 @@
       <div class="card-glow rounded-2xl p-5">
         <p class="text-xs font-bold uppercase tracking-wider text-outline">Entreprises</p>
         <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($entrepriseStats['count']) }}</p>
-        <p class="mt-1 text-xs font-semibold text-green-600">{{ $entrepriseStats['monthlyGrowth'] >= 0 ? '↑' : '↓' }} {{ abs($entrepriseStats['monthlyGrowth']) }}% vs mois dernier</p>
+        <p class="mt-1 text-xs font-semibold text-success">{{ $entrepriseStats['monthlyGrowth'] >= 0 ? '↑' : '↓' }} {{ abs($entrepriseStats['monthlyGrowth']) }}% vs mois dernier</p>
       </div>
       <div class="card-glow rounded-2xl p-5">
         <p class="text-xs font-bold uppercase tracking-wider text-outline">Offres</p>
         <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($offreStats['count']) }}</p>
-        <p class="mt-1 text-xs font-semibold text-green-600">{{ $offreStats['monthlyGrowth'] >= 0 ? '↑' : '↓' }} {{ abs($offreStats['monthlyGrowth']) }}% vs mois dernier</p>
+        <p class="mt-1 text-xs font-semibold text-success">{{ $offreStats['monthlyGrowth'] >= 0 ? '↑' : '↓' }} {{ abs($offreStats['monthlyGrowth']) }}% vs mois dernier</p>
       </div>
       <div class="card-glow rounded-2xl p-5">
         <p class="text-xs font-bold uppercase tracking-wider text-outline">Nouveaux inscrits</p>
         <p class="mt-2 text-3xl font-bold text-primary">{{ array_sum($userChartData['data']) }}</p>
-        <p class="mt-1 text-xs font-semibold text-green-600">Année {{ $userChartData['currentYear'] }}</p>
+        <p class="mt-1 text-xs font-semibold text-success">Année {{ $userChartData['currentYear'] }}</p>
       </div>
       <div class="card-glow rounded-2xl p-5">
         <p class="text-xs font-bold uppercase tracking-wider text-outline">Candidatures</p>
         <p class="mt-2 text-3xl font-bold text-primary">{{ number_format($totalPostulations) }}</p>
-        <p class="mt-1 text-xs font-semibold text-green-600">Toutes périodes confondues</p>
+        <p class="mt-1 text-xs font-semibold text-success">Toutes périodes confondues</p>
       </div>
     </div>
 

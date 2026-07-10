@@ -79,7 +79,7 @@
                     <td class="px-6 py-3 font-semibold text-primary">{{ $postulation->offre->poste ?? 'Offre indisponible' }}</td>
                     <td class="px-6 py-3 text-on-surface-variant">{{ $postulation->offre->entreprise->company_name ?? 'Entreprise inconnue' }}</td>
                     <td class="px-6 py-3">
-                      <x-admin.status-badge :label="$postulation->status ?? 'En attente'" color="bg-blue-50 text-blue-700" />
+                      <x-admin.status-badge :label="$postulation->status ?? 'En attente'" color="bg-info-light text-info-dark" />
                     </td>
                     <td class="px-6 py-3 text-outline">{{ optional($postulation->created_at)->format('d/m/Y') }}</td>
                   </tr>

@@ -8,13 +8,13 @@
   @endphp
   <div class="space-y-6">
     @if (session('success'))
-      <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+      <div class="rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-dark">
         {{ session('success') }}
       </div>
     @endif
 
     @if ($errors->any())
-      <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+      <div class="rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-dark">
         <p class="font-semibold">Certains champs doivent etre corriges.</p>
         <ul class="mt-2 list-disc pl-5">
           @foreach ($errors->all() as $error)
@@ -88,7 +88,7 @@
               </div>
             </div>
             @if ($currentLogo)
-              <button form="remove-logo-form" class="rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50">Supprimer</button>
+              <button form="remove-logo-form" class="rounded-xl border border-error-light px-4 py-2 text-sm font-semibold text-error transition-colors hover:bg-error-light">Supprimer</button>
             @endif
           </div>
 
@@ -108,7 +108,7 @@
               </div>
             </div>
             @if ($currentFavicon)
-              <button form="remove-favicon-form" class="rounded-xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 transition-colors hover:bg-red-50">Supprimer</button>
+              <button form="remove-favicon-form" class="rounded-xl border border-error-light px-4 py-2 text-sm font-semibold text-error transition-colors hover:bg-error-light">Supprimer</button>
             @endif
           </div>
 

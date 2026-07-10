@@ -65,7 +65,7 @@
                 <td class="hidden px-6 py-3 sm:table-cell">
                   <x-admin.status-badge
                     :label="$offer->categorie->nom ?? 'Non classée'"
-                    color="bg-purple-50 text-purple-700"
+                    color="bg-surface-container-low text-on-surface-variant"
                   />
                 </td>
                 <td class="px-6 py-3">
@@ -81,8 +81,8 @@
                         type="button"
                         icon="restart_alt"
                         label="Réactiver"
-                        color="text-green-500"
-                        hover="hover:bg-green-50"
+                        color="text-success"
+                        hover="hover:bg-success-light"
                         class="js-admin-offer-action"
                         data-url="{{ route('offres.reactivate', $offer->id) }}"
                         data-method="PATCH"
@@ -92,8 +92,8 @@
                         type="button"
                         icon="block"
                         label="Désactiver"
-                        color="text-amber-500"
-                        hover="hover:bg-amber-50"
+                        color="text-warning"
+                        hover="hover:bg-warning-light"
                         class="js-admin-offer-action"
                         data-url="{{ route('offres.deactivate', $offer->id) }}"
                         data-method="PATCH"

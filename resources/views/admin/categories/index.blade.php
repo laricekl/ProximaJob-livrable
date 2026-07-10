@@ -7,12 +7,12 @@
 
   {{-- Messages flash --}}
   @if (session('success'))
-    <div class="flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800">
+    <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep">
       <span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}
     </div>
   @endif
   @if (session('error'))
-    <div class="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+    <div class="flex items-center gap-2 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep">
       <span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}
     </div>
   @endif
@@ -49,12 +49,12 @@
           id="nom"
           name="nom"
           value="{{ old('nom') }}"
-          class="w-full rounded-xl border @error('nom') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0"
+          class="w-full rounded-xl border @error('nom') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-0"
           placeholder="Ex: Informatique, Marketing, Santé..."
           required
         />
         @error('nom')
-          <p class="mt-1 text-xs text-red-600">{{ $message }}</p>
+          <p class="mt-1 text-xs text-error">{{ $message }}</p>
         @enderror
       </div>
       <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold transition-colors hover:bg-secondary-container">
@@ -92,7 +92,7 @@
                     class="w-48 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-0"
                     required
                   />
-                  <button type="submit" class="text-green-600 hover:text-green-800" title="Enregistrer">
+                  <button type="submit" class="text-success hover:text-success-deep" title="Enregistrer">
                     <span class="material-symbols-outlined text-lg">check</span>
                   </button>
                   <button type="button" @click="editing = false" class="text-outline hover:text-primary" title="Annuler">
@@ -112,7 +112,7 @@
                   <form method="POST" action="{{ route('admin.categories.destroy', $categorie) }}" onsubmit="return confirm('Supprimer « {{ $categorie->nom }} » ?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="rounded-lg p-1.5 text-outline hover:bg-red-50 hover:text-red-600 transition-colors" title="Supprimer">
+                    <button type="submit" class="rounded-lg p-1.5 text-outline hover:bg-error-light hover:text-error transition-colors" title="Supprimer">
                       <span class="material-symbols-outlined text-base">delete</span>
                     </button>
                   </form>

@@ -4,10 +4,10 @@
 @section('content')
 <div class="space-y-6">
   @if (session('success'))
-    <div class="flex items-center gap-2 rounded-2xl border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-800"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
+    <div class="flex items-center gap-2 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm text-success-deep"><span class="material-symbols-outlined text-lg">check_circle</span> {{ session('success') }}</div>
   @endif
   @if (session('error'))
-    <div class="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"><span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}</div>
+    <div class="flex items-center gap-2 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep"><span class="material-symbols-outlined text-lg">error</span> {{ session('error') }}</div>
   @endif
 
   <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -27,12 +27,12 @@
       @csrf
       <div class="sm:col-span-2">
         <label for="name" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Nom</label>
-        <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full rounded-xl border @error('name') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: PHP, Gestion de projet..." required/>
-        @error('name')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+        <input type="text" id="name" name="name" value="{{ old('name') }}" class="w-full rounded-xl border @error('name') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" placeholder="Ex: PHP, Gestion de projet..." required/>
+        @error('name')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
         <label for="category" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Catégorie</label>
-        <select id="category" name="category" class="w-full rounded-xl border @error('category') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" required>
+        <select id="category" name="category" class="w-full rounded-xl border @error('category') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" required>
           <option value="">— Choisir —</option>
           <option value="technique" @selected(old('category') == 'technique')>Technique</option>
           <option value="transversale" @selected(old('category') == 'transversale')>Transversale</option>
@@ -41,16 +41,16 @@
           <option value="gestion" @selected(old('category') == 'gestion')>Gestion</option>
           <option value="commercial" @selected(old('category') == 'commercial')>Commercial</option>
         </select>
-        @error('category')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+        @error('category')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div>
         <label for="importance_level" class="block text-xs font-bold uppercase tracking-wider text-outline mb-1">Importance</label>
-        <select id="importance_level" name="importance_level" class="w-full rounded-xl border @error('importance_level') border-red-300 @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" required>
+        <select id="importance_level" name="importance_level" class="w-full rounded-xl border @error('importance_level') border-error @else border-outline-variant/20 @enderror bg-white/70 py-2.5 px-4 text-sm focus:border-secondary-container/50 focus:ring-0" required>
           @foreach ([1=>'1 - Basique',2=>'2 - Utile',3=>'3 - Important',4=>'4 - Très important',5=>'5 - Essentiel'] as $val => $label)
             <option value="{{ $val }}" @selected(old('importance_level', '3') == $val)>{{ $label }}</option>
           @endforeach
         </select>
-        @error('importance_level')<p class="mt-1 text-xs text-red-600">{{ $message }}</p>@enderror
+        @error('importance_level')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
       </div>
       <div class="sm:col-span-4 flex justify-end">
         <button type="submit" class="rounded-xl bg-primary text-white px-5 py-2.5 text-sm font-bold hover:bg-secondary-container transition-colors"><span class="material-symbols-outlined text-lg align-middle">add</span> Créer</button>
@@ -83,7 +83,7 @@
                   <select name="importance_level" class="w-24 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-2 text-sm focus:border-secondary-container/50 focus:ring-0">
                     @for ($i = 1; $i <= 5; $i++)<option value="{{ $i }}" @selected($skill->importance_level == $i)>{{ $i }}</option>@endfor
                   </select>
-                  <button type="submit" class="text-green-600 hover:text-green-800"><span class="material-symbols-outlined text-lg">check</span></button>
+                  <button type="submit" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
                   <button type="button" @click="editing = false" class="text-outline hover:text-primary"><span class="material-symbols-outlined text-lg">close</span></button>
                 </form>
               </td>
@@ -100,7 +100,7 @@
                   <button @click="editing = !editing" class="rounded-lg p-1.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-base">edit</span></button>
                   <form method="POST" action="{{ route('admin.skills.destroy', $skill) }}" onsubmit="return confirm('Supprimer « {{ $skill->name }} » ?')">
                     @csrf @method('DELETE')
-                    <button class="rounded-lg p-1.5 text-outline hover:bg-red-50 hover:text-red-600 transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
+                    <button class="rounded-lg p-1.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-base">delete</span></button>
                   </form>
                 </div>
               </td>

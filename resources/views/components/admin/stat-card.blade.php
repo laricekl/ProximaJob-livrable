@@ -8,6 +8,6 @@
   <p class="text-xs font-bold uppercase tracking-widest text-outline">{{ $label }}</p>
   <p class="mt-2 text-3xl font-bold text-primary">{{ $value }}</p>
   @if ($hint)
-    <p class="mt-1 text-xs font-semibold text-green-600">{{ $hint }}</p>
+    <p class="mt-1 text-xs font-semibold text-success">{{ $hint }}</p>
   @endif
 </div>

@@ -11,7 +11,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Entreprises</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($entrepriseStats['count']) }}</p>
-          <p class="text-[10px] font-semibold text-secondary-container">{{ $entrepriseStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $entrepriseStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $entrepriseStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $entrepriseStats['monthlyGrowth'] }}% ce mois</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -21,7 +21,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Offres d'emploi</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($offreStats['count']) }}</p>
-          <p class="text-[10px] font-semibold text-secondary-container">{{ $offreStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $offreStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $offreStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $offreStats['monthlyGrowth'] }}% ce mois</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -31,7 +31,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Candidats</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($candidateStats['count']) }}</p>
-          <p class="text-[10px] font-semibold text-secondary-container">{{ $candidateStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $candidateStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $candidateStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $candidateStats['monthlyGrowth'] }}% ce mois</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -41,7 +41,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Candidatures</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($matchStats['count']) }}</p>
-          <p class="text-[10px] font-semibold text-secondary-container">{{ $matchStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $matchStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $matchStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $matchStats['monthlyGrowth'] }}% ce mois</p>
         </div>
       </div>
     </div>
@@ -61,7 +61,7 @@
             <div class="chart-bar flex-1 cursor-pointer rounded-t-md bg-secondary-container/90" style="height: {{ max(8, ($value / $userMax) * 100) }}%"></div>
           @endforeach
         </div>
-        <div class="mt-3 flex justify-between text-[10px] font-semibold uppercase tracking-wider text-outline">
+        <div class="mt-3 flex justify-between text-2xs font-semibold uppercase tracking-wider text-outline">
           @foreach ($userChartData['labels'] as $label)
             <span>{{ $label }}</span>
           @endforeach
@@ -77,7 +77,7 @@
             <div class="chart-bar flex-1 cursor-pointer rounded-t-md bg-secondary-container/70" style="height: {{ max(8, ($value / $offerMax) * 100) }}%"></div>
           @endforeach
         </div>
-        <div class="mt-3 flex justify-between text-[10px] font-semibold uppercase tracking-wider text-outline">
+        <div class="mt-3 flex justify-between text-2xs font-semibold uppercase tracking-wider text-outline">
           @foreach ($offerChartData['labels'] as $label)
             <span>{{ $label }}</span>
           @endforeach
