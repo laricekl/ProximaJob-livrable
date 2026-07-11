@@ -30,7 +30,7 @@
     justify-content: center;
     overflow-y: auto;
     padding: 24px 16px;
-    background: rgba(15, 23, 42, 0.58);
+    background: rgba(var(--pj-primary-rgb), 0.58);
 }
 
 .application-modal.show {
@@ -45,17 +45,17 @@
 
 .application-modal .modal-content {
     border-radius: 20px;
-    border: 1px solid rgba(148, 163, 184, 0.18);
+    border: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.18);
     overflow: hidden;
     background: rgba(255, 255, 255, 0.96);
-    box-shadow: 0 30px 80px rgba(15, 23, 42, 0.18);
+    box-shadow: 0 30px 80px rgba(var(--pj-primary-rgb), 0.18);
     backdrop-filter: blur(18px);
 }
 
 .application-modal .form-header {
     background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.92) 100%);
     padding: 22px 28px 14px;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.18);
+    border-bottom: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.18);
     position: relative;
 }
 
@@ -66,7 +66,7 @@
     background: none;
     border: none;
     font-size: 24px;
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
     cursor: pointer;
     width: 38px;
     height: 38px;
@@ -78,15 +78,15 @@
 }
 
 .application-modal .close-btn:hover {
-    background: rgba(148, 163, 184, 0.12);
-    color: #0f172a;
+    background: rgba(var(--pj-border-rgb, 15,23,42), 0.12);
+    color: var(--pj-primary, #1f2433);
 }
 
 .application-modal .form-title {
     font-size: 24px;
     font-weight: 700;
     margin-bottom: 18px;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
     letter-spacing: -0.02em;
 }
 
@@ -120,19 +120,19 @@
 }
 
 .application-modal .step-circle.active {
-    background: #f97316;
+    background: var(--pj-accent, #eb843c);
     color: white;
-    box-shadow: 0 12px 28px rgba(249, 115, 22, 0.28);
+    box-shadow: 0 12px 28px rgba(var(--pj-accent-rgb), 0.28);
 }
 
 .application-modal .step-circle.inactive {
-    background: #e2e8f0;
-    color: #64748b;
+    background: var(--pj-surface-container, #eceef0);
+    color: var(--pj-text-muted, #76777d);
 }
 
 .application-modal .step-label {
     font-size: 12px;
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
     text-align: center;
     font-weight: 600;
 }
@@ -144,7 +144,7 @@
     left: 50px;
     width: 50px;
     height: 2px;
-    background: rgba(148, 163, 184, 0.28);
+    background: rgba(var(--pj-border-rgb, 15,23,42), 0.28);
     z-index: 1;
 }
 
@@ -167,12 +167,12 @@
     gap: 10px;
     font-size: 17px;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
     margin-bottom: 18px;
 }
 
 .application-modal .section-icon {
-    color: #f97316;
+    color: var(--pj-accent, #eb843c);
 }
 
 .application-modal .form-row {
@@ -194,37 +194,37 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
 }
 
 .application-modal .form-input {
     width: 100%;
     padding: 10px 13px;
-    border: 1px solid rgba(148, 163, 184, 0.35);
+    border: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.35);
     border-radius: 12px;
     font-size: 14px;
     transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
     background: rgba(255, 255, 255, 0.88);
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
 }
 
 .application-modal .form-input:focus {
     outline: none;
-    border-color: rgba(249, 115, 22, 0.55);
-    box-shadow: 0 0 0 4px rgba(249, 115, 22, 0.12);
+    border-color: rgba(var(--pj-accent-rgb), 0.55);
+    box-shadow: 0 0 0 4px rgba(var(--pj-accent-rgb), 0.12);
 }
 
 .application-modal .subsection-title {
     font-size: 14px;
     font-weight: 600;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
     margin-bottom: 10px;
     margin-top: 16px;
 }
 
 .application-modal .blue-background {
-    background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(255, 247, 237, 0.94)) !important;
-    border: 1px solid rgba(249, 115, 22, 0.14);
+    background: linear-gradient(135deg, rgba(var(--pj-accent-rgb), 0.08), rgba(255, 247, 237, 0.94)) !important;
+    border: 1px solid rgba(var(--pj-accent-rgb), 0.14);
 }
 
 .application-modal .upload-section {
@@ -237,7 +237,7 @@
 .application-modal .upload-item {
     margin-bottom: 12px;
     padding-bottom: 12px;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    border-bottom: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.16);
 }
 
 .application-modal .upload-item:last-child {
@@ -248,7 +248,7 @@
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
 }
 
 .application-modal .upload-area {
@@ -259,7 +259,7 @@
 }
 
 .application-modal .upload-btn {
-    background: #f97316;
+    background: var(--pj-accent, #eb843c);
     color: white;
     border: none;
     padding: 9px 15px;
@@ -272,7 +272,7 @@
 }
 
 .application-modal .upload-btn:hover {
-    background: #ea580c;
+    background: var(--pj-accent-strong, #d9732c);
     transform: translateY(-1px);
 }
 
@@ -292,7 +292,7 @@
 }
 
 .application-modal .upload-status.empty {
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
 }
 
 .application-modal .upload-status:not(.empty) {
@@ -345,14 +345,14 @@
     border-radius: 16px;
     padding: 16px;
     margin-bottom: 14px;
-    border: 1px solid rgba(148, 163, 184, 0.14);
+    border: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.14);
 }
 
 .application-modal .summary-title {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 15px;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
 }
 
 .application-modal .summary-row {
@@ -379,12 +379,12 @@
 
 .application-modal .summary-label {
     font-weight: 600;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
     min-width: fit-content;
 }
 
 .application-modal .summary-value {
-    color: #475569;
+    color: var(--pj-on-surface-variant, #45464d);
     font-weight: 400;
 }
 
@@ -399,7 +399,7 @@
     gap: 8px;
     margin-bottom: 8px;
     font-size: 14px;
-    color: #f97316;
+    color: var(--pj-accent, #eb843c);
 }
 
 .application-modal .checkbox-group {
@@ -415,7 +415,7 @@
 
 .application-modal .checkbox-label {
     font-size: 14px;
-    color: #334155;
+    color: var(--pj-on-surface, #191c1e);
     line-height: 1.5;
 }
 
@@ -461,13 +461,13 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 18px;
-    border-top: 1px solid rgba(148, 163, 184, 0.18);
+    border-top: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.18);
 }
 
 .application-modal .btn-secondary {
     background: transparent;
-    color: #64748b;
-    border: 1px solid rgba(148, 163, 184, 0.28);
+    color: var(--pj-text-muted, #76777d);
+    border: 1px solid rgba(var(--pj-border-rgb, 15,23,42), 0.28);
     padding: 10px 16px;
     font-size: 14px;
     cursor: pointer;
@@ -480,12 +480,12 @@
 }
 
 .application-modal .btn-secondary:hover {
-    background: rgba(148, 163, 184, 0.12);
-    color: #0f172a;
+    background: rgba(var(--pj-border-rgb, 15,23,42), 0.12);
+    color: var(--pj-primary, #1f2433);
 }
 
 .application-modal .btn-primary {
-    background: #f97316;
+    background: var(--pj-accent, #eb843c);
     color: white;
     border: none;
     padding: 10px 22px;
@@ -500,7 +500,7 @@
 }
 
 .application-modal .btn-primary:hover {
-    background: #ea580c;
+    background: var(--pj-accent-strong, #d9732c);
     transform: translateY(-1px);
 }
 
@@ -508,7 +508,7 @@
     text-align: center;
     margin: 40px 0;
     position: relative;
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
     font-weight: 500;
 }
 
@@ -539,7 +539,7 @@
 }
 
 .cv-generator-icon {
-    color: #f97316;
+    color: var(--pj-accent, #eb843c);
     font-size: 24px;
     margin-bottom: 15px;
 }
@@ -548,19 +548,19 @@
     font-size: 18px;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
 }
 
 .cv-generator p {
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
     margin-bottom: 20px;
     font-size: 14px;
 }
 
 .generate-btn {
     background: transparent;
-    color: #f97316;
-    border: 1px solid rgba(249, 115, 22, 0.3);
+    color: var(--pj-accent, #eb843c);
+    border: 1px solid rgba(var(--pj-accent-rgb), 0.3);
     padding: 12px 24px;
     border-radius: 9999px;
     font-weight: 700;
@@ -572,8 +572,8 @@
 }
 
 .generate-btn:hover {
-    background: rgba(249, 115, 22, 0.08);
-    border-color: rgba(249, 115, 22, 0.45);
+    background: rgba(var(--pj-accent-rgb), 0.08);
+    border-color: rgba(var(--pj-accent-rgb), 0.45);
 }
 
 .application-modal .document-toolbar {
@@ -586,7 +586,7 @@
 }
 
 .application-modal .compact-hint {
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
     font-size: 12px;
     line-height: 1.45;
     margin: 0;
@@ -636,18 +636,18 @@
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 15px;
-    color: #0f172a;
+    color: var(--pj-primary, #1f2433);
 }
 
 .success-message {
-    color: #64748b;
+    color: var(--pj-text-muted, #76777d);
     margin-bottom: 30px;
     line-height: 1.6;
 }
 
 .close-modal-btn {
-    background: #e2e8f0;
-    color: #0f172a;
+    background: var(--pj-surface-container, #eceef0);
+    color: var(--pj-primary, #1f2433);
     border: none;
     padding: 12px 30px;
     border-radius: 9999px;
@@ -722,9 +722,9 @@
 input[readonly],
 textarea[readonly],
 select[readonly] {
-    background-color: rgba(241, 245, 249, 0.88);
-    color: #64748b;
-    border-color: rgba(148, 163, 184, 0.22);
+    background-color: rgba(255, 255, 255, 0.88);
+    color: var(--pj-text-muted, #76777d);
+    border-color: rgba(var(--pj-border-rgb, 15,23,42), 0.22);
     cursor: not-allowed;       
 }
 
@@ -761,7 +761,8 @@ select[readonly] {
 
             <!-- Form Content -->
             <div class="form-content">
-                <form id="applicationForm" enctype="multipart/form-data">
+                <form id="applicationForm" action="{{ route('candidatures.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
                     <!-- Étape 1: Informations personnelles -->
                     <div class="step-content active" id="step-1">
                         <div class="section-title">
