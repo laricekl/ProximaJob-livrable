@@ -1,7 +1,7 @@
 @extends('layouts.candidat')
 @section('title', 'Plan')
 @section('content')
-  <main class="flex-grow pt-32">
+  <main class="flex-grow">
 
     <!-- Hero -->
     <section class="pt-16 pb-8 px-4 md:px-10 text-center">

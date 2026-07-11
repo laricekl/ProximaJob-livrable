@@ -16,7 +16,7 @@
   </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32 pb-16">
+  <main class="flex-grow pb-16">
 
     <!-- Top bar -->
     <section class="px-4 md:px-10 mb-6">

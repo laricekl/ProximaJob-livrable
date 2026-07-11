@@ -1,7 +1,7 @@
 @extends('layouts.candidat')
 @section('title', 'Dashboard')
 @section('content')
-  <main class="flex-grow pt-32 bg-white">
+  <main class="flex-grow bg-white">
 
     <!-- Hero Dashboard -->
     <section class="py-12 px-4 md:px-10 bg-white">

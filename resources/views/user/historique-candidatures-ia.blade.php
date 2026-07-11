@@ -16,7 +16,7 @@
 
     $newAiPostulationsCount = isset($newAiPostulationIds) ? $newAiPostulationIds->count() : 0;
   @endphp
-  <main class="flex-grow pt-32 bg-surface-container-low/40">
+  <main class="flex-grow bg-surface-container-low/40">
 
     <section class="px-4 md:px-10 pt-6 md:pt-8 pb-8">
       <div class="max-w-7xl mx-auto">
@@ -102,8 +102,8 @@
             <select id="status" name="status" style="min-width: 13rem;" class="px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all">
               <option value="" {{ request('status') === null ? 'selected' : '' }}>Tous statuts</option>
               <option value="En attente" {{ request('status') === 'En attente' ? 'selected' : '' }}>En attente</option>
-              <option value="Accepté" {{ request('status') === 'Accepté' ? 'selected' : '' }}>Accepté</option>
-              <option value="Rejeté" {{ request('status') === 'Rejeté' ? 'selected' : '' }}>Rejeté</option>
+              <option value="Accepté" {{ request('status') === 'Accepté' ? 'selected' : '' }}>accepted</option>
+              <option value="Rejeté" {{ request('status') === 'Rejeté' ? 'selected' : '' }}>rejected</option>
             </select>
           </div>
           <div>

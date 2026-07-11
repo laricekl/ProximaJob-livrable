@@ -46,7 +46,7 @@
       ? collect([$existingProfile->email, $existingProfile->telephone])->filter()->implode(' | ')
       : '';
   @endphp
-  <main class="flex-grow pt-32 pb-16">
+  <main class="flex-grow pb-16">
 
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-7xl mx-auto">
@@ -709,7 +709,7 @@
         if (marker) {
           marker.classList.toggle('text-white', isCompleted);
           marker.classList.toggle('bg-white/20', !isCompleted);
-          marker.style.backgroundColor = isCompleted ? '#16a34a' : '';
+          marker.style.backgroundColor = isCompleted ? 'var(--pj-accent)' : '';
           marker.innerHTML = isCompleted
             ? '<span class="material-symbols-outlined text-lg leading-none">check</span>'
             : String(stepNumber);

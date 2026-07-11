@@ -7,8 +7,9 @@
   </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32 pb-16">
+  <main class="flex-grow pb-16">
 
+    <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; Retour au tableau de bord</a>
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-3xl mx-auto space-y-6">
 

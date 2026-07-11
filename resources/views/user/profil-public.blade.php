@@ -44,7 +44,7 @@
   </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32 pb-16 {{ $isRecruiterPreview ? 'recruiter-preview' : '' }}">
+  <main class="flex-grow pb-16 {{ $isRecruiterPreview ? 'recruiter-preview' : '' }}">
 
     <!-- Top bar: title + preview -->
     <section class="px-4 md:px-10 mb-6">
@@ -95,7 +95,7 @@
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">mail</span>
-                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Courriel">{{ $publicUser->email ?? 'jean.dupont@email.com' }}</span>
+                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Courriel">{{ $publicUser->email ?? 'Non renseigné' }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">call</span>
@@ -139,7 +139,7 @@
                   <label class="block text-xs font-semibold text-outline mb-1.5">Salaire souhaité</label>
                   <div class="flex items-center gap-2">
                     <input type="number" class="w-full px-3 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="65000" value="{{ $publicUser->salary_expectation_min ?? '' }}" @disabled($isRecruiterPreview) />
-                    <span class="text-sm text-outline font-medium">CAD/an</span>
+                    <span class="text-sm text-outline font-medium">$/an</span>
                   </div>
                 </div>
                 <div>

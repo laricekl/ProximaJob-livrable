@@ -1,7 +1,7 @@
 @extends('layouts.candidat')
 @section('title', 'Mon abonnement')
 @section('content')
-  <main class="flex-grow pt-32">
+  <main class="flex-grow">
 
     <section class="py-12 px-4 md:px-10">
       <div class="max-w-5xl mx-auto">
@@ -43,7 +43,7 @@
                       @php
                         $joursRestants = $userAbonnement->date_fin ? (int) ceil(now()->diffInDays($userAbonnement->date_fin, false)) : null;
                       @endphp
-                      <p class="text-sm font-semibold {{ $joursRestants !== null && $joursRestants < 0 ? 'text-error' : ($joursRestants !== null && $joursRestants <= 7 ? 'text-warning' : 'text-primary') }}">
+                      <p class="text-sm font-semibold {{ $joursRestants !== null && $joursRestants < 0 ? 'text-error-dark'  : ($joursRestants !== null && $joursRestants <= 7 ? 'text-warning' : 'text-primary') }}">
                         @if ($joursRestants === null) —
                         @elseif ($joursRestants < 0) Expiré depuis {{ abs($joursRestants) }} jours
                         @else {{ $joursRestants }} jours
@@ -72,7 +72,7 @@
                 </h3>
                 <ul class="space-y-3">
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-success text-base">check_circle</span> CV personnalises par IA
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> CV personnalisés par IA
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
                     <span class="material-symbols-outlined text-success text-base">check_circle</span> Matching automatique
@@ -91,7 +91,7 @@
 
               <div class="rounded-2xl bg-gradient-to-br from-secondary-container/10 to-secondary-container/5 p-6">
                 <p class="text-xs font-semibold text-secondary-container mb-2">Besoin d'aide ?</p>
-                <p class="text-sm text-on-surface-variant mb-3">Notre equipe est disponible pour vos questions.</p>
+                <p class="text-sm text-on-surface-variant mb-3">Notre équipe est disponible pour vos questions.</p>
                 <a href="{{ route('contact') }}" class="text-sm font-bold text-secondary-container hover:underline">Contacter le support →</a>
               </div>
             </div>
@@ -104,7 +104,7 @@
                 <span class="material-symbols-outlined text-3xl text-outline">workspace_premium</span>
               </div>
               <h2 class="text-xl font-bold font-serif text-primary mb-2">Aucun abonnement actif</h2>
-              <p class="text-on-surface-variant max-w-md mx-auto mb-6">Souscrivez a un plan pour acceder aux CV personnalises par IA, au matching automatique et a toutes les fonctionnalites premium.</p>
+              <p class="text-on-surface-variant max-w-md mx-auto mb-6">Souscrivez à un plan pour accéder aux CV personnalisés par IA, au matching automatique et a toutes les fonctionnalites premium.</p>
               <a href="{{ route('plan.abonnement') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors shadow-lg shadow-secondary-container/20">
                 <span class="material-symbols-outlined text-lg">rocket_launch</span> Voir les plans
               </a>
@@ -115,7 +115,7 @@
             <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
               <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">auto_awesome</span>
               <p class="text-sm font-semibold text-primary">CV personnalises</p>
-              <p class="text-xs text-on-surface-variant mt-1">Generes par IA pour chaque offre</p>
+              <p class="text-xs text-on-surface-variant mt-1">Générés par IA pour chaque offre</p>
             </div>
             <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
               <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">psychology</span>
@@ -125,7 +125,7 @@
             <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
               <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">support_agent</span>
               <p class="text-sm font-semibold text-primary">Support prioritaire</p>
-              <p class="text-xs text-on-surface-variant mt-1">Assistance rapide et dedicate</p>
+              <p class="text-xs text-on-surface-variant mt-1">Assistance rapide et dédié</p>
             </div>
           </div>
         @endif

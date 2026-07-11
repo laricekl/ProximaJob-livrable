@@ -764,13 +764,13 @@
                   </div>
 
                   <div class="overflow-hidden flex-shrink min-w-0">
-                    <div id="spotlight2-text" class="space-y-1 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] w-full sm:w-[280px]" style="transform: translateX(0);">
+                    <div id="spotlight2-text" class="space-y-1 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] w-full sm:w-[280px] min-h-[120px]" style="transform: translateX(0);">
                       <div class="flex items-center gap-3">
                         <span class="px-2 py-0.5 rounded bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-wider border border-secondary-container/20">Partenaire Élite</span>
                         <span class="text-2xs text-primary/40 font-medium italic">Solution recrutement</span>
                       </div>
-                      <h3 class="text-xl md:text-2xl font-bold text-primary" id="spotlight2-name">ProximaJob Entreprise</h3>
-                      <p class="text-primary/60 text-sm italic font-medium" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."</p>
+                      <h3 class="text-xl md:text-2xl font-bold text-primary truncate" id="spotlight2-name">ProximaJob Entreprise</h3>
+                      <p class="text-primary/60 text-sm italic font-medium line-clamp-3 min-h-[3.5rem]" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."</p>
                     </div>
                   </div>
                 </div>
@@ -1152,7 +1152,7 @@
 
       const partners2 = [
         @foreach ($featuredEntreprises as $fe)
-          { name: '{{ addslashes($fe->company_name) }}', quote: '{{ addslashes(Str::limit($fe->description, 100)) }}', icon: 'business', link: '{{ route('entreprise.profil', $fe->id) }}' },
+          { name: '{{ addslashes(Str::limit($fe->company_name, 40)) }}', quote: '{{ addslashes(Str::limit($fe->description, 100)) }}', icon: 'business', link: '{{ route('entreprise.profil', $fe->id) }}' },
         @endforeach
       ];
 
