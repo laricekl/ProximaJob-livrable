@@ -3,6 +3,20 @@
 @section('content')
   <main class="flex-grow bg-white">
 
+    {{-- Bandeau complétion profil --}}
+    @php $cvProfile = auth()->user()->cvProfile; @endphp
+    @if (!$cvProfile || !$cvProfile->experiences()->exists())
+      <div class="bg-warning-light border-b border-warning-light">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
+          <p class="text-sm text-warning-dark flex items-center gap-2">
+            <span class="material-symbols-outlined text-lg">info</span>
+            Complétez votre profil CV pour débloquer le matching IA et postuler aux offres.
+          </p>
+          <a href="{{ route('infos.cv') }}" class="whitespace-nowrap text-sm font-bold text-warning-dark hover:underline">Compléter mon CV →</a>
+        </div>
+      </div>
+    @endif
+
     <!-- Hero Dashboard -->
     <section class="py-12 px-4 md:px-10 bg-white">
       <div class="max-w-7xl mx-auto">

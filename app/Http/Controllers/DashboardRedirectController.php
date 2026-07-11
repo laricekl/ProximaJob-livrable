@@ -26,6 +26,11 @@ class DashboardRedirectController extends Controller
         }
 
         if ($user->hasRole('candidat')) {
+            $cvProfile = $user->cvProfile;
+            if (!$cvProfile || !$cvProfile->experiences()->exists()) {
+                return redirect()->route('infos.cv')
+                    ->with('success', 'Bienvenue ! Complétez votre profil CV pour commencer.');
+            }
             return redirect()->route('user.home');
         }
 

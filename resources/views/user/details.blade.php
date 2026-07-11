@@ -109,6 +109,8 @@
 
               @auth
                 @php
+                  $cvProfile = auth()->user()->cvProfile;
+                  $hasCV = $cvProfile && $cvProfile->experiences()->exists();
                   $applicationStatus = $existingPostulation?->status;
                   $canUpdateApplication = $existingPostulation && !in_array($applicationStatus, ['accepted', 'rejected'], true);
                   $isFinalApplication = $existingPostulation && in_array($applicationStatus, ['accepted', 'rejected'], true);
@@ -117,7 +119,11 @@
                   $finalApplicationLabel = $applicationStatus === 'accepted' ? 'Candidature acceptée' : 'Candidature refusée';
                 @endphp
 
-                @if ($isFinalApplication)
+                @if (!$hasCV)
+                  <a href="{{ route('infos.cv') }}" class="w-full py-3.5 bg-warning-light text-warning-dark font-bold rounded-xl hover:bg-warning-light/80 transition-all mb-3 flex items-center justify-center gap-2">
+                    <span class="material-symbols-outlined text-lg">description</span> Compléter mon CV pour postuler
+                  </a>
+                @elseif ($isFinalApplication)
                   <button type="button" disabled class="w-full py-3.5 bg-surface-container-low text-outline font-bold rounded-xl mb-3 flex items-center justify-center gap-2 cursor-not-allowed">
                     <span class="material-symbols-outlined text-lg">lock</span> {{ $finalApplicationLabel }}
                   </button>
