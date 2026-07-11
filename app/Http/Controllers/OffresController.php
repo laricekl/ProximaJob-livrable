@@ -197,7 +197,8 @@ class OffresController extends Controller
         $sectors = Sector::active()->orderBy('name')->get();
         $diplomes = Diplome::actif()->orderBy('nom_diplome')->get();
 
-        return view('entreprise.create-offre', compact('contractTypes', 'sectors', 'diplomes'));
+        $skills = \App\Models\Skill::where('is_active', true)->orderBy('category')->orderBy('name')->get();
+        return view('entreprise.create-offre', compact('contractTypes', 'sectors', 'diplomes', 'skills'));
     }
 
     private function ensureDefaultSectors(): void

@@ -206,6 +206,26 @@
               </div>
             </div>
 
+            @if (isset($skills) && $skills->isNotEmpty())
+            <div>
+              <label class="block text-sm font-semibold text-primary mb-2">Compétences recherchées</label>
+              <p class="text-xs text-outline mb-3">Sélectionnez les compétences requises pour ce poste.</p>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-60 overflow-y-auto">
+                @foreach ($skills->groupBy('category') as $category => $group)
+                  <div class="md:col-span-2 mt-2 first:mt-0">
+                    <p class="text-xs font-bold text-outline uppercase tracking-wider mb-2">{{ $group->first()->category_label }}</p>
+                  </div>
+                  @foreach ($group as $skill)
+                    <label class="flex items-center gap-3 px-3 py-2 bg-white/70 backdrop-blur-sm border border-outline-variant/20 rounded-xl text-sm cursor-pointer hover:border-secondary-container/30 transition-colors">
+                      <input type="checkbox" name="skillls[]" value="{{ $skill->id }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @checked(in_array($skill->id, old('skillls', []))) />
+                      <span>{{ $skill->name }}</span>
+                    </label>
+                  @endforeach
+                @endforeach
+              </div>
+            </div>
+            @endif
+
             <div>
               <label class="block text-sm font-semibold text-primary mb-2">Avantages proposés</label>
               <div class="flex flex-wrap gap-3">

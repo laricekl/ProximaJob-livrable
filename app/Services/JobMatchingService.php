@@ -258,6 +258,27 @@ class JobMatchingService
 }
     
     /**
+     * Retourne les offres recommandées pour un candidat, triées par score.
+     */
+    public function getRecommendedOffers(int $candidateId, int $limit = 6): \Illuminate\Support\Collection
+    {
+        $offers = Offre::with(['entreprise.user', 'type', 'categorie'])
+            ->where('status', 'active')
+            ->get();
+
+        $scored = $offers->map(function ($offer) use ($candidateId) {
+            $score = $this->calculateMatchScore($offer->id, $candidateId);
+            $offer->match_score = $score;
+            return $offer;
+        })
+        ->filter(fn ($o) => $o->match_score > 0)
+        ->sortByDesc('match_score')
+        ->take($limit);
+
+        return $scored;
+    }
+
+    /**
      * Lance le processus de matching automatique
      */
     public function processAutoMatching(?int $candidateId = null): array

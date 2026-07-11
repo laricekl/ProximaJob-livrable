@@ -36,11 +36,8 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
-        $recommendedOffres = Offre::with(['entreprise.user', 'type'])
-            ->where('status', 'active')
-            ->latest()
-            ->take(3)
-            ->get();
+        $matchingService = app(\App\Services\JobMatchingService::class);
+        $recommendedOffres = $matchingService->getRecommendedOffers($user->id, 6);
 
         $applicationsQuery = Postulation::with(['offre.entreprise', 'offre.type'])
             ->where('user_id', $user->id);

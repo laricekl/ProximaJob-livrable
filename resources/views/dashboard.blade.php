@@ -102,6 +102,9 @@
               </div>
               <div class="mt-3 sm:mt-0 flex items-center gap-3 relative z-10">
                 <span class="px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">{{ $offre->type->nom ?? 'Offre' }}</span>
+                @if (!empty($offre->match_score))
+                  <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ round($offre->match_score) }}% match</span>
+                @endif
                 <span class="text-secondary-container font-bold text-sm">
                   @if ($offre->salaire_min || $offre->salaire_max)
                     {{ $offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', ' ') : '?' }} - {{ $offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', ' ') : '?' }}$
