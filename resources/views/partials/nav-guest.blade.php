@@ -45,7 +45,7 @@
 
   <div id="mobile-menu" class="fixed inset-0 z-40 lg:hidden pointer-events-none">
     <div id="menu-overlay" class="absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-300"></div>
-    <div id="menu-panel" class="absolute top-0 right-0 w-72 max-w-[85vw] h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col">
+    <div id="menu-panel" class="absolute top-0 right-0 w-72 max-w-[85vw] h-full bg-white shadow-2xl transform translate-x-full transition-transform duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col">
       <div class="flex items-center justify-between px-5 py-4 border-b border-outline-variant/20">
         <a href="{{ route('welcome') }}" class="flex items-center gap-2">
           <x-brand-logo icon-class="w-12 h-auto" text-class="text-[15px] font-bold font-serif text-primary tracking-tight" />

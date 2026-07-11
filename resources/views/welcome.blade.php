@@ -742,6 +742,7 @@
         </div>
 
         <!-- SPOTLIGHT PARTENAIRES · Slide -->
+        @if ($featuredEntreprises->isNotEmpty())
         <div class="hero-reveal hero-reveal--5 mt-6 max-w-4xl mx-auto spotlight-scene">
           <div class="relative group">
             <div class="absolute -inset-4 bg-gradient-to-r from-secondary-container/30 via-secondary/20 to-primary/10 rounded-[2.5rem] blur-2xl opacity-30 group-hover:opacity-60 transition duration-1000"></div>
@@ -781,6 +782,7 @@
             </div>
           </div>
         </div>
+        @endif
 
       </div>
     </section>
@@ -1149,10 +1151,9 @@
       if (!textEl || !nameEl) return;
 
       const partners2 = [
-        { name: 'Tech Solutions Inc.',       quote: '"Solutions IT sur mesure pour entreprises de toutes tailles."',  icon: 'precision_manufacturing', link: '{{ route('entreprise.profil', 1) }}' },
-        { name: 'Global Health Group',       quote: '"Recrutement specialise dans le secteur de la sante."',          icon: 'health_and_safety',      link: '{{ route('entreprise.profil', 2) }}' },
-        { name: 'LogiTransport Quebec',      quote: '"Leader en logistique et transport a travers le Quebec."',        icon: 'local_shipping',         link: '{{ route('entreprise.profil', 4) }}' },
-        { name: 'Banque Nationale du Quebec',quote: '"Opportunites de carriere dans le secteur financier."',           icon: 'account_balance',        link: '{{ route('entreprise.profil', 5) }}' }
+        @foreach ($featuredEntreprises as $fe)
+          { name: '{{ addslashes($fe->company_name) }}', quote: '{{ addslashes(Str::limit($fe->description, 100)) }}', icon: 'business', link: '{{ route('entreprise.profil', $fe->id) }}' },
+        @endforeach
       ];
 
       let idx = 0;

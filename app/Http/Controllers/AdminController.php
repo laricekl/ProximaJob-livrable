@@ -1940,4 +1940,15 @@ public function reactivateUser(Request $request, $id)
 }
 
 
+
+    /**
+     * Toggle featured status for an entreprise.
+     */
+    public function toggleFeatured($id)
+    {
+        $entreprise = \App\Models\Entreprise::findOrFail($id);
+        $entreprise->update(['is_featured' => !$entreprise->is_featured]);
+        $status = $entreprise->is_featured ? 'mise en vedette' : 'retiree des vedettes';
+        return redirect()->back()->with('success', $entreprise->company_name . ' ' . $status . '.');
+    }
 }

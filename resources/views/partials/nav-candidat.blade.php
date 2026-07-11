@@ -49,7 +49,7 @@
   </nav>
   <div id="mobile-menu" class="fixed inset-0 z-40 lg:hidden pointer-events-none">
     <div id="menu-overlay" class="absolute inset-0 bg-black/30 opacity-0 transition-opacity duration-300"></div>
-    <div id="menu-panel" class="absolute top-0 right-0 w-72 max-w-[85vw] h-full nav-glass rounded-l-3xl shadow-2xl transform translate-x-full transition-transform duration-400 ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col gap-8 pt-20 px-8">
+    <div id="menu-panel" class="absolute top-0 right-0 w-72 max-w-[85vw] h-full nav-glass rounded-l-3xl shadow-2xl transform translate-x-full transition-transform duration-[400ms] ease-[cubic-bezier(0.22,1,0.36,1)] flex flex-col gap-8 pt-20 px-8">
       <button onclick="document.getElementById('menu-overlay').click()" class="absolute top-6 right-6 w-11 h-11 flex items-center justify-center rounded-full bg-surface-container-low text-primary hover:bg-surface-container transition-colors" aria-label="Fermer le menu">
         <span class="material-symbols-outlined text-xl">close</span>
       </button>

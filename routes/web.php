@@ -213,6 +213,7 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
     Route::put('/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::post('/users/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
     Route::post('/users/{id}/suspend', [AdminController::class, 'suspendUser']) ->name('admin.users.suspend');
+    Route::post('/entreprises/{id}/toggle-featured', [AdminController::class, 'toggleFeatured'])->name('admin.entreprises.toggle-featured');
     Route::post('/users/{id}/reactivate', [AdminController::class, 'reactivateUser'])->name('admin.users.reactivate');
 
 

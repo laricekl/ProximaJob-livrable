@@ -68,12 +68,17 @@ class HomeController extends Controller
         $totalUtilisateurs = User::count();
         $totalEntreprises = Entreprise::count();
 
+        $featuredEntreprises = Entreprise::where('is_featured', true)
+            ->whereNotNull('verified_at')
+            ->take(6)
+            ->get();
+
          $abonnements = Abonnement::get();
          $fonctionnalites = AbonnementFonctionnalite::get();
 
 
 
-        return view('welcome', compact('offres', 'villes', 'categories', 'search', 'localisations','categoriesWithCount', 'totalOffres', 'totalUtilisateurs','totalEntreprises', 'abonnements',  'fonctionnalites'));
+        return view('welcome', compact('offres', 'villes', 'categories', 'search', 'localisations','categoriesWithCount', 'totalOffres', 'totalUtilisateurs','totalEntreprises', 'abonnements',  'fonctionnalites', 'featuredEntreprises'));
     }
 
     /**
