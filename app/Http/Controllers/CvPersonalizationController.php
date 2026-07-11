@@ -43,6 +43,8 @@ class CvPersonalizationController extends Controller
         $selectedOfferDetails = '';
         $selectedOfferRequirements = '';
         $selectedOfferCompany = '';
+        $offerSkills = [];
+        $offerDataQuality = null;
 
         if ($request->filled('offre_id')) {
             $selectedOffer = Offre::with(['entreprise'])
@@ -55,11 +57,32 @@ class CvPersonalizationController extends Controller
                     ?: $selectedOffer->responsibilities
                     ?: '';
 
+                // Enrichir avec les compétences sélectionnées dans l'offre
+                $offerSkills = $selectedOffer->skills()
+                    ->with('skill')
+                    ->get()
+                    ->pluck('skill.name')
+                    ->filter()
+                    ->toArray();
+
                 $selectedOfferRequirements = $selectedOffer->competences
                     ?: $selectedOffer->criteres
                     ?: '';
 
+                if (!empty($offerSkills)) {
+                    $skillsText = implode(', ', $offerSkills);
+                    $selectedOfferRequirements = $selectedOfferRequirements
+                        ? $selectedOfferRequirements . "\nCompétences requises : " . $skillsText
+                        : 'Compétences requises : ' . $skillsText;
+                }
+
                 $selectedOfferCompany = $selectedOffer->entreprise->company_name ?? '';
+
+                // Qualité des données de l'offre
+                $offerDataQuality = (mb_strlen($selectedOfferDetails) > 50) ? 'bonne' : 'faible';
+                if ($offerDataQuality === 'faible' && empty($offerSkills)) {
+                    $offerDataQuality = 'insuffisante';
+                }
             }
         }
 
@@ -69,7 +92,9 @@ class CvPersonalizationController extends Controller
             'selectedOffer',
             'selectedOfferDetails',
             'selectedOfferRequirements',
-            'selectedOfferCompany'
+            'selectedOfferCompany',
+            'offerSkills',
+            'offerDataQuality'
         ));
     }
 
@@ -79,10 +104,10 @@ class CvPersonalizationController extends Controller
     public function generateCV(Request $request)
     {
         $request->validate([
-            'offer_details' => 'required|string|min:10',
+            'offer_details' => 'required|string|min:20',
             'offer_title' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
-            'key_requirements' => 'nullable|string',
+            'key_requirements' => 'required_without:offre_id|nullable|string|min:3',
             'template_style' => 'nullable|in:modern,classic,executive',
             'accent_color' => 'nullable|in:blue,green,bordeaux,anthracite,petrol',
             'font_style' => 'nullable|in:sober,modern,classic',
@@ -199,7 +224,18 @@ class CvPersonalizationController extends Controller
         $offer->titre = $request->offer_title;
         $offer->poste = $request->offer_title;
         $offer->description = $request->offer_details;
-        $offer->competences = $request->key_requirements;
+
+        // Enrichir avec les skills de l'offre si disponible
+        $competences = $request->key_requirements ?: '';
+        if ($request->filled('offre_id')) {
+            $dbOffer = Offre::with('skills.skill')->find($request->integer('offre_id'));
+            if ($dbOffer && $dbOffer->skills->isNotEmpty()) {
+                $skillsText = $dbOffer->skills->pluck('skill.name')->filter()->implode(', ');
+                $competences = $competences ? $competences . ', ' . $skillsText : $skillsText;
+            }
+        }
+        $offer->competences = $competences;
+
         $offer->entreprise = new \stdClass();
         $offer->entreprise->name = $request->company_name ?? 'Entreprise Cible';
         $offer->customization_options = [

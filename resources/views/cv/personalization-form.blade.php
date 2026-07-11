@@ -50,6 +50,17 @@
                 <label class="block text-sm font-semibold text-primary mb-2" for="offer_details">Description du poste <span class="text-secondary-container">*</span></label>
                 <textarea id="offer_details" name="offer_details" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Decrivez les missions principales, le contexte..." required>{{ old('offer_details', $selectedOfferDetails ?? '') }}</textarea>
                 <p class="text-xs text-outline mt-1.5">Plus vous etes precis, mieux nous pouvons adapter votre CV</p>
+                @if (isset($offerDataQuality) && $offerDataQuality === 'insuffisante')
+                  <div class="mt-3 rounded-xl border border-warning-light bg-warning-light px-4 py-3 text-sm text-warning-dark flex items-start gap-2">
+                    <span class="material-symbols-outlined text-lg flex-shrink-0">warning</span>
+                    <span>L'offre sélectionnée contient peu d'informations. Pour un CV vraiment personnalisé, ajoutez plus de détails dans la description.</span>
+                  </div>
+                @elseif (isset($offerDataQuality) && $offerDataQuality === 'faible')
+                  <div class="mt-3 rounded-xl border border-warning-light/50 bg-warning-light/50 px-4 py-3 text-sm text-warning-dark flex items-start gap-2">
+                    <span class="material-symbols-outlined text-lg flex-shrink-0">info</span>
+                    <span>La description est courte. Ajoutez plus de détails pour un meilleur résultat.</span>
+                  </div>
+                @endif
               </div>
 
               <div>
