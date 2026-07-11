@@ -107,7 +107,7 @@
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $skills->firstItem() ?? 0 }}-{{ $skills->lastItem() ?? 0 }} sur {{ $skills->total() }} compétences</span>
-      {{ $skills->withQueryString()->links('components.pagination.admin-pagination') }}
+      {{ $skills->withQueryString()->links('components.pagination.public-pagination') }}
     </div>
   </div>
 </div>

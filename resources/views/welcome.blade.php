@@ -472,8 +472,8 @@
     <div class="ambient-orb ambient-orb--2"></div>
   </div>
 
-  <main class="flex-grow pt-24 md:pt-32">
-    <section class="pt-8 md:pt-16 pb-16 md:pb-20 px-4 md:px-10 relative overflow-visible">
+  <main class="flex-grow">
+    <section class="pt-4 md:pt-8 pb-16 md:pb-20 px-4 md:px-10 relative overflow-visible">
       <div class="max-w-5xl mx-auto text-center mt-6 md:mt-10 relative">
 
         <!-- MASCOTTE en Absolute Overlay -->
@@ -666,13 +666,13 @@
         </p>
 
         <!-- Search Bar -->
-        <div class="hero-reveal hero-reveal--3 mt-6 md:mt-10 max-w-5xl mx-auto search-glass relative z-10">
+        <div class="hero-reveal hero-reveal--3 mt-6 md:mt-10 max-w-5xl mx-auto relative z-10">
 
           <!-- MOBILE: Compact single-row -->
-          <form method="GET" action="{{ route('offres') }}" class="flex md:hidden items-center gap-1 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-1.5 border border-white/50">
+          <form method="GET" action="{{ route('offres') }}" class="flex md:hidden items-center gap-1 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-1.5 border border-white/50 search-glass">
             <div class="flex-1 flex items-center min-w-0 px-3 py-1.5">
               <span class="material-symbols-outlined text-outline mr-2 text-sm flex-shrink-0">search</span>
-              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
+              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
             </div>
             <button id="filter-toggle" type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-outline hover:text-secondary-container hover:bg-secondary-container/5 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px]" aria-label="Filtres">
               <span class="material-symbols-outlined text-xl">tune</span>
@@ -686,7 +686,7 @@
           <form method="GET" action="{{ route('offres') }}" id="filter-panel" class="md:hidden bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl p-3 border border-white/50 hidden">
             <div class="flex items-center px-3 py-2 mb-2 border-b border-outline-variant/20">
               <span class="material-symbols-outlined text-outline mr-2 text-sm">location_on</span>
-              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-sm" placeholder="Localisation" type="text" />
+              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Localisation" type="text" />
             </div>
             <div class="flex items-center px-3 py-2">
               <span class="material-symbols-outlined text-outline mr-2 text-sm">category</span>
@@ -701,14 +701,14 @@
           </form>
 
           <!-- DESKTOP: Multi-field row -->
-          <form method="GET" action="{{ route('offres') }}" class="hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-2 border border-white/50">
+          <form method="GET" action="{{ route('offres') }}" class="hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-2 border border-white/50 search-glass">
             <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
               <span class="material-symbols-outlined text-outline mr-3 text-base">search</span>
-              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
+              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
             </div>
             <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
               <span class="material-symbols-outlined text-outline mr-3 text-base">location_on</span>
-              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-base" placeholder="Localisation" type="text" />
+              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Localisation" type="text" />
             </div>
             <div class="flex-1 flex items-center px-4 py-2">
               <span class="material-symbols-outlined text-outline mr-3 text-base">category</span>
@@ -1149,10 +1149,10 @@
       if (!textEl || !nameEl) return;
 
       const partners2 = [
-        { name: 'ProximaJob Entreprise', quote: '"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."', icon: 'workspace_premium', link: '{{ route('offres') }}' },
-        { name: 'TechRecruit',             quote: '"L\'IA au coeur du matching — 10 000 recrutements par an."',                icon: 'precision_manufacturing',   link: '{{ route('offres') }}' },
-        { name: 'BuildTeam',               quote: '"Des equipes sur-mesure en moins de 48h. La qualite avant la quantite."',  icon: 'groups',                   link: '{{ route('offres') }}' },
-        { name: 'ScaleUp RH',              quote: '"Accelerez votre croissance avec nos solutions RH nouvelle generation."',   icon: 'trending_up',              link: '{{ route('offres') }}' }
+        { name: 'Tech Solutions Inc.',       quote: '"Solutions IT sur mesure pour entreprises de toutes tailles."',  icon: 'precision_manufacturing', link: '{{ route('entreprise.profil', 1) }}' },
+        { name: 'Global Health Group',       quote: '"Recrutement specialise dans le secteur de la sante."',          icon: 'health_and_safety',      link: '{{ route('entreprise.profil', 2) }}' },
+        { name: 'LogiTransport Quebec',      quote: '"Leader en logistique et transport a travers le Quebec."',        icon: 'local_shipping',         link: '{{ route('entreprise.profil', 4) }}' },
+        { name: 'Banque Nationale du Quebec',quote: '"Opportunites de carriere dans le secteur financier."',           icon: 'account_balance',        link: '{{ route('entreprise.profil', 5) }}' }
       ];
 
       let idx = 0;

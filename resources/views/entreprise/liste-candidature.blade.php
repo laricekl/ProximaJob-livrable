@@ -129,7 +129,7 @@
         </div>
 
         <div class="flex justify-center items-center gap-3">
-          {{ $postulations->withQueryString()->links() }}
+          {{ $postulations->withQueryString()->links('components.pagination.public-pagination') }}
         </div>
       </div>
     </section>

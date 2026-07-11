@@ -91,7 +91,7 @@
     </div>
     <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
       <span class="text-outline">{{ $secteurs->firstItem() ?? 0 }}-{{ $secteurs->lastItem() ?? 0 }} sur {{ $secteurs->total() }} secteurs</span>
-      {{ $secteurs->withQueryString()->links('components.pagination.admin-pagination') }}
+      {{ $secteurs->withQueryString()->links('components.pagination.public-pagination') }}
     </div>
   </div>
 </div>

@@ -77,6 +77,22 @@ class HomeController extends Controller
     }
 
     /**
+     * Page publique d'une entreprise.
+     */
+    public function entreprise($id)
+    {
+        $entreprise = Entreprise::findOrFail($id);
+        $entreprise->load('user');
+        $offres = $entreprise->offres()
+            ->where('status', 'active')
+            ->with(['type', 'categorie'])
+            ->latest()
+            ->paginate(6);
+
+        return view('parametres.entreprise-profil', compact('entreprise', 'offres'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()

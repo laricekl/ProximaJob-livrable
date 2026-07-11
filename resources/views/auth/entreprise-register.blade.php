@@ -73,6 +73,12 @@
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
 
+            <div class="mt-4">
+              <label for="description" class="block text-sm font-semibold text-primary mb-2">Description de l'entreprise</label>
+              <textarea id="description" name="description" rows="3" placeholder="Décrivez votre entreprise, votre mission, ce qui vous rend unique..."
+                class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline resize-none">{{ old('description') }}</textarea>
+            </div>
+
             <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label for="rccm" class="block text-sm font-semibold text-primary mb-2">RCCM</label>

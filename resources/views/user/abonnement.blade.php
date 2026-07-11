@@ -24,7 +24,7 @@
                       <h2 class="mt-2 text-xl font-bold text-primary">{{ $userAbonnement->abonnement->nom ?? 'Abonnement' }}</h2>
                     </div>
                     <div class="text-right">
-                      <p class="text-3xl font-bold text-primary">{{ number_format($userAbonnement->abonnement->montant ?? 0, 2, ',', ' ') }} €</p>
+                      <p class="text-3xl font-bold text-primary">{{ number_format($userAbonnement->abonnement->montant ?? 0, 2, ',', ' ') }} $</p>
                       <p class="text-xs text-outline">/{{ $userAbonnement->abonnement->duree ?? 'mois' }}</p>
                     </div>
                   </div>

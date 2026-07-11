@@ -42,7 +42,7 @@
               @endif
               <div class="card-3d-content text-center">
                 <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>
-                <p class="text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abo->montant, 2, ',', ' '), '0'), ',') }}<span class="text-lg text-outline">€</span></p>
+                <p class="text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abo->montant, 2, ',', ' '), '0'), ',') }}<span class="text-lg text-outline">$</span></p>
                 <p class="text-xs text-outline mt-1">/{{ $abo->duree }} jour(s)</p>
                 @if ($abo->description)
                   <p class="text-2xs text-outline/60 mt-1">{{ $abo->description }}</p>

@@ -66,7 +66,7 @@
         </div>
 
         <div class="flex justify-center items-center gap-3">
-          {{ $offres->withQueryString()->links() }}
+          {{ $offres->withQueryString()->links('components.pagination.public-pagination') }}
         </div>
       </div>
     </section>

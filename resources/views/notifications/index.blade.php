@@ -106,7 +106,7 @@
 
         @if ($isPaginatedNotifications && $notifications->hasPages())
           <div class="mt-8">
-            {{ $notifications->links() }}
+            {{ $notifications->links('components.pagination.public-pagination') }}
           </div>
         @endif
       </div>

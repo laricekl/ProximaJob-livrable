@@ -13,7 +13,7 @@
     .faq-item.active .faq-answer { display: block; }
     .faq-item.active .faq-icon { transform: rotate(45deg); }
     @media (max-width: 767px) {
-      main.pt-32 { padding-top: 5rem !important; }
+      main { }
       section.py-24 { padding: 2rem 1rem !important; }
       .text-5xl { font-size: 1.75rem !important; }
       .text-white\/70.text-lg { font-size: 0.8rem; }
@@ -50,7 +50,7 @@
 </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
+  <main class="flex-grow" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
 
     <x-public-page-hero
       title="Abonnements Premium"
@@ -130,7 +130,7 @@
                     @else
                       {{ rtrim(rtrim(number_format((float) $abo->montant, 2, ',', ' '), '0'), ',') }}
                     @endif
-                    <span class="text-lg text-outline">€</span>
+                    <span class="text-lg text-outline">$</span>
                   </p>
                   <p class="text-xs text-outline mt-1">/{{ $abo->duree }} jour(s)</p>
                   <ul class="mt-4 space-y-2 text-xs text-outline text-left">

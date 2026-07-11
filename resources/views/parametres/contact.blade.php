@@ -18,7 +18,7 @@
       }
     }
     @media (max-width: 767px) {
-      main.pt-32 { padding-top: 6rem; }
+      main { }
       section.py-20 { padding: 2rem 1rem !important; }
       .text-5xl { font-size: 2rem !important; }
       .text-3xl { font-size: 1.5rem !important; }
@@ -44,7 +44,7 @@
     $mapLocation = $infos?->localisation ?: 'Montreal, QC, Canada';
     $mapSearchUrl = 'https://www.google.com/maps/search/?api=1&query=' . urlencode($mapLocation);
   @endphp
-  <main class="flex-grow pt-32" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
+  <main class="flex-grow" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
 
     <x-public-page-hero
       title="Contactez-nous"

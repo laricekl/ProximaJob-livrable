@@ -20,7 +20,7 @@
     $description = $offre->description ?? $offre->missions ?? 'Aucune description detaillee disponible pour cette offre.';
   @endphp
 
-  <main class="flex-grow pt-32">
+  <main class="flex-grow">
     <section class="px-4 md:px-10 pb-2">
       <div class="max-w-7xl mx-auto">
         <nav class="inline-flex max-w-full items-center gap-2 rounded-full bg-white/90 px-4 py-2.5 text-xs font-semibold text-outline shadow-sm ring-1 ring-outline-variant/10" aria-label="Fil d'Ariane">
@@ -44,7 +44,13 @@
                 </div>
                 <div>
                   <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary leading-tight">{{ $offre->titre }}</h1>
-                  <p class="text-on-surface-variant mt-1">{{ $companyName }} • {{ $offre->localisation ?? 'Localisation à confirmer' }}</p>
+                  <p class="text-on-surface-variant mt-1">
+                    @if($offre->entreprise)
+                      <a href="{{ route('entreprise.profil', $offre->entreprise) }}" class="hover:text-secondary-container transition-colors font-semibold">{{ $companyName }}</a>
+                    @else
+                      {{ $companyName }}
+                    @endif
+                    • {{ $offre->localisation ?? 'Localisation à confirmer' }}</p>
                   <div class="flex flex-wrap items-center gap-2 mt-3">
                     <span class="px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">{{ $contractType }}</span>
                     @if ($offre->remote_work)
@@ -54,7 +60,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex flex-wrap items-center gap-6 text-sm text-on-surface-variant">
+              <div class="flex flex-wrap items-center justify-end gap-6 text-sm text-on-surface-variant">
                 <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">today</span> Publié le {{ optional($offre->created_at)->translatedFormat('d M Y') }}</span>
                 @if ($offre->date_fin)
                   <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> Date limite : {{ \Carbon\Carbon::parse($offre->date_fin)->translatedFormat('d M Y') }}</span>
@@ -99,8 +105,7 @@
 
           <aside class="lg:w-80 flex-shrink-0 space-y-5">
             <div class="card-glow rounded-2xl p-6 text-center sticky top-28">
-              <div class="text-3xl font-bold text-primary mb-1">{{ $salary }}</div>
-              <p class="text-xs text-on-surface-variant mb-5">{{ $offre->salary_type ?? 'Selon experience' }}</p>
+              <div class="text-xl font-bold text-primary mb-5">{{ $salary }}</div>
 
               @auth
                 @php

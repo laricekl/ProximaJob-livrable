@@ -83,7 +83,7 @@
         </div>
 
         <div class="flex justify-center items-center gap-3 mt-8">
-          {{ $offres->withQueryString()->links() }}
+          {{ $offres->withQueryString()->links('components.pagination.public-pagination') }}
         </div>
       </div>
     </section>

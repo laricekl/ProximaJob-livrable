@@ -11,7 +11,7 @@
       @forelse ($abonnementSummaries->take(3) as $abonnement)
         <div class="card-glow rounded-2xl p-6 text-center {{ $abonnement->populaire ? 'ring-2 ring-secondary-container' : '' }}" x-data="{ editing: false }">
           <p class="mb-2 text-xs font-bold uppercase tracking-widest {{ $abonnement->populaire ? 'text-secondary-container' : 'text-outline' }}">{{ $abonnement->nom }}</p>
-          <p class="mb-4 text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abonnement->montant, 2, ',', ' '), '0'), ',') }}€<span class="text-sm font-normal text-outline">/{{ $abonnement->duree }}</span></p>
+          <p class="mb-4 text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abonnement->montant, 2, ',', ' '), '0'), ',') }}$<span class="text-sm font-normal text-outline">/{{ $abonnement->duree }}</span></p>
           <p class="mb-2 text-sm text-on-surface-variant">{{ number_format($abonnement->users_count) }} utilisateurs</p>
           <div class="mb-4 h-2 w-full rounded-full bg-surface-container">
             <div class="h-2 rounded-full bg-secondary-container" style="width: {{ max(3, ($abonnement->users_count / $summaryMax) * 100) }}%"></div>
@@ -63,7 +63,7 @@
       <x-admin.stat-card label="Actifs" :value="number_format($activeSubscriptions)" />
       <x-admin.stat-card label="Expirés" :value="number_format($expiredSubscriptions)" />
       <x-admin.stat-card label="À renouveler" :value="number_format($toRenew)" />
-      <x-admin.stat-card label="Revenu mensuel" :value="number_format((float) $monthlyRevenue, 0, ',', ' ').'€'" />
+      <x-admin.stat-card label="Revenu mensuel" :value="number_format((float) $monthlyRevenue, 0, ',', ' ').'$'" />
     </div>
 
     <div class="card-glow overflow-hidden rounded-2xl">
@@ -121,7 +121,7 @@
       </div>
       <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
         <span class="text-outline">{{ $abonnements->firstItem() ?? 0 }}-{{ $abonnements->lastItem() ?? 0 }} sur {{ $abonnements->total() }} abonnements</span>
-        {{ $abonnements->withQueryString()->links('components.pagination.admin-pagination') }}
+        {{ $abonnements->withQueryString()->links('components.pagination.public-pagination') }}
       </div>
     </div>
   </div>

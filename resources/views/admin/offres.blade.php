@@ -57,7 +57,7 @@
                   <p class="text-xs text-outline">
                     {{ $offer->localisation ?: 'Localisation non renseignée' }}
                     @if ($offer->salaire_min || $offer->salaire_max)
-                      • {{ (int) $offer->salaire_min }}-{{ (int) $offer->salaire_max }}€
+                      • {{ (int) $offer->salaire_min }}-{{ (int) $offer->salaire_max }}$
                     @endif
                   </p>
                 </td>
@@ -121,7 +121,7 @@
         <span class="text-outline">
           {{ $offers->firstItem() ?? 0 }}-{{ $offers->lastItem() ?? 0 }} sur {{ $offers->total() }} offres
         </span>
-        {{ $offers->withQueryString()->links('components.pagination.admin-pagination') }}
+        {{ $offers->withQueryString()->links('components.pagination.public-pagination') }}
       </div>
     </div>
   </div>

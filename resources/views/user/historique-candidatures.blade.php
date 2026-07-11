@@ -167,7 +167,7 @@
               Affichage de {{ $postulations->firstItem() ?? 0 }} à {{ $postulations->lastItem() ?? 0 }} sur {{ $postulations->total() }} candidatures
             </p>
             <div>
-              {{ $postulations->withQueryString()->links() }}
+              {{ $postulations->withQueryString()->links('components.pagination.public-pagination') }}
             </div>
           </div>
         </div>

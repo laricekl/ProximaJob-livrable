@@ -21,7 +21,7 @@
       .mb-10 {
         margin-bottom: 1.5rem !important;
       }
-      main.pt-32 {
+      main {
         padding-top: 6rem;
       }
       main.pb-20 {
@@ -128,15 +128,7 @@
       }
 
       /* Pagination */
-      nav.mt-10 {
-        margin-top: 16px;
-      }
-      nav .w-10 {
-        width: 34px;
-        height: 34px;
-        font-size: 12px;
-        border-radius: 8px;
-      }
+      .pagination-container { padding: 8px 12px; }
 
       /* Footer - déjà compact, juste ajuster si besoin */
       footer nav.gap-4 {
@@ -155,7 +147,7 @@
   </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32 pb-20" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
+  <main class="flex-grow pb-20" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
     <x-public-page-hero
       title="Opportunités d'emploi"
       subtitle="Explorez les offres disponibles et repérez rapidement celles qui correspondent à votre profil."
@@ -167,10 +159,10 @@
       <div class="search-glass relative z-10 mb-8">
 
         <!-- MOBILE: Compact single-row -->
-        <form method="GET" action="{{ route('offres') }}" data-testid="offers-mobile-search-form" class="flex md:hidden items-center gap-1 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-1.5 border border-white">
+        <form method="GET" action="{{ route('offres') }}" data-testid="offers-mobile-search-form" class="flex md:hidden items-center gap-1 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-1.5 border border-white search-glass">
           <div class="flex-1 flex items-center min-w-0 px-3 py-1.5">
             <span class="material-symbols-outlined text-outline mr-2 text-sm flex-shrink-0">search</span>
-            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
+            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
           </div>
           <button id="search-filter-toggle" type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-outline hover:text-secondary-container hover:bg-secondary-container/5 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px]" aria-label="Filtres">
             <span class="material-symbols-outlined text-xl">tune</span>
@@ -185,7 +177,7 @@
           <input type="hidden" name="search" value="{{ $search }}">
           <div class="flex items-center px-3 py-2 mb-2 border-b border-outline-variant/20">
             <span class="material-symbols-outlined text-outline mr-2 text-sm">location_on</span>
-            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-sm" placeholder="Localisation" type="text" />
+            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Localisation" type="text" />
           </div>
           <div class="flex items-center px-3 py-2">
             <span class="material-symbols-outlined text-outline mr-2 text-sm">category</span>
@@ -200,14 +192,14 @@
         </form>
 
         <!-- DESKTOP: Full multi-field row -->
-        <form method="GET" action="{{ route('offres') }}" data-testid="offers-desktop-search-form" class="hidden md:flex items-center gap-2 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-2 border border-white">
+        <form method="GET" action="{{ route('offres') }}" data-testid="offers-desktop-search-form" class="hidden md:flex items-center gap-2 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-2 border border-white search-glass">
           <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
             <span class="material-symbols-outlined text-outline mr-3 text-base">search</span>
-            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
+            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
           </div>
           <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
             <span class="material-symbols-outlined text-outline mr-3 text-base">location_on</span>
-            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 text-on-surface placeholder-outline text-base" placeholder="Localisation" type="text" />
+            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Localisation" type="text" />
           </div>
           <div class="flex-1 flex items-center px-4 py-2">
             <span class="material-symbols-outlined text-outline mr-3 text-base">category</span>
