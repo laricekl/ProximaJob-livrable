@@ -670,11 +670,9 @@
       document.getElementById('principalPreviewActions')?.classList.remove('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvPreviewName').textContent = 'CV principal';
-      document.getElementById('generatedCvPreviewFile').textContent = 'Rendu PDF du profil';
-      document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
-      document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=100');
-      document.getElementById('cv-preview')?.classList.remove('hidden'); document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('generatedCvFrame')?.setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
+      document.getElementById('generatedCvOpenLink')?.setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=100');
+      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function showUploadedCvPreview() {
@@ -683,8 +681,8 @@
       document.getElementById('principalPreviewActions')?.classList.add('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvFrame').setAttribute('src', "{{ asset($uploadedCvPath ?? '') }}");
-      document.getElementById('cv-preview')?.classList.remove('hidden'); document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('generatedCvFrame')?.setAttribute('src', "{{ asset($uploadedCvPath ?? '') }}");
+      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function showGeneratedCvPreview(button) {
@@ -698,11 +696,9 @@
       document.getElementById('principalPreviewActions')?.classList.add('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvPreviewName').textContent = title;
-      document.getElementById('generatedCvPreviewFile').textContent = file;
-      document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl(previewUrl));
-      document.getElementById('generatedCvOpenLink').setAttribute('href', openUrl);
-      document.getElementById('cv-preview')?.classList.remove('hidden'); document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('generatedCvFrame')?.setAttribute('src', freshPdfUrl(previewUrl));
+      document.getElementById('generatedCvOpenLink')?.setAttribute('href', openUrl);
+      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function updateWizardUI() {
