@@ -56,10 +56,6 @@
             <h1 class="mt-2 text-3xl font-bold font-serif text-primary">Construire mon CV</h1>
             <p class="mt-2 max-w-2xl text-sm text-on-surface-variant">Remplissez ici votre CV de base. La personnalisation par offre utilise ces informations pour générer une version adaptée à un poste précis.</p>
           </div>
-          <button type="button" onclick="document.getElementById('cv-builder').classList.remove('hidden');document.getElementById('cv-builder').classList.add('flex');document.getElementById('cv-builder').scrollIntoView({behavior:'smooth',block:'start'})" class="shrink-0 inline-flex items-center gap-2 bg-secondary-container text-white font-bold px-5 py-3 rounded-xl hover:bg-secondary transition-all shadow-lg">
-            <span class="material-symbols-outlined text-lg">edit</span>
-            {{ $existingProfile ? 'Modifier mon CV' : 'Commencer mon CV' }}
-          </button>
         </div>
 
         <div id="cvLayout" class="mb-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
@@ -119,7 +115,7 @@
                         <p class="break-all text-xs font-semibold leading-4 text-on-surface-variant">{{ $uploadedCvPath ? basename($uploadedCvPath) : 'Aucun fichier' }}</p>
                       </div>
                       @if ($uploadedCvPath)
-                        <a href="{{ asset($uploadedCvPath) }}" target="_blank" rel="noopener" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary">Ouvrir</a>
+                        <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showUploadedCvPreview()">Voir</button>
                       @endif
                     </div>
                     <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $uploadedCvPath ? 'Source pour remplir le CV principal.' : 'PDF, DOCX, DOC ou TXT.' }}</p>
@@ -678,6 +674,16 @@
       document.getElementById('generatedCvPreviewFile').textContent = 'Rendu PDF du profil';
       document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
       document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=100');
+      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function showUploadedCvPreview() {
+      document.getElementById('previewTitle').textContent = 'CV importé';
+      document.getElementById('previewEditButton')?.classList.add('hidden');
+      document.getElementById('principalPreviewActions')?.classList.add('hidden');
+      document.getElementById('principalCvPreview')?.classList.add('hidden');
+      document.getElementById('generatedCvPreview')?.classList.remove('hidden');
+      document.getElementById('generatedCvFrame').setAttribute('src', "{{ asset($uploadedCvPath ?? '') }}");
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
