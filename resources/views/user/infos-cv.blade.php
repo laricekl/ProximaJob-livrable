@@ -56,6 +56,10 @@
             <h1 class="mt-2 text-3xl font-bold font-serif text-primary">Construire mon CV</h1>
             <p class="mt-2 max-w-2xl text-sm text-on-surface-variant">Remplissez ici votre CV de base. La personnalisation par offre utilise ces informations pour générer une version adaptée à un poste précis.</p>
           </div>
+          <button type="button" onclick="document.getElementById('cv-builder').classList.remove('hidden');document.getElementById('cv-builder').classList.add('flex');document.getElementById('cv-builder').scrollIntoView({behavior:'smooth',block:'start'})" class="shrink-0 inline-flex items-center gap-2 bg-secondary-container text-white font-bold px-5 py-3 rounded-xl hover:bg-secondary transition-all shadow-lg">
+            <span class="material-symbols-outlined text-lg">edit</span>
+            {{ $existingProfile ? 'Modifier mon CV' : 'Commencer mon CV' }}
+          </button>
         </div>
 
         <div id="cvLayout" class="mb-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
@@ -88,8 +92,14 @@
                     </div>
                     <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-2">
+                      <button type="button" onclick="openCvBuilder()" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-secondary-container">
+                        <span class="material-symbols-outlined text-sm">edit</span> Modifier
+                      </button>
+                      <a href="{{ route('cv.principal.inline') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-secondary-container">
+                        <span class="material-symbols-outlined text-sm">visibility</span> Voir PDF
+                      </a>
                       <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-1 text-xs font-bold text-secondary-container hover:text-secondary">
-                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter a une offre
+                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter
                       </a>
                     </div>
                   </div>
