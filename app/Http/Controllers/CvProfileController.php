@@ -25,13 +25,10 @@ class CvProfileController extends Controller
 {
     $userId = auth()->id();
     $existingProfile = CvProfile::where('user_id', $userId)->first();
-    
+
+    // Si le profil existe déjà, on met à jour au lieu de bloquer
     if ($existingProfile) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Vous avez déjà un profil CV. Vous pouvez le modifier depuis votre espace.',
-            'profile_id' => $existingProfile->id
-        ], 422);
+        return $this->update($request, $existingProfile->id);
     }
 
     // Validation des données principales

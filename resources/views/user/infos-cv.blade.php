@@ -600,7 +600,7 @@
                   <span class="material-symbols-outlined text-sm">arrow_back</span> Precedent
                 </button>
                 <button type="button" class="px-6 py-3 bg-white border border-outline-variant/10 text-primary text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors flex items-center gap-2" onclick="closeCvBuilder()">
-                  <span class="material-symbols-outlined text-sm">visibility</span> Voir l'apercu
+                  <span class="material-symbols-outlined text-sm">close</span> Fermer
                 </button>
               </div>
               <div class="flex items-center gap-3">
@@ -674,7 +674,7 @@
       document.getElementById('generatedCvPreviewFile').textContent = 'Rendu PDF du profil';
       document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
       document.getElementById('generatedCvOpenLink').setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=100');
-      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('cv-preview')?.classList.remove('hidden'); document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function showUploadedCvPreview() {
@@ -684,7 +684,7 @@
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
       document.getElementById('generatedCvFrame').setAttribute('src', "{{ asset($uploadedCvPath ?? '') }}");
-      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('cv-preview')?.classList.remove('hidden'); document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function showGeneratedCvPreview(button) {
@@ -702,7 +702,7 @@
       document.getElementById('generatedCvPreviewFile').textContent = file;
       document.getElementById('generatedCvFrame').setAttribute('src', freshPdfUrl(previewUrl));
       document.getElementById('generatedCvOpenLink').setAttribute('href', openUrl);
-      document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('cv-preview')?.classList.remove('hidden'); document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
     function updateWizardUI() {
@@ -1070,7 +1070,7 @@
         if (response.ok && data.success) {
           successAlert.classList.remove('hidden');
           successAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          window.setTimeout(() => window.location.reload(), 900);
+          window.setTimeout(() => window.location.reload(), 600);
         } else {
           alert(data.message || "Une erreur est survenue lors de l'enregistrement.");
         }
