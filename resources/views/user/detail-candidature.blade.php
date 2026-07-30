@@ -30,11 +30,17 @@
           $cvProfile = $candidate?->cvProfile;
           $statusLabels = [
             'en_attente' => 'En cours',
+            'shortlisted' => 'Présélectionnée',
+            'contacted' => 'Entreprise contactée',
+            'interview' => 'Entretien planifié',
             'accepted' => 'Acceptée',
             'rejected' => 'Refusée',
           ];
           $statusBadge = [
             'en_attente' => 'bg-info-light text-info-dark',
+            'shortlisted' => 'bg-info-light text-info-dark',
+            'contacted' => 'bg-info-light text-info-dark',
+            'interview' => 'bg-success-light text-success-dark',
             'accepted' => 'bg-success-light text-success-dark',
             'rejected' => 'bg-error-light text-error-dark',
           ];

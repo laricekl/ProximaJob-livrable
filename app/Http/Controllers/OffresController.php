@@ -12,6 +12,7 @@ use App\Models\Categorie;
 use App\Models\JobOfferSkill;
 use App\Models\Sector;
 use App\Models\Diplome;
+use App\Models\Skill;
 
 class OffresController extends Controller
 {
@@ -239,7 +240,7 @@ class OffresController extends Controller
         'sector' => 'required|exists:sectors,id',
        // 'employment_type' => 'required|string',
         'remote_work' => ['required', 'string', Rule::in(['Présentiel', 'Hybride', 'Télétravail'])],
-        'job_category' => ['required', 'string', 'max:255'],
+        'job_category' => ['required', 'string', Rule::in(['informatique', 'marketing', 'finance', 'rh', 'sante'])],
         'salary_type' => ['required', 'string', Rule::in(['annuel', 'mensuel', 'journalier', 'horaire'])],
         'salary_min' => 'nullable|numeric|min:0',
         'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
@@ -477,7 +478,7 @@ class OffresController extends Controller
         'sector' => 'required|exists:sectors,id',
         'employment_type' => 'nullable|string',
         'remote_work' => ['required', 'string', Rule::in(['Présentiel', 'Hybride', 'Télétravail'])],
-        'job_category' => ['required', 'string', 'max:255'],
+        'job_category' => ['required', 'string', Rule::in(['informatique', 'marketing', 'finance', 'rh', 'sante'])],
         'salary_type' => ['required', 'string', Rule::in(['annuel', 'mensuel', 'journalier', 'horaire'])],
         'salary_min' => 'nullable|numeric|min:0',
         'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
@@ -759,13 +760,20 @@ class OffresController extends Controller
             }
         }
 
-        // Retourner la vue d'édition avec les données
-        $types = TypeOffre::all();
-        $secteurs = Sector::where('is_active', true)->orderBy('name')->get();
+        if (request()->expectsJson()) {
+            return response()->json([
+                'success' => true,
+                'offre' => $offreData,
+            ]);
+        }
+
+        // Retourner la vue d'édition avec les mêmes référentiels que la création.
+        $contractTypes = TypeOffre::orderBy('nom')->get();
+        $sectors = Sector::where('is_active', true)->orderBy('name')->get();
         $diplomes = Diplome::where('statut', 'ACTIF')->orderBy('nom_diplome')->get();
         $skills = Skill::where('is_active', true)->orderBy('category')->orderBy('name')->get();
 
-        return view('entreprise.create-offre', compact('offre', 'types', 'secteurs', 'diplomes', 'skills'));
+        return view('entreprise.create-offre', compact('offre', 'contractTypes', 'sectors', 'diplomes', 'skills'));
 
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         return response()->json([

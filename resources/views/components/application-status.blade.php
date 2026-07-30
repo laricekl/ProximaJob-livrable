@@ -2,7 +2,10 @@
 
 @php
 $labels = [
-    'en_attente' => 'En attente',
+    'en_attente' => 'À examiner',
+    'shortlisted' => 'Présélectionnée',
+    'contacted' => 'Entreprise contactée',
+    'interview' => 'Entretien planifié',
     'accepted'   => 'Acceptée',
     'rejected'   => 'Refusée',
     'entretien'  => 'Entretien',
@@ -11,6 +14,9 @@ $labels = [
 
 $icons = [
     'en_attente' => 'hourglass_empty',
+    'shortlisted' => 'star',
+    'contacted' => 'phone_in_talk',
+    'interview' => 'event',
     'accepted'   => 'check_circle',
     'rejected'   => 'cancel',
     'entretien'  => 'calendar_today',
@@ -19,6 +25,9 @@ $icons = [
 
 $colors = [
     'en_attente' => 'bg-warning-light text-warning-dark',
+    'shortlisted' => 'bg-info-light text-info-dark',
+    'contacted' => 'bg-info-light text-info-dark',
+    'interview' => 'bg-success-light text-success-dark',
     'accepted'   => 'bg-success-light text-success-dark',
     'rejected'   => 'bg-error-light text-error-dark',
     'entretien'  => 'bg-info-light text-info-dark',

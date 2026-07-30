@@ -2,8 +2,18 @@
 @section('title', $entreprise->company_name)
 
 @php
-  $logoUrl  = $entreprise->logo ? asset($entreprise->logo) : null;
+  $logoUrl = !$entreprise->logo
+    ? null
+    : (\Illuminate\Support\Str::startsWith($entreprise->logo, 'assets/')
+        ? asset($entreprise->logo)
+        : asset('storage/' . $entreprise->logo));
   $initials = strtoupper(substr($entreprise->company_name, 0, 2));
+  $formatSalary = function ($offer) {
+    $values = array_filter([$offer->salaire_min, $offer->salaire_max], fn ($value) => !is_null($value));
+    return $values
+      ? collect($values)->map(fn ($value) => number_format((float) $value, 0, ',', ' ') . ' $')->join(' – ')
+      : 'Salaire à confirmer';
+  };
 @endphp
 
 @section('content')
@@ -56,7 +66,7 @@
             <div class="p-6 grid grid-cols-2 gap-4">
               <div class="text-center">
                 <p class="text-2xl font-bold text-primary">{{ $offres->total() }}</p>
-                <p class="text-xs text-outline mt-0.5">Offre(s) active(s)</p>
+                <p class="text-xs text-outline mt-0.5">{{ $offres->total() === 1 ? 'Offre active' : 'Offres actives' }}</p>
               </div>
               <div class="text-center">
                 <p class="text-2xl font-bold text-primary">{{ $offres->total() }}</p>
@@ -88,7 +98,7 @@
             <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
               <div>
                 <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">work</span> Offres publiées</h2>
-                <p class="text-xs text-on-surface-variant mt-0.5">{{ $offres->total() }} offre(s) active(s) sur {{ $offres->total() }} publiée(s).</p>
+                <p class="text-xs text-on-surface-variant mt-0.5">{{ $offres->total() }} {{ $offres->total() === 1 ? 'offre active publiée' : 'offres actives publiées' }}.</p>
               </div>
             </div>
             <div class="p-6">
@@ -119,7 +129,7 @@
                       </div>
                     </div>
                     <div class="text-right">
-                      <div class="text-lg font-bold text-primary">{{ number_format((float) ($o->salaire_min ?? $o->salaire_max ?? 0), 0, ',', ' ') }} $</div>
+                      <div class="text-lg font-bold text-primary">{{ $formatSalary($o) }}</div>
                       <span class="text-xs text-outline">{{ $o->salary_type ?? '' }}</span>
                     </div>
                   </div>
@@ -141,8 +151,8 @@
                           </div>
                         </div>
                         <div class="text-right flex-shrink-0">
-                          <div class="text-sm font-bold text-primary">{{ number_format((float) ($o->salaire_min ?? $o->salaire_max ?? 0), 0, ',', ' ') }} $</div>
-                          <span class="text-xs text-outline">{{ $o->created_at?->diffForHumans() }}</span>
+                          <div class="text-sm font-bold text-primary">{{ $formatSalary($o) }}</div>
+                          <span class="text-xs text-outline">{{ $o->salary_type ? ucfirst($o->salary_type) : $o->created_at?->diffForHumans() }}</span>
                         </div>
                       </div>
                     </a>

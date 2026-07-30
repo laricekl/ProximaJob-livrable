@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Inscription Entreprise')
+@section('title', 'Inscription entreprise')
 @section('content')
   <main class="flex-grow pt-32 flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-lg">
@@ -7,8 +7,8 @@
       <div class="card-glow rounded-[2rem] p-8 md:p-10">
 
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold font-serif text-primary mb-2">Créer un compte Entreprise</h1>
-          <p class="text-on-surface-variant text-sm">Remplissez les informations ci-dessous</p>
+          <h1 class="text-3xl font-bold font-serif text-primary mb-2">Créer un compte entreprise</h1>
+          <p class="text-on-surface-variant text-sm">Créez votre profil. Après confirmation de votre courriel, notre équipe validera l’entreprise.</p>
         </div>
 
         <!-- Switch Rôle -->
@@ -40,8 +40,8 @@
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
-                <label for="prenom" class="block text-sm font-semibold text-primary mb-2">Prénoms *</label>
-                <input type="text" id="prenom" name="prenom" placeholder="Prénoms" required
+                <label for="prenom" class="block text-sm font-semibold text-primary mb-2">Prénom *</label>
+                <input type="text" id="prenom" name="prenom" value="{{ old('prenom') }}" placeholder="Prénom" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
             </div>
@@ -79,12 +79,7 @@
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline resize-none">{{ old('description') }}</textarea>
             </div>
 
-            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label for="rccm" class="block text-sm font-semibold text-primary mb-2">RCCM</label>
-                <input type="text" id="rccm" name="rccm" placeholder="N° RCCM (optionnel)"
-                  class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
-              </div>
+            <div class="mt-4">
               <div>
                 <label for="neq" class="block text-sm font-semibold text-primary mb-2">NEQ *</label>
                 <input type="text" id="neq" value="{{ old('neq') }}" name="neq" placeholder="N° NEQ" required
@@ -98,15 +93,6 @@
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
 
-            <div class="mt-4">
-              <label for="rccm_document" class="block text-sm font-semibold text-primary mb-2">Document RCCM</label>
-              <div class="relative border-2 border-dashed border-outline-variant/50 rounded-xl p-6 text-center bg-white/50 hover:border-secondary-container/30 transition-colors cursor-pointer">
-                <span class="material-symbols-outlined text-3xl text-outline mb-2">upload_file</span>
-                <p class="text-sm text-outline font-medium">Cliquez pour telecharger le document si vous le souhaitez</p>
-                <p class="text-xs text-outline mt-1">PDF, PNG ou JPG (max 5 Mo)</p>
-                <input type="file" id="rccm_document" name="rccm_document" accept=".pdf,.png,.jpg,.jpeg" class="absolute inset-0 opacity-0 cursor-pointer" />
-              </div>
-            </div>
           </div>
 
           <!-- Section: Sécurité -->

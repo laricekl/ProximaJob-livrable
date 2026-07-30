@@ -50,7 +50,7 @@ class EnterpriseRegistrationTest extends TestCase
             'company_name' => 'Studio Horizon',
         ])->get(route('enterprise.verification.notice'))
             ->assertOk()
-            ->assertSee('Verifiez votre adresse email')
+            ->assertSee('Vérifiez votre adresse courriel')
             ->assertSee(route('enterprise.verification.resend'), false);
 
         $this->withSession([
