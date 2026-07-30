@@ -124,7 +124,7 @@ class RegisteredUserController extends Controller
         'company_name' => 'required|string|max:255',
         'description' => 'nullable|string',
         'website' => 'nullable|url|max:255',
-        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'neq' => 'required|string|max:255',
         
     ]);
@@ -214,7 +214,7 @@ public function entrepreisestore(Request $request)
         'company_name' => 'required|string|max:255',
         'description' => 'nullable|string',
         'website' => 'nullable|url|max:255',
-        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         'neq' => 'required|string|max:255',
     ]);
 

@@ -41,7 +41,8 @@ class OffresController extends Controller
             'diplomes' => function($query) {
                 $query->withPivot('obligatoire');
             }
-        ])->where('status' , 'active');
+        ])->where('status' , 'active')
+          ->whereHas('entreprise.user', fn ($query) => $query->where('email', 'not like', '%.test'));
             
         // Appliquer la recherche par titre de poste
         if ($search) {
@@ -193,6 +194,7 @@ class OffresController extends Controller
      */
     public function create()
     {
+        $this->ensureOfferQuota();
         $contractTypes = TypeOffre::orderBy('nom')->get();
         $this->ensureDefaultSectors();
         $sectors = Sector::active()->orderBy('name')->get();
@@ -227,11 +229,25 @@ class OffresController extends Controller
         }
     }
 
+    private function ensureOfferQuota(): void
+    {
+        $user = Auth::user();
+        if ($user?->hasCurrentPlan('Entreprise')) {
+            return;
+        }
+
+        $activeOffers = $user?->entreprise?->offres()->where('status', 'active')->count() ?? 0;
+        if ($activeOffers >= 1) {
+            abort(403, 'Le forfait Entreprise actif est requis pour publier plus d’une offre active.');
+        }
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
 {
+    $this->ensureOfferQuota();
     $validator = Validator::make($request->all(), [
         // Détails du poste
         'jobTitle' => 'required|string|max:255',
@@ -240,7 +256,7 @@ class OffresController extends Controller
         'sector' => 'required|exists:sectors,id',
        // 'employment_type' => 'required|string',
         'remote_work' => ['required', 'string', Rule::in(['Présentiel', 'Hybride', 'Télétravail'])],
-        'job_category' => ['required', 'string', Rule::in(['informatique', 'marketing', 'finance', 'rh', 'sante'])],
+        'job_category' => ['required', 'string', Rule::in(['informatique', 'marketing', 'finance', 'rh', 'sante', 'education', 'transport'])],
         'salary_type' => ['required', 'string', Rule::in(['annuel', 'mensuel', 'journalier', 'horaire'])],
         'salary_min' => 'nullable|numeric|min:0',
         'salary_max' => 'nullable|numeric|min:0|gte:salary_min',
@@ -458,12 +474,12 @@ class OffresController extends Controller
         if (!$request->expectsJson()) {
             return back()
                 ->withInput()
-                ->with('error', 'Erreur lors de la création de l\'offre: ' . $e->getMessage());
+                ->with('error', 'L’offre n’a pas pu être créée. Veuillez réessayer.');
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Erreur lors de la création de l\'offre: ' . $e->getMessage()
+            'message' => 'L’offre n’a pas pu être créée. Veuillez réessayer.'
         ], 500);
     }
 }

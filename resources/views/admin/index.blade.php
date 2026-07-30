@@ -11,7 +11,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Entreprises</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($entrepriseStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $entrepriseStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $entrepriseStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $entrepriseStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($entrepriseStats['monthlyGrowth'] >= 0 ? '+' : '').$entrepriseStats['monthlyGrowth'].'% ce mois') }}</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -21,7 +21,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Offres d'emploi</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($offreStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $offreStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $offreStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $offreStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($offreStats['monthlyGrowth'] >= 0 ? '+' : '').$offreStats['monthlyGrowth'].'% ce mois') }}</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -31,7 +31,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Candidats</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($candidateStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $candidateStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $candidateStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $candidateStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($candidateStats['monthlyGrowth'] >= 0 ? '+' : '').$candidateStats['monthlyGrowth'].'% ce mois') }}</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -41,7 +41,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Candidatures</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($matchStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $matchStats['monthlyGrowth'] >= 0 ? '+' : '' }}{{ $matchStats['monthlyGrowth'] }}% ce mois</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $matchStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($matchStats['monthlyGrowth'] >= 0 ? '+' : '').$matchStats['monthlyGrowth'].'% ce mois') }}</p>
         </div>
       </div>
     </div>
@@ -85,6 +85,7 @@
       </div>
     </div>
 
+    @role('admin')
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div class="card-glow overflow-hidden rounded-2xl lg:col-span-2">
         <div class="flex items-center justify-between border-b border-outline-variant/10 px-6 py-4">
@@ -149,5 +150,20 @@
         </div>
       </div>
     </div>
+    @endrole
+    @role('Marketing')
+      <div class="grid gap-6 md:grid-cols-2">
+        <a href="{{ route('admin.statistiques') }}" class="card-glow rounded-2xl p-6 hover:border-secondary-container/30">
+          <span class="material-symbols-outlined text-secondary-container">bar_chart</span>
+          <h3 class="mt-3 font-bold text-primary">Statistiques</h3>
+          <p class="mt-1 text-sm text-on-surface-variant">Analyser les tendances agrégées de la plateforme.</p>
+        </a>
+        <a href="{{ route('admin.newsletters') }}" class="card-glow rounded-2xl p-6 hover:border-secondary-container/30">
+          <span class="material-symbols-outlined text-secondary-container">mail</span>
+          <h3 class="mt-3 font-bold text-primary">Campagnes</h3>
+          <p class="mt-1 text-sm text-on-surface-variant">Préparer et envoyer les communications autorisées.</p>
+        </a>
+      </div>
+    @endrole
   </div>
 @endsection

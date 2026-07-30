@@ -1002,6 +1002,12 @@ select[readonly] {
     const isApplicationUpdate = Boolean(existingApplicationStatus && !['accepted', 'rejected'].includes(existingApplicationStatus));
     let selectedGeneratedCv = null;
     let successReloadTimer = null;
+
+    function escapeApplicationHtml(value) {
+        const element = document.createElement('div');
+        element.textContent = String(value ?? '');
+        return element.innerHTML;
+    }
     
     // Rendre currentStep accessible globalement
     window.currentStep = currentStep;
@@ -1131,7 +1137,7 @@ select[readonly] {
         choice.classList.add('active');
         choice.dataset.cvId = generatedCv.id;
         choice.dataset.cvName = generatedCv.name;
-        status.innerHTML = `<span>${generatedCv.name}</span><span class="text-xs text-outline">Document PDF</span>`;
+        status.innerHTML = `<span>${escapeApplicationHtml(generatedCv.name)}</span><span class="text-xs text-outline">Document PDF</span>`;
         previewLink.setAttribute('href', generatedCv.previewUrl);
         selectGeneratedCvForApplication();
     }
@@ -1157,7 +1163,7 @@ select[readonly] {
             <div class="check-circle">
                 <span class="material-symbols-outlined text-[12px]">check</span>
             </div>
-            <span>${selectedGeneratedCv.name}</span>
+            <span>${escapeApplicationHtml(selectedGeneratedCv.name)}</span>
         `;
         statusDiv.classList.remove('empty');
         document.getElementById('cv-upload-error').classList.remove('show');
@@ -1352,7 +1358,7 @@ select[readonly] {
             <div class="check-circle">
                 <span class="material-symbols-outlined text-[12px]">check</span>
             </div>
-            <span>${file.name} (${(file.size/1024).toFixed(2)} Ko)</span>
+            <span>${escapeApplicationHtml(file.name)} (${(file.size/1024).toFixed(2)} Ko)</span>
         `;
         statusDiv.classList.remove('empty');
         
@@ -1372,13 +1378,13 @@ select[readonly] {
         docsList.innerHTML = '';
 
         if (uploadedFiles.cv) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${uploadedFiles.cv.name}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${escapeApplicationHtml(uploadedFiles.cv.name)}</li>`;
         } else if (selectedGeneratedCv) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${selectedGeneratedCv.name}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${escapeApplicationHtml(selectedGeneratedCv.name)}</li>`;
         }
 
         if (uploadedFiles.motivation) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> Lettre de présentation: ${uploadedFiles.motivation.name}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> Lettre de présentation: ${escapeApplicationHtml(uploadedFiles.motivation.name)}</li>`;
         }
          // Ajouter les documents supplémentaires au récapitulatif
         document.querySelectorAll('.additional-document').forEach(doc => {
@@ -1386,7 +1392,7 @@ select[readonly] {
             const intitule = doc.querySelector('input[name^="additional_docs"][name$="[intitule]"]').value;
             
             if (fileInput.files[0]) {
-                docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">attach_file</span> ${intitule}: ${fileInput.files[0].name}</li>`;
+                docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">attach_file</span> ${escapeApplicationHtml(intitule)}: ${escapeApplicationHtml(fileInput.files[0].name)}</li>`;
             }
         });
     }
@@ -1602,7 +1608,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div class="check-circle">
                         <span class="material-symbols-outlined text-[12px]">check</span>
                     </div>
-                    <span>${file.name}</span>
+                    <span>${escapeApplicationHtml(file.name)}</span>
                 `;
                 statusDiv.classList.remove('empty');
             }

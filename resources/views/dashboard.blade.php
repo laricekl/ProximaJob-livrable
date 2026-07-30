@@ -1,6 +1,17 @@
 @extends('layouts.candidat')
 @section('title', 'Dashboard')
 @section('content')
+  @if (!$hasPremiumMatching)
+    <div class="mx-auto mt-6 max-w-7xl px-4 md:px-10">
+      <div class="rounded-2xl border border-secondary-container/20 bg-secondary-container/5 p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="font-bold text-primary">Matching IA disponible avec le forfait Pro</p>
+          <p class="text-sm text-on-surface-variant">Les recommandations et scores ne sont affichés qu’avec un abonnement Pro actif.</p>
+        </div>
+        <a href="{{ route('plan.abonnement') }}" class="inline-flex justify-center rounded-xl bg-secondary-container px-5 py-2.5 text-sm font-bold text-white">Voir les forfaits</a>
+      </div>
+    </div>
+  @endif
   <main class="flex-grow bg-white">
 
     {{-- Bandeau complétion profil --}}

@@ -69,6 +69,13 @@
             </div>
             @if (!is_null($postulation->match_score))
               <p class="mt-3 text-xs text-on-surface-variant">Cette estimation compare les compétences et l’expérience du profil aux critères de l’offre. Elle aide au tri, mais ne remplace pas votre évaluation.</p>
+              @if (is_array($postulation->match_details))
+                <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
+                  <span class="rounded-lg bg-surface-container-low px-3 py-2">Compétences techniques : {{ round($postulation->match_details['technical_skills_match'] ?? 0) }} %</span>
+                  <span class="rounded-lg bg-surface-container-low px-3 py-2">Compétences générales : {{ round($postulation->match_details['general_skills_match'] ?? 0) }} %</span>
+                  <span class="rounded-lg bg-surface-container-low px-3 py-2">Expérience : {{ round($postulation->match_details['experience_match'] ?? 0) }} %</span>
+                </div>
+              @endif
             @endif
           </div>
         </div>

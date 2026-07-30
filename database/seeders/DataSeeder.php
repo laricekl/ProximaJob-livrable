@@ -133,7 +133,7 @@ class DataSeeder extends Seeder
         $plans = [
             [
                 'nom' => 'Decouverte',
-                'duree' => 'mensuel',
+                'duree' => 30,
                 'montant' => 0,
                 'description' => 'Pour explorer la plateforme et tester les bases.',
                 'couleur' => '#94a3b8',
@@ -142,16 +142,16 @@ class DataSeeder extends Seeder
             ],
             [
                 'nom' => 'Pro',
-                'duree' => 'mensuel',
+                'duree' => 30,
                 'montant' => 49,
-                'description' => 'Pour publier et gerer plusieurs recrutements.',
+                'description' => 'Pour personnaliser vos candidatures et profiter du matching intelligent.',
                 'couleur' => '#f97316',
                 'populaire' => true,
                 'actif' => true,
             ],
             [
                 'nom' => 'Entreprise',
-                'duree' => 'annuel',
+                'duree' => 365,
                 'montant' => 399,
                 'description' => 'Pour une equipe avec suivi et visibilite etendue.',
                 'couleur' => '#0f172a',

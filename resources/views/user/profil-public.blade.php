@@ -394,7 +394,11 @@
           if (resp.ok) {
             const tag = document.createElement('span');
             tag.className = 'skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full cursor-pointer hover:bg-secondary-container/20 transition-colors';
-            tag.innerHTML = skill + ' <span class="material-symbols-outlined text-sm">close</span>';
+            tag.append(document.createTextNode(skill + ' '));
+            const closeIcon = document.createElement('span');
+            closeIcon.className = 'material-symbols-outlined text-sm';
+            closeIcon.textContent = 'close';
+            tag.append(closeIcon);
             skillTags.insertBefore(tag, addBtn);
             skillInput.value = '';
             inputRow.classList.add('hidden');

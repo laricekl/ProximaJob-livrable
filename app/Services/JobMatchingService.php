@@ -550,7 +550,7 @@ class JobMatchingService
                 'cv' => $personalizedCVPath ?? $candidate->cv,
                 'cover_letter' => $coverLetterPath,  
                 'algorithm_version' => '3.0',
-                'match_details' => json_encode($matchDetails)
+                'match_details' => $matchDetails
             ]);
 
         // Notification pour le CANDIDAT

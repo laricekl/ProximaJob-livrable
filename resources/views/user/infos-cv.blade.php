@@ -257,15 +257,15 @@
         <section id="cv-preview" class="rounded-2xl border border-outline-variant/10 bg-white p-5 md:p-8">
           <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Apercu</p>
+              <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Aperçu</p>
               <h2 id="previewTitle" class="mt-1 text-2xl font-bold font-serif text-primary">CV principal</h2>
             </div>
             <div class="flex items-center gap-2">
               <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low border border-outline-variant/20">
-                <span class="material-symbols-outlined text-sm">open_in_new</span> Plein ecran
+                <span class="material-symbols-outlined text-sm">open_in_new</span> Plein écran
               </a>
               <a href="{{ $existingProfile ? route('cv.principal.download') : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-secondary-container px-3 py-2 text-xs font-bold text-white hover:bg-secondary transition-colors">
-                <span class="material-symbols-outlined text-sm">download</span> Telecharger
+                <span class="material-symbols-outlined text-sm">download</span> Télécharger
               </a>
               <button type="button" onclick="toggleSidebar()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-outline-variant/20 bg-white px-2.5 py-2 text-xs font-semibold text-primary hover:bg-surface-container-low">
                 <span class="material-symbols-outlined text-sm" id="toggleSidebarIcon">fullscreen</span>
@@ -275,7 +275,7 @@
 
           <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
             <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Apercu du CV"></iframe>
+              <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Aperçu du CV"></iframe>
             </div>
           </div>
 
@@ -296,7 +296,7 @@
 
                 @if ($existingProfile->langues_competences || $existingProfile->logiciels)
                   <div class="mt-6">
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Competences</h4>
+                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Compétences</h4>
                     @if ($existingProfile->langues_competences)
                       <p class="mt-2 text-sm leading-6 text-on-surface-variant">{{ $existingProfile->langues_competences }}</p>
                     @endif
@@ -430,7 +430,7 @@
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="2">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
-                <span class="text-sm font-semibold">Competences</span>
+                <span class="text-sm font-semibold">Compétences</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="3">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
@@ -472,19 +472,19 @@
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Nom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="nom" required /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Prenom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="prenom_cv" required /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Prénom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="prenom_cv" required /></div>
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Courriel *</label><input type="email" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="email_cv" required /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Telephone *</label><input type="tel" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="telephone_cv" required /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Téléphone *</label><input type="tel" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="telephone_cv" required /></div>
                   <div class="md:col-span-2"><label class="block text-sm font-semibold text-primary mb-1.5">Adresse</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="adresse" /></div>
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Ville et province</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="ville" placeholder="Montreal (Quebec)" /></div>
                   <div><label class="block text-sm font-semibold text-primary mb-1.5">Code postal</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="code_postal" placeholder="H1B 8T2" /></div>
                 </div>
               </div>
 
-              <!-- Section 2: Competences -->
+              <!-- Section 2: Compétences -->
               <div class="cv-form-section" id="section-2">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Competences</h2>
+                  <h2 class="text-2xl font-bold font-serif text-primary">Compétences</h2>
                   <p class="text-sm text-on-surface-variant mt-1">Listez vos competences professionnelles</p>
                 </div>
                 <div class="space-y-5">
@@ -500,7 +500,7 @@
                   <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                       <div>
-                        <h3 class="text-lg font-bold text-primary">Competences specifiques</h3>
+                        <h3 class="text-lg font-bold text-primary">Compétences spécifiques</h3>
                         <p class="text-sm text-on-surface-variant">Ajoutez une carte par competence ou savoir-faire important.</p>
                       </div>
                       <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addCompetence()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une competence</button>
@@ -651,7 +651,7 @@
                 </div>
               </div>
 
-              <!-- Section 8: Recapitulatif & Enregistrement -->
+              <!-- Section 8: Récapitulatif & Enregistrement -->
               <div class="cv-form-section" id="section-8">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
                   <h2 class="text-2xl font-bold font-serif text-primary">Enregistrement</h2>
@@ -667,7 +667,7 @@
                 </div>
 
                 <div class="bg-white rounded-xl border border-outline-variant/10 p-6">
-                  <h3 class="font-bold text-primary mb-4">Recapitulatif de vos informations</h3>
+                  <h3 class="font-bold text-primary mb-4">Récapitulatif de vos informations</h3>
                   <div id="summary-content" class="text-sm text-on-surface-variant space-y-3">
                     <p class="text-outline italic">Naviguez jusqu'a la derniere section pour voir le recapitulatif.</p>
                   </div>
@@ -963,15 +963,21 @@
       const formData = new FormData(document.getElementById('cvDataForm'));
       const summary = [
         ['Nom', formData.get('nom')],
-        ['Prenom', formData.get('prenom_cv')],
+        ['Prénom', formData.get('prenom_cv')],
         ['Courriel', formData.get('email_cv')],
-        ['Telephone', formData.get('telephone_cv')],
+        ['Téléphone', formData.get('telephone_cv')],
         ['Ville', formData.get('ville')],
       ].filter(([, value]) => value);
 
       document.getElementById('summary-content').innerHTML = summary.length
-        ? summary.map(([label, value]) => `<p><span class="font-semibold text-primary">${label}:</span> ${value}</p>`).join('')
+        ? summary.map(([label, value]) => `<p><span class="font-semibold text-primary">${escapeCvSummaryHtml(label)}:</span> ${escapeCvSummaryHtml(value)}</p>`).join('')
         : '<p class="text-outline italic">Remplissez au moins vos informations de base pour afficher le recapitulatif.</p>';
+    }
+
+    function escapeCvSummaryHtml(value) {
+      const element = document.createElement('div');
+      element.textContent = String(value ?? '');
+      return element.innerHTML;
     }
 
     function setCvField(name, value) {

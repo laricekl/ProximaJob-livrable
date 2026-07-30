@@ -48,8 +48,8 @@
 
               <div>
                 <label class="block text-sm font-semibold text-primary mb-2" for="offer_details">Description du poste <span class="text-secondary-container">*</span></label>
-                <textarea id="offer_details" name="offer_details" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Decrivez les missions principales, le contexte..." required>{{ old('offer_details', $selectedOfferDetails ?? '') }}</textarea>
-                <p class="text-xs text-outline mt-1.5">Plus vous etes precis, mieux nous pouvons adapter votre CV</p>
+                <textarea id="offer_details" name="offer_details" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Décrivez les missions principales, le contexte..." required>{{ old('offer_details', $selectedOfferDetails ?? '') }}</textarea>
+                <p class="text-xs text-outline mt-1.5">Plus vous êtes précis, mieux nous pouvons adapter votre CV.</p>
                 @if (isset($offerDataQuality) && $offerDataQuality === 'insuffisante')
                   <div class="mt-3 rounded-xl border border-warning-light bg-warning-light px-4 py-3 text-sm text-warning-dark flex items-start gap-2">
                     <span class="material-symbols-outlined text-lg flex-shrink-0">warning</span>
@@ -64,9 +64,9 @@
               </div>
 
               <div>
-                <label class="block text-sm font-semibold text-primary mb-2" for="key_requirements">Competences / Exigences cles</label>
-                <textarea id="key_requirements" name="key_requirements" rows="3" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Ex: React, Node.js, Gestion d'equipe, Agile...">{{ old('key_requirements', $selectedOfferRequirements ?? '') }}</textarea>
-                <p class="text-xs text-outline mt-1.5">Listez les competences techniques et soft skills recherchees</p>
+                <label class="block text-sm font-semibold text-primary mb-2" for="key_requirements">Compétences et exigences clés</label>
+                <textarea id="key_requirements" name="key_requirements" rows="3" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Ex. : React, Node.js, gestion d’équipe, Agile...">{{ old('key_requirements', $selectedOfferRequirements ?? '') }}</textarea>
+                <p class="text-xs text-outline mt-1.5">Listez les compétences techniques et relationnelles recherchées.</p>
               </div>
 
               @php($cvTemplates = config('cv_templates', []))
@@ -105,10 +105,10 @@
                       'green' => ['Vert', '#2f7d5c'],
                       'bordeaux' => ['Bordeaux', '#8a334b'],
                       'anthracite' => ['Anthracite', '#343a40'],
-                      'petrol' => ['Petrole', '#28666e'],
+                      'petrol' => ['Pétrole', '#28666e'],
                     ] as $value => [$label, $color])
                       <label class="cursor-pointer">
-                        <input type="radio" name="accent_color" value="{{ $value }}" class="peer hidden" @checked(old('accent_color', $defaultCvOptions['accent_color'] ?? 'blue') === $value)>
+                        <input type="radio" name="accent_color" value="{{ $value }}" aria-label="Couleur {{ $label }}" class="peer hidden" @checked(old('accent_color', $defaultCvOptions['accent_color'] ?? 'blue') === $value)>
                         <span class="flex h-11 items-center justify-center rounded-xl border-2 border-outline-variant/20 bg-white text-xs font-bold text-primary transition-all peer-checked:border-secondary-container peer-checked:bg-secondary-container/10" title="{{ $label }}">
                           <span class="h-5 w-5 rounded-full" style="background-color: {{ $color }}"></span>
                         </span>
@@ -121,7 +121,7 @@
                   <label class="block text-sm font-semibold text-primary mb-3">Longueur</label>
                   <div class="grid grid-cols-3 gap-2">
                     @foreach([1, 2, 3] as $pages)
-                      <label class="cursor-pointer"><input type="radio" name="page_limit" value="{{ $pages }}" class="peer hidden" @checked((int) old('page_limit', $defaultCvOptions['page_limit'] ?? 2) === $pages)><span class="block rounded-xl border-2 border-outline-variant/20 px-3 py-3 text-center text-xs font-bold text-primary peer-checked:border-secondary-container peer-checked:bg-secondary-container/10">{{ $pages }} page{{ $pages > 1 ? 's' : '' }}</span></label>
+                      <label class="cursor-pointer"><input type="radio" name="page_limit" value="{{ $pages }}" aria-label="{{ $pages }} page{{ $pages > 1 ? 's' : '' }}" class="peer hidden" @checked((int) old('page_limit', $defaultCvOptions['page_limit'] ?? 2) === $pages)><span class="block rounded-xl border-2 border-outline-variant/20 px-3 py-3 text-center text-xs font-bold text-primary peer-checked:border-secondary-container peer-checked:bg-secondary-container/10">{{ $pages }} page{{ $pages > 1 ? 's' : '' }}</span></label>
                     @endforeach
                   </div>
                   <p class="mt-1.5 text-xs text-outline">2 pages est recommande. 3 pages convient aux profils tres experimentes.</p>

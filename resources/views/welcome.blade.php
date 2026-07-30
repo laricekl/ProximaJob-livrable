@@ -770,13 +770,13 @@
                         <span class="text-2xs text-primary/40 font-medium italic">Solution recrutement</span>
                       </div>
                       <h3 class="text-xl md:text-2xl font-bold text-primary truncate" id="spotlight2-name">ProximaJob Entreprise</h3>
-                      <p class="text-primary/60 text-sm italic font-medium line-clamp-3 min-h-[3.5rem]" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, evaluer et recruter les meilleurs talents."</p>
+                      <p class="text-primary/60 text-sm italic font-medium line-clamp-3 min-h-[3.5rem]" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, évaluer et recruter les meilleurs talents."</p>
                     </div>
                   </div>
                 </div>
 
                 <a href="{{ route('entreprises.index') }}" id="spotlight2-link" class="whitespace-nowrap bg-primary text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-secondary-container transition-all shadow-lg hover:shadow-secondary-container/20 active:scale-95 spotlight-cta flex-shrink-0">
-                  Decouvrir
+                  Découvrir
                 </a>
               </div>
             </div>
@@ -939,11 +939,19 @@
     </section>
 
     <!-- PRICING · Cartes 3D -->
+    @php
+      $discoveryPlan = $abonnements->first(fn ($plan) => in_array(mb_strtolower($plan->nom), ['decouverte', 'découverte', 'basique', 'gratuit'], true));
+      $proPlan = $abonnements->first(fn ($plan) => in_array(mb_strtolower($plan->nom), ['pro', 'premium'], true));
+      $enterprisePlan = $abonnements->first(fn ($plan) => mb_strtolower($plan->nom) === 'entreprise');
+      $formatPlanPrice = fn ($plan, $fallback) => $plan
+        ? rtrim(rtrim(number_format((float) $plan->montant, 2, ',', ' '), '0'), ',')
+        : $fallback;
+    @endphp
     <section class="home-deferred py-12 md:py-20 px-4 md:px-10">
       <div class="max-w-5xl mx-auto">
         <div class="reveal text-center mb-10 md:mb-16">
           <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight mb-4">Choisissez votre forfait</h2>
-          <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">Des solutions adaptees pour accelerer votre transition professionnelle.</p>
+          <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">Des solutions adaptées pour accélérer votre transition professionnelle.</p>
         </div>
 
         <div class="pricing-grid-wrapper relative">
@@ -961,13 +969,13 @@
               <div class="card-3d-content text-center">
                 <p class="text-xs font-bold text-outline uppercase tracking-wide mb-1">Gratuit</p>
                 <div class="flex items-baseline justify-center gap-0.5">
-                  <p class="text-4xl font-bold text-primary">0<span class="text-lg text-outline">$</span></p>
-                  <p class="text-xs text-outline">/mois</p>
+                  <p class="text-4xl font-bold text-primary">{{ $formatPlanPrice($discoveryPlan, '0') }}<span class="text-lg text-outline">$</span></p>
+                  <p class="text-xs text-outline">/{{ $discoveryPlan?->duree ?? 30 }} jours</p>
                 </div>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Acces aux offres</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidature simple</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalise IA</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Accès aux offres</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> 3 candidatures par mois</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalisé par IA</li>
                 </ul>
                 <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
               </div>
@@ -987,12 +995,12 @@
               <div class="card-3d-content text-center">
                 <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Premium</p>
                 <div class="flex items-baseline justify-center gap-0.5">
-                  <p class="text-4xl font-bold text-primary">29<span class="text-lg text-outline">$</span></p>
-                  <p class="text-xs text-outline">/mois</p>
+                  <p class="text-4xl font-bold text-primary">{{ $formatPlanPrice($proPlan, '49') }}<span class="text-lg text-outline">$</span></p>
+                  <p class="text-xs text-outline">/{{ $proPlan?->duree ?? 30 }} jours</p>
                 </div>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitees</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalise par IA</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitées</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalisé par IA</li>
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Mise en avant du profil</li>
                 </ul>
                 <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Commencer</a>
@@ -1012,13 +1020,13 @@
               <div class="card-3d-content text-center">
                 <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Entreprise</p>
                 <div class="flex items-baseline justify-center gap-0.5">
-                  <p class="text-4xl font-bold text-primary">99<span class="text-lg text-outline">$</span></p>
-                  <p class="text-xs text-outline">/mois</p>
+                  <p class="text-4xl font-bold text-primary">{{ $formatPlanPrice($enterprisePlan, '399') }}<span class="text-lg text-outline">$</span></p>
+                  <p class="text-xs text-outline">/{{ $enterprisePlan?->duree ?? 365 }} jours</p>
                 </div>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Tout Premium</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> API dediee</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Multi-employeurs</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Offres illimitées</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Matching des candidats</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Suivi des candidatures</li>
                 </ul>
                 <a href="{{ route('entreprise.register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
               </div>

@@ -13,6 +13,8 @@ use App\Models\Skill;
 use App\Models\Sector;
 use App\Models\User;
 use App\Models\UserAbonnement;
+use App\Models\Abonnement;
+use Carbon\Carbon;
 
 class EntreprisesController extends Controller
 {
@@ -47,6 +49,8 @@ class EntreprisesController extends Controller
     }
 
     $offres = $offresQuery->paginate(6)->withQueryString();
+    $canCreateOffer = Auth::user()->hasCurrentPlan('Entreprise')
+        || !$entreprise->offres()->where('status', 'active')->exists();
     $stats = $this->calculateStats($entreprise->id);
     $stats['total_offers'] = Offre::where('entreprise_id', $entreprise->id)->count();
     $stats['pending_applications'] = Postulation::whereHas('offre', function ($query) use ($entreprise) {
@@ -85,7 +89,8 @@ $notifications = \App\Models\Notification::where('user_id', Auth()->id())
         'sectors',
         'methodologicalSkills',
         'numericSkills'
-        ,'stats'
+        ,'stats',
+        'canCreateOffer'
     ));
 }
 
@@ -263,17 +268,49 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
         $subscriptionsQuery = UserAbonnement::where('user_id', $user->id);
         $subscriptionStats = [
             'total' => (clone $subscriptionsQuery)->count(),
-            'active' => (clone $subscriptionsQuery)->where('status', 'Actif')->count(),
-            'expired' => (clone $subscriptionsQuery)->where('status', 'Expiré')->count(),
+            'active' => (clone $subscriptionsQuery)->current()->count(),
+            'expired' => (clone $subscriptionsQuery)
+                ->where(fn ($query) => $query->where('status', 'Expiré')->orWhereDate('date_fin', '<', now()))
+                ->count(),
         ];
 
         $userAbonnements = (clone $subscriptionsQuery)
             ->with(['abonnement'])
             ->orderBy('created_at', 'desc')
             ->paginate(9);  
-            
+        $enterprisePlan = Abonnement::where('actif', true)
+            ->whereRaw('LOWER(nom) = ?', ['entreprise'])
+            ->first();
   
-        return view("entreprise.abonne" , compact('userAbonnements', 'subscriptionStats'));
+        return view("entreprise.abonne" , compact('userAbonnements', 'subscriptionStats', 'enterprisePlan'));
+    }
+
+    public function souscrire(Request $request)
+    {
+        $request->validate(['abonnement_id' => ['required', 'integer']]);
+
+        $plan = Abonnement::where('actif', true)
+            ->whereRaw('LOWER(nom) = ?', ['entreprise'])
+            ->findOrFail($request->integer('abonnement_id'));
+
+        $alreadyOpen = UserAbonnement::where('user_id', Auth::id())
+            ->whereIn('status', ['Actif', 'En attente'])
+            ->whereDate('date_fin', '>=', now())
+            ->exists();
+
+        if ($alreadyOpen) {
+            return back()->with('error', 'Un abonnement actif ou en attente existe déjà pour ce compte.');
+        }
+
+        UserAbonnement::create([
+            'user_id' => Auth::id(),
+            'abonnement_id' => $plan->id,
+            'date_debut' => Carbon::now(),
+            'date_fin' => Carbon::now()->addDays(max(1, (int) $plan->duree)),
+            'status' => (float) $plan->montant > 0 ? 'En attente' : 'Actif',
+        ]);
+
+        return back()->with('success', 'Votre demande a été transmise. L’activation sera confirmée après validation du paiement.');
     }
      public function promotion()
     {

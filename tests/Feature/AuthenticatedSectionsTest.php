@@ -125,10 +125,10 @@ class AuthenticatedSectionsTest extends TestCase
         $diplome = Diplome::create(['nom_diplome' => 'Baccalaureat informatique', 'niveau_education' => 'UNIVERSITAIRE_1ER_CYCLE', 'statut' => 'ACTIF']);
         $skill = Skill::create(['name' => 'Laravel', 'slug' => 'laravel', 'category' => 'Hard Skills', 'importance_level' => 5, 'is_active' => true]);
         $plan = Abonnement::create([
-            'nom' => 'Business',
+            'nom' => 'Entreprise',
             'description' => 'Plan entreprise',
             'montant' => 49.99,
-            'duree' => 'mensuel',
+            'duree' => 365,
             'actif' => true,
         ]);
 
@@ -180,7 +180,7 @@ class AuthenticatedSectionsTest extends TestCase
         $this->actingAs($enterpriseUser)
             ->get(route('entreprise.abonnements'))
             ->assertOk()
-            ->assertSee('Business');
+            ->assertSee('Entreprise');
 
         $this->actingAs($enterpriseUser)
             ->get(route('entreprise.promotion'))

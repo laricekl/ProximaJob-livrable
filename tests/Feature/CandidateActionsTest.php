@@ -241,7 +241,7 @@ class CandidateActionsTest extends TestCase
     {
         Queue::fake();
 
-        $candidate = $this->createCandidate();
+        $candidate = $this->createCandidate([], false);
         $refs = $this->createHiringReferences();
 
         $this->actingAs($candidate)
@@ -293,7 +293,7 @@ class CandidateActionsTest extends TestCase
         ]);
 
         $this->actingAs($candidate)
-            ->postJson(route('abonnements.souscrire'))
+            ->postJson(route('abonnements.souscrire'), ['abonnement_id' => 2])
             ->assertOk()
             ->assertJson(['success' => true]);
 

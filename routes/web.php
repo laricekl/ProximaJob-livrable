@@ -31,6 +31,7 @@ use App\Http\Controllers\Auth\ResendVerificationEmailController;
 
 // Route pour changer la langue
 Route::post('/set-language', [App\Http\Controllers\LocaleController::class, 'setLanguage'])
+    ->middleware('throttle:30,1')
     ->name('set.language');
 
 // Health check
@@ -45,10 +46,6 @@ Route::view('/cookies', 'cookies')->name('cookies.policy');
 
 
 // Routes de vérification d'email
-Route::get('/email/verify/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-    ->middleware(['auth', 'signed'])
-    ->name('verification.verify');
-
 Route::get('/verify-email/{token}', [VerifyEmailController::class, 'verify'])
     ->name('verification.custom.verify');
 
@@ -56,6 +53,7 @@ Route::get('/resend-verification', [VerifyEmailController::class, 'showResendFor
     ->name('verification.custom.resend-form');
 
 Route::post('/resend-verification', [VerifyEmailController::class, 'resend'])
+    ->middleware('throttle:3,1')
     ->name('verification.custom.resend');
 
     
@@ -70,7 +68,9 @@ Route::post('/resend-verification', [VerifyEmailController::class, 'resend'])
 Route::get('/offres', [OffresController::class, 'index'])->name('offres');
 Route::redirect('/offres/detail', '/offres')->name('details.offre');
 Route::redirect('/app-form', '/offres')->name('app_form');
-Route::post('/check-email', [UserController::class, 'checkEmail'])->name('check.email');
+Route::post('/check-email', [UserController::class, 'checkEmail'])
+    ->middleware('throttle:10,1')
+    ->name('check.email');
 Route::get('/offres/{offre:slug}', [UserController::class, 'jobdetails'])->name('job_infos');
 Route::get('/entreprises', [HomeController::class, 'entreprises'])->name('entreprises.index');
 Route::get('/entreprise/{entreprise}', [HomeController::class, 'entreprise'])
@@ -82,7 +82,9 @@ Route::get('/entreprise/{entreprise}', [HomeController::class, 'entreprise'])
 
 //Paramettes du site
 Route::get('/contact', [ParametresController::class, 'contact'])->name('contact');
-Route::post('/contact', [ParametresController::class, 'submitContact'])->name('contact.submit');
+Route::post('/contact', [ParametresController::class, 'submitContact'])
+    ->middleware('throttle:5,1')
+    ->name('contact.submit');
 Route::get('/abonnement', [ParametresController::class, 'abonnement'])->name('abonnement');
 
 //Ressources
@@ -95,9 +97,11 @@ Route::get('/ressources', [RessourcesController::class, 'index'])->name('ressour
 
 // Routes OAuth
 Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirectToProvider'])
+    ->whereIn('provider', ['google', 'facebook'])
     ->name('auth.social.redirect');
     
 Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'handleProviderCallback'])
+    ->whereIn('provider', ['google', 'facebook'])
     ->name('auth.social.callback');
 
 
@@ -109,6 +113,7 @@ Route::prefix('user')
         Route::post('/candidature/store', [CandidatureController::class, 'store'])->name('candidatures.store');
         Route::post('/profile/update', [UserController::class, 'update'])->name('user.profile.update'); 
         Route::post('/plan-souscrire', [UserController::class, 'souscrire'])->name('abonnements.souscrire');
+        Route::post('/abonnement/annuler', [UserController::class, 'cancelSubscription'])->name('abonnements.cancel');
        // Route::get('/preview-cv/{candidature}', [CandidatureController::class, 'previewCV'])->name('preview.cv');
     Route::get('/historique-candidatures', [UserController::class, 'historique'])->name('user.historiques');
     Route::get('/historique-candidatures_ia', [UserController::class, 'historique_ia'])->name('user.historiques_ia');
@@ -125,11 +130,13 @@ Route::prefix('user')
     Route::get('/preview-letter-ia/{candidature}', [CandidatureController::class, 'previewletteria'])->name('preview.letter-ia');
 
 
-    Route::get('/personnaliser-cv', [CvPersonalizationController::class, 'showForm'])->name('cv.personalization.form');
-    Route::post('/generer-cv-personnalise', [CvPersonalizationController::class, 'generateCV'])->name('cv.personalization.generate');
-    Route::get('/previsualiser-cv/{filename}', [CvPersonalizationController::class, 'previewCV'])->name('cv.personalization.preview');
-    Route::get('/afficher-cv/{filename}', [CvPersonalizationController::class, 'inlineCV'])->name('cv.personalization.inline');
-    Route::get('/telecharger-cv/{filename}', [CvPersonalizationController::class, 'downloadCV'])->name('cv.personalization.download');
+    Route::middleware('candidate.premium')->group(function () {
+        Route::get('/personnaliser-cv', [CvPersonalizationController::class, 'showForm'])->name('cv.personalization.form');
+        Route::post('/generer-cv-personnalise', [CvPersonalizationController::class, 'generateCV'])->name('cv.personalization.generate');
+        Route::get('/previsualiser-cv/{filename}', [CvPersonalizationController::class, 'previewCV'])->name('cv.personalization.preview');
+        Route::get('/afficher-cv/{filename}', [CvPersonalizationController::class, 'inlineCV'])->name('cv.personalization.inline');
+        Route::get('/telecharger-cv/{filename}', [CvPersonalizationController::class, 'downloadCV'])->name('cv.personalization.download');
+    });
 
 
    });
@@ -156,6 +163,7 @@ Route::prefix("/entreprise") ->middleware(['auth', 'verified', 'entreprise.acces
     Route::get("/historique",[EntreprisesController::class, 'historique'])->name("entreprise.historique");
     Route::get("/candidatures-ia",[EntreprisesController::class, 'historique_ia'])->name("entreprise.candidatures_ia");
     Route::get("/abonnements",[EntreprisesController::class, 'abonnements'])->name("entreprise.abonnements");
+    Route::post("/abonnements/souscrire",[EntreprisesController::class, 'souscrire'])->name("entreprise.abonnements.souscrire");
     Route::get("/promotion",[EntreprisesController::class, 'promotion'])->name("entreprise.promotion");
     Route::get('/candidatures', [CandidatureController::class, 'entrepriseIndex'])
         ->name('entreprise.candidatures.index');
@@ -205,8 +213,16 @@ Route::get('/notifications/unread-count', [NotificationController::class, 'unrea
 //Routes admin
 
 
-Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing'  ])->group(function() {
-    Route::get("/",[AdminController::class, 'index'])->name("admin.dashboard");
+Route::prefix('/admin')->middleware(['auth', 'verified'])->group(function () {
+    Route::middleware('role:admin|Marketing')->group(function () {
+        Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::get('/Gestion/statistiques', [AdminController::class, 'statistiques'])->name('admin.statistiques');
+        Route::get('/Gestion/newsletters', [AdminController::class, 'newsletters'])->name('admin.newsletters');
+        Route::post('/Gestion/newsletters', [AdminController::class, 'newsletterStore'])->name('admin.newsletters.store');
+        Route::get('/chart-data', [AdminController::class, 'getChartData'])->name('admin.chart-data');
+    });
+
+    Route::middleware('role:admin')->group(function () {
     Route::redirect('/utilisateurs', '/admin/Gestion/utilisateurs');
     Route::redirect('/offres', '/admin/Gestion/offres');
     Route::redirect('/abonnements', '/admin/Gestion/abonnements');
@@ -216,11 +232,7 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
     Route::get("/Gestion/utilisateurs",[AdminController::class, 'users'])->name("admin.users");
     Route::get("/Gestion/offres",[AdminController::class, 'offres'])->name("admin.offres");
     Route::get("/Gestion/abonnements",[AdminController::class, 'abonnements'])->name("admin.abonnements");
-    Route::get("/Gestion/statistiques",[AdminController::class, 'statistiques'])->name("admin.statistiques");
-    Route::get("/Gestion/newsletters",[AdminController::class, 'newsletters'])->name("admin.newsletters");
-    Route::post("/Gestion/newsletters",[AdminController::class, 'newsletterStore'])->name("admin.newsletters.store");
     Route::get("/Gestion/parametres",[AdminController::class, 'parametres'])->name("admin.parametres");
-    Route::get('/chart-data', [AdminController::class, 'getChartData'])->name('admin.chart-data');
     Route::get('/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
     Route::put('/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::post('/users/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
@@ -259,6 +271,8 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
     Route::get('/abonnements/{abonnement}/fonctionnalites', [AdminController::class, 'getFonctionnalites'])->name('admin.abonnements.fonctionnalites');
     Route::put('/abonnements/{abonnement}', [AdminController::class, 'abonupdate'])->name('admin.abonnements.update');
     Route::delete('/abonnements/{abonnement}', [AdminController::class, 'abondestroy'])->name('admin.abonnements.destroy');
+    Route::patch('/abonnements-utilisateurs/{subscription}/activate', [AdminController::class, 'activateSubscription'])->name('admin.user-subscriptions.activate');
+    Route::patch('/abonnements-utilisateurs/{subscription}/cancel', [AdminController::class, 'cancelSubscription'])->name('admin.user-subscriptions.cancel');
 
     // Routes pour les référentiels (catégories, types d'offres, secteurs, skills, diplômes)
     Route::resource('categories', \App\Http\Controllers\Admin\CategorieController::class)
@@ -301,22 +315,8 @@ Route::prefix("/admin") ->middleware(['auth', 'verified' , 'role:admin|Marketing
             'update'  => 'admin.diplomes.update',
             'destroy' => 'admin.diplomes.destroy',
         ]);
+    });
 });
-
-
-    Route::get('/candidatures/{user_id}/{offre_id}/{filename}', function ($user_id, $offre_id, $filename) {
-    $path = storage_path("app/private/candidatures/$user_id/$offre_id/$filename");
-
-    if (!file_exists($path)) {
-        abort(404);
-    }
-
-    return response()->file($path, [
-        'Content-Type' => 'application/pdf',
-        'Content-Disposition' => 'inline; filename="'.$filename.'"'
-    ]);
-})->name('candidature.files');
-
 
 
 Route::prefix('cv-generator')->middleware(['web', 'auth'])->group(function () {

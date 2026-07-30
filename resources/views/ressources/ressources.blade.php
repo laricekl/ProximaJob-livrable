@@ -97,95 +97,29 @@
         <!-- Grille de ressources -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="resourcesGrid">
 
-          <!-- Ressource 1 - Document -->
-          <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="document" data-title="Guide de rédaction de CV" data-description="Apprenez à créer un CV qui attire l'attention des employeurs">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">description</span> Document
-              </span>
-              <span class="text-xs text-outline">Ajouté le 12 Mai 2025</span>
+          @foreach ($ressources as $ressource)
+            @php
+              $meta = match ($ressource->type) {
+                'document' => ['description', 'Document', 'Télécharger'],
+                'video' => ['play_circle', 'Vidéo', 'Regarder'],
+                default => ['link', 'Lien utile', 'Visiter'],
+              };
+            @endphp
+            <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center"
+              data-type="{{ $ressource->type }}" data-title="{{ $ressource->titre }}" data-description="{{ $ressource->description }}">
+              <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
+                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
+                  <span class="material-symbols-outlined text-xs">{{ $meta[0] }}</span> {{ $meta[1] }}
+                </span>
+                <span class="text-xs text-outline">Ajouté le {{ $ressource->created_at?->translatedFormat('d M Y') }}</span>
+              </div>
+              <h3 class="font-bold text-lg text-primary mb-2">{{ $ressource->titre }}</h3>
+              <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">{{ $ressource->description }}</p>
+              <a href="{{ $ressource->fichier_url }}" target="_blank" rel="noopener noreferrer" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
+                <span class="material-symbols-outlined text-lg">{{ $meta[0] }}</span> {{ $meta[2] }}
+              </a>
             </div>
-            <h3 class="font-bold text-lg text-primary mb-2">Guide de rédaction de CV</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Apprenez à créer un CV qui attire l'attention des employeurs et maximise vos chances d'être sélectionné.</p>
-            <a href="{{ route('register') }}" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
-              <span class="material-symbols-outlined text-lg">download</span> Télécharger
-            </a>
-          </div>
-
-          <!-- Ressource 2 - Vidéo -->
-          <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="video" data-title="Préparer son entretien d'embauche" data-description="Les conseils pour réussir votre entretien et décrocher le poste">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">play_circle</span> Vidéo
-              </span>
-              <span class="text-xs text-outline">Ajouté le 10 Mai 2025</span>
-            </div>
-            <h3 class="font-bold text-lg text-primary mb-2">Préparer son entretien d'embauche</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Les conseils essentiels pour réussir votre entretien et décrocher le poste de vos rêves.</p>
-            <a href="{{ route('contact') }}" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
-              <span class="material-symbols-outlined text-lg">play_arrow</span> Regarder
-            </a>
-          </div>
-
-          <!-- Ressource 3 - Lien -->
-          <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="lien" data-title="Portail officiel de l'emploi" data-description="Accédez au portail gouvernemental pour plus d'opportunités">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">link</span> Lien utile
-              </span>
-              <span class="text-xs text-outline">Ajouté le 08 Mai 2025</span>
-            </div>
-            <h3 class="font-bold text-lg text-primary mb-2">Portail officiel de l'emploi</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Accédez au portail gouvernemental pour plus d'opportunités et de ressources.</p>
-            <a href="{{ route('offres') }}" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
-              <span class="material-symbols-outlined text-lg">open_in_new</span> Visiter
-            </a>
-          </div>
-
-          <!-- Ressource 4 - Document -->
-          <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="document" data-title="Modèle de lettre de présentation" data-description="Des modèles prêts à l'emploi pour votre candidature">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">description</span> Document
-              </span>
-              <span class="text-xs text-outline">Ajouté le 05 Mai 2025</span>
-            </div>
-            <h3 class="font-bold text-lg text-primary mb-2">Modèle de lettre de présentation</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Des modèles prêts à l'emploi pour accompagner votre CV et renforcer votre candidature.</p>
-            <a href="{{ route('register') }}" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
-              <span class="material-symbols-outlined text-lg">download</span> Télécharger
-            </a>
-          </div>
-
-          <!-- Ressource 5 - Vidéo -->
-          <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="video" data-title="Optimiser son profil LinkedIn" data-description="Comment mettre en valeur votre profil professionnel en ligne">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">play_circle</span> Vidéo
-              </span>
-              <span class="text-xs text-outline">Ajouté le 02 Mai 2025</span>
-            </div>
-            <h3 class="font-bold text-lg text-primary mb-2">Optimiser son profil LinkedIn</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Comment mettre en valeur votre profil professionnel en ligne pour attirer les employeurs.</p>
-            <a href="{{ route('contact') }}" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
-              <span class="material-symbols-outlined text-lg">play_arrow</span> Regarder
-            </a>
-          </div>
-
-          <!-- Ressource 6 - Lien -->
-          <div class="resource-item resource-item--outline bg-white rounded-2xl p-6 shadow-md border border-secondary-container/20 hover:border-secondary-container premium-card flex flex-col items-center text-center" data-type="lien" data-title="Calculateur de salaire" data-description="Estimez votre salaire selon votre secteur et expérience">
-            <div class="flex flex-wrap items-center justify-center gap-3 mb-4">
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs">link</span> Lien utile
-              </span>
-              <span class="text-xs text-outline">Ajouté le 28 Avr 2025</span>
-            </div>
-            <h3 class="font-bold text-lg text-primary mb-2">Calculateur de salaire</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed mb-6 flex-grow">Estimez votre salaire selon votre secteur d'activité et votre niveau d'expérience.</p>
-            <a href="{{ route('abonnement') }}" class="inline-flex resource-cta-outline w-full items-center justify-center gap-2 bg-white border font-bold px-6 py-2.5 rounded-xl transition-all text-sm">
-              <span class="material-symbols-outlined text-lg">open_in_new</span> Visiter
-            </a>
-          </div>
+          @endforeach
 
         </div>
 
@@ -204,15 +138,15 @@
           <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight mb-12">Nos ressources en chiffres</h2>
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-10">
             <div class="stat-item">
-              <div class="text-5xl font-bold text-secondary-container mb-2">24</div>
+              <div class="text-5xl font-bold text-secondary-container mb-2">{{ $stats['document'] }}</div>
               <div class="text-on-surface-variant font-medium">Documents disponibles</div>
             </div>
             <div class="stat-item">
-              <div class="text-5xl font-bold text-secondary-container mb-2">18</div>
+              <div class="text-5xl font-bold text-secondary-container mb-2">{{ $stats['video'] }}</div>
               <div class="text-on-surface-variant font-medium">Vidéos tutorielles</div>
             </div>
             <div class="stat-item">
-              <div class="text-5xl font-bold text-secondary-container mb-2">12</div>
+              <div class="text-5xl font-bold text-secondary-container mb-2">{{ $stats['lien'] }}</div>
               <div class="text-on-surface-variant font-medium">Liens utiles</div>
             </div>
           </div>
@@ -263,6 +197,7 @@
       if (searchInput) {
         searchInput.addEventListener('input', updateVisibility);
       }
+      updateVisibility();
     })();
   </script>
 @endsection

@@ -32,7 +32,8 @@ class ProfileController extends Controller
         }
 
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => $request->user()->load('cvProfile'),
+            'cvProfile' => $request->user()->cvProfile,
         ]);
     }
 
@@ -96,6 +97,12 @@ class ProfileController extends Controller
         }
 
         $request->user()->save();
+        if ($request->user()->cvProfile) {
+            $request->user()->cvProfile->update([
+                'nom' => $request->user()->name,
+                'email' => $request->user()->email,
+            ]);
+        }
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }

@@ -24,8 +24,8 @@ class SocialAuthAvailabilityTest extends TestCase
             ->assertOk()
             ->assertDontSee(route('auth.social.redirect', 'google'), false)
             ->assertDontSee(route('auth.social.redirect', 'facebook'), false)
-            ->assertSee('Google bientot disponible')
-            ->assertSee('Facebook bientot disponible');
+            ->assertSee('Google bientôt disponible')
+            ->assertSee('Facebook bientôt disponible');
 
         $this->get(route('register'))
             ->assertOk()
@@ -44,5 +44,22 @@ class SocialAuthAvailabilityTest extends TestCase
         $this->get(route('auth.social.redirect', 'google'))
             ->assertRedirect(route('login'))
             ->assertSessionHas('error');
+    }
+
+    public function test_social_registration_cannot_create_an_incomplete_enterprise_account(): void
+    {
+        config([
+            'services.google.client_id' => 'configured',
+            'services.google.client_secret' => 'configured',
+            'services.google.redirect' => 'http://localhost/auth/google/callback',
+        ]);
+
+        $this->get(route('auth.social.redirect', [
+            'provider' => 'google',
+            'mode' => 'register',
+            'role' => 'entreprise',
+        ]))
+            ->assertRedirect(route('entreprise.register'))
+            ->assertSessionHas('info');
     }
 }

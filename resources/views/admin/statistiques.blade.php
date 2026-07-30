@@ -4,8 +4,8 @@
 @section('content')
   <div class="space-y-8">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
-      <x-admin.stat-card label="Entreprises" :value="number_format($entrepriseStats['count'])" :hint="($entrepriseStats['monthlyGrowth'] >= 0 ? '↑ ' : '↓ ').abs($entrepriseStats['monthlyGrowth']).'% vs mois dernier'" />
-      <x-admin.stat-card label="Offres" :value="number_format($offreStats['count'])" :hint="($offreStats['monthlyGrowth'] >= 0 ? '↑ ' : '↓ ').abs($offreStats['monthlyGrowth']).'% vs mois dernier'" />
+      <x-admin.stat-card label="Entreprises" :value="number_format($entrepriseStats['count'])" :hint="$entrepriseStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($entrepriseStats['monthlyGrowth'] >= 0 ? '↑ ' : '↓ ').abs($entrepriseStats['monthlyGrowth']).'% vs mois dernier')" />
+      <x-admin.stat-card label="Offres" :value="number_format($offreStats['count'])" :hint="$offreStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($offreStats['monthlyGrowth'] >= 0 ? '↑ ' : '↓ ').abs($offreStats['monthlyGrowth']).'% vs mois dernier')" />
       <x-admin.stat-card label="Nouveaux inscrits" :value="array_sum($userChartData['data'])" :hint="'Année '.$userChartData['currentYear']" />
       <x-admin.stat-card label="Candidatures" :value="number_format($totalPostulations)" hint="Toutes périodes confondues" />
     </div>
@@ -65,11 +65,15 @@
             @forelse ($topEntreprises as $entreprise)
               <tr class="transition-colors hover:bg-surface-container-low/30">
                 <td class="px-6 py-3 font-semibold text-primary">
+                  @role('admin')
                   @if(!empty($entreprise['user_id']))
                     <a href="{{ route('admin.users.show', $entreprise['user_id']) }}" class="hover:text-secondary-container transition-colors">{{ $entreprise['company_name'] }}</a>
                   @else
                     {{ $entreprise['company_name'] }}
                   @endif
+                  @else
+                    {{ $entreprise['company_name'] }}
+                  @endrole
                 </td>
                 <td class="px-6 py-3">{{ $entreprise['offers_count'] }}</td>
                 <td class="hidden px-6 py-3 sm:table-cell">{{ $entreprise['applications_count'] }}</td>

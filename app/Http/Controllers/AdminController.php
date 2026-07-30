@@ -23,6 +23,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\EntrepriseValidated;
+use App\Mail\NewsletterCampaignMail;
 use Illuminate\Validation\ValidationException;
 use Throwable;
 
@@ -66,30 +67,32 @@ class AdminController extends Controller
          return view("admin.index", compact('users', 'entrepriseStats', 'offreStats', 'candidateStats', 'matchStats', 'userChartData', 'offerChartData'));
     }
 
-    private function calculateMonthlyGrowth($role): float
+    private function calculateMonthlyGrowth($role): ?float
     {
         $currentMonthCount = User::role($role)
+                            ->whereYear('created_at', now()->year)
                             ->whereMonth('created_at', now()->month)
                             ->count();
 
         $previousMonthCount = User::role($role)
+                            ->whereYear('created_at', now()->subMonth()->year)
                             ->whereMonth('created_at', now()->subMonth()->month)
                             ->count();
 
         if ($previousMonthCount === 0) {
-            return 0;
+            return null;
         }
 
         return round(($currentMonthCount - $previousMonthCount) / $previousMonthCount * 100, 1);
     }
 
-    private function calculateOffreMonthlyGrowth($model): float
+    private function calculateOffreMonthlyGrowth($model): ?float
     {
-        $currentMonthCount = $model::whereMonth('created_at', now()->month)->count();
-        $previousMonthCount = $model::whereMonth('created_at', now()->subMonth()->month)->count();
+        $currentMonthCount = $model::whereYear('created_at', now()->year)->whereMonth('created_at', now()->month)->count();
+        $previousMonthCount = $model::whereYear('created_at', now()->subMonth()->year)->whereMonth('created_at', now()->subMonth()->month)->count();
 
         if ($previousMonthCount === 0) {
-            return 0;
+            return null;
         }
 
         return round(($currentMonthCount - $previousMonthCount) / $previousMonthCount * 100, 1);
@@ -421,7 +424,7 @@ public function reactivateOffer($id)
 public function abonnements(Request $request)
 {
    
-    $activeSubscriptions = UserAbonnement::where('date_fin', '>=', now())->count();
+    $activeSubscriptions = UserAbonnement::current()->count();
     $expiredSubscriptions = UserAbonnement::where('date_fin', '<', now())->count();
     
     // Calcul du revenu mensuel (version optimisée avec la nouvelle structure)
@@ -494,6 +497,28 @@ public function abonnements(Request $request)
     ));
 }
 
+public function activateSubscription(UserAbonnement $subscription)
+{
+    $duration = max(1, (int) ($subscription->abonnement?->duree ?? 30));
+    $subscription->update([
+        'status' => 'Actif',
+        'date_debut' => now(),
+        'date_fin' => now()->addDays($duration),
+    ]);
+
+    return back()->with('success', 'Abonnement activé après validation.');
+}
+
+public function cancelSubscription(UserAbonnement $subscription)
+{
+    $subscription->update([
+        'status' => 'Annulé',
+        'date_fin' => now(),
+    ]);
+
+    return back()->with('success', 'Abonnement annulé.');
+}
+
     public function statistiques()
     {
          $users = User::with('roles')
@@ -523,10 +548,12 @@ public function abonnements(Request $request)
 
          $totalPostulations = max(Postulation::count(), 1);
          $applicationStatusDistribution = collect([
-            ['label' => 'Matchées', 'count' => Postulation::where('status', 'matchée')->count(), 'color' => 'bg-secondary-container'],
-            ['label' => 'En cours', 'count' => Postulation::whereIn('status', ['en attente', 'en_cours'])->count(), 'color' => 'bg-amber-400'],
-            ['label' => 'Entretien', 'count' => Postulation::where('status', 'entretien')->count(), 'color' => 'bg-blue-500'],
-            ['label' => 'Refusées', 'count' => Postulation::whereIn('status', ['refusée', 'refusee'])->count(), 'color' => 'bg-red-400'],
+            ['label' => 'À examiner', 'count' => Postulation::where('status', 'en_attente')->count(), 'color' => 'bg-amber-400'],
+            ['label' => 'Présélectionnées', 'count' => Postulation::where('status', 'shortlisted')->count(), 'color' => 'bg-secondary-container'],
+            ['label' => 'Contactées', 'count' => Postulation::where('status', 'contacted')->count(), 'color' => 'bg-blue-400'],
+            ['label' => 'Entretiens', 'count' => Postulation::where('status', 'interview')->count(), 'color' => 'bg-blue-600'],
+            ['label' => 'Acceptées', 'count' => Postulation::where('status', 'accepted')->count(), 'color' => 'bg-green-500'],
+            ['label' => 'Refusées', 'count' => Postulation::where('status', 'rejected')->count(), 'color' => 'bg-red-400'],
          ])->filter(fn ($item) => $item['count'] > 0)->values();
 
          if ($applicationStatusDistribution->isEmpty()) {
@@ -587,36 +614,51 @@ public function abonnements(Request $request)
                 ->withErrors($validator)->withInput();
         }
 
-        $statut = $request->action === 'envoyer' ? 'envoyee' : 'brouillon';
-        $envoyeeLe = $request->action === 'envoyer' ? now() : null;
+        $recipients = User::query()->whereNotNull('email');
+        match ($request->audience) {
+            'candidats' => $recipients->role('candidat'),
+            'entreprises' => $recipients->role('entreprise'),
+            'premium' => $recipients->whereHas('abonnements', fn ($query) => $query
+                ->where('user_abonnements.status', 'Actif')
+                ->where('user_abonnements.date_fin', '>=', now())),
+            default => null,
+        };
+        $count = (clone $recipients)->count();
+        $isSending = $request->action === 'envoyer';
 
-        // Compter les destinataires selon l'audience
-        $count = 0;
-        switch ($request->audience) {
-            case 'candidats':
-                $count = User::role('candidat')->count();
-                break;
-            case 'entreprises':
-                $count = User::role('entreprise')->count();
-                break;
-            case 'premium':
-                $count = UserAbonnement::where('status', 'Actif')->distinct('user_id')->count();
-                break;
-            default:
-                $count = User::count();
-        }
-
-        \App\Models\NewsletterCampagne::create([
+        $campaign = \App\Models\NewsletterCampagne::create([
             'sujet'               => $request->sujet,
             'contenu'             => $request->contenu,
             'audience'            => $request->audience,
-            'statut'              => $statut,
-            'envoyee_le'          => $envoyeeLe,
+            'statut'              => $isSending ? 'en_cours' : 'brouillon',
+            'envoyee_le'          => null,
             'destinataires_count' => $count,
         ]);
 
-        $message = $statut === 'envoyee'
-            ? 'Newsletter « ' . $request->sujet . ' » envoyée à ' . number_format($count) . ' destinataires.'
+        if ($isSending) {
+            try {
+                $recipients->select(['id', 'email'])->chunkById(200, function ($users) use ($request) {
+                    foreach ($users as $recipient) {
+                        Mail::to($recipient->email)->queue(
+                            new NewsletterCampaignMail($request->sujet, $request->contenu)
+                        );
+                    }
+                });
+                $campaign->update(['statut' => 'envoyee', 'envoyee_le' => now()]);
+            } catch (Throwable $exception) {
+                $campaign->update(['statut' => 'echec']);
+                Log::error('Échec de mise en file de la newsletter', [
+                    'campaign_id' => $campaign->id,
+                    'error' => $exception->getMessage(),
+                ]);
+
+                return redirect()->route('admin.newsletters')
+                    ->with('error', 'La campagne n’a pas pu être envoyée. Elle est conservée avec le statut « Échec ».');
+            }
+        }
+
+        $message = $isSending
+            ? 'Newsletter « ' . $request->sujet . ' » mise en file pour ' . number_format($count) . ' destinataire(s).'
             : 'Newsletter « ' . $request->sujet . ' » sauvegardée en brouillon.';
 
         return redirect()->route('admin.newsletters')->with('success', $message);
@@ -631,6 +673,7 @@ public function abonnements(Request $request)
 
         // Liste des fuseaux horaires
         $timezones = [
+            'America/Toronto' => 'America/Toronto (heure de l’Est)',
             'Europe/Paris' => 'Europe/Paris (UTC+1)',
             'UTC' => 'UTC',
             'America/New_York' => 'America/New_York (UTC-5)',
@@ -654,7 +697,7 @@ public function abonnements(Request $request)
             'timezone' => 'required|string|max:100',
             'map_embed_url' => 'nullable|url|max:5000',
             'map_zoom' => 'nullable|integer|min:1|max:20',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'favicon' => 'nullable|image|mimes:ico,png,jpg|max:1024',
         ], [
             'site_nom.required' => 'Le nom du site est obligatoire.',
@@ -663,7 +706,7 @@ public function abonnements(Request $request)
             'map_embed_url.url' => 'Le lien de la carte doit etre une URL valide.',
             'map_zoom.integer' => 'Le niveau de zoom doit etre un nombre entier.',
             'logo.image' => 'Le logo doit être une image.',
-            'logo.mimes' => 'Le logo doit être au format JPG, PNG ou SVG.',
+            'logo.mimes' => 'Le logo doit être au format JPG, PNG ou WebP.',
             'logo.max' => 'Le logo ne doit pas dépasser 2MB.',
             'favicon.image' => 'Le favicon doit être une image.',
             'favicon.mimes' => 'Le favicon doit être au format ICO ou PNG.',

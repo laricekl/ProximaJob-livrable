@@ -20,18 +20,18 @@
                 <div class="p-6 md:p-8">
                   <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
                     <div>
-                      <span class="inline-flex px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">Actif</span>
+                      <span class="inline-flex px-3 py-1 {{ $userAbonnement->status_color }} text-2xs font-black uppercase tracking-widest rounded-full">{{ $userAbonnement->effective_status }}</span>
                       <h2 class="mt-2 text-xl font-bold text-primary">{{ $userAbonnement->abonnement->nom ?? 'Abonnement' }}</h2>
                     </div>
                     <div class="text-right">
                       <p class="text-3xl font-bold text-primary">{{ number_format($userAbonnement->abonnement->montant ?? 0, 2, ',', ' ') }} $</p>
-                      <p class="text-xs text-outline">/{{ $userAbonnement->abonnement->duree ?? 'mois' }}</p>
+                      <p class="text-xs text-outline">/{{ $userAbonnement->abonnement->duree ?? 30 }} jours</p>
                     </div>
                   </div>
 
                   <div class="grid grid-cols-2 gap-4 p-4 rounded-xl bg-surface-container-low/50">
                     <div>
-                      <p class="text-2xs font-bold uppercase tracking-wide text-outline">Debut</p>
+                      <p class="text-2xs font-bold uppercase tracking-wide text-outline">Début</p>
                       <p class="text-sm font-semibold text-primary">{{ $userAbonnement->date_debut ? $userAbonnement->date_debut->translatedFormat('d M Y') : '—' }}</p>
                     </div>
                     <div>
@@ -52,7 +52,7 @@
                     </div>
                     <div>
                       <p class="text-2xs font-bold uppercase tracking-wide text-outline">Statut</p>
-                      <p class="text-sm font-semibold text-success">{{ $userAbonnement->status }}</p>
+                      <p class="text-sm font-semibold {{ $userAbonnement->effective_status === 'Actif' ? 'text-success' : 'text-error-dark' }}">{{ $userAbonnement->effective_status }}</p>
                     </div>
                   </div>
 
@@ -60,6 +60,14 @@
                     <a href="{{ route('plan.abonnement') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                       <span class="material-symbols-outlined text-lg">upgrade</span> Changer de plan
                     </a>
+                    @if (in_array($userAbonnement->effective_status, ['Actif', 'En attente'], true))
+                      <form method="POST" action="{{ route('abonnements.cancel') }}" onsubmit="return confirm('Confirmer l’annulation de cet abonnement ?')">
+                        @csrf
+                        <button class="inline-flex items-center gap-2 px-5 py-2.5 border border-error/30 text-error-dark text-sm font-bold rounded-xl hover:bg-error-light transition-colors">
+                          <span class="material-symbols-outlined text-lg">cancel</span> Annuler l’abonnement
+                        </button>
+                      </form>
+                    @endif
                   </div>
                 </div>
               </div>
@@ -68,7 +76,7 @@
             <div class="space-y-4">
               <div class="card-glow rounded-2xl p-6">
                 <h3 class="text-sm font-bold text-primary mb-4 flex items-center gap-2">
-                  <span class="material-symbols-outlined text-secondary-container text-lg">star</span> Avantages inclus
+                  <span class="material-symbols-outlined text-secondary-container text-lg">star</span> Avantages du forfait
                 </h3>
                 <ul class="space-y-3">
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
@@ -78,7 +86,7 @@
                     <span class="material-symbols-outlined text-success text-base">check_circle</span> Matching automatique
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
-                    <span class="material-symbols-outlined text-success text-base">check_circle</span> Candidatures illimitees
+                    <span class="material-symbols-outlined text-success text-base">check_circle</span> Candidatures illimitées
                   </li>
                   <li class="flex items-center gap-2 text-sm text-on-surface-variant">
                     <span class="material-symbols-outlined text-success text-base">check_circle</span> Support prioritaire
@@ -104,7 +112,7 @@
                 <span class="material-symbols-outlined text-3xl text-outline">workspace_premium</span>
               </div>
               <h2 class="text-xl font-bold font-serif text-primary mb-2">Aucun abonnement actif</h2>
-              <p class="text-on-surface-variant max-w-md mx-auto mb-6">Souscrivez à un plan pour accéder aux CV personnalisés par IA, au matching automatique et a toutes les fonctionnalites premium.</p>
+              <p class="text-on-surface-variant max-w-md mx-auto mb-6">Souscrivez à un plan pour accéder aux CV personnalisés par IA, au matching automatique et à toutes les fonctionnalités premium.</p>
               <a href="{{ route('plan.abonnement') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors shadow-lg shadow-secondary-container/20">
                 <span class="material-symbols-outlined text-lg">rocket_launch</span> Voir les plans
               </a>
@@ -114,7 +122,7 @@
           <div class="mt-8 grid gap-4 sm:grid-cols-3">
             <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
               <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">auto_awesome</span>
-              <p class="text-sm font-semibold text-primary">CV personnalises</p>
+              <p class="text-sm font-semibold text-primary">CV personnalisés</p>
               <p class="text-xs text-on-surface-variant mt-1">Générés par IA pour chaque offre</p>
             </div>
             <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
@@ -125,7 +133,7 @@
             <div class="rounded-xl bg-white border border-outline-variant/10 p-5 text-center">
               <span class="material-symbols-outlined text-2xl text-secondary-container mb-2">support_agent</span>
               <p class="text-sm font-semibold text-primary">Support prioritaire</p>
-              <p class="text-xs text-on-surface-variant mt-1">Assistance rapide et dédié</p>
+              <p class="text-xs text-on-surface-variant mt-1">Assistance rapide et dédiée</p>
             </div>
           </div>
         @endif

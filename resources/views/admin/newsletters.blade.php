@@ -53,8 +53,8 @@
           <div class="flex items-center justify-between">
             <p class="text-sm font-semibold text-primary">{{ $campagne->sujet }}</p>
             <span class="inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-bold
-              {{ $campagne->statut === 'envoyee' ? 'bg-success-light text-success-dark' : 'bg-warning-light text-warning-dark' }}">
-              {{ $campagne->statut === 'envoyee' ? 'Envoyée' : 'Brouillon' }}
+              {{ $campagne->statut === 'envoyee' ? 'bg-success-light text-success-dark' : ($campagne->statut === 'echec' ? 'bg-error-light text-error-dark' : 'bg-warning-light text-warning-dark') }}">
+              {{ ['envoyee' => 'Envoyée', 'echec' => 'Échec', 'en_cours' => 'En cours', 'brouillon' => 'Brouillon'][$campagne->statut] ?? ucfirst($campagne->statut) }}
             </span>
           </div>
           <p class="mt-0.5 text-xs text-outline">

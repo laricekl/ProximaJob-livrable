@@ -113,7 +113,7 @@ class EnterpriseAccessTest extends TestCase
 
         $this->actingAs($candidate)
             ->get('/dashboard')
-            ->assertRedirect('/user');
+            ->assertRedirect('/user/infos-cv');
 
         $this->actingAs($enterprise)
             ->get('/dashboard')

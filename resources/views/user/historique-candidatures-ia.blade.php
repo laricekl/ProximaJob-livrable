@@ -71,8 +71,8 @@
             <div class="rounded-2xl bg-white border border-outline-variant/10 p-4 shadow-sm">
               <div class="flex items-center justify-between gap-3">
                 <div>
-                  <div class="text-2xl font-bold text-primary">{{ $postulations->getCollection()->where('status', 'en_attente')->count() }}</div>
-                  <div class="text-xs font-semibold text-on-surface-variant mt-1">En attente</div>
+                  <div class="text-2xl font-bold text-primary">{{ collect(['en_attente', 'shortlisted', 'contacted', 'interview'])->sum(fn ($status) => $statusStats[$status] ?? 0) }}</div>
+                  <div class="text-xs font-semibold text-on-surface-variant mt-1">En cours</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">hourglass_empty</span>
               </div>
@@ -80,7 +80,7 @@
             <div class="rounded-2xl bg-white border border-outline-variant/10 p-4 shadow-sm">
               <div class="flex items-center justify-between gap-3">
                 <div>
-                  <div class="text-2xl font-bold text-primary">{{ $postulations->getCollection()->where('status', 'accepted')->count() }}</div>
+                  <div class="text-2xl font-bold text-primary">{{ $statusStats['accepted'] ?? 0 }}</div>
                   <div class="text-xs font-semibold text-on-surface-variant mt-1">Acceptées</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">check_circle</span>
@@ -89,8 +89,8 @@
             <div class="rounded-2xl bg-white border border-outline-variant/10 p-4 shadow-sm">
               <div class="flex items-center justify-between gap-3">
                 <div>
-                  <div class="text-2xl font-bold text-primary">{{ $newAiPostulationsCount }}</div>
-                  <div class="text-xs font-semibold text-on-surface-variant mt-1">Nouvelles</div>
+                  <div class="text-2xl font-bold text-primary">{{ $statusStats['rejected'] ?? 0 }}</div>
+                  <div class="text-xs font-semibold text-on-surface-variant mt-1">Refusées</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">notifications</span>
               </div>
@@ -107,9 +107,12 @@
             <label for="status" class="block text-xs font-semibold text-primary mb-1.5">Statut</label>
             <select id="status" name="status" style="min-width: 13rem;" class="px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all">
               <option value="" {{ request('status') === null ? 'selected' : '' }}>Tous statuts</option>
-              <option value="En attente" {{ request('status') === 'En attente' ? 'selected' : '' }}>En attente</option>
-              <option value="Accepté" {{ request('status') === 'Accepté' ? 'selected' : '' }}>accepted</option>
-              <option value="Rejeté" {{ request('status') === 'Rejeté' ? 'selected' : '' }}>rejected</option>
+              <option value="en_attente" @selected(request('status') === 'en_attente')>À examiner</option>
+              <option value="shortlisted" @selected(request('status') === 'shortlisted')>Présélectionnée</option>
+              <option value="contacted" @selected(request('status') === 'contacted')>Entreprise contactée</option>
+              <option value="interview" @selected(request('status') === 'interview')>Entretien planifié</option>
+              <option value="accepted" @selected(request('status') === 'accepted')>Acceptée</option>
+              <option value="rejected" @selected(request('status') === 'rejected')>Refusée</option>
             </select>
           </div>
           <div>

@@ -10,10 +10,12 @@ use App\Models\Sector;
 use App\Models\Skill;
 use App\Models\TypeOffre;
 use App\Models\User;
+use App\Models\Abonnement;
+use App\Models\UserAbonnement;
 
 trait CreatesTestAccounts
 {
-    protected function createCandidate(array $attributes = []): User
+    protected function createCandidate(array $attributes = [], bool $withProPlan = true): User
     {
         $user = User::factory()->create(array_merge([
             'prenom' => 'Camille',
@@ -23,11 +25,14 @@ trait CreatesTestAccounts
         ], $attributes));
 
         $user->syncRoles(['candidat']);
+        if ($withProPlan) {
+            $this->attachCurrentPlan($user, 'Pro', 49, 30);
+        }
 
         return $user->fresh();
     }
 
-    protected function createEnterprise(array $attributes = [], array $enterpriseAttributes = []): User
+    protected function createEnterprise(array $attributes = [], array $enterpriseAttributes = [], bool $withEnterprisePlan = true): User
     {
         $user = User::factory()->create(array_merge([
             'prenom' => 'Alex',
@@ -43,8 +48,32 @@ trait CreatesTestAccounts
             'company_name' => 'Entreprise QA',
             'status' => 'approved',
         ], $enterpriseAttributes));
+        if ($withEnterprisePlan) {
+            $this->attachCurrentPlan($user, 'Entreprise', 399, 365);
+        }
 
         return $user->fresh();
+    }
+
+    protected function attachCurrentPlan(User $user, string $name, float $amount, int $duration): UserAbonnement
+    {
+        $plan = Abonnement::firstOrCreate(
+            ['nom' => $name],
+            [
+                'description' => 'Forfait actif pour les tests fonctionnels.',
+                'montant' => $amount,
+                'duree' => $duration,
+                'actif' => true,
+            ]
+        );
+
+        return UserAbonnement::create([
+            'user_id' => $user->id,
+            'abonnement_id' => $plan->id,
+            'date_debut' => now()->subDay(),
+            'date_fin' => now()->addDays($duration),
+            'status' => 'Actif',
+        ]);
     }
 
     protected function createOfferFor(?User $enterpriseUser = null, array $attributes = []): Offre

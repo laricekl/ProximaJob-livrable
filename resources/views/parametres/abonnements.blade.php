@@ -146,7 +146,7 @@
                   @if ($isFree)
                     <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
                   @elseif ($isPopular)
-                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Essai gratuit 7 jours</a>
+                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Créer mon compte</a>
                   @else
                     <a href="{{ route('contact') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
                   @endif
@@ -157,7 +157,7 @@
 
         </div>
 
-        <p class="text-center text-sm text-outline mt-8">Annulation possible à tout moment. Essai gratuit de 7 jours pour le forfait Premium.</p>
+        <p class="text-center text-sm text-outline mt-8">Les forfaits payants sont activés après confirmation par notre équipe.</p>
       </div>
     </section>
 
@@ -198,28 +198,28 @@
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">03</span>
-                <span>Comment fonctionne l'essai gratuit de 7 jours ?</span>
+                <span>Comment activer un forfait payant ?</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              L'essai gratuit vous donne accès à toutes les fonctionnalités Premium pendant 7 jours. Aucun frais ne vous sera facturé pendant cette période. Vous pouvez annuler avant la fin de l'essai sans être débité.
+              Depuis votre espace, choisissez le forfait souhaité et envoyez votre demande. Il apparaît alors « En attente » jusqu’à sa confirmation par l’équipe ProximaJob.
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">04</span>
-                <span>Quels moyens de paiement acceptez-vous ?</span>
+                <span>Quand les fonctionnalités deviennent-elles accessibles ?</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Nous acceptons les cartes de crédit (Visa, Mastercard), les cartes de débit, ainsi que les paiements via PayPal et les services de mobile money selon votre région.
+              Les fonctionnalités du forfait deviennent accessibles dès que son statut passe à « Actif ». La date de début et la date d’expiration sont alors visibles dans votre espace.
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">

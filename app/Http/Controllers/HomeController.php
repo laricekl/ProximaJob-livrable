@@ -20,7 +20,10 @@ class HomeController extends Controller
    public function index(Request $request)
     {
         // Récupération des villes distinctes
-        $villes = Offre::select('localisation')->distinct()->pluck('localisation');
+        $publicOffers = fn () => Offre::query()
+            ->where('status', 'active')
+            ->whereHas('entreprise.user', fn ($query) => $query->where('email', 'not like', '%.test'));
+        $villes = $publicOffers()->select('localisation')->distinct()->pluck('localisation');
 
         // Récupération des catégories avec compteur
         $categories = Categorie::withCount('offres')->limit(6)->get();
@@ -28,7 +31,7 @@ class HomeController extends Controller
         // Recherche et filtres
         $search = $request->get('search');
 
-        $query = Offre::with(['entreprise.user', 'type', 'categorie'])
+        $query = $publicOffers()->with(['entreprise.user', 'type', 'categorie'])
                     ->when($request->filled('localisation'), function($q) use ($request) {
                         $q->where('localisation', $request->localisation);
                     })
@@ -53,7 +56,7 @@ class HomeController extends Controller
         $offres = $query->latest()->take(8)->get();
 
         // value actuel du filtre
-        $localisations = Offre::select('localisation')
+        $localisations = $publicOffers()->select('localisation')
         ->distinct()
         ->whereNotNull('localisation')
         ->where('localisation', '!=', '')
@@ -64,12 +67,13 @@ class HomeController extends Controller
             ->orderBy('nom')
             ->get();
         //
-        $totalOffres = Offre::count();
-        $totalUtilisateurs = User::count();
-        $totalEntreprises = Entreprise::count();
+        $totalOffres = $publicOffers()->count();
+        $totalUtilisateurs = User::where('email', 'not like', '%.test')->count();
+        $totalEntreprises = Entreprise::whereHas('user', fn ($query) => $query->where('email', 'not like', '%.test'))->count();
 
         $featuredEntreprises = Entreprise::where('is_featured', true)
             ->whereNotNull('verified_at')
+            ->whereHas('user', fn ($query) => $query->where('email', 'not like', '%.test'))
             ->take(6)
             ->get();
 
@@ -90,6 +94,7 @@ class HomeController extends Controller
             ->whereKey($id)
             ->where('is_featured', true)
             ->whereNotNull('verified_at')
+            ->whereHas('user', fn ($query) => $query->where('email', 'not like', '%.test'))
             ->firstOrFail();
         $entreprise->load('user');
         $offres = $entreprise->offres()
@@ -97,8 +102,11 @@ class HomeController extends Controller
             ->with(['type', 'categorie'])
             ->latest()
             ->paginate(6);
+        $totalPublishedOffers = $entreprise->offres()
+            ->where('status', '!=', 'draft')
+            ->count();
 
-        return view('parametres.entreprise-profil', compact('entreprise', 'offres'));
+        return view('parametres.entreprise-profil', compact('entreprise', 'offres', 'totalPublishedOffers'));
     }
 
     /**
@@ -109,6 +117,7 @@ class HomeController extends Controller
         $entreprises = Entreprise::query()
             ->where('is_featured', true)
             ->whereNotNull('verified_at')
+            ->whereHas('user', fn ($query) => $query->where('email', 'not like', '%.test'))
             ->withCount([
                 'offres as active_offers_count' => fn ($query) => $query->where('status', 'active'),
             ])
