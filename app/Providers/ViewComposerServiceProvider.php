@@ -5,9 +5,6 @@ namespace App\Providers;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Notification; 
-use App\Models\Sector; 
-use App\Models\Diplome; 
-use App\Models\Skill; 
 
 class ViewComposerServiceProvider extends ServiceProvider
 {
@@ -27,16 +24,9 @@ class ViewComposerServiceProvider extends ServiceProvider
                     ->limit(10)
                     ->get();
 
-                    $sectors = Sector::get();
-                    $diplomes = Diplome::get();
-                    $skills = Skill::get();
-                
                 $view->with([
                     'unreadNotificationsCount' => $unreadNotificationsCount,
                     'notifications' => $notifications,
-                    'sectors' => $sectors,
-                    'diplomes' => $diplomes,
-                    'skills' => $skills,
                 ]);
             } else {
                 $view->with([

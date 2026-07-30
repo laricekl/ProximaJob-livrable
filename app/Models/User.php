@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
@@ -104,6 +103,18 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Abonnement::class, 'user_abonnements')
                     ->withPivot('date_debut', 'date_fin', 'status', 'created_at', 'updated_at');
+    }
+
+    public function hasCurrentPlan(string ...$names): bool
+    {
+        $normalizedNames = collect($names)->map(fn ($name) => mb_strtolower($name))->all();
+
+        return $this->abonnements()
+            ->wherePivot('status', 'Actif')
+            ->wherePivot('date_debut', '<=', now())
+            ->wherePivot('date_fin', '>=', now())
+            ->whereIn(\DB::raw('LOWER(abonnements.nom)'), $normalizedNames)
+            ->exists();
     }
 
     /**
@@ -198,53 +209,35 @@ class User extends Authenticatable
         return $query->role('candidat');
     }
 
-    /**
-     * Méthode pour attribuer le rôle candidat par défaut
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::created(function ($user) {
-            // Par défaut, on attribue le rôle candidat si aucun rôle n'est défini
-            if (!$user->hasAnyRole(Role::all())) {
-                $user->assignRole('candidat');
-            }
-        });
-    }
-
     public function profileCompletionPercentage()
     {
-        $totalFields = 12;  
+        $this->loadMissing([
+            'cvProfile.experiences',
+            'cvProfile.formations',
+            'cvProfile.competences',
+            'cvProfile.langues',
+            'candidateSector',
+            'skills',
+        ]);
+
+        $profile = $this->cvProfile;
+        $totalFields = 12;
         $completedFields = 0;
 
-        // Informations de base (existantes)
-        if (!empty($this->name)) $completedFields++;
-        if (!empty($this->prenom)) $completedFields++;
-        if (!empty($this->email)) $completedFields++;
-        if (!empty($this->telephone)) $completedFields++;
-        if (!empty($this->adresse)) $completedFields++;
+        if (!empty($profile?->nom ?: $this->name)) $completedFields++;
+        if (!empty($profile?->prenom ?: $this->prenom)) $completedFields++;
+        if (!empty($profile?->email ?: $this->email)) $completedFields++;
+        if (!empty($profile?->telephone ?: $this->telephone)) $completedFields++;
+        if (!empty($profile?->ville ?: $profile?->adresse ?: $this->adresse)) $completedFields++;
         if (!empty($this->profile_photo_path)) $completedFields++;
-        if (!empty($this->cv)) $completedFields++;
+        if ($profile || !empty($this->cv)) $completedFields++;
         if (!empty($this->salary_expectation_min)) $completedFields++;
-    
-        if ($this->candidateSector && !empty($this->candidateSector->sector_id)) {
-            $completedFields++;
-        }
-    
-        if ($this->candidateSector && !empty($this->candidateSector->diplome_id)) {
-            $completedFields++;
-        }
-    
-        if ($this->candidateSector && !empty($this->candidateSector->experience_years)) {
-            $completedFields++;
-        }
+        if (($profile?->experiences?->count() ?? 0) > 0 || ($this->candidateSector?->experience_years ?? 0) > 0) $completedFields++;
+        if (($profile?->formations?->count() ?? 0) > 0 || !empty($this->candidateSector?->diplome_id)) $completedFields++;
+        if ($this->skills->isNotEmpty() || ($profile?->competences?->count() ?? 0) > 0) $completedFields++;
+        if (($profile?->langues?->count() ?? 0) > 0 || !empty($profile?->langues_competences)) $completedFields++;
 
-        if ($this->skills()->count() > 0) {
-            $completedFields++;
-        }
-
-        return round(($completedFields / $totalFields) * 100);
+        return (int) round(($completedFields / $totalFields) * 100);
     }
 
     public function hasAppliedTo(Offre $offre)

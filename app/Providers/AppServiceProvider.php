@@ -34,6 +34,14 @@ class AppServiceProvider extends ServiceProvider
     Paginator::useBootstrapFive();
     
     try {
+        if (Schema::hasTable('site_settings')) {
+            $configuredTimezone = SiteSetting::value('timezone');
+            if ($configuredTimezone && in_array($configuredTimezone, timezone_identifiers_list(), true)) {
+                config(['app.timezone' => $configuredTimezone]);
+                date_default_timezone_set($configuredTimezone);
+            }
+        }
+
         View::composer('*', function ($view) {
             $view->with('siteSettings', SiteSetting::firstOrCreate([], SiteSetting::defaults()));
         });

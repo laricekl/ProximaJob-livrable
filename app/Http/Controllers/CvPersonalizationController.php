@@ -161,7 +161,13 @@ class CvPersonalizationController extends Controller
             ]))->with('success', 'CV personnalisé généré avec succès !');
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Erreur lors de la génération : ' . $e->getMessage());
+            \Log::error('Échec de génération du CV personnalisé', [
+                'user_id' => Auth::id(),
+                'exception' => get_class($e),
+                'error' => $e->getMessage(),
+            ]);
+
+            return back()->with('error', 'Le CV n’a pas pu être généré. Veuillez réessayer.');
         }
     }
 
@@ -171,6 +177,7 @@ class CvPersonalizationController extends Controller
     public function inlineCV($filename)
     {
         $filePath = 'personalized-cvs/' . $filename;
+        $this->ownedGeneratedCvOrFail($filePath);
 
         if (!Storage::disk('public')->exists($filePath)) {
             abort(404, 'CV introuvable.');
@@ -191,6 +198,7 @@ class CvPersonalizationController extends Controller
     public function previewCV(Request $request, $filename)
     {
         $filePath = 'personalized-cvs/' . $filename;
+        $generatedCv = $this->ownedGeneratedCvOrFail($filePath);
         
         if (!Storage::disk('public')->exists($filePath)) {
             abort(404);
@@ -198,10 +206,6 @@ class CvPersonalizationController extends Controller
 
         $fileUrl = route('cv.personalization.inline', ['filename' => $filename]);
         $returnToApplicationUrl = null;
-        $generatedCv = CvGenere::query()
-            ->where('chemin_fichier', $filePath)
-            ->whereHas('cvProfile', fn ($query) => $query->where('user_id', Auth::id()))
-            ->first();
         $templateLabel = $generatedCv?->template_label ?? 'Personnalisé';
 
         if ($request->filled('offre_id')) {
@@ -220,6 +224,7 @@ class CvPersonalizationController extends Controller
     public function downloadCV($filename)
     {
         $filePath = 'personalized-cvs/' . $filename;
+        $this->ownedGeneratedCvOrFail($filePath);
         
         if (!Storage::disk('public')->exists($filePath)) {
             abort(404);
@@ -232,6 +237,14 @@ class CvPersonalizationController extends Controller
         $downloadName = 'CV_'.$candidateName.'.pdf';
 
         return Storage::disk('public')->download($filePath, $downloadName);
+    }
+
+    private function ownedGeneratedCvOrFail(string $filePath): CvGenere
+    {
+        return CvGenere::query()
+            ->where('chemin_fichier', $filePath)
+            ->whereHas('cvProfile', fn ($query) => $query->where('user_id', Auth::id()))
+            ->firstOrFail();
     }
 
     /**

@@ -34,7 +34,8 @@ class HealthController extends Controller
             DB::connection()->getPdo();
             return ['ok' => true, 'message' => 'Connecté'];
         } catch (\Exception $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            report($e);
+            return ['ok' => false, 'message' => 'Indisponible'];
         }
     }
 
@@ -47,7 +48,8 @@ class HealthController extends Controller
             Cache::forget($key);
             return ['ok' => $value === true, 'message' => $value === true ? 'Fonctionnel' : 'Échec lecture/écriture'];
         } catch (\Exception $e) {
-            return ['ok' => false, 'message' => $e->getMessage()];
+            report($e);
+            return ['ok' => false, 'message' => 'Indisponible'];
         }
     }
 }

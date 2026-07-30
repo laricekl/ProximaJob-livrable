@@ -26,6 +26,7 @@
           <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">dashboard</span> Tableau de bord</a></li>
         </ul>
       </div>
+      @role('admin')
       <div>
         <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Gestion</h3>
         <ul class="space-y-0.5">
@@ -34,6 +35,8 @@
           <li><a href="{{ route('admin.abonnements') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.abonnements*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">credit_card</span> Abonnements</a></li>
         </ul>
       </div>
+      @endrole
+      @role('admin')
       <div>
         <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
         <ul class="space-y-0.5">
@@ -44,6 +47,7 @@
           <li><a href="{{ route('admin.diplomes.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.diplomes*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">school</span> Diplômes</a></li>
         </ul>
       </div>
+      @endrole
       <div>
         <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Communication</h3>
         <ul class="space-y-0.5">
@@ -51,12 +55,14 @@
           <li><a href="{{ route('admin.newsletters') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> Newsletter</a></li>
         </ul>
       </div>
+      @role('admin')
       <div>
         <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Configuration</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.parametres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> Paramètres</a></li>
         </ul>
       </div>
+      @endrole
     </nav>
     <div class="px-3 py-4 border-t border-white/10">
       <form method="POST" action="{{ route('logout') }}" onsubmit="if(window.innerWidth<1024)closeSidebar()">
@@ -84,6 +90,12 @@
         <div class="flex items-center gap-3 relative">
           <button id="userBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity" aria-haspopup="true" aria-expanded="false" aria-label="Menu utilisateur">
             <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-white text-xs font-bold">{{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}{{ strtoupper(substr(auth()->user()->prenom ?? 'D', 0, 1)) }}</div>
+            <span class="hidden text-xs font-semibold text-outline sm:inline">
+              @if(auth()->user()->hasRole('admin')) Administrateur
+              @elseif(auth()->user()->hasRole('Marketing')) Marketing
+              @else {{ ucfirst(auth()->user()->getRoleNames()->first() ?? 'Utilisateur') }}
+              @endif
+            </span>
             <span class="material-symbols-outlined text-sm text-outline">expand_more</span>
           </button>
           <div id="userDropdown" class="user-dropdown absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl border border-outline-variant/20 p-2 min-w-[180px] z-50">

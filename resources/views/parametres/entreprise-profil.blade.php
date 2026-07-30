@@ -69,7 +69,7 @@
                 <p class="text-xs text-outline mt-0.5">{{ $offres->total() === 1 ? 'Offre active' : 'Offres actives' }}</p>
               </div>
               <div class="text-center">
-                <p class="text-2xl font-bold text-primary">{{ $offres->total() }}</p>
+                <p class="text-2xl font-bold text-primary">{{ $totalPublishedOffers }}</p>
                 <p class="text-xs text-outline mt-0.5">Total publié</p>
               </div>
             </div>

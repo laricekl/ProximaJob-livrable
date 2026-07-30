@@ -117,6 +117,8 @@
                   <option value="finance" @selected(old('job_category', $offre->job_category ?? '') === 'finance')>Finance & Comptabilité</option>
                   <option value="rh" @selected(old('job_category', $offre->job_category ?? '') === 'rh')>Ressources humaines</option>
                   <option value="sante" @selected(old('job_category', $offre->job_category ?? '') === 'sante')>Santé</option>
+                  <option value="education" @selected(old('job_category', $offre->job_category ?? '') === 'education')>Éducation</option>
+                  <option value="transport" @selected(old('job_category', $offre->job_category ?? '') === 'transport')>Transport & Logistique</option>
                 </select>
                 @error('job_category') <p class="mt-1 text-xs text-error">{{ $message }}</p> @enderror
               </div>
@@ -216,11 +218,17 @@
               <label class="block text-sm font-semibold text-primary mb-2">Diplômes souhaités</label>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 @foreach ($diplomes->take(8) as $diplome)
-                  <label class="flex items-center gap-3 px-4 py-3 bg-white/70 backdrop-blur-sm border border-outline-variant/20 rounded-xl text-sm cursor-pointer hover:border-secondary-container/30 transition-colors">
-                    <input type="checkbox" name="diplomes[{{ $loop->index }}][id]" value="{{ $diplome->id }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @checked($selectedDiplomas->pluck('id')->contains($diplome->id)) />
-                    <input type="hidden" name="diplomes[{{ $loop->index }}][obligatoire]" value="1" />
-                    <span>{{ $diplome->nom_diplome }}</span>
-                  </label>
+                  <div class="rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-3">
+                    <label class="flex items-center gap-3 text-sm cursor-pointer">
+                      <input type="checkbox" name="diplomes[{{ $loop->index }}][id]" value="{{ $diplome->id }}" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @checked($selectedDiplomas->pluck('id')->contains($diplome->id)) />
+                      <span>{{ $diplome->nom_diplome }}</span>
+                    </label>
+                    <input type="hidden" name="diplomes[{{ $loop->index }}][obligatoire]" value="0" />
+                    <label class="mt-2 flex items-center gap-2 text-xs text-on-surface-variant">
+                      <input type="checkbox" name="diplomes[{{ $loop->index }}][obligatoire]" value="1" class="rounded border-outline-variant/50 text-secondary-container">
+                      Exigé pour cette offre
+                    </label>
+                  </div>
                 @endforeach
               </div>
             </div>

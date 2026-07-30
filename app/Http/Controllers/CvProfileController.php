@@ -103,6 +103,7 @@ class CvProfileController extends Controller
             'langues_competences' => $request->langues_competences,
             'logiciels' => $request->logiciels,
         ]);
+        $this->syncCandidateIdentity($cvProfile);
 
         // Ajouter les formations
         if ($request->has('formations') && is_array($request->formations)) {
@@ -327,6 +328,7 @@ public function update(Request $request, $id)
             'langues_competences' => $request->langues_competences,
             'logiciels' => $request->logiciels,
         ]);
+        $this->syncCandidateIdentity($cvProfile);
 
         // Mettre à jour les relations (formations, compétences, expériences, etc.)
         $this->updateRelations($cvProfile, $request);
@@ -395,6 +397,16 @@ public function update(Request $request, $id)
             return $matches[1];
         }
         return null;
+    }
+
+    private function syncCandidateIdentity(CvProfile $profile): void
+    {
+        $profile->user()->update([
+            'name' => $profile->nom,
+            'prenom' => $profile->prenom,
+            'telephone' => $profile->telephone,
+            'adresse' => $profile->adresse,
+        ]);
     }
 
     /**
@@ -691,12 +703,12 @@ PROMPT;
 
         // Essayer DeepSeek d'abord, puis Gemini, puis fallback regex
         $providers = [
-            [\Prism\Prism\Enums\Provider::DeepSeek, 'deepseek-chat', 'DEEPSEEK_API_KEY'],
-            [\Prism\Prism\Enums\Provider::Gemini, 'gemini-2.5-flash', 'GEMINI_API_KEY'],
+            [\Prism\Prism\Enums\Provider::DeepSeek, 'deepseek-chat', 'prism.providers.deepseek.api_key'],
+            [\Prism\Prism\Enums\Provider::Gemini, 'gemini-2.5-flash', 'prism.providers.gemini.api_key'],
         ];
 
-        foreach ($providers as [$provider, $model, $envKey]) {
-            if (!env($envKey)) continue;
+        foreach ($providers as [$provider, $model, $configKey]) {
+            if (!config($configKey)) continue;
 
             try {
                 $response = \Prism\Prism\Prism::text()

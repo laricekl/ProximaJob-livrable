@@ -27,7 +27,8 @@ class Postulation extends Model
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'autopostulation' => 'boolean'
+        'autopostulation' => 'boolean',
+        'match_details' => 'array',
     ];
 
     public function user()

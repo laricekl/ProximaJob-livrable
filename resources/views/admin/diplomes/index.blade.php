@@ -80,7 +80,7 @@
                   <select name="niveau_education" class="w-32 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-2 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
                     @foreach ($niveaux as $val => $label)<option value="{{ $val }}" @selected($diplome->niveau_education == $val)>{{ $label }}</option>@endforeach
                   </select>
-                  <button type="submit" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
+                  <button type="submit" aria-label="Enregistrer le diplôme" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
                   <button type="button" @click="editing = false" class="text-outline hover:text-primary"><span class="material-symbols-outlined text-lg">close</span></button>
                 </form>
               </td>
@@ -92,7 +92,7 @@
                   <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
                   <form method="POST" action="{{ route('admin.diplomes.destroy', $diplome) }}" onsubmit="return confirm('Supprimer « {{ $diplome->nom_diplome }} » ?')">
                     @csrf @method('DELETE')
-                    <button class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+                    <button aria-label="Supprimer le diplôme" class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
                   </form>
                 </div>
               </td>

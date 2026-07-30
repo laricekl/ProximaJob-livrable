@@ -93,10 +93,10 @@
                     </td>
                     <td class="px-6 py-4 text-right">
                       <div class="flex justify-end gap-2">
-                        <a href="{{ route('entreprise.offres.candidatures', $offre) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir">
+                        <a href="{{ route('entreprise.offres.candidatures', $offre) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir" aria-label="Voir les candidatures">
                           <span class="material-symbols-outlined text-base">visibility</span>
                         </a>
-                        <a href="{{ route('edit.offres', $offre->id) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-secondary-container/10 transition-colors flex items-center justify-center text-outline hover:text-secondary-container" title="Modifier">
+                        <a href="{{ route('edit.offres', $offre->id) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-secondary-container/10 transition-colors flex items-center justify-center text-outline hover:text-secondary-container" title="Modifier" aria-label="Modifier l’offre">
                           <span class="material-symbols-outlined text-base">edit</span>
                         </a>
                       </div>

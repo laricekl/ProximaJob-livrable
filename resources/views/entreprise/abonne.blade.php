@@ -29,23 +29,34 @@
           </div>
         </div>
 
-        <div class="flex justify-end mb-6">
-          <a href="{{ route('abonnement') }}" class="inline-flex items-center gap-2 px-5 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-            <span class="material-symbols-outlined text-lg">workspace_premium</span>
-            Voir les forfaits
-          </a>
-        </div>
+        @if ($enterprisePlan && $activeSubscriptions === 0)
+          <div class="card-glow rounded-2xl p-6 mb-8 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p class="text-xs font-black uppercase tracking-widest text-secondary-container">Forfait entreprise</p>
+              <h2 class="mt-1 text-xl font-bold text-primary">{{ $enterprisePlan->nom }} — {{ $enterprisePlan->prix_formatte }}</h2>
+              <p class="mt-1 text-sm text-on-surface-variant">{{ $enterprisePlan->description }}</p>
+            </div>
+            <form method="POST" action="{{ route('entreprise.abonnements.souscrire') }}">
+              @csrf
+              <input type="hidden" name="abonnement_id" value="{{ $enterprisePlan->id }}">
+              <button class="inline-flex items-center gap-2 px-5 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                <span class="material-symbols-outlined text-lg">workspace_premium</span>
+                Demander l’activation
+              </button>
+            </form>
+          </div>
+        @endif
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
           @forelse ($userAbonnements as $userAbonnement)
             @php
               $plan = $userAbonnement->abonnement;
-              $isActive = $userAbonnement->status === 'Actif';
+              $isActive = $userAbonnement->effective_status === 'Actif';
             @endphp
             <div class="card-glow rounded-2xl overflow-hidden border-l-4 {{ $isActive ? 'border-l-success' : 'border-l-outline-variant' }}">
               <div class="p-6">
                 <div class="flex justify-between items-start mb-4 gap-3">
-                  <span class="px-3 py-1 {{ $userAbonnement->status_color }} text-xs font-semibold rounded-full">{{ $userAbonnement->status }}</span>
+                  <span class="px-3 py-1 {{ $userAbonnement->status_color }} text-xs font-semibold rounded-full">{{ $userAbonnement->effective_status }}</span>
                   <span class="text-xl font-bold text-primary">{{ $plan?->prix_formatte ?? 'Tarif indisponible' }}</span>
                 </div>
 
@@ -66,7 +77,7 @@
             <div class="md:col-span-2 lg:col-span-3 card-glow rounded-2xl p-10 text-center">
               <span class="material-symbols-outlined text-4xl text-outline mb-3">credit_card_off</span>
               <h3 class="font-bold text-primary mb-2">Accès gratuit</h3>
-              <p class="text-sm text-on-surface-variant">Aucun forfait payant n’est associé à ce compte. Votre accès actuel reste gratuit.</p>
+              <p class="text-sm text-on-surface-variant">Aucun forfait payant n’est associé à ce compte. L’accès découverte permet d’évaluer la plateforme avant activation.</p>
             </div>
           @endforelse
         </div>

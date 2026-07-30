@@ -22,10 +22,17 @@
           <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary">Bonjour, {{ $enterpriseName }}</h1>
           <p class="mt-2 text-on-surface-variant max-w-2xl">Pilotez vos offres et traitez les candidatures depuis un seul espace.</p>
         </div>
-        <a href="{{ route('entreprise.offres.create') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors shadow-lg shadow-secondary-container/20">
-          <span class="material-symbols-outlined">add</span>
-          Publier une offre
-        </a>
+        @if ($canCreateOffer)
+          <a href="{{ route('entreprise.offres.create') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors shadow-lg shadow-secondary-container/20">
+            <span class="material-symbols-outlined">add</span>
+            Publier une offre
+          </a>
+        @else
+          <a href="{{ route('entreprise.abonnements') }}" class="inline-flex items-center justify-center gap-2 px-6 py-3 border border-secondary-container/30 text-secondary-container text-sm font-bold rounded-xl hover:bg-secondary-container/5 transition-colors">
+            <span class="material-symbols-outlined">workspace_premium</span>
+            Débloquer les offres illimitées
+          </a>
+        @endif
       </div>
 
       @if (session('success'))
@@ -127,7 +134,7 @@
             </div>
             <h3 class="text-xl font-bold font-serif text-primary">{{ request('search') ? 'Aucune offre trouvée' : 'Publiez votre première offre' }}</h3>
             <p class="mt-2 text-sm text-on-surface-variant max-w-md mx-auto">{{ request('search') ? 'Essayez un autre terme de recherche.' : 'Présentez votre besoin et commencez à recevoir des candidatures qualifiées.' }}</p>
-            @if (!request('search'))
+            @if (!request('search') && $canCreateOffer)
               <a href="{{ route('entreprise.offres.create') }}" class="mt-6 inline-flex items-center gap-2 px-5 py-3 bg-secondary-container text-white rounded-xl text-sm font-bold hover:bg-secondary transition-colors"><span class="material-symbols-outlined">add</span>Créer une offre</a>
             @endif
           </div>

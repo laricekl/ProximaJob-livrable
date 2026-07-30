@@ -67,7 +67,7 @@
                       <option value="{{ $parent->id }}" @selected($secteur->parent_id == $parent->id)>{{ $parent->name }}</option>
                     @endforeach
                   </select>
-                  <button type="submit" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
+                  <button type="submit" aria-label="Enregistrer le secteur" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
                   <button type="button" @click="editing = false" class="text-outline hover:text-primary"><span class="material-symbols-outlined text-lg">close</span></button>
                 </form>
               </td>
@@ -78,7 +78,7 @@
                   <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
                   <form method="POST" action="{{ route('admin.secteurs.destroy', $secteur) }}" onsubmit="return confirm('Supprimer « {{ $secteur->name }} » ?')">
                     @csrf @method('DELETE')
-                    <button class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+                    <button aria-label="Supprimer le secteur" class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
                   </form>
                 </div>
               </td>

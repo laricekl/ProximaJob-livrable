@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Abonnement;
 use App\Models\AbonnementFonctionnalite;
 use App\Models\SiteSetting;
+use App\Mail\PublicContactMessage;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 
 class ParametresController extends Controller
@@ -33,10 +35,23 @@ class ParametresController extends Controller
             'message' => ['required', 'string', 'max:5000'],
         ]);
 
-        Log::info('New public contact message received', $validated);
+        $destination = SiteSetting::first()?->email ?: config('mail.from.address');
+
+        try {
+            Mail::to($destination)->send(new PublicContactMessage($validated));
+        } catch (\Throwable $exception) {
+            Log::error('Échec de transmission du formulaire de contact', [
+                'destination' => $destination,
+                'error' => $exception->getMessage(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Votre message n’a pas pu être transmis. Veuillez réessayer ou nous écrire directement.');
+        }
 
         return redirect()->route('contact')
-            ->with('success', 'Votre message a bien ete envoye. Nous vous recontacterons rapidement.');
+            ->with('success', 'Votre message a bien été envoyé. Nous vous recontacterons rapidement.');
     }
     public function abonnement()
     {

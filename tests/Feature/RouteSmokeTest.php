@@ -160,6 +160,11 @@ class RouteSmokeTest extends TestCase
             route('admin.newsletters'),
             route('admin.parametres'),
             route('admin.users.show', $candidate),
+            route('admin.categories.index'),
+            route('admin.types-offres.index'),
+            route('admin.secteurs.index'),
+            route('admin.skills.index'),
+            route('admin.diplomes.index'),
         ];
 
         foreach ($adminRoutes as $url) {

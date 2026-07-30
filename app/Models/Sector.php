@@ -50,6 +50,14 @@ class Sector extends Model
     }
 
     /**
+     * Offres rattachées à ce secteur.
+     */
+    public function offres(): HasMany
+    {
+        return $this->hasMany(Offre::class, 'sector_id');
+    }
+
+    /**
      * Relation many-to-many avec les compétences via la table pivot sector_skills
      */
     public function skills(): BelongsToMany

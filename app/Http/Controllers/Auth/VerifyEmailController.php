@@ -94,12 +94,10 @@ class VerifyEmailController extends Controller
 
     // Vérifier si l'email est déjà vérifié
     if ($user->email_verified_at) {
-        // Si l'utilisateur est un candidat, on le connecte directement
-        if ($user->hasRole('candidat')) {
-            Auth::login($user);
-            return redirect()->route('welcome');
-        }
-        return redirect()->route('welcome')->with('info_alert', 'Votre email est déjà vérifié. Votre compte est en attente de validation administrative.');
+        $verification->delete();
+
+        return redirect()->route('login')
+            ->with('info', 'Cette adresse est déjà vérifiée. Connectez-vous avec vos identifiants.');
     }
 
     // SI C'EST UN CANDIDAT
@@ -194,10 +192,9 @@ class VerifyEmailController extends Controller
 
             Mail::to($user->email)->send(new EmailVerificationMail($token, $user));
 
-            return back()->with('success', 'Un nouveau lien de vérification a été envoyé à votre adresse email.');
         }
 
-        return back()->with('error', 'Adresse email non trouvée ou déjà vérifiée.');
+        return back()->with('success', 'Si cette adresse nécessite une vérification, un nouveau lien vient d’être envoyé.');
     }
 
     /**

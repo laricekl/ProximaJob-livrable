@@ -45,7 +45,7 @@
                 <form x-show="editing" method="POST" action="{{ route('admin.types-offres.update', $type) }}" class="flex items-center gap-2" x-cloak>
                   @csrf @method('PUT')
                   <input type="text" name="nom" value="{{ $type->nom }}" class="w-48 rounded-xl border border-outline-variant/20 bg-white/70 py-1.5 px-3 text-sm focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" required/>
-                  <button type="submit" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
+                  <button type="submit" aria-label="Enregistrer le type d’offre" class="text-success hover:text-success-deep"><span class="material-symbols-outlined text-lg">check</span></button>
                   <button type="button" @click="editing = false" class="text-outline hover:text-primary"><span class="material-symbols-outlined text-lg">close</span></button>
                 </form>
               </td>
@@ -56,7 +56,7 @@
                   <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
                   <form method="POST" action="{{ route('admin.types-offres.destroy', $type) }}" onsubmit="return confirm('Supprimer « {{ $type->nom }} » ?')">
                     @csrf @method('DELETE')
-                    <button class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
+                    <button aria-label="Supprimer le type d’offre" class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
                   </form>
                 </div>
               </td>

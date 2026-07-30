@@ -65,6 +65,19 @@ class CandidatureController extends Controller
 
         $userId = Auth::id();
         $offreId = $validated['offre_id'];
+        $hasUnlimitedApplications = Auth::user()->hasCurrentPlan('Pro');
+        $monthlyApplications = Postulation::where('user_id', $userId)
+            ->where('created_at', '>=', now()->startOfMonth())
+            ->count();
+
+        if (!$hasUnlimitedApplications && $monthlyApplications >= 3) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'La formule Découverte permet trois candidatures par mois. Activez le forfait Pro pour continuer.',
+            ], 403);
+        }
+
         $uniqueId = Str::uuid()->toString();
         
         // Chemin dans public/assets/cvs/
@@ -263,12 +276,13 @@ class CandidatureController extends Controller
  public function previewletteria($candidatureId)
 {
     try {
-        $candidature = \App\Models\Postulation::with('user')->findOrFail($candidatureId);
+        $candidature = \App\Models\Postulation::with(['user', 'offre.entreprise'])->findOrFail($candidatureId);
         
         // Vérifications de permission
         $user = auth()->user();
         $isCandidat = $user->hasRole('candidat') && $candidature->user_id == $user->id;
-        $isEntreprise = $user->hasRole('entreprise');
+        $isEntreprise = $user->hasRole('entreprise')
+            && $candidature->offre?->entreprise?->user_id === $user->id;
         
         if (!$isCandidat && !$isEntreprise) {
             abort(403, 'Accès non autorisé');
@@ -308,6 +322,8 @@ class CandidatureController extends Controller
             'X-CV-Source' => $candidature->autopostulation ? 'gemini_generated' : 'manual_upload'
         ]);
             
+    } catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e) {
+        throw $e;
     } catch (\Exception $e) {
         Log::error('Erreur prévisualisation lettre de présentation', [
             'candidature_id' => $candidatureId,
@@ -320,12 +336,13 @@ class CandidatureController extends Controller
  public function previewCVia($candidatureId)
 {
     try {
-        $candidature = \App\Models\Postulation::with('user')->findOrFail($candidatureId);
+        $candidature = \App\Models\Postulation::with(['user', 'offre.entreprise'])->findOrFail($candidatureId);
         
         // Vérifications de permission
         $user = auth()->user();
         $isCandidat = $user->hasRole('candidat') && $candidature->user_id == $user->id;
-        $isEntreprise = $user->hasRole('entreprise');
+        $isEntreprise = $user->hasRole('entreprise')
+            && $candidature->offre?->entreprise?->user_id === $user->id;
         
         if (!$isCandidat && !$isEntreprise) {
             abort(403, 'Accès non autorisé');
@@ -365,6 +382,8 @@ class CandidatureController extends Controller
             'X-CV-Source' => $candidature->autopostulation ? 'gemini_generated' : 'manual_upload'
         ]);
             
+    } catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e) {
+        throw $e;
     } catch (\Exception $e) {
         Log::error('Erreur prévisualisation CV', [
             'candidature_id' => $candidatureId,
@@ -656,18 +675,20 @@ private function servePublicFile($filePath, $candidature)
                 Notification::create([
                     'user_id' => $postulation->user_id, 
                     'role' => 'candidat',
+                    'type' => 'application',
                     'title' => 'Mise à jour de votre candidature',
                     'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
-                    'link' => "/user/historique-candidature_ia",
+                    'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
                     'is_read' => false,
                 ]);
              }else {
                       Notification::create([
                     'user_id' => $postulation->user_id, 
                     'role' => 'candidat',
+                    'type' => 'application',
                     'title' => 'Mise à jour de votre candidature',
                     'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
-                    'link' => "/user/historique-candidature",
+                    'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
                     'is_read' => false,
                 ]);
              }

@@ -37,6 +37,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'user.status' => App\Http\Middleware\CheckUserStatus::class,
             'entreprise.access' => App\Http\Middleware\EnsureEntrepriseAccess::class,
             'candidate.access' => App\Http\Middleware\EnsureCandidateAccess::class,
+            'candidate.premium' => App\Http\Middleware\EnsureCandidatePremium::class,
              'throttle' => ThrottleRequests::class,
         ]);
     })

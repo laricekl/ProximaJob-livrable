@@ -36,15 +36,18 @@ class UserController extends Controller
     {
         $user = Auth::user();
 
+        $hasPremiumMatching = $user->hasCurrentPlan('Pro');
         $matchingService = app(\App\Services\JobMatchingService::class);
-        $recommendedOffres = $matchingService->getRecommendedOffers($user->id, 6);
+        $recommendedOffres = $hasPremiumMatching
+            ? $matchingService->getRecommendedOffers($user->id, 6)
+            : collect();
 
         $applicationsQuery = Postulation::with(['offre.entreprise', 'offre.type'])
             ->where('user_id', $user->id);
 
         $dashboardStats = [
             'applications_count' => (clone $applicationsQuery)->count(),
-            'interviews_count' => (clone $applicationsQuery)->where('status', 'accepted')->count(),
+            'interviews_count' => (clone $applicationsQuery)->where('status', 'interview')->count(),
             'auto_applications_count' => (clone $applicationsQuery)->where('autopostulation', true)->count(),
             'unread_notifications_count' => $user->unreadNotifications()->count(),
         ];
@@ -54,7 +57,7 @@ class UserController extends Controller
             ->take(3)
             ->get();
 
-        return view('dashboard', compact('recommendedOffres', 'dashboardStats', 'recentApplications'));
+        return view('dashboard', compact('recommendedOffres', 'dashboardStats', 'recentApplications', 'hasPremiumMatching'));
     }
 
     public function detailCandidature(Request $request)
@@ -155,6 +158,11 @@ class UserController extends Controller
 
     public function historique(Request $request)
     {
+        $statusStats = Postulation::where('user_id', Auth::id())
+            ->where('autopostulation', false)
+            ->selectRaw('status, COUNT(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
         $query = Postulation::with(['offre.entreprise', 'offre'])
             ->where('user_id', Auth::id())
             ->where('autopostulation', false)
@@ -213,12 +221,16 @@ class UserController extends Controller
 
         $postulations = $query->paginate(10);
 
-        return view("user.historique-candidatures", compact('postulations'));
+        return view("user.historique-candidatures", compact('postulations', 'statusStats'));
     }
 
         public function historique_ia(Request $request)
     {
-
+        $statusStats = Postulation::where('user_id', Auth::id())
+            ->where('autopostulation', true)
+            ->selectRaw('status, COUNT(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
 
         $query = Postulation::with(['offre.entreprise', 'offre'])
             ->where('user_id', Auth::id())
@@ -292,7 +304,7 @@ class UserController extends Controller
             ->values();
 
        
-        return view("user.historique-candidatures-ia" , compact('postulations', 'newAiPostulationIds'));
+        return view("user.historique-candidatures-ia" , compact('postulations', 'newAiPostulationIds', 'statusStats'));
     }
 
     
@@ -342,7 +354,6 @@ public function jobdetails($slug)
     {
         $abonnements = Abonnement::where('actif', true)->get();
         $userAbonnement = UserAbonnement::where('user_id', auth()->id())
-            ->where('status', 'Actif')
             ->latest('date_fin')
             ->first();
 
@@ -352,7 +363,9 @@ public function jobdetails($slug)
     public function planabonnement()
     {
 
-         $abonnements = Abonnement::get();
+         $abonnements = Abonnement::where('actif', true)
+             ->whereRaw('LOWER(nom) != ?', ['entreprise'])
+             ->get();
     
         // Récupérer les paramètres existants ou créer un enregistrement par défaut
         $settings = SiteSetting::first();
@@ -388,9 +401,12 @@ public function jobdetails($slug)
     public function souscrire(Request $request)
     {
         $user = Auth::user();
+        $request->validate(['abonnement_id' => ['required', 'integer']]);
 
         // Vérifier que l'abonnement existe
-        $abonnement = Abonnement::where('actif', true)->find($request->abonnement_id);
+        $abonnement = Abonnement::where('actif', true)
+            ->whereRaw('LOWER(nom) != ?', ['entreprise'])
+            ->find($request->abonnement_id);
 
         if (!$abonnement) {
             return response()->json([
@@ -402,7 +418,8 @@ public function jobdetails($slug)
         try {
             // Vérifier si l'utilisateur a déjà un abonnement actif
             $existing = UserAbonnement::where('user_id', $user->id)
-                ->where('status', 'Actif')
+                ->whereIn('status', ['Actif', 'En attente'])
+                ->whereDate('date_fin', '>=', now())
                 ->first();
 
             if ($existing) {
@@ -413,17 +430,20 @@ public function jobdetails($slug)
             }
 
             // Créer l'abonnement
+            $requiresApproval = (float) $abonnement->montant > 0;
             UserAbonnement::create([
                 'user_id'       => $user->id,
                 'abonnement_id' => $abonnement->id,
                 'date_debut'    => Carbon::now(),
                 'date_fin'      => Carbon::now()->addDays((int) $abonnement->duree),
-                'status'        => 'Actif'
+                'status'        => $requiresApproval ? 'En attente' : 'Actif'
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Abonnement « ' . $abonnement->nom . ' » souscrit avec succès !'
+                'message' => $requiresApproval
+                    ? 'Votre demande pour le plan « '.$abonnement->nom.' » a été transmise. Son activation sera confirmée après validation du paiement.'
+                    : 'Abonnement « '.$abonnement->nom.' » activé avec succès !'
             ]);
 
         } catch (\Exception $e) {
@@ -433,6 +453,22 @@ public function jobdetails($slug)
                 'message' => 'Erreur lors de la souscription. Veuillez réessayer.'
             ], 500);
         }
+    }
+
+    public function cancelSubscription(Request $request)
+    {
+        $subscription = UserAbonnement::where('user_id', Auth::id())
+            ->whereIn('status', ['Actif', 'En attente'])
+            ->latest('date_fin')
+            ->firstOrFail();
+
+        $subscription->update([
+            'status' => 'Annulé',
+            'date_fin' => now(),
+        ]);
+
+        return redirect()->route('user.abonnement')
+            ->with('success', 'Votre abonnement a été annulé.');
     }
 
     
@@ -592,6 +628,14 @@ public function update(Request $request)
         }
 
         $user->save();
+        if ($user->cvProfile) {
+            $user->cvProfile->update([
+                'nom' => $user->name,
+                'prenom' => $user->prenom,
+                'telephone' => $user->telephone,
+                'adresse' => $user->adresse,
+            ]);
+        }
 
         // Variable pour suivre si des éléments importants ont changé
         $significantChanges = false;

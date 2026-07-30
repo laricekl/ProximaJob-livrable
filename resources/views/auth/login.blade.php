@@ -123,6 +123,8 @@
             </svg>
             Continuer avec Google
           </a>
+          @else
+            <button type="button" disabled class="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low py-3.5 text-sm font-semibold text-outline">Google bientôt disponible</button>
           @endif
 
           @if ($facebookEnabled)
@@ -132,6 +134,8 @@
             </svg>
             Continuer avec Facebook
           </a>
+          @else
+            <button type="button" disabled class="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low py-3.5 text-sm font-semibold text-outline">Facebook bientôt disponible</button>
           @endif
         </div>
 

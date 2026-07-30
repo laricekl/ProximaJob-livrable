@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Socialite\Facades\Socialite;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class SocialAuthController extends Controller
 {
@@ -22,8 +23,18 @@ class SocialAuthController extends Controller
 
         try {
             // Stocker le mode (login ou register) et le rôle en session
-            $mode = $request->query('mode', 'login'); 
-            $role = $request->query('role', 'candidat');  
+            $mode = in_array($request->query('mode'), ['login', 'register'], true)
+                ? $request->query('mode')
+                : 'login';
+            $requestedRole = $request->query('role', 'candidat');
+
+            if ($mode === 'register' && $requestedRole !== 'candidat') {
+                return redirect()
+                    ->route('entreprise.register')
+                    ->with('info', 'Créez votre compte entreprise avec le formulaire sécurisé.');
+            }
+
+            $role = 'candidat';
             
             session(['oauth_mode' => $mode]);
             session(['oauth_role' => $role]);
@@ -36,6 +47,10 @@ class SocialAuthController extends Controller
 
     public function handleProviderCallback($provider)
     {
+        if (! $this->isProviderConfigured($provider)) {
+            return redirect()->route('login')->with('error', 'Ce fournisseur de connexion n’est pas disponible.');
+        }
+
         try {
             $socialUser = Socialite::driver($provider)->user();
             
@@ -53,7 +68,12 @@ class SocialAuthController extends Controller
             }
             
         } catch (Exception $e) {
-            return redirect()->route('login')->with('error', 'Erreur OAuth: ' . $e->getMessage());
+            Log::warning('Échec de connexion OAuth', [
+                'provider' => $provider,
+                'exception' => get_class($e),
+            ]);
+
+            return redirect()->route('login')->with('error', 'La connexion externe a échoué. Veuillez réessayer.');
         } finally {
             // Nettoyer la session
             session()->forget(['oauth_mode', 'oauth_role']);
@@ -78,6 +98,7 @@ class SocialAuthController extends Controller
             'email_verified_at' => now(),
             'password' => Hash::make(uniqid()),
         ]);
+        $user->syncRoles(['candidat']);
 
         Auth::login($user);
 
@@ -101,7 +122,8 @@ class SocialAuthController extends Controller
 
         Auth::login($existingUser);
 
-        return redirect()->intended('/user')->with('success', 'Connexion réussie avec ' . ucfirst($provider) . ' !');
+        return redirect()->intended(route('dashboard', absolute: false))
+            ->with('success', 'Connexion réussie avec ' . ucfirst($provider) . ' !');
     }
 
     private function isProviderConfigured(string $provider): bool

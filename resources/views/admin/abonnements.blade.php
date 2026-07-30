@@ -80,6 +80,7 @@
               <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">Début</th>
               <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Expire</th>
               <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
+              <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-outline">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-outline-variant/5">
@@ -108,12 +109,26 @@
                 <td class="hidden px-6 py-3 text-outline md:table-cell">{{ optional($abonnement->date_debut)->format('d/m/Y') ?: '—' }}</td>
                 <td class="hidden px-6 py-3 text-outline sm:table-cell">{{ optional($abonnement->date_fin)->format('d/m/Y') ?: '—' }}</td>
                 <td class="px-6 py-3">
-                  <x-admin.status-badge :label="$abonnement->status" :color="$abonnement->status_color" />
+                  <x-admin.status-badge :label="$abonnement->effective_status" :color="$abonnement->status_color" />
+                </td>
+                <td class="px-6 py-3 text-right whitespace-nowrap">
+                  @if ($abonnement->effective_status === 'En attente')
+                    <form method="POST" action="{{ route('admin.user-subscriptions.activate', $abonnement) }}" class="inline">
+                      @csrf @method('PATCH')
+                      <button class="rounded-xl px-3 py-2 text-xs font-bold text-success-dark hover:bg-success-light">Activer</button>
+                    </form>
+                  @endif
+                  @if (in_array($abonnement->effective_status, ['Actif', 'En attente'], true))
+                    <form method="POST" action="{{ route('admin.user-subscriptions.cancel', $abonnement) }}" class="inline" onsubmit="return confirm('Annuler cet abonnement ?')">
+                      @csrf @method('PATCH')
+                      <button class="rounded-xl px-3 py-2 text-xs font-bold text-error-dark hover:bg-error-light">Annuler</button>
+                    </form>
+                  @endif
                 </td>
               </tr>
             @empty
               <tr>
-                <td colspan="5" class="px-6 py-10 text-center text-sm text-outline">Aucun abonnement ne correspond aux filtres actuels.</td>
+                <td colspan="6" class="px-6 py-10 text-center text-sm text-outline">Aucun abonnement ne correspond aux filtres actuels.</td>
               </tr>
             @endforelse
           </tbody>
