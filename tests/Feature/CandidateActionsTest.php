@@ -11,6 +11,7 @@ use App\Models\CvProfile;
 use App\Models\Notification;
 use App\Models\Postulation;
 use App\Models\UserAbonnement;
+use App\Services\JobMatchingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
@@ -536,6 +537,13 @@ class CandidateActionsTest extends TestCase
             'cv_profile_id' => $candidate->cvProfile->id,
             'nom_fichier' => 'CV - Camille Martin',
             'chemin_fichier' => $files[0],
+            'template_style' => 'modern',
+            'accent_color' => 'green',
+            'font_style' => 'classic',
+            'density' => 'compact',
+            'section_order' => 'experience_first',
+            'page_limit' => 1,
+            'summary_tone' => 'direct',
         ]);
 
         $filename = basename($files[0]);
@@ -556,6 +564,73 @@ class CandidateActionsTest extends TestCase
             ->get(route('cv.personalization.download', ['filename' => $filename]))
             ->assertOk()
             ->assertHeader('content-type', 'application/pdf');
+    }
+
+    public function test_candidate_can_generate_distinct_files_with_each_cv_template(): void
+    {
+        Storage::fake('public');
+
+        $candidate = $this->createCandidate(['email' => 'cv-formats@example.com']);
+        $cvProfile = CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+            'ville' => 'Montreal',
+            'langues_competences' => 'Gestion de projets numériques et amélioration continue.',
+            'logiciels' => 'Laravel, PHP, SQL',
+        ]);
+
+        CvExperience::create([
+            'cv_profile_id' => $cvProfile->id,
+            'periode' => '2022 - Aujourd hui',
+            'poste' => 'Responsable produit',
+            'entreprise' => 'Studio Horizon',
+            'description' => 'Pilotage de produits et coordination des équipes.',
+            'ordre' => 0,
+        ]);
+
+        $service = app(JobMatchingService::class);
+        $paths = [];
+
+        $templates = array_keys(config('cv_templates'));
+
+        foreach ($templates as $template) {
+            $offer = new \stdClass();
+            $offer->id = 'virtual_'.$template;
+            $offer->titre = 'Direction de produit';
+            $offer->poste = 'Direction de produit';
+            $offer->description = 'Piloter la stratégie produit, coordonner les équipes et améliorer les résultats.';
+            $offer->competences = 'Leadership, stratégie, livraison';
+            $offer->entreprise = (object) ['name' => 'Entreprise QA'];
+            $offer->customization_options = [
+                'template_style' => $template,
+                'include_photo' => in_array($template, ['signature', 'portfolio'], true),
+                'accent_color' => 'blue',
+                'font_style' => 'sober',
+                'density' => 'balanced',
+                'section_order' => $template === 'classic' ? 'experience_first' : 'skills_first',
+                'page_limit' => 2,
+                'summary_tone' => 'professional',
+                'sections' => ['software', 'languages', 'perfectionnements', 'benevolats'],
+            ];
+
+            $result = $service->generatePersonalizedCVForUser($cvProfile, $offer, $candidate->id);
+
+            $this->assertTrue($result['success'] ?? false);
+            $paths[] = $result['file_path'];
+
+            $this->assertDatabaseHas('cv_generes', [
+                'cv_profile_id' => $cvProfile->id,
+                'chemin_fichier' => $result['file_path'],
+                'template_style' => $template,
+                'include_photo' => in_array($template, ['signature', 'portfolio'], true),
+            ]);
+        }
+
+        $this->assertCount(count($templates), array_unique($paths));
+        $this->assertCount(count($templates), Storage::disk('public')->files('personalized-cvs'));
     }
 
     public function test_candidate_cv_personalization_form_can_prefill_from_offer(): void
@@ -585,7 +660,9 @@ class CandidateActionsTest extends TestCase
             ->assertSee('value="Analyste QA Produit"', false)
             ->assertSee('value="Atelier Produit Nord"', false)
             ->assertSee('Valider les parcours utilisateurs et documenter les anomalies prioritaires.')
-            ->assertSee('Tests fonctionnels, communication, Jira');
+            ->assertSee('Tests fonctionnels, communication, Jira')
+            ->assertSeeInOrder(array_column(config('cv_templates'), 'label'))
+            ->assertSee('2 avec photo optionnelle');
     }
 
     public function test_candidate_can_preview_and_download_principal_cv_pdf(): void
@@ -625,6 +702,61 @@ class CandidateActionsTest extends TestCase
             ->assertHeader('content-type', 'application/pdf');
     }
 
+    public function test_candidate_can_save_a_principal_cv_design_and_reuse_it_for_personalization(): void
+    {
+        $candidate = $this->createCandidate([
+            'email' => 'principal-design@example.com',
+            'profile_photo_path' => 'default_profile.jpg',
+        ]);
+
+        $profile = CvProfile::create([
+            'user_id' => $candidate->id,
+            'nom' => 'Martin',
+            'prenom' => 'Camille',
+            'email' => $candidate->email,
+            'telephone' => '5141234567',
+            'ville' => 'Montreal',
+        ]);
+
+        $this->actingAs($candidate)
+            ->postJson(route('cv.principal.design'), [
+                'template_style' => 'signature',
+                'include_photo' => true,
+                'accent_color' => 'bordeaux',
+                'font_style' => 'classic',
+                'density' => 'airy',
+            ])
+            ->assertOk()
+            ->assertJson([
+                'success' => true,
+                'template_label' => 'Signature',
+            ]);
+
+        $profile->refresh();
+        $this->assertSame('signature', $profile->design_options['template_style']);
+        $this->assertTrue($profile->design_options['include_photo']);
+        $this->assertSame('bordeaux', $profile->design_options['accent_color']);
+
+        $this->actingAs($candidate)
+            ->get(route('infos.cv'))
+            ->assertOk()
+            ->assertSee('Mon modèle principal :')
+            ->assertSee('Signature')
+            ->assertSee('Enregistrer comme modèle principal');
+
+        $this->actingAs($candidate)
+            ->get(route('cv.personalization.form'))
+            ->assertOk()
+            ->assertSee('value="signature"', false)
+            ->assertSee('id="template-signature"', false)
+            ->assertSee('id="template-signature" value="signature" class="peer sr-only" data-supports-photo="1" checked', false);
+
+        $this->actingAs($candidate)
+            ->get(route('cv.principal.inline'))
+            ->assertOk()
+            ->assertHeader('content-type', 'application/pdf');
+    }
+
     public function test_candidate_cv_personalization_rejects_invalid_display_options(): void
     {
         $candidate = $this->createCandidate();
@@ -640,7 +772,7 @@ class CandidateActionsTest extends TestCase
         $this->actingAs($candidate)->from(route('cv.personalization.form'))->post(route('cv.personalization.generate'), [
             'offer_title' => 'Developpeuse Laravel',
             'offer_details' => 'Nous recherchons une developpeuse Laravel capable de livrer des interfaces fiables.',
-            'template_style' => 'creative',
+            'template_style' => 'unknown_template',
             'accent_color' => 'neon',
             'page_limit' => 9,
             'sections_present' => 1,

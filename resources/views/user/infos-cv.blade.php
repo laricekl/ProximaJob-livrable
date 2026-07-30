@@ -45,6 +45,14 @@
     $principalContactLine = $existingProfile
       ? collect([$existingProfile->email, $existingProfile->telephone])->filter()->implode(' | ')
       : '';
+    $principalOptions = array_merge([
+      'template_style' => 'modern',
+      'include_photo' => false,
+      'accent_color' => 'blue',
+      'font_style' => 'sober',
+      'density' => 'balanced',
+    ], $existingProfile?->design_options ?? []);
+    $principalTemplate = config('cv_templates.'.$principalOptions['template_style'], config('cv_templates.modern'));
   @endphp
   <main class="flex-grow pb-16">
 
@@ -57,6 +65,79 @@
             <p class="mt-2 max-w-2xl text-sm text-on-surface-variant">Remplissez ici votre CV de base. La personnalisation par offre utilise ces informations pour générer une version adaptée à un poste précis.</p>
           </div>
         </div>
+
+        @if($existingProfile)
+          <details id="principalDesignPanel" class="group mb-6 rounded-2xl border border-outline-variant/10 bg-white shadow-sm">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 p-5 md:p-6">
+              <div class="flex min-w-0 items-center gap-4">
+                <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">
+                  <span class="material-symbols-outlined">palette</span>
+                </span>
+                <div class="min-w-0">
+                  <p class="text-xs font-black uppercase tracking-[0.16em] text-secondary-container">Apparence par défaut</p>
+                  <h2 class="mt-1 text-lg font-bold text-primary">Mon modèle principal : <span id="principalTemplateLabel">{{ $principalTemplate['label'] }}</span></h2>
+                  <p class="mt-1 text-xs text-on-surface-variant">Ce choix sera proposé automatiquement pour vos prochains CV personnalisés.</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined shrink-0 text-outline transition-transform group-open:rotate-180">expand_more</span>
+            </summary>
+
+            <form id="principalDesignForm" action="{{ route('cv.principal.design') }}" method="POST" class="border-t border-outline-variant/10 p-5 md:p-6">
+              @csrf
+              @php($selectedTemplate = $principalOptions['template_style'])
+              @php($inputIdPrefix = 'principal-template')
+              <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                @foreach(config('cv_templates', []) as $templateKey => $template)
+                  @include('cv.partials.template-card', compact('templateKey', 'template', 'selectedTemplate', 'inputIdPrefix'))
+                @endforeach
+              </div>
+
+              <div class="mt-5 grid gap-5 lg:grid-cols-[1.4fr_1fr_1fr]">
+                <div>
+                  <label class="mb-2 block text-sm font-semibold text-primary">Couleur principale</label>
+                  <div class="grid grid-cols-5 gap-2">
+                    @foreach(['blue' => '#2f5f8f', 'green' => '#2f7d5c', 'bordeaux' => '#8a334b', 'anthracite' => '#343a40', 'petrol' => '#28666e'] as $value => $color)
+                      <label class="cursor-pointer">
+                        <input type="radio" name="accent_color" value="{{ $value }}" class="peer hidden" @checked($principalOptions['accent_color'] === $value)>
+                        <span class="flex h-11 items-center justify-center rounded-xl border-2 border-outline-variant/20 bg-white peer-checked:border-secondary-container peer-checked:bg-secondary-container/10"><span class="h-5 w-5 rounded-full" style="background:{{ $color }}"></span></span>
+                      </label>
+                    @endforeach
+                  </div>
+                </div>
+                <div>
+                  <label for="principal_font_style" class="mb-2 block text-sm font-semibold text-primary">Police</label>
+                  <select id="principal_font_style" name="font_style" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary">
+                    <option value="sober" @selected($principalOptions['font_style'] === 'sober')>Sobre</option>
+                    <option value="modern" @selected($principalOptions['font_style'] === 'modern')>Moderne</option>
+                    <option value="classic" @selected($principalOptions['font_style'] === 'classic')>Classique</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="principal_density" class="mb-2 block text-sm font-semibold text-primary">Densité</label>
+                  <select id="principal_density" name="density" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary">
+                    <option value="airy" @selected($principalOptions['density'] === 'airy')>Aérée</option>
+                    <option value="balanced" @selected($principalOptions['density'] === 'balanced')>Équilibrée</option>
+                    <option value="compact" @selected($principalOptions['density'] === 'compact')>Compacte</option>
+                  </select>
+                </div>
+              </div>
+
+              <div id="principalPhotoOption" class="mt-5 {{ ($principalTemplate['supports_photo'] ?? false) ? '' : 'hidden' }} rounded-xl border border-secondary-container/20 bg-secondary-container/5 p-4">
+                <label class="flex cursor-pointer items-start gap-3">
+                  <input type="checkbox" name="include_photo" value="1" class="mt-1 rounded border-outline-variant/40 text-secondary-container" @checked($principalOptions['include_photo'])>
+                  <span><strong class="block text-sm text-primary">Inclure ma photo de profil</strong><span class="mt-1 block text-xs text-on-surface-variant">Disponible pour Signature et Portfolio. Sans photo, vos initiales seront utilisées.</span></span>
+                </label>
+              </div>
+
+              <div class="mt-5 flex flex-col gap-3 border-t border-outline-variant/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
+                <p id="principalDesignStatus" class="hidden text-sm font-semibold text-secondary-container"></p>
+                <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white hover:bg-secondary">
+                  <span class="material-symbols-outlined text-lg">save</span> Enregistrer comme modèle principal
+                </button>
+              </div>
+            </form>
+          </details>
+        @endif
 
         <div id="cvLayout" class="mb-6 grid gap-6 lg:grid-cols-[360px_minmax(0,1fr)] lg:items-start">
         <aside class="min-w-0 rounded-2xl border border-outline-variant/10 bg-white p-4 md:p-5 lg:sticky lg:top-28">
@@ -148,7 +229,9 @@
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
                         <p class="truncate text-sm font-bold text-primary">Version du CV</p>
-                        <p class="truncate text-xs text-on-surface-variant">{{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version enregistrée' }}</p>
+                        <p class="truncate text-xs text-on-surface-variant">
+                          {{ $generatedCv->template_label }} · {{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version enregistrée' }}
+                        </p>
                       </div>
                       <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->display_name) }}" data-file="Document PDF" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}">Voir</button>
                     </div>
@@ -626,6 +709,46 @@
     const totalSections = 8;
     const completedSections = new Set();
     const existingCvProfile = @json($existingCvProfilePayload);
+
+    const principalDesignForm = document.getElementById('principalDesignForm');
+    const principalPhotoOption = document.getElementById('principalPhotoOption');
+    const updatePrincipalPhotoOption = () => {
+      const selected = principalDesignForm?.querySelector('input[name="template_style"]:checked');
+      principalPhotoOption?.classList.toggle('hidden', selected?.dataset.supportsPhoto !== '1');
+    };
+
+    principalDesignForm?.querySelectorAll('input[name="template_style"]').forEach((input) => {
+      input.addEventListener('change', updatePrincipalPhotoOption);
+    });
+
+    principalDesignForm?.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const button = principalDesignForm.querySelector('button[type="submit"]');
+      const status = document.getElementById('principalDesignStatus');
+      button.disabled = true;
+      status.classList.remove('hidden');
+      status.textContent = 'Enregistrement en cours...';
+
+      try {
+        const response = await fetch(principalDesignForm.action, {
+          method: 'POST',
+          body: new FormData(principalDesignForm),
+          headers: { 'Accept': 'application/json' },
+        });
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.message || 'Impossible d’enregistrer ce modèle.');
+
+        document.getElementById('principalTemplateLabel').textContent = data.template_label;
+        status.textContent = data.message;
+        document.getElementById('generatedCvFrame')?.setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
+      } catch (error) {
+        status.classList.remove('text-secondary-container');
+        status.classList.add('text-error');
+        status.textContent = error.message;
+      } finally {
+        button.disabled = false;
+      }
+    });
 
     function openCvBuilder() {
       const builder = document.getElementById('cv-builder');

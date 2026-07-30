@@ -15,11 +15,23 @@ class CvGenere extends Model
         'cv_profile_id',
         'offre_id',
         'nom_fichier',
-        'chemin_fichier'
+        'chemin_fichier',
+        'template_style',
+        'include_photo',
+        'accent_color',
+        'font_style',
+        'density',
+        'section_order',
+        'page_limit',
+        'summary_tone',
+        'visible_sections',
     ];
 
     protected $casts = [
         'date_generation' => 'datetime',
+        'page_limit' => 'integer',
+        'include_photo' => 'boolean',
+        'visible_sections' => 'array',
     ];
 
     public function cvProfile()
@@ -32,6 +44,11 @@ class CvGenere extends Model
         $fullName = trim(($this->cvProfile?->prenom ?? '').' '.($this->cvProfile?->nom ?? ''));
 
         return trim('CV'.($fullName !== '' ? ' - '.$fullName : ''));
+    }
+
+    public function getTemplateLabelAttribute(): string
+    {
+        return config('cv_templates.'.($this->template_style ?: 'modern').'.label', 'Moderne');
     }
 
     // Accessor pour l'URL du fichier

@@ -69,25 +69,29 @@
                 <p class="text-xs text-outline mt-1.5">Listez les competences techniques et soft skills recherchees</p>
               </div>
 
+              @php($cvTemplates = config('cv_templates', []))
+              @php($selectedTemplate = $defaultCvOptions['template_style'] ?? 'modern')
               <div>
-                <label class="block text-sm font-semibold text-primary mb-3">Style de CV</label>
-                <div class="grid grid-cols-3 gap-3">
-                  <input type="radio" name="template_style" id="modern" value="modern" class="template-radio hidden" checked />
-                  <label for="modern" class="border-2 border-outline-variant/20 rounded-xl p-4 text-center cursor-pointer transition-all hover:border-secondary-container/30">
-                    <span class="material-symbols-outlined text-2xl text-primary mb-2">auto_awesome</span>
-                    <span class="block text-sm font-semibold text-primary">Moderne</span>
-                  </label>
-
-                  <input type="radio" name="template_style" id="classic" value="classic" class="template-radio hidden" />
-                  <label for="classic" class="border-2 border-outline-variant/20 rounded-xl p-4 text-center cursor-pointer transition-all hover:border-secondary-container/30">
-                    <span class="material-symbols-outlined text-2xl text-primary mb-2">description</span>
-                    <span class="block text-sm font-semibold text-primary">Classique</span>
-                  </label>
-
-                  <input type="radio" name="template_style" id="executive" value="executive" class="template-radio hidden" />
-                  <label for="executive" class="border-2 border-outline-variant/20 rounded-xl p-4 text-center cursor-pointer transition-all hover:border-secondary-container/30">
-                    <span class="material-symbols-outlined text-2xl text-primary mb-2">work</span>
-                    <span class="block text-sm font-semibold text-primary">Executive</span>
+                <div class="mb-3 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div>
+                    <label class="block text-sm font-semibold text-primary">Modèle de CV</label>
+                    <p class="mt-1 text-xs text-outline">8 compositions différentes, dont 2 avec photo optionnelle.</p>
+                  </div>
+                  <div class="flex flex-wrap gap-2" aria-label="Filtrer les modèles">
+                    @foreach(['all' => 'Tous', 'ats' => 'ATS', 'modern' => 'Modernes', 'creative' => 'Créatifs', 'photo' => 'Avec photo'] as $filter => $label)
+                      <button type="button" data-template-filter="{{ $filter }}" class="rounded-full border border-outline-variant/30 bg-white px-3 py-1.5 text-xs font-bold text-primary transition-colors hover:border-secondary-container first:border-secondary-container first:bg-secondary-container/10">{{ $label }}</button>
+                    @endforeach
+                  </div>
+                </div>
+                <div id="template-catalog" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+                  @foreach($cvTemplates as $templateKey => $template)
+                    @include('cv.partials.template-card', compact('templateKey', 'template'))
+                  @endforeach
+                </div>
+                <div id="photo-options" class="mt-4 hidden rounded-2xl border border-secondary-container/20 bg-secondary-container/5 p-4">
+                  <label class="flex cursor-pointer items-start gap-3">
+                    <input type="checkbox" name="include_photo" value="1" class="mt-1 rounded border-outline-variant/40 text-secondary-container focus:ring-secondary-container" @checked(old('include_photo', $defaultCvOptions['include_photo'] ?? false))>
+                    <span><strong class="block text-sm text-primary">Inclure ma photo de profil</strong><span class="mt-1 block text-xs text-on-surface-variant">La photo est utilisée uniquement dans ce CV. Sans photo, vos initiales sont affichées.</span></span>
                   </label>
                 </div>
               </div>
@@ -104,7 +108,7 @@
                       'petrol' => ['Petrole', '#28666e'],
                     ] as $value => [$label, $color])
                       <label class="cursor-pointer">
-                        <input type="radio" name="accent_color" value="{{ $value }}" class="peer hidden" @checked($value === 'blue')>
+                        <input type="radio" name="accent_color" value="{{ $value }}" class="peer hidden" @checked(old('accent_color', $defaultCvOptions['accent_color'] ?? 'blue') === $value)>
                         <span class="flex h-11 items-center justify-center rounded-xl border-2 border-outline-variant/20 bg-white text-xs font-bold text-primary transition-all peer-checked:border-secondary-container peer-checked:bg-secondary-container/10" title="{{ $label }}">
                           <span class="h-5 w-5 rounded-full" style="background-color: {{ $color }}"></span>
                         </span>
@@ -116,9 +120,9 @@
                 <div>
                   <label class="block text-sm font-semibold text-primary mb-3">Longueur</label>
                   <div class="grid grid-cols-3 gap-2">
-                    <label class="cursor-pointer"><input type="radio" name="page_limit" value="1" class="peer hidden"><span class="block rounded-xl border-2 border-outline-variant/20 px-3 py-3 text-center text-xs font-bold text-primary peer-checked:border-secondary-container peer-checked:bg-secondary-container/10">1 page</span></label>
-                    <label class="cursor-pointer"><input type="radio" name="page_limit" value="2" class="peer hidden" checked><span class="block rounded-xl border-2 border-outline-variant/20 px-3 py-3 text-center text-xs font-bold text-primary peer-checked:border-secondary-container peer-checked:bg-secondary-container/10">2 pages</span></label>
-                    <label class="cursor-pointer"><input type="radio" name="page_limit" value="3" class="peer hidden"><span class="block rounded-xl border-2 border-outline-variant/20 px-3 py-3 text-center text-xs font-bold text-primary peer-checked:border-secondary-container peer-checked:bg-secondary-container/10">3 pages</span></label>
+                    @foreach([1, 2, 3] as $pages)
+                      <label class="cursor-pointer"><input type="radio" name="page_limit" value="{{ $pages }}" class="peer hidden" @checked((int) old('page_limit', $defaultCvOptions['page_limit'] ?? 2) === $pages)><span class="block rounded-xl border-2 border-outline-variant/20 px-3 py-3 text-center text-xs font-bold text-primary peer-checked:border-secondary-container peer-checked:bg-secondary-container/10">{{ $pages }} page{{ $pages > 1 ? 's' : '' }}</span></label>
+                    @endforeach
                   </div>
                   <p class="mt-1.5 text-xs text-outline">2 pages est recommande. 3 pages convient aux profils tres experimentes.</p>
                 </div>
@@ -128,18 +132,18 @@
                 <div>
                   <label class="block text-sm font-semibold text-primary mb-2" for="font_style">Police</label>
                   <select id="font_style" name="font_style" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
-                    <option value="sober" selected>Sobre</option>
-                    <option value="modern">Moderne</option>
-                    <option value="classic">Classique</option>
+                    <option value="sober" @selected(old('font_style', $defaultCvOptions['font_style'] ?? 'sober') === 'sober')>Sobre</option>
+                    <option value="modern" @selected(old('font_style', $defaultCvOptions['font_style'] ?? 'sober') === 'modern')>Moderne</option>
+                    <option value="classic" @selected(old('font_style', $defaultCvOptions['font_style'] ?? 'sober') === 'classic')>Classique</option>
                   </select>
                 </div>
 
                 <div>
                   <label class="block text-sm font-semibold text-primary mb-2" for="density">Densite</label>
                   <select id="density" name="density" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
-                    <option value="airy">Aere</option>
-                    <option value="balanced" selected>Equilibre</option>
-                    <option value="compact">Compact</option>
+                    <option value="airy" @selected(old('density', $defaultCvOptions['density'] ?? 'balanced') === 'airy')>Aere</option>
+                    <option value="balanced" @selected(old('density', $defaultCvOptions['density'] ?? 'balanced') === 'balanced')>Equilibre</option>
+                    <option value="compact" @selected(old('density', $defaultCvOptions['density'] ?? 'balanced') === 'compact')>Compact</option>
                   </select>
                 </div>
               </div>
@@ -148,18 +152,18 @@
                 <div>
                   <label class="block text-sm font-semibold text-primary mb-2" for="section_order">Ordre des sections</label>
                   <select id="section_order" name="section_order" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
-                    <option value="skills_first" selected>Competences puis experiences</option>
-                    <option value="experience_first">Experiences puis competences</option>
+                    <option value="skills_first" @selected(old('section_order', $defaultCvOptions['section_order'] ?? 'skills_first') === 'skills_first')>Competences puis experiences</option>
+                    <option value="experience_first" @selected(old('section_order', $defaultCvOptions['section_order'] ?? 'skills_first') === 'experience_first')>Experiences puis competences</option>
                   </select>
                 </div>
 
                 <div>
                   <label class="block text-sm font-semibold text-primary mb-2" for="summary_tone">Ton du resume</label>
                   <select id="summary_tone" name="summary_tone" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
-                    <option value="professional" selected>Professionnel</option>
-                    <option value="direct">Direct</option>
-                    <option value="human">Plus humain</option>
-                    <option value="technical">Plus technique</option>
+                    <option value="professional" @selected(old('summary_tone', $defaultCvOptions['summary_tone'] ?? 'professional') === 'professional')>Professionnel</option>
+                    <option value="direct" @selected(old('summary_tone', $defaultCvOptions['summary_tone'] ?? 'professional') === 'direct')>Direct</option>
+                    <option value="human" @selected(old('summary_tone', $defaultCvOptions['summary_tone'] ?? 'professional') === 'human')>Plus humain</option>
+                    <option value="technical" @selected(old('summary_tone', $defaultCvOptions['summary_tone'] ?? 'professional') === 'technical')>Plus technique</option>
                   </select>
                 </div>
               </div>
@@ -175,7 +179,7 @@
                     'benevolats' => 'Activites benevoles',
                   ] as $value => $label)
                     <label class="flex cursor-pointer items-center gap-2 rounded-xl border border-outline-variant/20 bg-white px-4 py-3 text-sm font-semibold text-primary">
-                      <input type="checkbox" name="sections[]" value="{{ $value }}" class="rounded border-outline-variant/40 text-secondary-container focus:ring-secondary-container" checked>
+                      <input type="checkbox" name="sections[]" value="{{ $value }}" class="rounded border-outline-variant/40 text-secondary-container focus:ring-secondary-container" @checked(in_array($value, old('sections', $defaultCvOptions['sections'] ?? []), true))>
                       {{ $label }}
                     </label>
                   @endforeach
@@ -207,4 +211,38 @@
     </section>
 
   </main>
+@endsection
+
+@section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const cards = [...document.querySelectorAll('[data-template-card]')];
+  const filters = [...document.querySelectorAll('[data-template-filter]')];
+  const photoOptions = document.getElementById('photo-options');
+
+  const updatePhotoOption = () => {
+    const selected = document.querySelector('input[name="template_style"]:checked');
+    photoOptions?.classList.toggle('hidden', selected?.dataset.supportsPhoto !== '1');
+  };
+
+  filters.forEach((button) => button.addEventListener('click', () => {
+    const filter = button.dataset.templateFilter;
+    filters.forEach((item) => {
+      item.classList.remove('border-secondary-container', 'bg-secondary-container/10');
+    });
+    button.classList.add('border-secondary-container', 'bg-secondary-container/10');
+    cards.forEach((card) => {
+      const visible = filter === 'all'
+        || card.dataset.category === filter
+        || (filter === 'ats' && card.dataset.ats === 'excellent');
+      card.classList.toggle('hidden', !visible);
+    });
+  }));
+
+  document.querySelectorAll('input[name="template_style"]').forEach((input) => {
+    input.addEventListener('change', updatePhotoOption);
+  });
+  updatePhotoOption();
+});
+</script>
 @endsection

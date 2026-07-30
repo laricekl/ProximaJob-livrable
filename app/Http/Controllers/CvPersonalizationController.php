@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Services\JobMatchingService;
+use App\Models\CvGenere;
 use App\Models\CvProfile;
 use App\Models\Offre;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -45,6 +47,17 @@ class CvPersonalizationController extends Controller
         $selectedOfferCompany = '';
         $offerSkills = [];
         $offerDataQuality = null;
+        $defaultCvOptions = array_merge([
+            'template_style' => 'modern',
+            'include_photo' => false,
+            'accent_color' => 'blue',
+            'font_style' => 'sober',
+            'density' => 'balanced',
+            'section_order' => 'skills_first',
+            'page_limit' => 2,
+            'summary_tone' => 'professional',
+            'sections' => ['software', 'languages', 'perfectionnements', 'benevolats'],
+        ], $cvProfile->design_options ?? []);
 
         if ($request->filled('offre_id')) {
             $selectedOffer = Offre::with(['entreprise'])
@@ -94,7 +107,8 @@ class CvPersonalizationController extends Controller
             'selectedOfferRequirements',
             'selectedOfferCompany',
             'offerSkills',
-            'offerDataQuality'
+            'offerDataQuality',
+            'defaultCvOptions'
         ));
     }
 
@@ -108,7 +122,8 @@ class CvPersonalizationController extends Controller
             'offer_title' => 'required|string|max:255',
             'company_name' => 'nullable|string|max:255',
             'key_requirements' => 'required_without:offre_id|nullable|string|min:3',
-            'template_style' => 'nullable|in:modern,classic,executive',
+            'template_style' => ['nullable', Rule::in(array_keys(config('cv_templates', [])))],
+            'include_photo' => 'nullable|boolean',
             'accent_color' => 'nullable|in:blue,green,bordeaux,anthracite,petrol',
             'font_style' => 'nullable|in:sober,modern,classic',
             'density' => 'nullable|in:airy,balanced,compact',
@@ -183,6 +198,11 @@ class CvPersonalizationController extends Controller
 
         $fileUrl = route('cv.personalization.inline', ['filename' => $filename]);
         $returnToApplicationUrl = null;
+        $generatedCv = CvGenere::query()
+            ->where('chemin_fichier', $filePath)
+            ->whereHas('cvProfile', fn ($query) => $query->where('user_id', Auth::id()))
+            ->first();
+        $templateLabel = $generatedCv?->template_label ?? 'Personnalisé';
 
         if ($request->filled('offre_id')) {
             $offer = Offre::whereKey($request->integer('offre_id'))->first();
@@ -191,7 +211,7 @@ class CvPersonalizationController extends Controller
                 : null;
         }
         
-        return view('cv.preview', compact('fileUrl', 'filename', 'returnToApplicationUrl'));
+        return view('cv.preview', compact('fileUrl', 'filename', 'returnToApplicationUrl', 'templateLabel'));
     }
 
     /**
@@ -240,6 +260,7 @@ class CvPersonalizationController extends Controller
         $offer->entreprise->name = $request->company_name ?? 'Entreprise Cible';
         $offer->customization_options = [
             'template_style' => $request->input('template_style', 'modern'),
+            'include_photo' => $request->boolean('include_photo'),
             'accent_color' => $request->input('accent_color', 'blue'),
             'font_style' => $request->input('font_style', 'sober'),
             'density' => $request->input('density', 'balanced'),
