@@ -7,7 +7,7 @@
 
   @include('partials.nav-entreprise')
 
-  <main class="flex-grow pt-24 md:pt-32 pb-16">
+  <main class="flex-grow pt-24 md:pt-28 pb-16">
     @yield('content')
   </main>
 

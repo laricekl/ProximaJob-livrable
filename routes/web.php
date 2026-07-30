@@ -73,7 +73,9 @@ Route::redirect('/app-form', '/offres')->name('app_form');
 Route::post('/check-email', [UserController::class, 'checkEmail'])->name('check.email');
 Route::get('/offres/{offre:slug}', [UserController::class, 'jobdetails'])->name('job_infos');
 Route::get('/entreprises', [HomeController::class, 'entreprises'])->name('entreprises.index');
-Route::get('/entreprise/{entreprise}', [HomeController::class, 'entreprise'])->name('entreprise.profil');
+Route::get('/entreprise/{entreprise}', [HomeController::class, 'entreprise'])
+    ->whereNumber('entreprise')
+    ->name('entreprise.profil');
 //Route::post('/register/user', [RegisteredUserController::class, 'registerJobSeeker'])->name('register.jobseeker');
 //Route::post('/register/entreprise', [RegisteredUserController::class, 'registerCompany'])->name('register.company');
 
@@ -155,9 +157,15 @@ Route::prefix("/entreprise") ->middleware(['auth', 'verified', 'entreprise.acces
     Route::get("/candidatures-ia",[EntreprisesController::class, 'historique_ia'])->name("entreprise.candidatures_ia");
     Route::get("/abonnements",[EntreprisesController::class, 'abonnements'])->name("entreprise.abonnements");
     Route::get("/promotion",[EntreprisesController::class, 'promotion'])->name("entreprise.promotion");
+    Route::get('/candidatures', [CandidatureController::class, 'entrepriseIndex'])
+        ->name('entreprise.candidatures.index');
    // Route::get("/candidat-details",[EntreprisesController::class, 'candidat'])->name("entreprise.connected_candidate_details");
-   Route::get('/candidat/{id}', [EntreprisesController::class, 'candidat'])
-     ->name('entreprise.connected_candidate_details');
+    Route::get('/candidatures/{postulation}', [EntreprisesController::class, 'candidatureDetail'])
+        ->whereNumber('postulation')
+        ->name('entreprise.candidatures.show');
+    Route::get('/candidat/{id}', [EntreprisesController::class, 'candidat'])
+        ->whereNumber('id')
+        ->name('entreprise.connected_candidate_details');
    // Route::get('/historique-candidatures', [UserController::class, 'historique'])->name('user.historique');
    // Route::get('/', [OffresController::class, 'index'])->name('index');
     Route::post('/', [OffresController::class, 'store'])->name('offres.store');
@@ -167,6 +175,8 @@ Route::prefix("/entreprise") ->middleware(['auth', 'verified', 'entreprise.acces
     Route::put('/offres/update/{id}', [OffresController::class, 'update'])->name('offres.update');
     Route::delete('/offres/{id}', [OffresController::class, 'destroy'])->name('offres.destroy');
     Route::post('/profile/update', [UserController::class, 'update'])->name('entreprise.profile.update');
+    Route::patch('/parametres', [ProfileController::class, 'updateEnterprise'])
+        ->name('entreprise.settings.update');
     Route::get('/offres/{offre}/candidatures', [CandidatureController::class, 'candidature']) ->name('entreprise.offres.candidatures');
     Route::put('/candidature/{postulation}/update-status', [CandidatureController::class, 'updateStatus'])->name('candidature.updateStatus');
     Route::get('/preview-cv/{candidature}', [CandidatureController::class, 'previewCV'])->name('previewcv');

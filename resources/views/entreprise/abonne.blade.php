@@ -2,8 +2,8 @@
 @section('title', 'Abonnements')
 @section('content')
   @php
-    $activeSubscriptions = $userAbonnements->getCollection()->where('status', 'Actif')->count();
-    $expiredSubscriptions = $userAbonnements->getCollection()->where('status', 'Expiré')->count();
+    $activeSubscriptions = $subscriptionStats['active'] ?? 0;
+    $expiredSubscriptions = $subscriptionStats['expired'] ?? 0;
   @endphp
 
   <div>
@@ -11,22 +11,29 @@
       <div class="max-w-7xl mx-auto">
         <div class="mb-8">
           <h1 class="text-2xl font-bold font-serif text-primary mb-2">Mes abonnements</h1>
-          <p class="text-sm text-on-surface-variant">Consultez vos forfaits actifs, leur durée et l'historique associé à votre compte entreprise.</p>
+          <p class="text-sm text-on-surface-variant">Consultez vos forfaits payants actifs et l’historique associé à votre compte entreprise.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div class="card-glow rounded-2xl p-6">
-            <p class="text-2xl font-bold text-primary">{{ $userAbonnements->total() }}</p>
-            <p class="text-sm text-on-surface-variant mt-1">Abonnements trouvés</p>
+            <p class="text-2xl font-bold text-primary">{{ $subscriptionStats['total'] ?? $userAbonnements->total() }}</p>
+            <p class="text-sm text-on-surface-variant mt-1">Forfaits utilisés</p>
           </div>
           <div class="card-glow rounded-2xl p-6">
             <p class="text-2xl font-bold text-secondary-container">{{ $activeSubscriptions }}</p>
-            <p class="text-sm text-on-surface-variant mt-1">Abonnements actifs</p>
+            <p class="text-sm text-on-surface-variant mt-1">Forfaits actifs</p>
           </div>
           <div class="card-glow rounded-2xl p-6">
             <p class="text-2xl font-bold text-primary">{{ $expiredSubscriptions }}</p>
-            <p class="text-sm text-on-surface-variant mt-1">Abonnements expirés</p>
+            <p class="text-sm text-on-surface-variant mt-1">Forfaits expirés</p>
           </div>
+        </div>
+
+        <div class="flex justify-end mb-6">
+          <a href="{{ route('abonnement') }}" class="inline-flex items-center gap-2 px-5 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+            <span class="material-symbols-outlined text-lg">workspace_premium</span>
+            Voir les forfaits
+          </a>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
@@ -58,8 +65,8 @@
           @empty
             <div class="md:col-span-2 lg:col-span-3 card-glow rounded-2xl p-10 text-center">
               <span class="material-symbols-outlined text-4xl text-outline mb-3">credit_card_off</span>
-              <h3 class="font-bold text-primary mb-2">Aucun abonnement enregistre</h3>
-              <p class="text-sm text-on-surface-variant">Votre entreprise n'a pas encore de forfait actif ou archivé à afficher.</p>
+              <h3 class="font-bold text-primary mb-2">Accès gratuit</h3>
+              <p class="text-sm text-on-surface-variant">Aucun forfait payant n’est associé à ce compte. Votre accès actuel reste gratuit.</p>
             </div>
           @endforelse
         </div>

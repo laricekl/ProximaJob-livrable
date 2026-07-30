@@ -1,31 +1,27 @@
 @extends('layouts.entreprise')
 @section('title', 'Promotions')
 @section('content')
-  <main class="flex-grow pt-32 pb-16">
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 class="text-2xl font-bold font-serif text-primary mb-2">Promotions</h1>
-            <p class="text-sm text-on-surface-variant">Suivez vos offres actives et les candidatures associées.</p>
+            <p class="text-sm text-on-surface-variant">Préparez les offres que vous souhaiterez mettre davantage en valeur.</p>
           </div>
-          <a href="{{ route('entreprise.offres.create') }}" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center gap-2 shadow-lg shadow-secondary-container/20">
-            <span class="material-symbols-outlined">add</span> Ajouter une offre
-          </a>
         </div>
 
         <div class="mb-8 rounded-2xl bg-gradient-to-r from-secondary-container/10 to-secondary-container/5 border border-secondary-container/20 px-6 py-5 flex items-center gap-4">
           <span class="material-symbols-outlined text-3xl text-secondary-container flex-shrink-0">rocket_launch</span>
           <div>
             <p class="text-lg font-bold font-serif text-primary">Module de promotion — Bientôt disponible</p>
-            <p class="text-sm text-on-surface-variant">Boostez vos offres et attirez plus de talents.</p>
+            <p class="text-sm text-on-surface-variant">La promotion payante n’est pas encore activée. Aucun achat ni prélèvement ne peut être effectué sur cette page.</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div class="card-glow rounded-2xl p-6 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-secondary-container">inventory_2</span></div>
-            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['total_offers'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Offres suivies</p></div>
+            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['total_offers'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Offres admissibles</p></div>
           </div>
           <div class="card-glow rounded-2xl p-6 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-secondary-container">trending_up</span></div>
@@ -33,11 +29,15 @@
           </div>
           <div class="card-glow rounded-2xl p-6 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-secondary-container">smart_toy</span></div>
-            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['autopostulations'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Candidatures IA recues</p></div>
+            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['autopostulations'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Profils IA proposés</p></div>
           </div>
         </div>
 
         <div class="card-glow rounded-2xl overflow-hidden mb-10">
+          <div class="border-b border-outline-variant/10 px-6 py-5">
+            <h2 class="font-serif text-lg font-bold text-primary">Offres admissibles à une future promotion</h2>
+            <p class="mt-1 text-sm text-on-surface-variant">Vous pouvez continuer à consulter ou modifier vos offres en attendant l’ouverture du module.</p>
+          </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
               <thead>
@@ -65,8 +65,9 @@
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->autopostulations_count ?? 0 }}</td>
                     <td class="px-6 py-4 text-right">
                       <div class="flex justify-end gap-2">
-                        <a href="{{ route('entreprise.offres.candidatures', $offer) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir candidatures"><span class="material-symbols-outlined text-base">visibility</span></a>
-                        <a href="{{ route('edit.offres', $offer->id) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Modifier"><span class="material-symbols-outlined text-base">edit</span></a>
+                        <a href="{{ route('entreprise.offres.candidatures', $offer) }}" aria-label="Voir les candidatures de {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir les candidatures"><span class="material-symbols-outlined text-base">visibility</span></a>
+                        <a href="{{ route('edit.offres', $offer->id) }}" aria-label="Modifier l’offre {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Modifier l’offre"><span class="material-symbols-outlined text-base">edit</span></a>
+                        <span class="inline-flex items-center rounded-lg bg-surface-container px-2.5 py-1.5 text-xs font-semibold text-outline" title="La promotion sera disponible prochainement">Bientôt disponible</span>
                       </div>
                     </td>
                   </tr>
@@ -89,5 +90,4 @@
         </div>
       </div>
     </section>
-  </main>
 @endsection

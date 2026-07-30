@@ -137,8 +137,8 @@
                     <td class="px-4 py-4 align-middle text-center text-on-surface-variant hidden md:table-cell">{{ optional($postulation->created_at)->translatedFormat('d M Y') }}</td>
                     <td class="px-4 py-4 align-middle text-center">
                       @php
-                        $statusColors = ['en_attente' => 'bg-warning-light text-warning-dark', 'accepted' => 'bg-success-light text-success-dark', 'rejected' => 'bg-error-light text-error-dark', 'entretien' => 'bg-info-light text-info-dark'];
-                        $statusLabels = ['en_attente' => 'En attente', 'accepted' => 'Acceptée', 'rejected' => 'Refusée', 'entretien' => 'Entretien'];
+                        $statusColors = ['en_attente' => 'bg-warning-light text-warning-dark', 'shortlisted' => 'bg-info-light text-info-dark', 'contacted' => 'bg-info-light text-info-dark', 'interview' => 'bg-success-light text-success-dark', 'accepted' => 'bg-success-light text-success-dark', 'rejected' => 'bg-error-light text-error-dark', 'entretien' => 'bg-info-light text-info-dark'];
+                        $statusLabels = ['en_attente' => 'À examiner', 'shortlisted' => 'Présélectionnée', 'contacted' => 'Entreprise contactée', 'interview' => 'Entretien planifié', 'accepted' => 'Acceptée', 'rejected' => 'Refusée', 'entretien' => 'Entretien'];
                         $statusLabel = $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? ''));
                         $statusIcon = $postulation->status === 'accepted' ? 'check_circle' : ($postulation->status === 'rejected' ? 'cancel' : 'hourglass_empty');
                       @endphp

@@ -4,12 +4,18 @@
   @php
     $statusStyles = [
       'en_attente' => 'bg-secondary-container/10 text-secondary-container',
+      'shortlisted' => 'bg-info-light text-info-dark',
+      'contacted' => 'bg-info-light text-info-dark',
+      'interview' => 'bg-success-light text-success-dark',
       'accepted' => 'bg-secondary-fixed text-on-secondary-fixed-variant',
       'rejected' => 'bg-error-light text-error',
     ];
 
     $statusLabels = [
-      'en_attente' => 'En attente',
+      'en_attente' => 'À examiner',
+      'shortlisted' => 'Présélectionnée',
+      'contacted' => 'Entreprise contactée',
+      'interview' => 'Entretien planifié',
       'accepted' => 'Acceptée',
       'rejected' => 'Refusée',
     ];

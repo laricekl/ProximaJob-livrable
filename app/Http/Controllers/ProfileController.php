@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\Rules;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProfileController extends Controller
@@ -22,9 +24,64 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        if ($request->user()->entreprise) {
+            return view('entreprise.profile', [
+                'user' => $request->user(),
+                'entreprise' => $request->user()->entreprise,
+            ]);
+        }
+
         return view('profile.edit', [
             'user' => $request->user(),
         ]);
+    }
+
+    public function updateEnterprise(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+        $entreprise = $user->entreprise;
+        abort_unless($entreprise, 404);
+
+        $validated = $request->validate([
+            'company_name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:3000'],
+            'website' => ['nullable', 'url', 'max:255'],
+            'neq' => ['nullable', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique(\App\Models\User::class)->ignore($user->id),
+            ],
+            'telephone' => ['nullable', 'string', 'max:30'],
+            'adresse' => ['nullable', 'string', 'max:500'],
+            'logo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
+        ]);
+
+        if ($request->hasFile('logo')) {
+            if ($entreprise->logo && Storage::disk('public')->exists($entreprise->logo)) {
+                Storage::disk('public')->delete($entreprise->logo);
+            }
+            $validated['logo'] = $request->file('logo')->store('entreprises/logos', 'public');
+        }
+
+        $user->update([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'telephone' => $validated['telephone'] ?? null,
+            'adresse' => $validated['adresse'] ?? null,
+        ]);
+
+        $entreprise->update([
+            'company_name' => $validated['company_name'],
+            'description' => $validated['description'] ?? null,
+            'website' => $validated['website'] ?? null,
+            'neq' => $validated['neq'] ?? null,
+            'logo' => $validated['logo'] ?? $entreprise->logo,
+        ]);
+
+        return Redirect::route('profile.edit')->with('status', 'enterprise-profile-updated');
     }
 
     /**

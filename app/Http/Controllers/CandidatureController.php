@@ -509,18 +509,34 @@ private function servePublicFile($filePath, $candidature)
         }
 
         // Récupération de l'offre avec vérification d'existence
-        $offre = Offre::findOrFail($offreId);
+        $offre = Offre::where('entreprise_id', Auth::user()->entreprise->id)
+            ->findOrFail($offreId);
+
+        $baseQuery = Postulation::where('offre_id', $offreId);
+        if (request('source') === 'ia') {
+            $baseQuery->where('autopostulation', true);
+        }
+
+        $statusCounts = (clone $baseQuery)
+            ->selectRaw('status, count(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
 
         // Construction de la requête de base
-        $query = Postulation::where('offre_id', $offreId)
-                    ->with(['user' => function($query) {
-                        $query->select('id', 'name', 'email', 'telephone');  
-                    }, 'offre'])
+        $query = (clone $baseQuery)
+                    ->with([
+                        'user' => function($query) {
+                            $query->select('id', 'prenom', 'name', 'email', 'telephone');
+                        },
+                        'user.candidateSector.sector',
+                        'user.skills',
+                        'offre',
+                    ])
                     ->orderBy('created_at', 'asc'); // Tri par défaut
 
         // Filtre par statut (avec validation)
         if ($status = request('status')) {
-            $allowedStatuses = ['en_attente', 'accepted', 'rejected'];
+            $allowedStatuses = ['en_attente', 'shortlisted', 'contacted', 'interview', 'accepted', 'rejected'];
             if (in_array($status, $allowedStatuses)) {
                 $query->where('status', $status);
             }
@@ -549,8 +565,69 @@ private function servePublicFile($filePath, $candidature)
         return view('entreprise.liste-candidature', [
             'offre' => $offre,
             'postulations' => $postulations,
-            'statuses' => ['en_attente', 'accepted', 'rejected'],
-            'filters' => request()->only(['status', 'date', 'search', 'per_page'])
+            'statuses' => ['en_attente', 'shortlisted', 'contacted', 'interview', 'accepted', 'rejected'],
+            'statusCounts' => $statusCounts,
+            'filters' => request()->only(['status', 'date', 'search', 'per_page', 'source'])
+        ]);
+    }
+
+    public function entrepriseIndex(Request $request)
+    {
+        $entreprise = Auth::user()->entreprise;
+        $allowedStatuses = ['en_attente', 'shortlisted', 'contacted', 'interview', 'accepted', 'rejected'];
+
+        $allApplications = Postulation::query()
+            ->whereHas('offre', fn ($query) => $query->where('entreprise_id', $entreprise->id));
+
+        $statusCounts = (clone $allApplications)
+            ->selectRaw('status, count(*) as aggregate')
+            ->groupBy('status')
+            ->pluck('aggregate', 'status');
+
+        $query = (clone $allApplications)->with([
+            'offre:id,titre,entreprise_id',
+            'user:id,prenom,name,email,telephone',
+            'user.candidateSector.sector',
+            'user.skills',
+        ]);
+
+        if ($request->filled('status') && in_array($request->status, $allowedStatuses, true)) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->filled('offre_id')) {
+            $query->where('offre_id', $request->integer('offre_id'));
+        }
+
+        if ($request->source === 'ia') {
+            $query->where('autopostulation', true);
+        } elseif ($request->source === 'directe') {
+            $query->where('autopostulation', false);
+        }
+
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+            $query->where(function ($candidateQuery) use ($search) {
+                $candidateQuery
+                    ->whereHas('user', fn ($userQuery) => $userQuery
+                        ->where('name', 'like', "%{$search}%")
+                        ->orWhere('prenom', 'like', "%{$search}%")
+                        ->orWhere('email', 'like', "%{$search}%"))
+                    ->orWhereHas('offre', fn ($offerQuery) => $offerQuery->where('titre', 'like', "%{$search}%"));
+            });
+        }
+
+        $postulations = $query->latest()->paginate(12)->withQueryString();
+        $offres = Offre::query()
+            ->where('entreprise_id', $entreprise->id)
+            ->orderBy('titre')
+            ->get(['id', 'titre']);
+
+        return view('entreprise.candidatures-index', [
+            'postulations' => $postulations,
+            'offres' => $offres,
+            'statusCounts' => $statusCounts,
+            'filters' => $request->only(['status', 'offre_id', 'source', 'search']),
         ]);
     }
 
@@ -558,7 +635,7 @@ private function servePublicFile($filePath, $candidature)
     public function updateStatus(Request $request, $id)
     {
         $validated = $request->validate([
-            'status' => 'required|in:en_attente,accepted,rejected'
+            'status' => 'required|in:en_attente,shortlisted,contacted,interview,accepted,rejected'
         ]);
 
         try {
@@ -627,9 +704,12 @@ private function servePublicFile($filePath, $candidature)
 private function getStatusMessage($status)
 {
     $messages = [
-        'en_attente' => 'mise en attente',
-        'accepted' => 'acceptée ',
-        'rejected' => 'refusée'
+        'en_attente' => 'replacée dans la file d’examen',
+        'shortlisted' => 'présélectionnée',
+        'contacted' => 'marquée comme contactée',
+        'interview' => 'retenue pour un entretien',
+        'accepted' => 'acceptée',
+        'rejected' => 'refusée',
     ];
     
     return $messages[$status] ?? 'mise à jour';
@@ -639,29 +719,39 @@ private function getStatusMessage($status)
 
  public function previewFile($postulationId, $type)
 {
-    $postulation = Postulation::with('user')->findOrFail($postulationId);
+    $postulation = Postulation::with('user')
+        ->whereHas('offre', function ($query) {
+            $query->where('entreprise_id', Auth::user()->entreprise->id);
+        })
+        ->findOrFail($postulationId);
 
     // Déterminer le chemin du fichier selon le type
     if ($type === 'cv' && $postulation->cv) {
         $filePath = $postulation->cv;
         $fileName = 'CV_' . Str::slug($postulation->user->name) . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
-    } elseif ($type === 'motivation' && $postulation->lettre_motivation) {
-        $filePath = $postulation->lettre_motivation;
+        $fullPath = $this->resolveCVPath($filePath);
+    } elseif ($type === 'motivation' && ($postulation->cover_letter || $postulation->lettre_motivation)) {
+        $filePath = $postulation->cover_letter ?: $postulation->lettre_motivation;
         $fileName = 'Lettre_Motivation_' . Str::slug($postulation->user->name) . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
+        $fullPath = $this->resolveLetterPath($filePath);
     } else {
         abort(404, 'Fichier non trouvé');
     }
 
-    // Chemin complet dans public
-    $fullPath = public_path($filePath);
-    
-    // Vérifier que le fichier existe
     if (!File::exists($fullPath)) {
         abort(404, 'Fichier introuvable');
     }
 
-    // Vérification de sécurité
-    if (!Str::startsWith($filePath, 'assets/cvs/')) {
+    $realPath = realpath($fullPath);
+    $allowedRoots = array_filter([
+        realpath(public_path('assets/cvs')),
+        realpath(Storage::disk('public')->path('')),
+    ]);
+    $isAllowed = $realPath && collect($allowedRoots)->contains(
+        fn ($root) => $realPath === $root || Str::startsWith($realPath, $root . DIRECTORY_SEPARATOR)
+    );
+
+    if (!$isAllowed) {
         abort(403, 'Chemin de fichier non autorisé');
     }
 

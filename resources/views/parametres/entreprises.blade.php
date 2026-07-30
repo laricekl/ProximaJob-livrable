@@ -23,7 +23,11 @@
         <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           @foreach ($entreprises as $entreprise)
             @php
-              $logoUrl = $entreprise->logo ? asset($entreprise->logo) : null;
+              $logoUrl = !$entreprise->logo
+                ? null
+                : (\Illuminate\Support\Str::startsWith($entreprise->logo, 'assets/')
+                    ? asset($entreprise->logo)
+                    : asset('storage/' . $entreprise->logo));
               $initials = strtoupper(substr($entreprise->company_name, 0, 2));
             @endphp
             <a href="{{ route('entreprise.profil', $entreprise) }}" class="card-glow group flex h-full flex-col rounded-2xl p-6 transition-all hover:-translate-y-1 hover:shadow-xl">

@@ -248,6 +248,62 @@ class EnterpriseActionsTest extends TestCase
         ]);
     }
 
+    public function test_enterprise_has_a_global_application_inbox_scoped_to_its_offers(): void
+    {
+        $enterprise = $this->createEnterprise(['email' => 'inbox-owner@example.com']);
+        $otherEnterprise = $this->createEnterprise(['email' => 'inbox-other@example.com']);
+        $candidate = $this->createCandidate(['prenom' => 'Amina', 'name' => 'Inbox']);
+        $ownOffer = $this->createOfferFor($enterprise, ['titre' => 'Développeuse produit']);
+        $otherOffer = $this->createOfferFor($otherEnterprise, ['titre' => 'Offre confidentielle']);
+
+        Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $ownOffer->id,
+            'autopostulation' => true,
+            'status' => 'shortlisted',
+        ]);
+        Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $otherOffer->id,
+            'autopostulation' => false,
+            'status' => 'en_attente',
+        ]);
+
+        $this->actingAs($enterprise)
+            ->get(route('entreprise.candidatures.index', ['source' => 'ia']))
+            ->assertOk()
+            ->assertSee('Toutes les candidatures')
+            ->assertSee('Amina Inbox')
+            ->assertSee('Développeuse produit')
+            ->assertSee('Présélectionnée')
+            ->assertDontSee('Offre confidentielle');
+    }
+
+    public function test_enterprise_can_move_an_application_through_recruitment_stages(): void
+    {
+        $enterprise = $this->createEnterprise(['email' => 'stages@example.com']);
+        $candidate = $this->createCandidate();
+        $offer = $this->createOfferFor($enterprise);
+        $postulation = Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $offer->id,
+            'autopostulation' => false,
+            'status' => 'en_attente',
+        ]);
+
+        foreach (['shortlisted', 'contacted', 'interview'] as $status) {
+            $this->actingAs($enterprise)
+                ->putJson(route('candidature.updateStatus', $postulation), ['status' => $status])
+                ->assertOk()
+                ->assertJsonPath('new_status', $status);
+        }
+
+        $this->assertDatabaseHas('postulations', [
+            'id' => $postulation->id,
+            'status' => 'interview',
+        ]);
+    }
+
     public function test_enterprise_cannot_update_status_for_another_enterprise_application(): void
     {
         $owner = $this->createEnterprise(['email' => 'owner-status@example.com']);
@@ -269,6 +325,73 @@ class EnterpriseActionsTest extends TestCase
         $this->assertDatabaseHas('postulations', [
             'id' => $postulation->id,
             'status' => 'en_attente',
+        ]);
+    }
+
+    public function test_candidate_detail_uses_the_exact_application_and_is_scoped_to_the_enterprise(): void
+    {
+        $enterprise = $this->createEnterprise(['email' => 'detail-owner@example.com']);
+        $otherEnterprise = $this->createEnterprise(['email' => 'detail-other@example.com']);
+        $candidate = $this->createCandidate(['prenom' => 'Jean', 'name' => 'Contexte']);
+        $firstOffer = $this->createOfferFor($enterprise, ['titre' => 'Offre exacte']);
+        $secondOffer = $this->createOfferFor($enterprise, ['titre' => 'Autre offre']);
+        $postulation = Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $firstOffer->id,
+            'autopostulation' => false,
+            'status' => 'en_attente',
+        ]);
+        Postulation::create([
+            'user_id' => $candidate->id,
+            'offre_id' => $secondOffer->id,
+            'autopostulation' => false,
+            'status' => 'en_attente',
+        ]);
+
+        $this->actingAs($enterprise)
+            ->get(route('entreprise.candidatures.show', $postulation))
+            ->assertOk()
+            ->assertSee('Jean Contexte')
+            ->assertSee('Offre exacte')
+            ->assertDontSee('Autre offre');
+
+        $this->actingAs($otherEnterprise)
+            ->get(route('entreprise.candidatures.show', $postulation))
+            ->assertNotFound();
+    }
+
+    public function test_enterprise_profile_uses_company_fields_and_can_be_updated(): void
+    {
+        $enterprise = $this->createEnterprise(
+            ['email' => 'profile-enterprise@example.com'],
+            ['company_name' => 'Entreprise Initiale']
+        );
+
+        $this->actingAs($enterprise)
+            ->get(route('profile.edit'))
+            ->assertOk()
+            ->assertSee('Profil de l’entreprise')
+            ->assertSee('Entreprise Initiale')
+            ->assertDontSee('Salaire minimum souhaité');
+
+        $this->actingAs($enterprise)
+            ->patch(route('entreprise.settings.update'), [
+                'company_name' => 'Entreprise Renouvelée',
+                'description' => 'Une présentation publique mise à jour.',
+                'website' => 'https://example.com',
+                'neq' => '1234567890',
+                'name' => 'Responsable Recrutement',
+                'email' => 'profile-enterprise@example.com',
+                'telephone' => '514-555-0199',
+                'adresse' => 'Montréal',
+            ])
+            ->assertRedirect(route('profile.edit'))
+            ->assertSessionHas('status', 'enterprise-profile-updated');
+
+        $this->assertDatabaseHas('entreprises', [
+            'id' => $enterprise->entreprise->id,
+            'company_name' => 'Entreprise Renouvelée',
+            'website' => 'https://example.com',
         ]);
     }
 

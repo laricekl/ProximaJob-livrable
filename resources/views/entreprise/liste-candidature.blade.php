@@ -4,43 +4,65 @@
   @php
     $statusStyles = [
       'en_attente' => 'bg-secondary-container/10 text-secondary-container',
+      'shortlisted' => 'bg-primary-container/10 text-primary-container',
+      'contacted' => 'bg-info-light text-info-dark',
+      'interview' => 'bg-tertiary-container/40 text-primary',
       'accepted' => 'bg-secondary-fixed text-on-secondary-fixed-variant',
       'rejected' => 'bg-error-light text-error',
     ];
 
     $statusLabels = [
-      'en_attente' => 'En attente',
+      'en_attente' => 'À examiner',
+      'shortlisted' => 'Présélectionnée',
+      'contacted' => 'Contactée',
+      'interview' => 'Entretien planifié',
       'accepted' => 'Acceptée',
-      'rejected' => 'Rejetée',
+      'rejected' => 'Refusée',
     ];
   @endphp
 
-  <main class="flex-grow pt-32 pb-16">
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-5xl mx-auto">
-        <a href="{{ route('offres.publies') }}" class="inline-flex items-center gap-2 text-sm text-secondary-container font-semibold hover:underline mb-4">
-          <span class="material-symbols-outlined text-lg">arrow_back</span> Retour aux offres
+        <a href="{{ ($filters['source'] ?? null) === 'ia' ? route('entreprise.candidatures_ia') : route('offres.publies') }}" class="inline-flex items-center gap-2 text-sm text-secondary-container font-semibold hover:underline mb-4">
+          <span class="material-symbols-outlined text-lg">arrow_back</span> {{ ($filters['source'] ?? null) === 'ia' ? 'Retour à la sélection IA' : 'Retour aux offres' }}
         </a>
 
-        <h1 class="text-2xl font-bold font-serif text-primary mb-2">Candidatures pour : {{ $offre->titre }}</h1>
-        <div class="bg-secondary-container/10 backdrop-blur-md border border-secondary-container/20 rounded-2xl p-5 mb-8 inline-block">
-          <p class="text-2xl font-bold text-primary">{{ $postulations->total() }} candidatures reçues</p>
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-7">
+          <div>
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-secondary-container mb-2">{{ ($filters['source'] ?? null) === 'ia' ? 'Profils proposés par la sélection IA' : 'Suivi du recrutement' }}</p>
+            <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ $offre->titre }}</h1>
+            <p class="mt-2 text-on-surface-variant">{{ $postulations->total() }} candidature{{ $postulations->total() > 1 ? 's' : '' }} correspond{{ $postulations->total() > 1 ? 'ent' : '' }} aux filtres.</p>
+          </div>
+          <a href="{{ route('edit.offres', $offre->id) }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white border border-outline-variant/30 text-primary text-sm font-semibold rounded-xl hover:bg-surface-container-low">
+            <span class="material-symbols-outlined text-lg">edit</span> Modifier l’offre
+          </a>
+        </div>
+
+        <div class="flex gap-2 overflow-x-auto pb-2 mb-6">
+          @foreach ([
+            '' => ['Toutes', array_sum($statusCounts->toArray())],
+            'en_attente' => ['À examiner', $statusCounts['en_attente'] ?? 0],
+            'shortlisted' => ['Présélectionnées', $statusCounts['shortlisted'] ?? 0],
+            'contacted' => ['Contactées', $statusCounts['contacted'] ?? 0],
+            'interview' => ['Entretiens', $statusCounts['interview'] ?? 0],
+            'accepted' => ['Acceptées', $statusCounts['accepted'] ?? 0],
+            'rejected' => ['Refusées', $statusCounts['rejected'] ?? 0],
+          ] as $value => [$label, $count])
+            <a href="{{ route('entreprise.offres.candidatures', ['offre' => $offre, 'status' => $value ?: null, 'source' => $filters['source'] ?? null]) }}" class="whitespace-nowrap inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-colors {{ ($filters['status'] ?? '') === $value ? 'bg-primary-container text-white' : 'bg-white text-on-surface-variant border border-outline-variant/20 hover:text-primary' }}">
+              {{ $label }} <span class="min-w-6 h-6 px-1.5 rounded-full flex items-center justify-center text-xs {{ ($filters['status'] ?? '') === $value ? 'bg-white/15' : 'bg-surface-container' }}">{{ $count }}</span>
+            </a>
+          @endforeach
         </div>
 
         <div class="card-glow rounded-2xl p-6 mb-8">
           <form method="GET" action="{{ route('entreprise.offres.candidatures', $offre) }}" class="space-y-4">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div>
-                <label class="block text-sm font-semibold text-primary mb-1.5" for="status">Statut</label>
-                <select id="status" name="status" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all">
-                  <option value="">Tous les statuts</option>
-                  @foreach ($statuses as $status)
-                    <option value="{{ $status }}" {{ ($filters['status'] ?? '') === $status ? 'selected' : '' }}>
-                      {{ $statusLabels[$status] ?? ucfirst(str_replace('_', ' ', $status)) }}
-                    </option>
-                  @endforeach
-                </select>
-              </div>
+            @if (($filters['source'] ?? null) === 'ia')
+              <input type="hidden" name="source" value="ia">
+            @endif
+            @if (!empty($filters['status']))
+              <input type="hidden" name="status" value="{{ $filters['status'] }}">
+            @endif
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label class="block text-sm font-semibold text-primary mb-1.5" for="search">Rechercher</label>
                 <input type="text" id="search" name="search" value="{{ $filters['search'] ?? '' }}" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="Nom ou email..." />
@@ -62,7 +84,7 @@
               <button type="submit" class="px-5 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors flex items-center gap-2">
                 <span class="material-symbols-outlined text-lg">search</span> Filtrer
               </button>
-              <a href="{{ route('entreprise.offres.candidatures', $offre) }}" class="px-5 py-2.5 bg-surface-container text-primary text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors flex items-center gap-2">
+              <a href="{{ route('entreprise.offres.candidatures', ['offre' => $offre, 'source' => $filters['source'] ?? null]) }}" class="px-5 py-2.5 bg-surface-container text-primary text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors flex items-center gap-2">
                 <span class="material-symbols-outlined text-lg">close</span> Effacer
               </a>
             </div>
@@ -91,15 +113,26 @@
                 @if ($postulation->cover_letter || $postulation->lettre_motivation)
                   <a href="{{ $postulation->cover_letter ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) : route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">description</span> Voir la lettre de présentation</a>
                 @endif
+                <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-outline">work_history</span> {{ $postulation->user?->candidateSector?->experience_years ?? 0 }} an(s) d’expérience</span>
+                @if (!is_null($postulation->match_score))
+                  <span class="flex items-center gap-1.5 font-semibold text-secondary-container"><span class="material-symbols-outlined text-sm">data_usage</span> Compatibilité estimée : {{ round($postulation->match_score) }} %</span>
+                @endif
               </div>
+              @if ($postulation->user?->skills?->isNotEmpty())
+                <div class="mb-4 flex flex-wrap gap-2">
+                  @foreach ($postulation->user->skills->take(3) as $skill)
+                    <span class="rounded-full bg-surface-container px-2.5 py-1 text-xs text-on-surface-variant">{{ $skill->name }}</span>
+                  @endforeach
+                </div>
+              @endif
 
               <div class="flex flex-wrap gap-3 pt-4 border-t border-outline-variant/10">
-                <a href="{{ route('entreprise.connected_candidate_details', $postulation->user_id) }}" class="px-5 py-2.5 bg-primary-container text-white text-sm font-semibold rounded-xl hover:bg-primary-container/90 transition-colors flex items-center gap-2">
-                  <span class="material-symbols-outlined text-lg">visibility</span> Voir le profil
+                <a href="{{ route('entreprise.candidatures.show', ['postulation' => $postulation, 'source' => $filters['source'] ?? null]) }}" class="px-5 py-2.5 bg-primary-container text-white text-sm font-semibold rounded-xl hover:bg-primary-container/90 transition-colors flex items-center gap-2">
+                  <span class="material-symbols-outlined text-lg">visibility</span> Examiner le dossier
                 </a>
 
-                @if ($postulation->status !== 'accepted')
-                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}">
+                @if ($postulation->status === 'en_attente')
+                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" onsubmit="return confirm('Accepter cette candidature ?');">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="accepted">
@@ -107,10 +140,7 @@
                       <span class="material-symbols-outlined text-lg">check</span> Accepter
                     </button>
                   </form>
-                @endif
-
-                @if ($postulation->status !== 'rejected')
-                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}">
+                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" onsubmit="return confirm('Refuser cette candidature ?');">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="rejected">
@@ -133,5 +163,4 @@
         </div>
       </div>
     </section>
-  </main>
 @endsection

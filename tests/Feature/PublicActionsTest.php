@@ -123,14 +123,14 @@ class PublicActionsTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Affichage de')
-            ->assertSee('Precedent')
-            ->assertSee('Suivant')
+            ->assertSee('Préc.')
+            ->assertSee('Suiv.')
             ->assertDontSee('Montrant')
-            ->assertDontSee('résultats', false);
+            ->assertSee('résultats');
 
         $content = $response->getContent();
 
-        $this->assertSame(1, substr_count($content, 'aria-label="Pagination des offres"'));
+        $this->assertSame(1, substr_count($content, 'aria-label="Pagination des résultats"'));
         $this->assertGreaterThanOrEqual(3, substr_count($content, 'data-pagination-control'));
     }
 

@@ -47,6 +47,14 @@ class EntreprisesController extends Controller
     }
 
     $offres = $offresQuery->paginate(6)->withQueryString();
+    $stats = $this->calculateStats($entreprise->id);
+    $stats['total_offers'] = Offre::where('entreprise_id', $entreprise->id)->count();
+    $stats['pending_applications'] = Postulation::whereHas('offre', function ($query) use ($entreprise) {
+        $query->where('entreprise_id', $entreprise->id);
+    })->where('status', 'en_attente')->count();
+    $stats['accepted_applications'] = Postulation::whereHas('offre', function ($query) use ($entreprise) {
+        $query->where('entreprise_id', $entreprise->id);
+    })->where('status', 'accepted')->count();
 
 $notifications = \App\Models\Notification::where('user_id', Auth()->id())
                     ->where('role', 'entreprise')
@@ -77,13 +85,12 @@ $notifications = \App\Models\Notification::where('user_id', Auth()->id())
         'sectors',
         'methodologicalSkills',
         'numericSkills'
-
-
+        ,'stats'
     ));
 }
 
 
-    public function historique()
+    public function historique(Request $request)
     {
         $entreprise = Auth::user()->entreprise;
 
@@ -92,18 +99,38 @@ $notifications = \App\Models\Notification::where('user_id', Auth()->id())
 
         
         // Récupérer les offres avec le compte des postulations
-        $offres = Offre::with(['type', 'categorie'])
+        $offresQuery = Offre::with(['type', 'categorie'])
             ->withCount('postulations') // Ajoutez cette ligne pour compter les postulations
-            ->where('entreprise_id', $entreprise->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+            ->where('entreprise_id', $entreprise->id);
+
+        if ($request->filled('search')) {
+            $search = $request->string('search')->toString();
+            $offresQuery->where(function ($query) use ($search) {
+                $query->where('titre', 'like', "%{$search}%")
+                    ->orWhere('poste', 'like', "%{$search}%")
+                    ->orWhere('localisation', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('status') && in_array($request->status, ['active', 'closed', 'inactive', 'draft'], true)) {
+            $offresQuery->where('status', $request->status);
+        }
+
+        if ($request->filled('from')) {
+            $offresQuery->whereDate('created_at', '>=', $request->date('from'));
+        }
+
+        if ($request->filled('to')) {
+            $offresQuery->whereDate('created_at', '<=', $request->date('to'));
+        }
+
+        $offres = $offresQuery->orderBy('created_at', 'desc')
+            ->paginate(10)
+            ->withQueryString();
 
         // Calculer les statistiques
         $stats = $this->calculateStats($entreprise->id);
 
-        
-        // Ajouter le nombre total de candidatures aux stats
-        $stats['total_applications'] = $offres->sum('postulations_count');
         
         // Récupérer les types et catégories pour les formulaires
         $types = TypeOffre::all();
@@ -233,13 +260,20 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
     {
         $user = Auth::user();
         
-        $userAbonnements = UserAbonnement::with(['abonnement'])
-            ->where('user_id', $user->id)
+        $subscriptionsQuery = UserAbonnement::where('user_id', $user->id);
+        $subscriptionStats = [
+            'total' => (clone $subscriptionsQuery)->count(),
+            'active' => (clone $subscriptionsQuery)->where('status', 'Actif')->count(),
+            'expired' => (clone $subscriptionsQuery)->where('status', 'Expiré')->count(),
+        ];
+
+        $userAbonnements = (clone $subscriptionsQuery)
+            ->with(['abonnement'])
             ->orderBy('created_at', 'desc')
             ->paginate(9);  
             
   
-        return view("entreprise.abonne" , compact('userAbonnements'));
+        return view("entreprise.abonne" , compact('userAbonnements', 'subscriptionStats'));
     }
      public function promotion()
     {
@@ -257,13 +291,38 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
             ->paginate(10);
 
         $promotionStats = [
-            'total_offers' => $offers->total(),
-            'active_offers' => $offers->getCollection()->where('status', 'active')->count(),
-            'autopostulations' => $offers->getCollection()->sum('autopostulations_count'),
+            'total_offers' => Offre::where('entreprise_id', $entreprise->id)->count(),
+            'active_offers' => Offre::where('entreprise_id', $entreprise->id)->where('status', 'active')->count(),
+            'autopostulations' => Postulation::whereHas(
+                'offre',
+                fn ($query) => $query->where('entreprise_id', $entreprise->id)
+            )->where('autopostulation', true)->count(),
         ];
 
         return view("entreprise.promotion-entreprise", compact('offers', 'promotionStats'));
     }
+    public function candidatureDetail($postulation)
+    {
+        $postulation = Postulation::query()
+            ->with([
+                'offre.type',
+                'offre.entreprise',
+                'autresDocs',
+                'user.skills',
+                'user.candidateSector.sector',
+                'user.candidateSector.diplome',
+            ])
+            ->whereKey($postulation)
+            ->whereHas('offre', function ($query) {
+                $query->where('entreprise_id', Auth::user()->entreprise->id);
+            })
+            ->firstOrFail();
+
+        $candidat = $postulation->user;
+
+        return view('entreprise.details-candidat', compact('candidat', 'postulation'));
+    }
+
     public function candidat($id)
     {
         $candidat = User::with([
@@ -280,7 +339,9 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
             ->latest()
             ->first();
 
-        return view("entreprise.details-candidat", compact('candidat', 'postulation'));
+        abort_unless($postulation, 404);
+
+        return view('entreprise.details-candidat', compact('candidat', 'postulation'));
     }
 
 

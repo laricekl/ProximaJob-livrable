@@ -25,7 +25,7 @@
         <!-- En-tête -->
         <div class="text-center mb-8">
           <h1 class="text-3xl font-bold font-serif text-primary mb-2">{{ $isEntrepriseLogin ? 'Connexion entreprise' : 'Bienvenue' }}</h1>
-          <p class="text-on-surface-variant text-sm">{{ $isEntrepriseLogin ? 'Connectez-vous pour gerer vos recrutements' : 'Connectez-vous pour continuer' }}</p>
+          <p class="text-on-surface-variant text-sm">{{ $isEntrepriseLogin ? 'Connectez-vous pour gérer vos recrutements' : 'Connectez-vous pour continuer' }}</p>
         </div>
 
         <!-- Switch Rôle -->
@@ -139,7 +139,7 @@
         <p class="text-center text-sm text-on-surface-variant mt-8">
           Vous n'avez pas de compte ?
           <a href="{{ $isEntrepriseLogin ? route('entreprise.register') : route('register') }}" class="text-secondary-container font-bold hover:underline">
-            {{ $isEntrepriseLogin ? "Creer un compte entreprise" : "S'inscrire" }}
+            {{ $isEntrepriseLogin ? "Créer un compte entreprise" : "S'inscrire" }}
           </a>
         </p>
 
