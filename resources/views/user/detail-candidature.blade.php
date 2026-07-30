@@ -161,10 +161,6 @@
                   <a href="{{ $letterPreviewUrl }}" target="_blank" rel="noopener" class="flex items-center gap-2 px-5 py-2.5 border-2 border-secondary-container text-secondary-container text-sm font-bold rounded-xl hover:bg-secondary-container/5 transition-colors">
                     <span class="material-symbols-outlined text-lg">visibility</span> Voir la lettre
                   </a>
-                  @else
-                  <a href="{{ $offerUrl }}" class="flex items-center gap-2 px-5 py-2.5 border-2 border-secondary-container text-secondary-container text-sm font-bold rounded-xl hover:bg-secondary-container/5 transition-colors">
-                    <span class="material-symbols-outlined text-lg">north_east</span> Voir l'offre
-                  </a>
                   @endif
                 </div>
                 @if (! $cvPreviewUrl && ! $letterPreviewUrl)
@@ -194,7 +190,7 @@
                     <p class="mt-3">Utilisez le bouton de prévisualisation pour ouvrir le document complet dans un nouvel onglet.</p>
                   @else
                     <p>Aucune lettre de présentation n'a été jointe à cette candidature.</p>
-                    <p class="mt-3">Cette étape est optionnelle. Vous pouvez toujours préparer un autre CV ou consulter l'offre.</p>
+                    <p class="mt-3">Cette étape est optionnelle. Vous pouvez toujours consulter l'offre depuis les détails du dossier.</p>
                   @endif
                 </div>
               </div>
@@ -245,9 +241,15 @@
 
             <!-- Actions -->
             <div class="card-glow rounded-2xl p-6 space-y-3">
+              @if ($applicationStatus === 'en_attente')
               <a href="{{ $personalizationUrl }}" class="flex items-center justify-center gap-2 w-full py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                 <span class="material-symbols-outlined text-lg">auto_awesome</span> Préparer un autre CV
               </a>
+              @else
+              <button type="button" disabled aria-disabled="true" title="Cette candidature est clôturée" class="flex cursor-not-allowed items-center justify-center gap-2 w-full py-3 bg-surface-container text-outline text-sm font-bold rounded-xl opacity-70">
+                <span class="material-symbols-outlined text-lg">lock</span> Candidature clôturée
+              </button>
+              @endif
               <a href="{{ $historyRoute }}" class="flex items-center justify-center gap-2 w-full py-3 border-2 border-outline-variant/30 text-primary text-sm font-bold rounded-xl hover:bg-surface-container-low transition-colors">
                 <span class="material-symbols-outlined text-lg">list_alt</span> Retour à l'historique
               </a>

@@ -144,11 +144,6 @@
         </p>
 
       </div>
-
-      <!-- Lien admin discret -->
-      <p class="text-center mt-6">
-        <a href="{{ route('admin.login') }}" class="text-xs text-outline hover:text-on-surface-variant transition-colors">Espace administration</a>
-      </p>
     </div>
   </main>
 @endsection

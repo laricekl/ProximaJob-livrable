@@ -16,11 +16,50 @@ class PublicActionsTest extends TestCase
     {
         $this->createOfferFor();
 
-        foreach (['/', '/offres', '/contact', '/ressources', '/abonnement', '/terms', '/policy', '/cookies'] as $path) {
+        foreach (['/', '/offres', '/entreprises', '/contact', '/ressources', '/abonnement', '/terms', '/policy', '/cookies'] as $path) {
             $this->get($path)
                 ->assertOk()
                 ->assertDontSee('Page Expired');
         }
+    }
+
+    public function test_only_featured_verified_enterprises_are_publicly_listed(): void
+    {
+        $visible = $this->createEnterprise(
+            ['email' => 'visible-enterprise@example.com'],
+            [
+                'company_name' => 'Entreprise publique QA',
+                'verified_at' => now(),
+                'is_featured' => true,
+            ]
+        );
+        $hidden = $this->createEnterprise(
+            ['email' => 'hidden-enterprise@example.com'],
+            [
+                'company_name' => 'Entreprise privee QA',
+                'verified_at' => now(),
+                'is_featured' => false,
+            ]
+        );
+
+        $this->get(route('entreprises.index'))
+            ->assertOk()
+            ->assertSee('Entreprise publique QA')
+            ->assertDontSee('Entreprise privee QA')
+            ->assertSee(route('entreprise.profil', $visible->entreprise), false);
+
+        $this->get(route('entreprise.profil', $visible->entreprise))->assertOk();
+        $this->get(route('entreprise.profil', $hidden->entreprise))->assertNotFound();
+    }
+
+    public function test_public_login_hides_admin_link_but_private_admin_url_still_works(): void
+    {
+        $this->get(route('login'))
+            ->assertOk()
+            ->assertDontSee('Espace administration')
+            ->assertDontSee(route('admin.login'), false);
+
+        $this->get(route('admin.login'))->assertOk();
     }
 
     public function test_public_pages_use_centralized_site_settings_for_branding_and_map(): void

@@ -1,10 +1,10 @@
 @extends('layouts.candidat')
 @section('title', 'Adapter mon CV a une offre')
 @section('content')
-  <main class="flex-grow pt-32">
+  <main class="flex-grow">
 
-    <section class="py-12 px-4 md:px-10">
-      <div class="max-w-3xl mx-auto">
+    <section class="pt-6 pb-12 px-4 md:px-10">
+      <div class="max-w-5xl mx-auto">
         <div class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Personnalisation</p>

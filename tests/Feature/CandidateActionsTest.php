@@ -410,14 +410,22 @@ class CandidateActionsTest extends TestCase
             'is_validated' => true,
         ]);
 
-        $this->actingAs($candidate)
+        $response = $this->actingAs($candidate)
             ->get(route('user.profil-public'))
             ->assertOk()
             ->assertSee('Camille Martin')
             ->assertSee('Developpeuse Laravel')
             ->assertSee('Montreal')
             ->assertSee('78000')
-            ->assertSee('Laravel');
+            ->assertSee('Laravel')
+            ->assertSee('CV principal')
+            ->assertSee(route('cv.principal.inline'), false);
+
+        $content = $response->getContent();
+        $this->assertLessThan(
+            strpos($content, 'Lettre de présentation'),
+            strpos($content, 'Expérience professionnelle')
+        );
     }
 
     public function test_candidate_application_detail_page_uses_real_application_data(): void
@@ -444,6 +452,33 @@ class CandidateActionsTest extends TestCase
             ->assertSee('Studio Horizon')
             ->assertSee('Quebec')
             ->assertSee('Candidature envoyée par le candidat');
+    }
+
+    public function test_terminal_application_disables_new_cv_action_and_shows_offer_once(): void
+    {
+        $candidate = $this->createCandidate();
+
+        foreach (['accepted', 'rejected'] as $index => $status) {
+            $offer = $this->createOfferFor(null, [
+                'titre' => "Offre clôturée {$index}",
+                'poste' => "Offre clôturée {$index}",
+                'slug' => "offre-cloturee-{$index}",
+            ]);
+            $postulation = Postulation::create([
+                'user_id' => $candidate->id,
+                'offre_id' => $offer->id,
+                'status' => $status,
+                'autopostulation' => false,
+            ]);
+
+            $response = $this->actingAs($candidate)
+                ->get(route('user.detail-candidature', ['id' => $postulation->id]))
+                ->assertOk()
+                ->assertSee('Candidature clôturée')
+                ->assertDontSee('Préparer un autre CV');
+
+            $this->assertSame(1, substr_count($response->getContent(), "Voir l'offre"));
+        }
     }
 
     public function test_candidate_can_generate_preview_and_download_a_personalized_cv_without_gemini(): void

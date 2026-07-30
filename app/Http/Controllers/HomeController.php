@@ -86,7 +86,11 @@ class HomeController extends Controller
      */
     public function entreprise($id)
     {
-        $entreprise = Entreprise::findOrFail($id);
+        $entreprise = Entreprise::query()
+            ->whereKey($id)
+            ->where('is_featured', true)
+            ->whereNotNull('verified_at')
+            ->firstOrFail();
         $entreprise->load('user');
         $offres = $entreprise->offres()
             ->where('status', 'active')
@@ -95,6 +99,23 @@ class HomeController extends Controller
             ->paginate(6);
 
         return view('parametres.entreprise-profil', compact('entreprise', 'offres'));
+    }
+
+    /**
+     * Liste des entreprises autorisées à apparaître sur le site public.
+     */
+    public function entreprises()
+    {
+        $entreprises = Entreprise::query()
+            ->where('is_featured', true)
+            ->whereNotNull('verified_at')
+            ->withCount([
+                'offres as active_offers_count' => fn ($query) => $query->where('status', 'active'),
+            ])
+            ->orderBy('company_name')
+            ->paginate(12);
+
+        return view('parametres.entreprises', compact('entreprises'));
     }
 
     /**

@@ -72,6 +72,7 @@ Route::redirect('/offres/detail', '/offres')->name('details.offre');
 Route::redirect('/app-form', '/offres')->name('app_form');
 Route::post('/check-email', [UserController::class, 'checkEmail'])->name('check.email');
 Route::get('/offres/{offre:slug}', [UserController::class, 'jobdetails'])->name('job_infos');
+Route::get('/entreprises', [HomeController::class, 'entreprises'])->name('entreprises.index');
 Route::get('/entreprise/{entreprise}', [HomeController::class, 'entreprise'])->name('entreprise.profil');
 //Route::post('/register/user', [RegisteredUserController::class, 'registerJobSeeker'])->name('register.jobseeker');
 //Route::post('/register/entreprise', [RegisteredUserController::class, 'registerCompany'])->name('register.company');
@@ -349,4 +350,3 @@ Route::get('/email/verify', function () {
 Route::post('/email/resend-verification', [ResendVerificationEmailController::class, 'store'])
     ->middleware(['throttle:3,1'])
     ->name('enterprise.verification.resend');
-

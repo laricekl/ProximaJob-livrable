@@ -18,14 +18,23 @@ class ContentSecurityPolicy
         /** @var Response $response */
         $response = $next($request);
 
+        // Autorise le serveur Vite uniquement en développement local.
+        $viteSources = app()->isLocal()
+            ? ' http://127.0.0.1:5173 http://localhost:5173'
+            : '';
+
+        $viteConnections = app()->isLocal()
+            ? $viteSources.' ws://127.0.0.1:5173 ws://localhost:5173'
+            : '';
+
         // Politique CSP — permet les CDN utilisés par l'application (Tailwind, Fonts, Alpine.js)
         $csp = implode('; ', [
             "default-src 'self'",
-            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net",
-            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net",
+            "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net".$viteSources,
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net".$viteSources,
             "font-src 'self' https://fonts.gstatic.com",
             "img-src 'self' data: blob:",
-            "connect-src 'self'",
+            "connect-src 'self'".$viteConnections,
             "frame-src 'self'",
             "object-src 'none'",
         ]);

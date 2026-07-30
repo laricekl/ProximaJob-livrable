@@ -775,7 +775,7 @@
                   </div>
                 </div>
 
-                <a href="{{ route('offres') }}" id="spotlight2-link" class="whitespace-nowrap bg-primary text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-secondary-container transition-all shadow-lg hover:shadow-secondary-container/20 active:scale-95 spotlight-cta flex-shrink-0">
+                <a href="{{ route('entreprises.index') }}" id="spotlight2-link" class="whitespace-nowrap bg-primary text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-secondary-container transition-all shadow-lg hover:shadow-secondary-container/20 active:scale-95 spotlight-cta flex-shrink-0">
                   Decouvrir
                 </a>
               </div>
@@ -1152,7 +1152,7 @@
 
       const partners2 = [
         @foreach ($featuredEntreprises as $fe)
-          { name: '{{ addslashes(Str::limit($fe->company_name, 40)) }}', quote: '{{ addslashes(Str::limit($fe->description, 100)) }}', icon: 'business', link: '{{ route('entreprise.profil', $fe->id) }}' },
+          { name: '{{ addslashes(Str::limit($fe->company_name, 40)) }}', quote: '{{ addslashes(Str::limit($fe->description, 100)) }}', icon: 'business' },
         @endforeach
       ];
 
@@ -1164,7 +1164,6 @@
         if (nameEl)  nameEl.textContent  = partner.name;
         if (quoteEl) quoteEl.textContent = partner.quote;
         if (logoEl)  logoEl.textContent  = partner.icon;
-        if (linkEl)  linkEl.href         = partner.link;
       }
 
       function slideOut() {

@@ -15,7 +15,8 @@
   $profileApplicationsCount = $profileData['applications_count'] ?? 0;
   $profilePitch = $profileData['pitch'] ?? '';
   $profileMotivation = $profileData['motivation'] ?? '';
-  $latestCvLabel = $profileData['latest_cv_label'] ?? null;
+  $principalCvLabel = $profileData['principal_cv_label'] ?? null;
+  $principalCvUrl = $profileData['principal_cv_url'] ?? null;
   $isRecruiterPreview = request('preview') === 'employeur';
   $editableAttr = $isRecruiterPreview ? 'false' : 'true';
 @endphp
@@ -233,34 +234,6 @@
               </div>
             </div>
 
-            <!-- Motivation letter -->
-            <div class="card-glow rounded-2xl overflow-hidden">
-              <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
-                <div>
-                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h2>
-                  <p class="text-xs text-on-surface-variant mt-0.5">Une lettre de base que vous pouvez joindre ou adapter selon l'offre.</p>
-                </div>
-                @unless ($isRecruiterPreview)
-                <a href="{{ route('cv.personalization.form') }}" class="text-xs font-bold text-secondary-container hover:underline flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter à une offre
-                </a>
-                @endunless
-              </div>
-              <div class="p-6">
-                <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Rédigez une lettre de base que vous pourrez adapter pour une offre précise. Cette étape reste optionnelle." @readonly($isRecruiterPreview)>{{ $profileMotivation }}</textarea>
-                @unless ($isRecruiterPreview)
-                <form method="POST" action="{{ route('user.profile.update') }}" class="flex justify-end mt-3">
-                  @csrf
-                  <input type="hidden" name="motivation">
-                  <button type="submit" onclick="this.form.querySelector('[name=motivation]').value=document.getElementById('pitchMotivation').value" class="flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                    <span class="material-symbols-outlined text-lg">save</span> Enregistrer
-                    <span class="save-feedback text-white text-xs">✓ Sauvegardé</span>
-                  </button>
-                </div>
-                @endunless
-              </div>
-            </div>
-
             <!-- Expérience pro (read-only, link to CV builder) -->
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
@@ -293,11 +266,39 @@
               </div>
             </div>
 
-            <!-- CV Upload + Generated CVs -->
+            <!-- Motivation letter -->
+            <div class="card-glow rounded-2xl overflow-hidden">
+              <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
+                <div>
+                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h2>
+                  <p class="text-xs text-on-surface-variant mt-0.5">Une lettre de base que vous pouvez joindre ou adapter selon l'offre.</p>
+                </div>
+                @unless ($isRecruiterPreview)
+                <a href="{{ route('cv.personalization.form') }}" class="text-xs font-bold text-secondary-container hover:underline flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter à une offre
+                </a>
+                @endunless
+              </div>
+              <div class="p-6">
+                <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Rédigez une lettre de base que vous pourrez adapter pour une offre précise. Cette étape reste optionnelle." @readonly($isRecruiterPreview)>{{ $profileMotivation }}</textarea>
+                @unless ($isRecruiterPreview)
+                <form method="POST" action="{{ route('user.profile.update') }}" class="flex justify-end mt-3">
+                  @csrf
+                  <input type="hidden" name="motivation">
+                  <button type="submit" onclick="this.form.querySelector('[name=motivation]').value=document.getElementById('pitchMotivation').value" class="flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                    <span class="material-symbols-outlined text-lg">save</span> Enregistrer
+                    <span class="save-feedback text-white text-xs">✓ Sauvegardé</span>
+                  </button>
+                </form>
+                @endunless
+              </div>
+            </div>
+
+            <!-- CV principal visible sur le profil -->
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10">
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">picture_as_pdf</span> Mes CV</h2>
-                <p class="text-xs text-on-surface-variant mt-0.5">{{ $isRecruiterPreview ? 'CV disponible pour la candidature.' : 'Gérez votre CV principal et vos versions enregistrées.' }}</p>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">picture_as_pdf</span> CV principal</h2>
+                <p class="text-xs text-on-surface-variant mt-0.5">{{ $isRecruiterPreview ? 'Voici le CV principal rendu visible aux employeurs.' : 'Ce CV généré à partir de votre profil est celui que les employeurs voient ici.' }}</p>
               </div>
               <div class="p-6 space-y-4">
                 @unless ($isRecruiterPreview)
@@ -309,22 +310,32 @@
                   <input type="file" class="hidden" accept=".pdf,.docx" />
                 </div>
                 @endunless
-                <!-- Existing CVs -->
-                @if ($latestCvLabel)
+                @if ($principalCvLabel && $principalCvUrl)
                   <div class="flex items-center justify-between p-4 bg-surface-container-low rounded-xl">
                     <div class="flex items-center gap-3">
                       <div class="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary-container">description</span></div>
                       <div>
-                        <p class="text-sm font-semibold text-primary">{{ $latestCvLabel }}</p>
-                        <p class="text-2xs text-outline">CV deja ajoute a votre compte</p>
+                        <p class="text-sm font-semibold text-primary">{{ $principalCvLabel }}</p>
+                        <p class="text-2xs text-outline">Version publique du profil candidat</p>
                       </div>
                     </div>
                     <div class="flex items-center gap-2">
-                      <a href="{{ route('infos.cv') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Voir"><span class="material-symbols-outlined text-lg text-outline">visibility</span></a>
+                      <a href="{{ $principalCvUrl }}" target="_blank" rel="noopener" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Voir le CV principal"><span class="material-symbols-outlined text-lg text-outline">visibility</span></a>
                       @unless ($isRecruiterPreview)
                         <a href="{{ route('cv.personalization.form') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Adapter"><span class="material-symbols-outlined text-lg text-outline">auto_awesome</span></a>
                       @endunless
                     </div>
+                  </div>
+                @else
+                  <div class="rounded-xl bg-surface-container-low p-5 text-center">
+                    <span class="material-symbols-outlined text-3xl text-outline">description</span>
+                    <p class="mt-2 text-sm font-semibold text-primary">Aucun CV principal disponible</p>
+                    <p class="mt-1 text-xs text-on-surface-variant">Créez votre CV principal pour le rendre visible sur ce profil.</p>
+                    @unless ($isRecruiterPreview)
+                      <a href="{{ route('infos.cv') }}" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white hover:bg-secondary">
+                        <span class="material-symbols-outlined text-lg">add</span> Créer mon CV principal
+                      </a>
+                    @endunless
                   </div>
                 @endif
                 @unless ($isRecruiterPreview)

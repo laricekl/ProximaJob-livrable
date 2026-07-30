@@ -18,13 +18,15 @@ class Entreprise extends Model
         'logo',
         'neq',
         'status',
-         'verified_at',
+        'verified_at',
+        'is_featured',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-         'verified_at' => 'datetime',
+        'verified_at' => 'datetime',
+        'is_featured' => 'boolean',
     ];
 
     public function user()

@@ -146,7 +146,8 @@ class UserController extends Controller
                 ->filter()
                 ->first()
                 ?: '',
-            'latest_cv_label' => $user->cv ? basename((string) $user->cv) : null,
+            'principal_cv_label' => $cvProfile ? 'CV principal' : null,
+            'principal_cv_url' => $cvProfile ? route('cv.principal.inline') : null,
         ];
 
         return view('user.profil-public', compact('user', 'cvProfile', 'profileData'));
