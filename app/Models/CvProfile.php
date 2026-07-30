@@ -20,12 +20,14 @@ class CvProfile extends Model
         'code_postal',
         'province',
         'langues_competences',
-        'logiciels'
+        'logiciels',
+        'design_options',
     ];
 
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+        'design_options' => 'array',
     ];
 
     // Relations

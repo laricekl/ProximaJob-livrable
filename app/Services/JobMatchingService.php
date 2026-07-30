@@ -13,6 +13,7 @@ use App\Models\CvProfile;
 use App\Models\CvGenere;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Storage;
@@ -25,6 +26,7 @@ class JobMatchingService
     private const MAX_APPLICATIONS_PER_DAY = 3;
     private const DEFAULT_CV_OPTIONS = [
         'template_style' => 'modern',
+        'include_photo' => false,
         'accent_color' => 'blue',
         'font_style' => 'sober',
         'density' => 'balanced',
@@ -624,7 +626,7 @@ class JobMatchingService
                 ->setPaper('a4')
                 ->setOption('dpi', 150)
                 ->setOption('defaultFont', 'Arial');
-            $filename = 'cv_' . $cvProfile->id . '_' . $offer->id . '_' . time() . '.pdf';
+            $filename = $this->generatedCvFilename($candidateId, $options['template_style'], (int) $offer->id);
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
@@ -634,6 +636,15 @@ class JobMatchingService
                 'offre_id' => $offer->id,
                 'nom_fichier' => $this->generatedCvLabel($cvProfile),
                 'chemin_fichier' => $filePath,
+                'template_style' => $options['template_style'],
+                'include_photo' => $options['include_photo'],
+                'accent_color' => $options['accent_color'],
+                'font_style' => $options['font_style'],
+                'density' => $options['density'],
+                'section_order' => $options['section_order'],
+                'page_limit' => $options['page_limit'],
+                'summary_tone' => $options['summary_tone'],
+                'visible_sections' => $options['sections'],
             ]);
             
             Log::info('CV Gemini généré avec succès', [
@@ -682,7 +693,7 @@ class JobMatchingService
             $personalizedData = $this->personalizeCVData($cvProfile, $offer);
             $pdf = PDF::loadView('cv.personalized-template', $personalizedData);
             
-            $filename = 'cv_classic_' . $cvProfile->prenom . '_' . $cvProfile->nom . '_' . $offer->id . '_' . time() . '.pdf';
+            $filename = $this->generatedCvFilename($cvProfile->user_id, 'classic', (int) $offer->id);
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
@@ -691,6 +702,15 @@ class JobMatchingService
                 'cv_profile_id' => $cvProfile->id,
                 'nom_fichier' => $this->generatedCvLabel($cvProfile),
                 'chemin_fichier' => $filePath,
+                'template_style' => 'classic',
+                'include_photo' => false,
+                'accent_color' => 'anthracite',
+                'font_style' => 'classic',
+                'density' => 'balanced',
+                'section_order' => 'experience_first',
+                'page_limit' => 2,
+                'summary_tone' => 'professional',
+                'visible_sections' => self::DEFAULT_CV_OPTIONS['sections'],
             ]);
             
             return $filePath;
@@ -1147,6 +1167,8 @@ private function normalizePromptList(array|string|null $value): array
             'personalization_note' => $this->generatePersonalizationNote($cvProfile, $offer)
         ];
 
+        $data['photo_data'] = $this->cvPhotoData($cvProfile);
+
         // Réorganiser les compétences selon les besoins de l'offre
         if (isset($offer->skills) && $offer->skills instanceof Collection && $offer->skills->isNotEmpty()) {
             $data['competences'] = $this->prioritizeSkills($data['competences'], $offer);
@@ -1156,6 +1178,23 @@ private function normalizePromptList(array|string|null $value): array
         $data['experiences'] = $this->prioritizeExperiences($data['experiences']);
 
         return $data;
+    }
+
+    private function cvPhotoData(CvProfile $cvProfile): ?string
+    {
+        $filename = $cvProfile->user?->profile_photo_path;
+        if (! $filename || in_array($filename, ['default.jpg', 'default_profile.jpg', 'profildefault.jpeg'], true)) {
+            return null;
+        }
+
+        $path = public_path('assets/images/user_pdp/'.basename($filename));
+        if (! is_file($path) || ! is_readable($path)) {
+            return null;
+        }
+
+        $mime = mime_content_type($path) ?: 'image/jpeg';
+
+        return 'data:'.$mime.';base64,'.base64_encode(file_get_contents($path));
     }
 
     /**
@@ -1351,7 +1390,7 @@ private function normalizePromptList(array|string|null $value): array
     {
         $normalized = array_merge(self::DEFAULT_CV_OPTIONS, $options);
         $allowed = [
-            'template_style' => ['modern', 'classic', 'executive'],
+            'template_style' => array_keys(config('cv_templates', [])),
             'accent_color' => ['blue', 'green', 'bordeaux', 'anthracite', 'petrol'],
             'font_style' => ['sober', 'modern', 'classic'],
             'density' => ['airy', 'balanced', 'compact'],
@@ -1371,6 +1410,8 @@ private function normalizePromptList(array|string|null $value): array
 
         $sections = is_array($normalized['sections'] ?? null) ? $normalized['sections'] : self::DEFAULT_CV_OPTIONS['sections'];
         $normalized['sections'] = array_values(array_intersect($sections, self::DEFAULT_CV_OPTIONS['sections']));
+        $normalized['include_photo'] = (bool) ($normalized['include_photo'] ?? false)
+            && (bool) config('cv_templates.'.$normalized['template_style'].'.supports_photo', false);
 
         return $normalized;
     }
@@ -1425,7 +1466,11 @@ private function normalizePromptList(array|string|null $value): array
                 ->setOption('dpi', 150)
                 ->setOption('defaultFont', 'Arial');
 
-            $filename = 'cv_' . $userId . '_' . time() . '.pdf';
+            $filename = $this->generatedCvFilename(
+                $userId,
+                $options['template_style'],
+                is_numeric($virtualOffer->id ?? null) ? (int) $virtualOffer->id : null
+            );
             $filePath = 'personalized-cvs/' . $filename;
             
             Storage::disk('public')->put($filePath, $pdf->output());
@@ -1435,6 +1480,15 @@ private function normalizePromptList(array|string|null $value): array
                 'offre_id' => is_numeric($virtualOffer->id ?? null) ? (int) $virtualOffer->id : null,
                 'nom_fichier' => $this->generatedCvLabel($cvProfile),
                 'chemin_fichier' => $filePath,
+                'template_style' => $options['template_style'],
+                'include_photo' => $options['include_photo'],
+                'accent_color' => $options['accent_color'],
+                'font_style' => $options['font_style'],
+                'density' => $options['density'],
+                'section_order' => $options['section_order'],
+                'page_limit' => $options['page_limit'],
+                'summary_tone' => $options['summary_tone'],
+                'visible_sections' => $options['sections'],
             ]);
 
             // Log de l'activité
@@ -1827,5 +1881,23 @@ private function buildCoverLetterPrompt(CvProfile $cvProfile, Offre $offer): str
         $label = trim('CV'.($fullName !== '' ? ' - '.$fullName : ''));
 
         return mb_substr($label, 0, 500);
+    }
+
+    private function generatedCvFilename(int $userId, string $templateStyle, ?int $offerId = null): string
+    {
+        $segments = [
+            'cv',
+            $userId,
+            Str::slug($templateStyle) ?: 'modern',
+        ];
+
+        if ($offerId) {
+            $segments[] = $offerId;
+        }
+
+        $segments[] = now()->format('Ymd_His');
+        $segments[] = Str::lower(Str::random(6));
+
+        return implode('_', $segments).'.pdf';
     }
 }

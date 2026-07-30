@@ -12,6 +12,7 @@ use App\Models\CvBenevolat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CvProfileController extends Controller
 {
@@ -798,7 +799,7 @@ PROMPT;
             abort(404, 'Aucun profil CV trouvé. Veuillez d\'abord créer votre CV.');
         }
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.principal-template', compact('cvProfile'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.personalized-template', $this->principalPdfData($cvProfile));
         $pdf->setPaper('A4');
 
         return $pdf->stream('cv_principal.pdf');
@@ -818,9 +819,101 @@ PROMPT;
             abort(404, 'Aucun profil CV trouvé. Veuillez d\'abord créer votre CV.');
         }
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.principal-template', compact('cvProfile'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.personalized-template', $this->principalPdfData($cvProfile));
         $pdf->setPaper('A4');
 
         return $pdf->download('cv_principal.pdf');
+    }
+
+    public function updatePrincipalDesign(Request $request)
+    {
+        $validated = $request->validate([
+            'template_style' => ['required', Rule::in(array_keys(config('cv_templates', [])))],
+            'accent_color' => 'required|in:blue,green,bordeaux,anthracite,petrol',
+            'font_style' => 'required|in:sober,modern,classic',
+            'density' => 'required|in:airy,balanced,compact',
+            'include_photo' => 'nullable|boolean',
+        ]);
+
+        $cvProfile = CvProfile::where('user_id', auth()->id())->firstOrFail();
+        $template = config('cv_templates.'.$validated['template_style']);
+        $cvProfile->update([
+            'design_options' => array_merge($this->defaultDesignOptions(), [
+                'template_style' => $validated['template_style'],
+                'accent_color' => $validated['accent_color'],
+                'font_style' => $validated['font_style'],
+                'density' => $validated['density'],
+                'include_photo' => $request->boolean('include_photo')
+                    && (bool) ($template['supports_photo'] ?? false),
+            ]),
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Le modèle principal a été enregistré.',
+            'template_label' => $template['label'],
+        ]);
+    }
+
+    private function defaultDesignOptions(): array
+    {
+        return [
+            'template_style' => 'modern',
+            'include_photo' => false,
+            'accent_color' => 'blue',
+            'font_style' => 'sober',
+            'density' => 'balanced',
+            'section_order' => 'skills_first',
+            'page_limit' => 2,
+            'summary_tone' => 'professional',
+            'sections' => ['software', 'languages', 'perfectionnements', 'benevolats'],
+        ];
+    }
+
+    private function principalPdfData(CvProfile $cvProfile): array
+    {
+        $options = array_merge($this->defaultDesignOptions(), $cvProfile->design_options ?? []);
+        if (! config('cv_templates.'.$options['template_style'].'.supports_photo', false)) {
+            $options['include_photo'] = false;
+        }
+
+        $photoData = null;
+        $filename = $cvProfile->user?->profile_photo_path;
+        if ($filename && ! in_array($filename, ['default.jpg', 'default_profile.jpg', 'profildefault.jpeg'], true)) {
+            $path = public_path('assets/images/user_pdp/'.basename($filename));
+            if (is_file($path) && is_readable($path)) {
+                $photoData = 'data:'.(mime_content_type($path) ?: 'image/jpeg').';base64,'.base64_encode(file_get_contents($path));
+            }
+        }
+
+        return [
+            'nom' => $cvProfile->nom,
+            'prenom' => $cvProfile->prenom,
+            'email' => $cvProfile->email,
+            'telephone' => $cvProfile->telephone,
+            'adresse' => $cvProfile->adresse,
+            'ville' => $cvProfile->ville,
+            'code_postal' => $cvProfile->code_postal,
+            'province' => $cvProfile->province,
+            'langues_competences' => $cvProfile->langues_competences,
+            'logiciels' => $cvProfile->logiciels,
+            'formations' => $cvProfile->formations,
+            'competences' => $cvProfile->competences,
+            'experiences' => $cvProfile->experiences,
+            'langues' => $cvProfile->langues,
+            'perfectionnements' => $cvProfile->perfectionnements,
+            'benevolats' => $cvProfile->benevolats,
+            'offer_title' => '',
+            'photo_data' => $photoData,
+            'cv_options' => $options,
+            'cv_limits' => [
+                'experiences' => 5,
+                'formations' => 4,
+                'competences' => 8,
+                'perfectionnements' => 4,
+                'langues' => 5,
+                'benevolats' => 3,
+            ],
+        ];
     }
 }

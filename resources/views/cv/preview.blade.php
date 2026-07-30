@@ -24,7 +24,7 @@
         <div class="card-glow rounded-2xl overflow-hidden">
           <div class="bg-surface-container-low px-6 py-4 border-b border-outline-variant/10 flex items-center gap-3">
             <span class="material-symbols-outlined text-outline">description</span>
-            <span class="text-sm font-semibold text-primary">CV</span>
+            <span class="text-sm font-semibold text-primary">CV {{ $templateLabel ?? 'personnalisé' }}</span>
             <span class="text-xs text-outline ml-auto">Document PDF</span>
           </div>
           <div class="p-4 bg-surface-container-low/30">
