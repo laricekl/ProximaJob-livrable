@@ -1505,7 +1505,7 @@ async function submitApplication() {
         console.error('Erreur complète:', error);
         
         // Afficher l'erreur à l'utilisateur avec plus de détails
-        alert(`Erreur: ${error.message}`);
+        window.ProximaUI.notify(`Erreur : ${error.message}`, 'error');
         
         // Réactiver le bouton
         document.getElementById('nextBtn').disabled = false;

@@ -143,7 +143,12 @@
       document.querySelectorAll('.js-admin-user-action').forEach((button) => {
         button.addEventListener('click', async () => {
           const actionLabel = button.dataset.label || 'mettre à jour';
-          const password = window.prompt(`Entrez votre mot de passe admin pour ${actionLabel} cet utilisateur :`);
+          const password = await window.ProximaUI.prompt(`Entrez votre mot de passe administrateur pour ${actionLabel} cet utilisateur.`, {
+            title: 'Vérification administrateur',
+            inputLabel: 'Mot de passe administrateur',
+            confirmLabel: 'Continuer',
+            tone: actionLabel === 'réactiver' ? 'default' : 'danger',
+          });
 
           if (!password) return;
 
@@ -162,13 +167,13 @@
             const payload = await response.json();
 
             if (!response.ok || payload.success === false) {
-              window.alert(payload.message || 'Action impossible pour le moment.');
+              window.ProximaUI.notify(payload.message || 'Action impossible pour le moment.', 'error');
               return;
             }
 
             window.location.reload();
           } catch (error) {
-            window.alert('Une erreur est survenue pendant l’action admin.');
+            window.ProximaUI.notify('Une erreur est survenue pendant l’action administrateur.', 'error');
           }
         });
       });

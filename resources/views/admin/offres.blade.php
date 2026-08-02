@@ -133,7 +133,14 @@
       const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
 
       document.querySelectorAll('.js-admin-offer-action').forEach((button) => {
-        button.addEventListener('click', async () => { const action = button.dataset.url.includes('deactivate') ? 'désactiver' : 'réactiver'; if (!confirm('Confirmer la ' + action + ' de cette offre ?')) return;
+        button.addEventListener('click', async () => {
+          const action = button.dataset.url.includes('deactivate') ? 'désactiver' : 'réactiver';
+          const approved = await window.ProximaUI.confirm(`Confirmer la ${action} de cette offre ?`, {
+            title: `${action.charAt(0).toUpperCase()}${action.slice(1)} l’offre`,
+            confirmLabel: action.charAt(0).toUpperCase() + action.slice(1),
+            tone: action === 'désactiver' ? 'danger' : 'default',
+          });
+          if (!approved) return;
           try {
             const response = await fetch(button.dataset.url, {
               method: button.dataset.method || 'POST',
@@ -147,13 +154,13 @@
             const payload = await response.json();
 
             if (!response.ok || payload.success === false) {
-              window.alert(payload.message || 'Action impossible pour le moment.');
+              window.ProximaUI.notify(payload.message || 'Action impossible pour le moment.', 'error');
               return;
             }
 
             window.location.reload();
           } catch (error) {
-            window.alert('Une erreur est survenue pendant la mise à jour de l’offre.');
+            window.ProximaUI.notify('Une erreur est survenue pendant la mise à jour de l’offre.', 'error');
           }
         });
       });

@@ -119,7 +119,7 @@
                     </form>
                   @endif
                   @if (in_array($abonnement->effective_status, ['Actif', 'En attente'], true))
-                    <form method="POST" action="{{ route('admin.user-subscriptions.cancel', $abonnement) }}" class="inline" onsubmit="return confirm('Annuler cet abonnement ?')">
+                    <form method="POST" action="{{ route('admin.user-subscriptions.cancel', $abonnement) }}" class="inline" data-proxima-confirm="Annuler cet abonnement ?" data-proxima-title="Annuler l’abonnement" data-proxima-confirm-label="Annuler l’abonnement" data-proxima-tone="danger">
                       @csrf @method('PATCH')
                       <button class="rounded-xl px-3 py-2 text-xs font-bold text-error-dark hover:bg-error-light">Annuler</button>
                     </form>

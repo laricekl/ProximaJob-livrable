@@ -181,6 +181,7 @@
     });
   </script>
   @include('partials.cookie-consent')
+  @include('partials.proxima-dialogs')
   @yield('scripts')
 </body>
 </html>

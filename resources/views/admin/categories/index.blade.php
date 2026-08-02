@@ -99,7 +99,7 @@
                   <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors" title="Modifier">
                     <span class="material-symbols-outlined text-lg">edit</span>
                   </button>
-                  <form method="POST" action="{{ route('admin.categories.destroy', $categorie) }}" onsubmit="return confirm('Supprimer « {{ $categorie->nom }} » ?')">
+                  <form method="POST" action="{{ route('admin.categories.destroy', $categorie) }}" data-proxima-confirm="Supprimer « {{ $categorie->nom }} » ?" data-proxima-title="Supprimer la catégorie" data-proxima-confirm-label="Supprimer" data-proxima-tone="danger">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors" title="Supprimer">

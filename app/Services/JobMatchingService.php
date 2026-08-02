@@ -37,41 +37,32 @@ class JobMatchingService
     ];
     
 
-    private function parseExperienceInterval(string $expString): ?array
+    private function parseExperienceInterval(?string $expString): ?array
     {
-        $expString = trim($expString);
-        
-        // Table de conversion exacte basée sur votre formulaire
-        $conversion = [
-            '0–6 mois' => ['min' => 0, 'max' => 0.5],
-            '0-6 mois' => ['min' => 0, 'max' => 0.5],
-            '1' => ['min' => 1, 'max' => 1],
-            '2–3' => ['min' => 2, 'max' => 3],
-            '2-3' => ['min' => 2, 'max' => 3],
-            '5' => ['min' => 5, 'max' => null], // null = pas de maximum
-            '0' => null, // "Non exigée"
-        ];
-        
-        // Vérifier dans la table
-        if (isset($conversion[$expString])) {
-            return $conversion[$expString];
+        $normalized = Str::lower(trim((string) $expString));
+        $normalized = str_replace(['–', '—'], '-', $normalized);
+
+        if (in_array($normalized, ['', '0', 'non exigée', 'non exigee'], true)) {
+            return null;
         }
-        
-        // Extraire les nombres si format différent
-        if (preg_match('/(\d+)\s*(?:–|-)\s*(\d+)/', $expString, $matches)) {
+
+        if (preg_match('/^(\d+)\s*(?:ans?)?\s*(?:et\s+plus|\+)$/', $normalized, $matches)) {
+            return ['min' => (float) $matches[1], 'max' => null];
+        }
+
+        if (preg_match('/(\d+)\s*-\s*(\d+)/', $normalized, $matches)) {
             return ['min' => (float)$matches[1], 'max' => (float)$matches[2]];
         }
-        
-        if (preg_match('/^(\d+)/', $expString, $matches)) {
-            // Juste un nombre
+
+        if (preg_match('/^(\d+)/', $normalized, $matches)) {
             return ['min' => (float)$matches[1], 'max' => (float)$matches[1]];
         }
-        
-        return null;  
+
+        return null;
     }
 
 
-    private function calculateTechnicalSkillsPercentage(int $offerId, int $candidateId): float
+    private function calculateTechnicalSkillsPercentage(int $offerId, int $candidateId): ?float
     {
         // Compétences techniques requises par l'offre
         $requiredTechnicalSkillIds = JobOfferSkill::where('job_offer_id', $offerId)
@@ -80,7 +71,7 @@ class JobMatchingService
             ->toArray();
         
         if (empty($requiredTechnicalSkillIds)) {
-            return 100; // Pas de compétences techniques requises
+            return null;
         }
         
         // Compétences techniques du candidat
@@ -95,16 +86,16 @@ class JobMatchingService
         return round($matchPercentage, 2);
     }
 
-    private function calculateGeneralSkillsScore(int $offerId, int $candidateId): float
+    private function calculateGeneralSkillsScore(int $offerId, int $candidateId): ?float
     {
         // Compétences générales requises par l'offre
         $requiredGeneralSkillIds = JobOfferSkill::where('job_offer_id', $offerId)
-            ->where('skill_type', 'general')
+            ->whereIn('skill_type', ['general', 'methodological', 'digital'])
             ->pluck('skill_id')
             ->toArray();
         
         if (empty($requiredGeneralSkillIds)) {
-            return 100; // Pas de compétences générales requises
+            return null;
         }
         
         // Compétences générales du candidat
@@ -119,23 +110,86 @@ class JobMatchingService
         return round($matchPercentage, 2);
     }
 
-    private function calculateMatchScore(int $offerId, int $candidateId): float
+    public function calculateCompatibility(int $offerId, int $candidateId): array
     {
-        $score = 0;
+        $criteria = [
+            'technical_skills_match' => [
+                'score' => $this->calculateTechnicalSkillsPercentage($offerId, $candidateId),
+                'weight' => 0.40,
+            ],
+            'general_skills_match' => [
+                'score' => $this->calculateGeneralSkillsScore($offerId, $candidateId),
+                'weight' => 0.40,
+            ],
+            'experience_match' => [
+                'score' => $this->calculateExperienceScore($offerId, $candidateId),
+                'weight' => 0.20,
+            ],
+        ];
 
-        // 1. Compatibilité compétences techniques (40%)
-        $technicalSkillsPercentage = $this->calculateTechnicalSkillsPercentage($offerId, $candidateId);
-        $score += $technicalSkillsPercentage * 0.40;
+        $availableCriteria = collect($criteria)
+            ->filter(fn (array $criterion) => $criterion['score'] !== null);
+        $availableWeight = (float) $availableCriteria->sum('weight');
+        $score = $availableWeight > 0
+            ? round((float) $availableCriteria->sum(
+                fn (array $criterion) => $criterion['score'] * $criterion['weight']
+            ) / $availableWeight, 2)
+            : null;
 
-        // 2. Compatibilité compétences générales (40%)
-        $generalSkillsScore = $this->calculateGeneralSkillsScore($offerId, $candidateId);
-        $score += $generalSkillsScore * 0.40;
+        return [
+            'score' => $score,
+            'details' => [
+                'technical_skills_match' => $criteria['technical_skills_match']['score'],
+                'general_skills_match' => $criteria['general_skills_match']['score'],
+                'experience_match' => $criteria['experience_match']['score'],
+                'algorithm_version' => '4.0',
+            ],
+        ];
+    }
 
-        // 3. Expérience (20%)
-        $experienceScore = $this->calculateExperienceScore($offerId, $candidateId);
-        $score += $experienceScore * 0.20;
+    private function calculateMatchScore(int $offerId, int $candidateId): ?float
+    {
+        return $this->calculateCompatibility($offerId, $candidateId)['score'];
+    }
 
-        return round($score, 2);
+    public function recalculateStoredApplications(?int $offerId = null): int
+    {
+        $updated = 0;
+        $query = Postulation::query()->orderBy('id');
+
+        if ($offerId !== null) {
+            $query->where('offre_id', $offerId);
+        }
+
+        $query->chunkById(100, function ($applications) use (&$updated) {
+            foreach ($applications as $application) {
+                if (! Offre::whereKey($application->offre_id)->exists()
+                    || ! User::whereKey($application->user_id)->exists()) {
+                    continue;
+                }
+
+                $compatibility = $this->calculateCompatibility(
+                    (int) $application->offre_id,
+                    (int) $application->user_id
+                );
+                $previousDetails = is_array($application->match_details)
+                    ? $application->match_details
+                    : [];
+
+                $application->forceFill([
+                    'match_score' => $compatibility['score'],
+                    'algorithm_version' => '4.0',
+                    'match_details' => array_merge($compatibility['details'], [
+                        'personalized_cv_generated' => (bool) ($previousDetails['personalized_cv_generated'] ?? $application->cv),
+                        'cover_letter_generated' => (bool) ($previousDetails['cover_letter_generated'] ?? $application->cover_letter),
+                    ]),
+                ])->save();
+
+                $updated++;
+            }
+        });
+
+        return $updated;
     }
     
     /**
@@ -171,93 +225,32 @@ class JobMatchingService
      */
  
 
-    private function calculateExperienceScore(int $offerId, int $candidateId): float
-{
-    $offer = Offre::findOrFail($offerId);
-    $candidate = User::findOrFail($candidateId);
-    
-    // Convertir l'expérience requise en intervalle
-    $experienceInterval = $this->parseExperienceInterval($offer->required_experience ?? '0');
-    $candidateExp = $candidate->candidateSector->experience_years ?? 0;
-    
-    // Si pas d'exigence d'expérience → score parfait
-    if ($experienceInterval === null) {
-        return 100;
-    }
-    
-    $min = $experienceInterval['min'];
-    $max = $experienceInterval['max'];
-    
-    // Cas 1: Intervalle fixe (ex: "2-3 ans")
-    if ($max !== null) {
-        if ($candidateExp >= $min && $candidateExp <= $max) {
-            // Parfaitement dans l'intervalle
+    private function calculateExperienceScore(int $offerId, int $candidateId): ?float
+    {
+        $offer = Offre::findOrFail($offerId);
+        $candidate = User::with('candidateSector')->findOrFail($candidateId);
+        $experienceInterval = $this->parseExperienceInterval($offer->required_experience);
+
+        if ($experienceInterval === null) {
+            return null;
+        }
+
+        $minimum = (float) $experienceInterval['min'];
+        $candidateExperience = (float) ($candidate->candidateSector?->experience_years ?? 0);
+
+        if ($minimum <= 0 || $candidateExperience >= $minimum) {
             return 100;
         }
-        
-        if ($candidateExp < $min) {
-            // Moins que le minimum
-            // Éviter la division par zéro
-            if ($min == 0) {
-                // Si le minimum est 0, alors le candidat avec 0 expérience est dans l'intervalle
-                // On retourne un score proportionnel à l'expérience par rapport au maximum
-                if ($max > 0) {
-                    $ratio = $candidateExp / $max;
-                    if ($ratio >= 0.9) return 80;
-                    if ($ratio >= 0.7) return 60;
-                    if ($ratio >= 0.5) return 40;
-                    return 20;
-                }
-                return 20; // Fallback
-            }
-            
-            $ratio = $candidateExp / $min;
-            if ($ratio >= 0.9) return 80;    // Presque (90%+)
-            if ($ratio >= 0.7) return 60;    // Proche (70%+)
-            if ($ratio >= 0.5) return 40;    // Moitié (50%+)
-            return 20;                       // Loin
-        }
-        
-        // Plus que le maximum (surqualifié)
-        // Éviter la division par zéro
-        if ($max == 0) {
-            // Si le maximum est 0, alors le candidat est surqualifié
-            return 40;
-        }
-        
-        $overqualifiedRatio = ($candidateExp - $max) / $max;
-        if ($overqualifiedRatio <= 0.5) return 80;  // Un peu surqualifié (≤50% en plus)
-        if ($overqualifiedRatio <= 1.0) return 60;  // Modérément surqualifié (≤100% en plus)
-        return 40; // Très surqualifié
+
+        $ratio = $candidateExperience / $minimum;
+
+        return match (true) {
+            $ratio >= 0.9 => 80,
+            $ratio >= 0.7 => 60,
+            $ratio >= 0.5 => 40,
+            default => 20,
+        };
     }
-    
-    // Cas 2: Minimum seulement (ex: "5 ans et plus")
-    if ($candidateExp >= $min) {
-        // A au moins le minimum requis
-        if ($min == 0) {
-            // Si le minimum est 0, toutes les expériences sont acceptables
-            return 100;
-        }
-        
-        if ($candidateExp == $min) return 100;          // Exactement
-        if ($candidateExp <= $min * 1.5) return 90;     // Un peu plus (≤50% en plus)
-        if ($candidateExp <= $min * 2) return 80;       // Plus expérimenté (≤100% en plus)
-        return 70; // Beaucoup plus expérimenté
-    }
-    
-    // Moins que le minimum requis
-    // Éviter la division par zéro
-    if ($min == 0) {
-        // Si le minimum est 0 mais le candidat a moins que 0 (impossible), retourner 0
-        return 0;
-    }
-    
-    $ratio = $candidateExp / $min;
-    if ($ratio >= 0.9) return 80; // Presque (90%+)
-    if ($ratio >= 0.7) return 60; // Proche (70%+)
-    if ($ratio >= 0.5) return 40; // Moitié (50%+)
-    return 20;                    // Loin
-}
     
     /**
      * Retourne les offres recommandées pour un candidat, triées par score.
@@ -530,14 +523,11 @@ class JobMatchingService
     }
 
 
-        $matchDetails = [
-            'technical_skills_match' => $this->calculateTechnicalSkillsPercentage($offerId, $candidateId),
-            'general_skills_match' => $this->calculateGeneralSkillsScore($offerId, $candidateId),
-            'experience_match' => $this->calculateExperienceScore($offerId, $candidateId),
-            'algorithm_version' => '3.0',
+        $compatibility = $this->calculateCompatibility($offerId, $candidateId);
+        $matchDetails = array_merge($compatibility['details'], [
             'personalized_cv_generated' => !empty($personalizedCVPath),
-             'cover_letter_generated' => !empty($coverLetterPath)
-        ];
+            'cover_letter_generated' => !empty($coverLetterPath),
+        ]);
             
         // Créer la postulation
         $postulation = Postulation::create([
@@ -549,7 +539,7 @@ class JobMatchingService
                 'autopostulation' => true,
                 'cv' => $personalizedCVPath ?? $candidate->cv,
                 'cover_letter' => $coverLetterPath,  
-                'algorithm_version' => '3.0',
+                'algorithm_version' => '4.0',
                 'match_details' => $matchDetails
             ]);
 

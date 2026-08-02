@@ -102,12 +102,12 @@
           if (data.success) {
             window.location.href = '{{ route('user.abonnement') }}';
           } else {
-            alert(data.message || "Erreur lors de la souscription.");
+            window.ProximaUI.notify(data.message || "Erreur lors de la souscription.", 'error');
             button.disabled = false;
             button.textContent = 'Choisir ' + planName;
           }
         } catch (error) {
-          alert("Impossible de finaliser la souscription. Veuillez réessayer.");
+          window.ProximaUI.notify("Impossible de finaliser la souscription. Veuillez réessayer.", 'error');
           button.disabled = false;
           button.textContent = 'Choisir ' + planName;
         }
