@@ -61,7 +61,7 @@
                       <span class="material-symbols-outlined text-lg">upgrade</span> Changer de plan
                     </a>
                     @if (in_array($userAbonnement->effective_status, ['Actif', 'En attente'], true))
-                      <form method="POST" action="{{ route('abonnements.cancel') }}" onsubmit="return confirm('Confirmer l’annulation de cet abonnement ?')">
+                      <form method="POST" action="{{ route('abonnements.cancel') }}" data-proxima-confirm="Confirmer l’annulation de cet abonnement ?" data-proxima-title="Annuler l’abonnement" data-proxima-confirm-label="Annuler l’abonnement" data-proxima-tone="danger">
                         @csrf
                         <button class="inline-flex items-center gap-2 px-5 py-2.5 border border-error/30 text-error-dark text-sm font-bold rounded-xl hover:bg-error-light transition-colors">
                           <span class="material-symbols-outlined text-lg">cancel</span> Annuler l’abonnement

@@ -90,7 +90,7 @@
               <td class="px-6 py-3 text-right">
                 <div class="flex items-center justify-end gap-1">
                   <button @click="editing = !editing" title="Modifier" aria-label="Modifier" class="rounded-xl p-2.5 text-outline hover:bg-surface-container-low hover:text-primary transition-colors"><span class="material-symbols-outlined text-lg">edit</span></button>
-                  <form method="POST" action="{{ route('admin.diplomes.destroy', $diplome) }}" onsubmit="return confirm('Supprimer « {{ $diplome->nom_diplome }} » ?')">
+                  <form method="POST" action="{{ route('admin.diplomes.destroy', $diplome) }}" data-proxima-confirm="Supprimer « {{ $diplome->nom_diplome }} » ?" data-proxima-title="Supprimer le diplôme" data-proxima-confirm-label="Supprimer" data-proxima-tone="danger">
                     @csrf @method('DELETE')
                     <button aria-label="Supprimer le diplôme" class="rounded-xl p-2.5 text-outline hover:bg-error-light hover:text-error transition-colors"><span class="material-symbols-outlined text-lg">delete</span></button>
                   </form>

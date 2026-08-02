@@ -66,6 +66,16 @@ Artisan::command('jobs:match-now', function () {
     
 })->purpose('Traite immédiatement le matching automatique (sans queue)');
 
+Artisan::command('matching:recalculate {--offer= : Limiter le recalcul à une offre}', function () {
+    $offerId = $this->option('offer');
+    $offerId = $offerId !== null ? (int) $offerId : null;
+
+    $updated = app(\App\Services\JobMatchingService::class)
+        ->recalculateStoredApplications($offerId);
+
+    $this->info("{$updated} candidature(s) recalculée(s) avec l’algorithme 4.0.");
+})->purpose('Recalcule les scores de compatibilité déjà enregistrés');
+
 /*
 |--------------------------------------------------------------------------
 | Tâches Programmées (Schedule)

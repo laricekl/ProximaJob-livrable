@@ -6,6 +6,34 @@ use Tests\TestCase;
 
 class ViewRefactorGuardTest extends TestCase
 {
+    public function test_active_views_do_not_use_native_browser_dialogs(): void
+    {
+        $views = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                resource_path('views'),
+                \FilesystemIterator::SKIP_DOTS
+            )
+        );
+
+        foreach ($views as $view) {
+            if ($view->getExtension() !== 'php') {
+                continue;
+            }
+
+            $content = file_get_contents($view->getPathname());
+            $usesNativeDialog = preg_match(
+                '/(?<!ProximaUI\.)(?<!->)(?<!::)\b(?:window\.)?(?:alert|confirm|prompt)\s*\(/',
+                $content
+            );
+
+            $this->assertSame(
+                0,
+                $usesNativeDialog,
+                sprintf('%s utilise encore une boîte native du navigateur.', $view->getPathname())
+            );
+        }
+    }
+
     public function test_active_views_do_not_extend_legacy_bootstrap_layouts(): void
     {
         $views = [

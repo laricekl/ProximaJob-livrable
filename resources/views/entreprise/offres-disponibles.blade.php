@@ -45,7 +45,7 @@
 
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
         @foreach ([
-          ['label' => 'Offres actives', 'value' => $stats['active_offers'] ?? 0, 'icon' => 'work', 'tone' => 'bg-primary-container/10 text-primary-container', 'url' => null],
+          ['label' => 'Offres actives', 'value' => $stats['active_offers'] ?? 0, 'icon' => 'work', 'tone' => 'bg-primary-container/10 text-primary-container', 'url' => '#vos-offres'],
           ['label' => 'À examiner', 'value' => $stats['pending_applications'] ?? 0, 'icon' => 'inbox', 'tone' => 'bg-secondary-container/10 text-secondary-container', 'url' => route('entreprise.candidatures.index', ['status' => 'en_attente'])],
           ['label' => 'Candidatures', 'value' => $stats['total_applications'] ?? 0, 'icon' => 'groups', 'tone' => 'bg-tertiary-container/30 text-primary', 'url' => route('entreprise.candidatures.index')],
           ['label' => 'Acceptées', 'value' => $stats['accepted_applications'] ?? 0, 'icon' => 'task_alt', 'tone' => 'bg-success-light text-success-dark', 'url' => route('entreprise.candidatures.index', ['status' => 'accepted'])],
@@ -68,7 +68,7 @@
         @endforeach
       </div>
 
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+      <div id="vos-offres" class="flex scroll-mt-32 flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
         <div>
           <h2 class="text-2xl font-bold font-serif text-primary">Vos offres</h2>
           <p class="text-sm text-on-surface-variant mt-1">{{ $stats['total_offers'] ?? $offres->total() }} offre{{ ($stats['total_offers'] ?? $offres->total()) > 1 ? 's' : '' }} au total</p>

@@ -59,23 +59,31 @@
             <div class="flex items-center gap-3 flex-wrap">
               @if ($postulation)
                 <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Reçue le {{ optional($postulation->created_at)->format('d/m/Y') }}</span>
-                @if (!is_null($postulation->match_score))
-                  <span class="px-3 py-1.5 bg-primary-container/10 text-primary text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">data_usage</span> Compatibilité estimée : {{ round($postulation->match_score) }} %</span>
-                @endif
+                <span class="px-3 py-1.5 bg-primary-container/10 text-primary text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">data_usage</span> {{ is_null($postulation->match_score) ? 'Compatibilité non évaluée' : 'Compatibilité estimée : '.round($postulation->match_score).' %' }}</span>
               @endif
               @if ($candidat->candidateSector?->diplome?->nom_diplome)
                 <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">school</span> {{ $candidat->candidateSector->diplome->nom_diplome }}</span>
               @endif
             </div>
             @if (!is_null($postulation->match_score))
-              <p class="mt-3 text-xs text-on-surface-variant">Cette estimation compare les compétences et l’expérience du profil aux critères de l’offre. Elle aide au tri, mais ne remplace pas votre évaluation.</p>
-              @if (is_array($postulation->match_details))
-                <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
-                  <span class="rounded-lg bg-surface-container-low px-3 py-2">Compétences techniques : {{ round($postulation->match_details['technical_skills_match'] ?? 0) }} %</span>
-                  <span class="rounded-lg bg-surface-container-low px-3 py-2">Compétences générales : {{ round($postulation->match_details['general_skills_match'] ?? 0) }} %</span>
-                  <span class="rounded-lg bg-surface-container-low px-3 py-2">Expérience : {{ round($postulation->match_details['experience_match'] ?? 0) }} %</span>
-                </div>
-              @endif
+              <p class="mt-3 text-xs text-on-surface-variant">Cette estimation compare uniquement les critères renseignés dans l’offre avec le profil. Elle aide au tri, mais ne remplace pas votre évaluation.</p>
+            @else
+              <p class="mt-3 text-xs text-on-surface-variant">Aucun score global n’est affiché, car l’offre ne contient pas assez de critères évaluables.</p>
+            @endif
+            @if (is_array($postulation->match_details))
+              @php
+                $matchCriteria = [
+                  'technical_skills_match' => 'Compétences techniques',
+                  'general_skills_match' => 'Compétences générales',
+                  'experience_match' => 'Expérience',
+                ];
+              @endphp
+              <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
+                @foreach ($matchCriteria as $key => $label)
+                  @php($criterionScore = $postulation->match_details[$key] ?? null)
+                  <span class="rounded-lg bg-surface-container-low px-3 py-2">{{ $label }} : {{ is_numeric($criterionScore) ? round($criterionScore).' %' : 'Non évalué' }}</span>
+                @endforeach
+              </div>
             @endif
           </div>
         </div>

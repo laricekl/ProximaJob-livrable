@@ -1197,10 +1197,10 @@
           successAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
           window.setTimeout(() => window.location.reload(), 600);
         } else {
-          alert(data.message || "Une erreur est survenue lors de l'enregistrement.");
+          window.ProximaUI.notify(data.message || "Une erreur est survenue lors de l'enregistrement.", 'error');
         }
       } catch (error) {
-        alert("Impossible d'enregistrer le profil CV pour le moment.");
+        window.ProximaUI.notify("Impossible d'enregistrer le profil CV pour le moment.", 'error');
       }
     }
 

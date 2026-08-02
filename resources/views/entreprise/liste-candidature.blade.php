@@ -114,9 +114,7 @@
                   <a href="{{ $postulation->cover_letter ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) : route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) }}" class="flex items-center gap-1.5 text-secondary-container font-semibold hover:underline"><span class="material-symbols-outlined text-sm">description</span> Voir la lettre de présentation</a>
                 @endif
                 <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm text-outline">work_history</span> {{ $postulation->user?->candidateSector?->experience_years ?? 0 }} an(s) d’expérience</span>
-                @if (!is_null($postulation->match_score))
-                  <span class="flex items-center gap-1.5 font-semibold text-secondary-container"><span class="material-symbols-outlined text-sm">data_usage</span> Compatibilité estimée : {{ round($postulation->match_score) }} %</span>
-                @endif
+                <span class="flex items-center gap-1.5 font-semibold text-secondary-container"><span class="material-symbols-outlined text-sm">data_usage</span> {{ is_null($postulation->match_score) ? 'Compatibilité non évaluée' : 'Compatibilité estimée : '.round($postulation->match_score).' %' }}</span>
               </div>
               @if ($postulation->user?->skills?->isNotEmpty())
                 <div class="mb-4 flex flex-wrap gap-2">
@@ -132,7 +130,7 @@
                 </a>
 
                 @if ($postulation->status === 'en_attente')
-                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" onsubmit="return confirm('Accepter cette candidature ?');">
+                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" data-proxima-confirm="Accepter cette candidature ?" data-proxima-title="Accepter la candidature" data-proxima-confirm-label="Accepter" data-proxima-tone="default">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="accepted">
@@ -140,7 +138,7 @@
                       <span class="material-symbols-outlined text-lg">check</span> Accepter
                     </button>
                   </form>
-                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" onsubmit="return confirm('Refuser cette candidature ?');">
+                  <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" data-proxima-confirm="Refuser cette candidature ?" data-proxima-title="Rejeter la candidature" data-proxima-confirm-label="Rejeter" data-proxima-tone="danger">
                     @csrf
                     @method('PUT')
                     <input type="hidden" name="status" value="rejected">
