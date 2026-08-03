@@ -67,7 +67,9 @@
                       <div class="flex justify-end gap-2">
                         <a href="{{ route('entreprise.offres.candidatures', $offer) }}" aria-label="Voir les candidatures de {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir les candidatures"><span class="material-symbols-outlined text-base">visibility</span></a>
                         <a href="{{ route('edit.offres', $offer->id) }}" aria-label="Modifier l’offre {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Modifier l’offre"><span class="material-symbols-outlined text-base">edit</span></a>
-                        <span class="inline-flex items-center rounded-lg bg-surface-container px-2.5 py-1.5 text-xs font-semibold text-outline" title="La promotion sera disponible prochainement">Bientôt disponible</span>
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface-container text-outline" title="Promotion bientôt disponible" aria-label="Promotion bientôt disponible">
+                          <span class="material-symbols-outlined text-base" aria-hidden="true">schedule</span>
+                        </span>
                       </div>
                     </td>
                   </tr>

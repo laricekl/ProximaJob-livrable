@@ -87,4 +87,34 @@ class ViewRefactorGuardTest extends TestCase
             }
         }
     }
+
+    public function test_shared_interface_exposes_consistent_loading_and_motion_states(): void
+    {
+        $script = file_get_contents(public_path('js/proxima-ui.js'));
+        $styles = file_get_contents(public_path('css/proxima-glass.css'));
+
+        $this->assertStringContainsString('proxima-navigation-progress', $script);
+        $this->assertStringContainsString('proximaBusy', $script);
+        $this->assertStringContainsString('prefers-reduced-motion: reduce', $styles);
+        $this->assertStringContainsString('.proxima-button-spinner', $styles);
+    }
+
+    public function test_cv_preview_has_loading_error_and_retry_states(): void
+    {
+        $view = file_get_contents(resource_path('views/user/infos-cv.blade.php'));
+
+        $this->assertStringContainsString('id="generatedCvLoading"', $view);
+        $this->assertStringContainsString('id="generatedCvError"', $view);
+        $this->assertStringContainsString('id="generatedCvRetry"', $view);
+        $this->assertStringContainsString('setCvFrameSource(', $view);
+    }
+
+    public function test_custom_dialog_traps_focus_and_animates_dismissal(): void
+    {
+        $view = file_get_contents(resource_path('views/partials/proxima-dialogs.blade.php'));
+
+        $this->assertStringContainsString("event.key !== 'Tab'", $view);
+        $this->assertStringContainsString("overlay.classList.add('is-open')", $view);
+        $this->assertStringContainsString('proxima-toast-message', $view);
+    }
 }

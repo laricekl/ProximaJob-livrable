@@ -2,6 +2,14 @@
 @section('title', 'Dashboard')
 @section('page-title', 'Dashboard')
 @section('content')
+  @php
+    $growthLabel = static function ($growth): string {
+      if ($growth === null) return 'Pas de comparaison disponible';
+      if ($growth <= -100) return 'Aucune nouvelle donnée ce mois';
+
+      return ($growth >= 0 ? '+' : '').$growth.'% ce mois';
+    };
+  @endphp
   <div class="space-y-8">
     <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 md:gap-6">
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -11,7 +19,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Entreprises</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($entrepriseStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $entrepriseStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($entrepriseStats['monthlyGrowth'] >= 0 ? '+' : '').$entrepriseStats['monthlyGrowth'].'% ce mois') }}</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($entrepriseStats['monthlyGrowth']) }}</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -21,7 +29,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Offres d'emploi</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($offreStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $offreStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($offreStats['monthlyGrowth'] >= 0 ? '+' : '').$offreStats['monthlyGrowth'].'% ce mois') }}</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($offreStats['monthlyGrowth']) }}</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -31,7 +39,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Candidats</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($candidateStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $candidateStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($candidateStats['monthlyGrowth'] >= 0 ? '+' : '').$candidateStats['monthlyGrowth'].'% ce mois') }}</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($candidateStats['monthlyGrowth']) }}</p>
         </div>
       </div>
       <div class="card-glow flex items-center gap-4 rounded-2xl p-5">
@@ -41,7 +49,7 @@
         <div>
           <p class="text-xs text-on-surface-variant">Candidatures</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($matchStats['count']) }}</p>
-          <p class="text-2xs font-semibold text-secondary-container">{{ $matchStats['monthlyGrowth'] === null ? 'Données antérieures insuffisantes' : (($matchStats['monthlyGrowth'] >= 0 ? '+' : '').$matchStats['monthlyGrowth'].'% ce mois') }}</p>
+          <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($matchStats['monthlyGrowth']) }}</p>
         </div>
       </div>
     </div>

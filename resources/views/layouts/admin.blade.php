@@ -3,7 +3,7 @@
 <head>
   @include('partials.head')
 </head>
-<body class="bg-surface text-on-surface font-sans antialiased min-h-screen">
+<body class="admin-shell bg-surface text-on-surface font-sans antialiased min-h-screen">
 
   <!-- Sidebar -->
   <aside id="sidebar" class="sidebar fixed top-0 left-0 z-50 w-64 h-full bg-primary-container text-white flex flex-col">

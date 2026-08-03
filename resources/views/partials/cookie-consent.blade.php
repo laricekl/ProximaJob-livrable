@@ -186,6 +186,11 @@
         bottom: 0.75rem;
       }
 
+      .admin-shell .cookie-floating-trigger {
+        right: 0.75rem;
+        left: auto;
+      }
+
       .cookie-consent-card {
         border-radius: 999px;
         width: 100%;

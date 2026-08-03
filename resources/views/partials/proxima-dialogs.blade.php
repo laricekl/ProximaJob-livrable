@@ -40,19 +40,34 @@
     let resolveDialog = null;
     let dialogMode = 'confirm';
     let previousFocus = null;
+    let closeTimer = null;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const closeDialog = (value) => {
-      overlay.classList.add('hidden');
-      overlay.classList.remove('flex');
-      document.body.style.overflow = '';
+      if (!resolveDialog) return;
       const resolver = resolveDialog;
       resolveDialog = null;
-      previousFocus?.focus?.();
-      resolver?.(value);
+      overlay.classList.remove('is-open');
+
+      const finishClose = () => {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('flex');
+        document.body.style.overflow = '';
+        previousFocus?.focus?.();
+        resolver(value);
+      };
+
+      window.clearTimeout(closeTimer);
+      closeTimer = window.setTimeout(finishClose, reducedMotion.matches ? 0 : 210);
     };
 
     const openDialog = (mode, text, options = {}) => new Promise((resolve) => {
-      if (resolveDialog) closeDialog(dialogMode === 'prompt' ? null : false);
+      window.clearTimeout(closeTimer);
+      if (resolveDialog) {
+        const previousResolver = resolveDialog;
+        resolveDialog = null;
+        previousResolver(dialogMode === 'prompt' ? null : false);
+      }
 
       dialogMode = mode;
       resolveDialog = resolve;
@@ -76,7 +91,10 @@
       overlay.classList.remove('hidden');
       overlay.classList.add('flex');
       document.body.style.overflow = 'hidden';
-      window.setTimeout(() => (mode === 'prompt' ? input : confirmButton).focus(), 0);
+      window.requestAnimationFrame(() => {
+        overlay.classList.add('is-open');
+        (mode === 'prompt' ? input : confirmButton).focus();
+      });
     });
 
     cancelButton.addEventListener('click', () => closeDialog(dialogMode === 'prompt' ? null : false));
@@ -92,6 +110,21 @@
     });
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && resolveDialog) closeDialog(dialogMode === 'prompt' ? null : false);
+      if (event.key !== 'Tab' || !resolveDialog) return;
+
+      const focusable = [...overlay.querySelectorAll('button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])')]
+        .filter((element) => !element.closest('.hidden'));
+      if (!focusable.length) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
     });
 
     const notify = (text, tone = 'info') => {
@@ -101,7 +134,7 @@
         : tone === 'success'
           ? 'border-success/20 bg-success-light text-success-dark'
           : 'border-primary/10 bg-white text-primary';
-      toast.className = `pointer-events-auto flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold shadow-xl ${toneClasses}`;
+      toast.className = `proxima-toast-message pointer-events-auto flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm font-semibold shadow-xl ${toneClasses}`;
 
       const toastIcon = document.createElement('span');
       toastIcon.className = 'material-symbols-outlined text-lg';
@@ -111,7 +144,10 @@
       toastText.textContent = text;
       toast.append(toastIcon, toastText);
       toastRegion.appendChild(toast);
-      window.setTimeout(() => toast.remove(), 5000);
+      window.setTimeout(() => {
+        toast.classList.add('is-leaving');
+        window.setTimeout(() => toast.remove(), reducedMotion.matches ? 0 : 180);
+      }, 5000);
     };
 
     window.ProximaUI = {

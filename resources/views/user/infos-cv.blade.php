@@ -274,8 +274,25 @@
           </div>
 
           <div id="generatedCvPreview" class="{{ $existingProfile ? '' : 'hidden' }}">
-            <div class="overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low">
-              <iframe id="generatedCvFrame" scrolling="no" src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Aperçu du CV"></iframe>
+            <div class="relative min-h-[600px] overflow-hidden rounded-xl border border-outline-variant/10 bg-surface-container-low md:min-h-[1120px]">
+              <div id="generatedCvLoading" class="absolute inset-0 z-10 flex items-center justify-center bg-surface-container-low px-6" role="status" aria-live="polite">
+                <div class="w-full max-w-sm rounded-2xl border border-white/70 bg-white/90 p-6 text-center shadow-sm backdrop-blur">
+                  <span class="proxima-button-spinner text-secondary-container" aria-hidden="true"></span>
+                  <p class="mt-4 text-sm font-bold text-primary">Chargement de l’aperçu…</p>
+                  <p class="mt-1 text-xs leading-5 text-on-surface-variant">Le document est en cours de préparation.</p>
+                </div>
+              </div>
+              <div id="generatedCvError" class="absolute inset-0 z-10 hidden items-center justify-center bg-surface-container-low px-6" role="alert">
+                <div class="w-full max-w-sm rounded-2xl border border-error/15 bg-white p-6 text-center shadow-sm">
+                  <span class="material-symbols-outlined text-3xl text-error" aria-hidden="true">error</span>
+                  <p class="mt-3 text-sm font-bold text-primary">L’aperçu n’a pas pu être chargé</p>
+                  <p class="mt-1 text-xs leading-5 text-on-surface-variant">Vous pouvez réessayer sans perdre vos informations.</p>
+                  <button id="generatedCvRetry" type="button" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary-container px-4 py-2.5 text-xs font-bold text-white transition hover:opacity-90">
+                    <span class="material-symbols-outlined text-base" aria-hidden="true">refresh</span> Réessayer
+                  </button>
+                </div>
+              </div>
+              <iframe id="generatedCvFrame" scrolling="no" src="" data-initial-src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white opacity-0 transition-opacity duration-200 md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Aperçu du CV"></iframe>
             </div>
           </div>
 
@@ -709,6 +726,59 @@
     const totalSections = 8;
     const completedSections = new Set();
     const existingCvProfile = @json($existingCvProfilePayload);
+    const generatedCvFrame = document.getElementById('generatedCvFrame');
+    const generatedCvLoading = document.getElementById('generatedCvLoading');
+    const generatedCvError = document.getElementById('generatedCvError');
+    const generatedCvRetry = document.getElementById('generatedCvRetry');
+    let generatedCvTimeout = null;
+
+    function showCvFrameLoading() {
+      window.clearTimeout(generatedCvTimeout);
+      generatedCvFrame?.classList.add('opacity-0');
+      generatedCvError?.classList.add('hidden');
+      generatedCvError?.classList.remove('flex');
+      generatedCvLoading?.classList.remove('hidden');
+      generatedCvLoading?.classList.add('flex');
+      generatedCvTimeout = window.setTimeout(showCvFrameError, 15000);
+    }
+
+    function showCvFrame() {
+      window.clearTimeout(generatedCvTimeout);
+      generatedCvLoading?.classList.add('hidden');
+      generatedCvLoading?.classList.remove('flex');
+      generatedCvError?.classList.add('hidden');
+      generatedCvError?.classList.remove('flex');
+      generatedCvFrame?.classList.remove('opacity-0');
+    }
+
+    function showCvFrameError() {
+      window.clearTimeout(generatedCvTimeout);
+      generatedCvLoading?.classList.add('hidden');
+      generatedCvLoading?.classList.remove('flex');
+      generatedCvError?.classList.remove('hidden');
+      generatedCvError?.classList.add('flex');
+      generatedCvFrame?.classList.add('opacity-0');
+    }
+
+    function setCvFrameSource(url) {
+      if (!generatedCvFrame || !url) return;
+      showCvFrameLoading();
+      generatedCvFrame.setAttribute('src', url);
+    }
+
+    generatedCvFrame?.addEventListener('load', showCvFrame);
+    generatedCvFrame?.addEventListener('error', showCvFrameError);
+    generatedCvRetry?.addEventListener('click', () => {
+      const currentUrl = generatedCvFrame?.getAttribute('src');
+      if (currentUrl) setCvFrameSource(freshPdfUrl(currentUrl));
+    });
+    const initialCvSource = generatedCvFrame?.dataset.initialSrc;
+    if (initialCvSource) {
+      setCvFrameSource(initialCvSource);
+    } else {
+      generatedCvLoading?.classList.add('hidden');
+      generatedCvLoading?.classList.remove('flex');
+    }
 
     const principalDesignForm = document.getElementById('principalDesignForm');
     const principalPhotoOption = document.getElementById('principalPhotoOption');
@@ -740,7 +810,7 @@
 
         document.getElementById('principalTemplateLabel').textContent = data.template_label;
         status.textContent = data.message;
-        document.getElementById('generatedCvFrame')?.setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
+        setCvFrameSource(freshPdfUrl('{{ route('cv.principal.inline') }}'));
       } catch (error) {
         status.classList.remove('text-secondary-container');
         status.classList.add('text-error');
@@ -793,7 +863,7 @@
       document.getElementById('principalPreviewActions')?.classList.remove('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvFrame')?.setAttribute('src', freshPdfUrl('{{ route('cv.principal.inline') }}'));
+      setCvFrameSource(freshPdfUrl('{{ route('cv.principal.inline') }}'));
       document.getElementById('generatedCvOpenLink')?.setAttribute('href', '{{ route('cv.principal.inline') }}#zoom=100');
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -804,7 +874,7 @@
       document.getElementById('principalPreviewActions')?.classList.add('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvFrame')?.setAttribute('src', "{{ asset($uploadedCvPath ?? '') }}");
+      setCvFrameSource("{{ asset($uploadedCvPath ?? '') }}");
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -819,7 +889,7 @@
       document.getElementById('principalPreviewActions')?.classList.add('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
       document.getElementById('generatedCvPreview')?.classList.remove('hidden');
-      document.getElementById('generatedCvFrame')?.setAttribute('src', freshPdfUrl(previewUrl));
+      setCvFrameSource(freshPdfUrl(previewUrl));
       document.getElementById('generatedCvOpenLink')?.setAttribute('href', openUrl);
       document.getElementById('cv-preview')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
