@@ -8,6 +8,8 @@
   @endphp
 
   <div class="space-y-6">
+    @if(session('success'))<div class="rounded-2xl bg-green-50 px-5 py-4 text-sm font-semibold text-green-800">{{ session('success') }}</div>@endif
+    @if($errors->any())<div class="rounded-2xl bg-red-50 px-5 py-4 text-sm text-red-700">{{ $errors->first() }}</div>@endif
     <a href="{{ route('admin.users') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-secondary-container hover:underline">
       <span class="material-symbols-outlined text-lg">arrow_back</span> Retour à la liste
     </a>
@@ -31,6 +33,15 @@
       </div>
 
       <div class="space-y-6 lg:col-span-2">
+        <details class="card-glow rounded-2xl" @if($errors->any()) open @endif>
+          <summary class="flex cursor-pointer list-none items-center justify-between p-5 font-bold text-primary"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">edit</span> Modifier le compte</span><span class="material-symbols-outlined">expand_more</span></summary>
+          <form method="POST" action="{{ route('admin.users.update',$user) }}" class="grid gap-4 border-t border-primary/5 p-5 md:grid-cols-2">@csrf @method('PUT')
+            <input type="hidden" name="role" value="{{ $user->getRoleNames()->first() }}">
+            <label class="text-xs font-bold text-primary">Nom<input name="name" value="{{ old('name',$user->name) }}" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Prénom<input name="prenom" value="{{ old('prenom',$user->prenom) }}" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Courriel<input name="email" value="{{ old('email',$user->email) }}" type="email" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Téléphone<input name="telephone" value="{{ old('telephone',$user->telephone) }}" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary md:col-span-2">Adresse<input name="adresse" value="{{ old('adresse',$user->adresse) }}" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+            @if($user->entreprise)<label class="text-xs font-bold text-primary">Nom de l’entreprise<input name="company_name" value="{{ old('company_name',$user->entreprise->company_name) }}" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">NEQ<input name="neq" value="{{ old('neq',$user->entreprise->neq) }}" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Site Web<input name="website" value="{{ old('website',$user->entreprise->website) }}" type="url" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Description<textarea name="description" rows="2" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm">{{ old('description',$user->entreprise->description) }}</textarea></label>@endif
+            <label class="text-xs font-bold text-primary">Nouveau mot de passe (facultatif)<input name="password" type="password" minlength="8" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Confirmation<input name="password_confirmation" type="password" minlength="8" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><button class="w-fit rounded-xl bg-primary-container px-5 py-2.5 text-sm font-bold text-white">Enregistrer les modifications</button>
+          </form>
+        </details>
         @if ($user->entreprise)
           <div class="card-glow overflow-hidden rounded-2xl">
             <div class="border-b border-outline-variant/10 px-6 py-4">

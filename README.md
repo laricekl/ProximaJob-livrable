@@ -7,75 +7,53 @@ Application de recherche d'emploi et recrutement.
 
 ---
 
-## Déploiement Laravel Cloud — Solution qui marche
+## Déploiement de production
 
-### Architecture
+La production doit utiliser une base persistante, une file asynchrone et un stockage persistant. Une base SQLite placée dans le conteneur ne convient pas : les données seraient perdues lors d’un remplacement du conteneur et les écritures concurrentes seraient limitées.
 
-```
-git push → Build → Deploy → App prête
-                              │
-                              ├── AppServiceProvider::register() crée le .sqlite
-                              └── EnsureDatabaseExists middleware lance migrate
-```
+### 1. Préparer l’environnement
 
-### 1. Base de données
+Copier les valeurs de `.env.production.example` dans le gestionnaire de secrets de l’hébergeur. Ne jamais commiter le véritable `.env`.
 
-**SQLite** — MySQL est bloqué par ProxySQL sur le plan gratuit (le hostname `*.public.db.laravel.cloud` n'est pas accessible depuis le réseau interne).
+Exigences principales :
 
-### 2. Variables d'environnement
+- `APP_ENV=production`, `APP_DEBUG=false` et une URL HTTPS ;
+- PostgreSQL ou MySQL persistant ;
+- `QUEUE_CONNECTION=database` ou `redis`, avec un worker permanent ;
+- sessions et cache sur `database` ou `redis` ;
+- cookies HTTPS et sessions chiffrées ;
+- SMTP ou fournisseur transactionnel réellement configuré ;
+- volume persistant pour `storage/app/public` si les conteneurs sont éphémères.
 
-```
-APP_KEY=base64:...
-APP_NAME=ProximaJob
-APP_ENV=production
-APP_DEBUG=false
-APP_URL=https://<ton-app>.laravel.cloud
-APP_LOCALE=fr
-APP_FAKER_LOCALE=fr_FR
-DEEPSEEK_API_KEY=sk-...
-DB_CONNECTION=sqlite
-DB_DATABASE=/var/www/html/storage/database.sqlite
-DB_HOST=
+### 2. Déployer
+
+Le script `scripts/deploy-production.sh` installe les dépendances, compile les ressources, applique les migrations, crée le lien de stockage, construit les caches Laravel et redémarre les workers.
+
+```bash
+chmod +x scripts/deploy-production.sh
+./scripts/deploy-production.sh
 ```
 
-**Critique :** `DB_HOST=` doit être vide pour éviter que le fallback MySQL ne prenne le dessus.  
-**Critique :** `DB_DATABASE` doit être un chemin absolu vers `storage/`.
-**Démo IA :** `DEEPSEEK_API_KEY` doit être configurée dans Laravel Cloud pour activer l'extraction CV avec DeepSeek en production. Ne jamais commiter la vraie clé.
+Les migrations ne sont jamais exécutées depuis une requête web en production.
 
-### 3. Commandes build/deploy
+### 3. Processus permanents
 
-```
-Build : composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
-        npm ci --audit false
-        npm run build
+Configurer ces deux processus chez l’hébergeur :
 
-Deploy: echo 'deployed'
+```bash
+php artisan queue:work --sleep=2 --tries=3 --timeout=120 --max-time=3600
+php artisan schedule:work
 ```
 
-Le deploy command est volontairement minimal. Les migrations sont gérées au runtime par le middleware `EnsureDatabaseExists`.
+Le worker de queue doit être relancé automatiquement lorsqu’il termine. Une seule instance du planificateur doit être active.
 
-### 4. Push-to-deploy
+### 4. Vérification obligatoire
 
-Fiable à 100%. Chaque `git push origin main` déclenche build → deploy → app fonctionnelle.
+```bash
+php artisan production:check --strict
+```
 
-### 5. Fichiers clés
-
-| Fichier | Rôle |
-|---------|------|
-| `config/database.php` | `default=sqlite`, fallback MySQL désactivé |
-| `app/Providers/AppServiceProvider.php` | `register()` crée le fichier SQLite s'il n'existe pas |
-| `app/Http/Middleware/EnsureDatabaseExists.php` | Lance `migrate --force` au 1er accès si la BDD est vide |
-| `bootstrap/app.php` | Enregistre le middleware dans le groupe `web` |
-
-### Problèmes connus
-
-| Problème | Cause | Solution |
-|----------|-------|----------|
-| MySQL inaccessible | ProxySQL bloque le hostname public | Utiliser SQLite |
-| `DB_CONNECTION=mysql` auto-injecté | Laravel Cloud injecte les vars de la BDD attachée | Overrider avec `DB_CONNECTION=sqlite` |
-| BDD perdue au redéploiement | Container éphémère | Middleware recrée au 1er accès |
-| `route:cache` échoue | Routes en double | Corrigé (`admin.login` → `admin.login.post`) |
-| `database-cluster:create` échoue | Bug régions (CLI v0.5.0) | Créer via l'interface web |
+Le déploiement doit être arrêté si cette commande retourne un échec. La route `/health` vérifie ensuite la base et le cache pendant l’exploitation.
 
 ---
 

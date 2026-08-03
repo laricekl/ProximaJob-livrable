@@ -2,13 +2,17 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\SecuritySetting;
+use App\Models\User;
+use App\Services\AdminAuditService;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class LoginRequest extends FormRequest
 {
@@ -27,10 +31,24 @@ class LoginRequest extends FormRequest
 
     public function authenticate(): void
     {
-        $this->ensureIsNotRateLimited();
+        if ($this->bruteForceProtectionEnabled()) {
+            $this->ensureIsNotRateLimited();
+        }
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+            if ($this->bruteForceProtectionEnabled()) {
+                RateLimiter::hit($this->throttleKey());
+            }
+
+            $user = User::where('email', $this->string('email'))->first();
+            if ($user?->hasAnyRole(['admin', 'Marketing'])) {
+                app(AdminAuditService::class)->recordLogin(
+                    'login.failed',
+                    $user,
+                    'Échec de connexion administrateur.',
+                    ['reason' => 'invalid_credentials']
+                );
+            }
 
             $this->throwAuthFailedException();
         }
@@ -44,7 +62,7 @@ class LoginRequest extends FormRequest
             throw new HttpResponseException(
                 response()->json([
                     'success' => false,
-                    'message' => trans('auth.failed')
+                    'message' => trans('auth.failed'),
                 ], 401)
             );
         }
@@ -71,7 +89,7 @@ class LoginRequest extends FormRequest
                     'message' => trans('auth.throttle', [
                         'seconds' => $seconds,
                         'minutes' => ceil($seconds / 60),
-                    ])
+                    ]),
                 ], 429)
             );
         }
@@ -87,5 +105,14 @@ class LoginRequest extends FormRequest
     public function throttleKey(): string
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
+    }
+
+    private function bruteForceProtectionEnabled(): bool
+    {
+        if (! Schema::hasTable('security_settings')) {
+            return true;
+        }
+
+        return (bool) SecuritySetting::firstOrCreate([], SecuritySetting::getDefaultSettings())->brute_force_protection;
     }
 }

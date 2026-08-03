@@ -16,19 +16,19 @@ class DiplomeController extends Controller
 
         $diplomes = Diplome::query()
             ->withCount('offres')
-            ->when($search, fn($q) => $q->where('nom_diplome', 'LIKE', '%'.$search.'%')->orWhere('sigle', 'LIKE', '%'.$search.'%'))
-            ->when($niveau, fn($q) => $q->where('niveau_education', $niveau))
+            ->when($search, fn ($q) => $q->where('nom_diplome', 'LIKE', '%'.$search.'%')->orWhere('sigle', 'LIKE', '%'.$search.'%'))
+            ->when($niveau, fn ($q) => $q->where('niveau_education', $niveau))
             ->orderBy('niveau_education')->orderBy('nom_diplome')
             ->paginate(20)
             ->withQueryString();
 
         $niveaux = [
-            'SECONDAIRE'               => 'Secondaire',
-            'COLLEGIAL'                => 'Collégial',
-            'UNIVERSITAIRE_1ER_CYCLE'  => 'Universitaire 1er cycle',
-            'UNIVERSITAIRE_2E_CYCLE'   => 'Universitaire 2e cycle',
-            'UNIVERSITAIRE_3E_CYCLE'   => 'Universitaire 3e cycle',
-            'PROFESSIONNEL'            => 'Professionnel',
+            'SECONDAIRE' => 'Secondaire',
+            'COLLEGIAL' => 'Collégial',
+            'UNIVERSITAIRE_1ER_CYCLE' => 'Universitaire 1er cycle',
+            'UNIVERSITAIRE_2E_CYCLE' => 'Universitaire 2e cycle',
+            'UNIVERSITAIRE_3E_CYCLE' => 'Universitaire 3e cycle',
+            'PROFESSIONNEL' => 'Professionnel',
         ];
 
         return view('admin.diplomes.index', compact('diplomes', 'niveaux', 'search', 'niveau'));
@@ -37,11 +37,11 @@ class DiplomeController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nom_diplome'      => 'required|string|max:255|unique:diplome,nom_diplome',
-            'nom_anglais'      => 'nullable|string|max:255',
-            'sigle'            => 'nullable|string|max:50',
+            'nom_diplome' => 'required|string|max:255|unique:diplomes,nom_diplome',
+            'nom_anglais' => 'nullable|string|max:255',
+            'sigle' => 'nullable|string|max:50',
             'niveau_education' => 'required|string|in:SECONDAIRE,COLLEGIAL,UNIVERSITAIRE_1ER_CYCLE,UNIVERSITAIRE_2E_CYCLE,UNIVERSITAIRE_3E_CYCLE,PROFESSIONNEL',
-            'duree_annees'     => 'nullable|numeric|min:0|max:15',
+            'duree_annees' => 'nullable|numeric|min:0|max:15',
         ]);
 
         if ($validator->fails()) {
@@ -49,12 +49,12 @@ class DiplomeController extends Controller
         }
 
         Diplome::create([
-            'nom_diplome'      => $request->nom_diplome,
-            'nom_anglais'      => $request->nom_anglais,
-            'sigle'            => $request->sigle,
+            'nom_diplome' => $request->nom_diplome,
+            'nom_anglais' => $request->nom_anglais,
+            'sigle' => $request->sigle,
             'niveau_education' => $request->niveau_education,
-            'duree_annees'     => $request->duree_annees,
-            'statut'           => 'ACTIF',
+            'duree_annees' => $request->duree_annees,
+            'statut' => 'ACTIF',
         ]);
 
         return redirect()->route('admin.diplomes.index')->with('success', 'Diplôme « '.$request->nom_diplome.' » créé.');
@@ -63,11 +63,11 @@ class DiplomeController extends Controller
     public function update(Request $request, Diplome $diplome)
     {
         $validator = Validator::make($request->all(), [
-            'nom_diplome'      => 'required|string|max:255|unique:diplome,nom_diplome,'.$diplome->id,
-            'nom_anglais'      => 'nullable|string|max:255',
-            'sigle'            => 'nullable|string|max:50',
+            'nom_diplome' => 'required|string|max:255|unique:diplomes,nom_diplome,'.$diplome->id,
+            'nom_anglais' => 'nullable|string|max:255',
+            'sigle' => 'nullable|string|max:50',
             'niveau_education' => 'required|string|in:SECONDAIRE,COLLEGIAL,UNIVERSITAIRE_1ER_CYCLE,UNIVERSITAIRE_2E_CYCLE,UNIVERSITAIRE_3E_CYCLE,PROFESSIONNEL',
-            'duree_annees'     => 'nullable|numeric|min:0|max:15',
+            'duree_annees' => 'nullable|numeric|min:0|max:15',
         ]);
 
         if ($validator->fails()) {
@@ -75,11 +75,11 @@ class DiplomeController extends Controller
         }
 
         $diplome->update([
-            'nom_diplome'      => $request->nom_diplome,
-            'nom_anglais'      => $request->nom_anglais,
-            'sigle'            => $request->sigle,
+            'nom_diplome' => $request->nom_diplome,
+            'nom_anglais' => $request->nom_anglais,
+            'sigle' => $request->sigle,
             'niveau_education' => $request->niveau_education,
-            'duree_annees'     => $request->duree_annees,
+            'duree_annees' => $request->duree_annees,
         ]);
 
         return redirect()->route('admin.diplomes.index')->with('success', 'Diplôme mis à jour.');
@@ -92,6 +92,7 @@ class DiplomeController extends Controller
         }
         $nom = $diplome->nom_diplome;
         $diplome->delete();
+
         return redirect()->route('admin.diplomes.index')->with('success', 'Diplôme « '.$nom.' » supprimé.');
     }
 }

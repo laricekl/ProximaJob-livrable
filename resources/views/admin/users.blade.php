@@ -3,6 +3,23 @@
 @section('page-title', 'Utilisateurs')
 @section('content')
   <div class="space-y-6">
+    @if(session('success'))<div class="rounded-2xl bg-green-50 px-5 py-4 text-sm font-semibold text-green-800">{{ session('success') }}</div>@endif
+    @if($errors->any())<div class="rounded-2xl bg-red-50 px-5 py-4 text-sm text-red-700">{{ $errors->first() }}</div>@endif
+    <details class="card-glow rounded-2xl" @if($errors->any()) open @endif>
+      <summary class="flex cursor-pointer list-none items-center justify-between p-5 font-bold text-primary"><span class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">person_add</span> Créer un compte</span><span class="material-symbols-outlined">expand_more</span></summary>
+      <form method="POST" action="{{ route('admin.users.store') }}" enctype="multipart/form-data" class="grid gap-4 border-t border-primary/5 p-5 md:grid-cols-2" x-data="{ role: '{{ old('role','candidat') }}' }">@csrf
+        <label class="text-xs font-bold text-primary">Nom<input name="name" value="{{ old('name') }}" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <label class="text-xs font-bold text-primary">Prénom<input name="prenom" value="{{ old('prenom') }}" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <label class="text-xs font-bold text-primary">Courriel<input name="email" value="{{ old('email') }}" type="email" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <label class="text-xs font-bold text-primary">Rôle<select name="role" x-model="role" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"><option value="candidat">Candidat</option><option value="entreprise">Entreprise</option><option value="Marketing">Marketing</option><option value="admin">Administrateur</option></select></label>
+        <label class="text-xs font-bold text-primary">Mot de passe<input name="password" type="password" minlength="8" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <label class="text-xs font-bold text-primary">Confirmation<input name="password_confirmation" type="password" minlength="8" required class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <label class="text-xs font-bold text-primary">Téléphone<input name="telephone" value="{{ old('telephone') }}" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <label class="text-xs font-bold text-primary">Adresse<input name="adresse" value="{{ old('adresse') }}" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label>
+        <div x-show="role === 'entreprise'" class="contents"><label class="text-xs font-bold text-primary">Nom de l’entreprise<input name="company_name" value="{{ old('company_name') }}" :required="role === 'entreprise'" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">NEQ<input name="neq" value="{{ old('neq') }}" :required="role === 'entreprise'" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Site Web<input name="website" value="{{ old('website') }}" type="url" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm"></label><label class="text-xs font-bold text-primary">Description<textarea name="description" rows="2" class="mt-2 w-full rounded-xl border-outline-variant/30 text-sm">{{ old('description') }}</textarea></label></div>
+        <button class="w-fit rounded-xl bg-primary-container px-5 py-2.5 text-sm font-bold text-white">Créer le compte</button>
+      </form>
+    </details>
     <form method="GET" action="{{ route('admin.users') }}" class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center">
         <div class="relative flex-1 sm:max-w-sm">

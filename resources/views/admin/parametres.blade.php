@@ -24,7 +24,6 @@
       <button class="tab-btn active whitespace-nowrap px-5 py-3 text-sm font-bold text-primary transition-colors" data-tab="general">Général</button>
       <button class="tab-btn whitespace-nowrap px-5 py-3 text-sm font-semibold text-outline transition-colors hover:text-primary" data-tab="appearance">Apparence</button>
       <button class="tab-btn whitespace-nowrap px-5 py-3 text-sm font-semibold text-outline transition-colors hover:text-primary" data-tab="contact">Contact</button>
-      <button class="tab-btn whitespace-nowrap px-5 py-3 text-sm font-semibold text-outline transition-colors hover:text-primary" data-tab="delivery">Livraison</button>
     </div>
 
     <div class="tab-panel active space-y-6" data-tab="general">
@@ -153,47 +152,6 @@
       </x-admin.panel>
     </div>
 
-    <div class="tab-panel space-y-6" data-tab="delivery">
-      <x-admin.panel title="Livraison & suite" body-class="space-y-5">
-        <div class="rounded-2xl border border-outline-variant/20 bg-surface-container-low p-5">
-          <p class="text-sm font-semibold text-primary">Cette brique centralise maintenant le branding et le contact publics.</p>
-          <p class="mt-2 text-sm text-on-surface-variant">Etapes logiques suivantes: textes homepage, footer avance, reseaux sociaux, configuration SMTP et options de moderation.</p>
-        </div>
-        <div class="flex items-center justify-between rounded-xl bg-surface-container-low p-4">
-          <div>
-            <p class="text-sm font-bold text-primary">Authentification à deux facteurs</p>
-            <p class="text-xs text-on-surface-variant">Option conservee en vitrine pour la prochaine phase admin.</p>
-          </div>
-          <label class="relative inline-flex cursor-pointer items-center">
-            <input type="checkbox" class="peer sr-only" checked disabled />
-            <div class="h-6 w-10 rounded-full bg-surface-container transition-colors peer-checked:bg-secondary-container"></div>
-            <div class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-4"></div>
-          </label>
-        </div>
-        <div class="flex items-center justify-between rounded-xl bg-surface-container-low p-4">
-          <div>
-            <p class="text-sm font-bold text-primary">Vérification email obligatoire</p>
-            <p class="text-xs text-on-surface-variant">Les nouveaux comptes doivent vérifier leur email.</p>
-          </div>
-          <label class="relative inline-flex cursor-pointer items-center">
-            <input type="checkbox" class="peer sr-only" checked disabled />
-            <div class="h-6 w-10 rounded-full bg-surface-container transition-colors peer-checked:bg-secondary-container"></div>
-            <div class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-4"></div>
-          </label>
-        </div>
-        <div class="flex items-center justify-between rounded-xl bg-surface-container-low p-4">
-          <div>
-            <p class="text-sm font-bold text-primary">Validation manuelle des entreprises</p>
-            <p class="text-xs text-on-surface-variant">Un admin doit approuver les nouveaux comptes entreprise.</p>
-          </div>
-          <label class="relative inline-flex cursor-pointer items-center">
-            <input type="checkbox" class="peer sr-only" disabled />
-            <div class="h-6 w-10 rounded-full bg-surface-container transition-colors peer-checked:bg-secondary-container"></div>
-            <div class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform peer-checked:translate-x-4"></div>
-          </label>
-        </div>
-      </x-admin.panel>
-    </div>
   </div>
 @endsection
 

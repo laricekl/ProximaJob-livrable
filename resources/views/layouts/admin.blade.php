@@ -31,7 +31,9 @@
         <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Gestion</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.users') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.users*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">group</span> Utilisateurs</a></li>
+          <li><a href="{{ route('admin.entreprises.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.entreprises*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">domain</span> Entreprises</a></li>
           <li><a href="{{ route('admin.offres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work</span> Offres</a></li>
+          <li><a href="{{ route('admin.candidatures.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.candidatures*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">clinical_notes</span> Candidatures</a></li>
           <li><a href="{{ route('admin.abonnements') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.abonnements*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">credit_card</span> Abonnements</a></li>
         </ul>
       </div>
@@ -53,6 +55,9 @@
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.statistiques') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> Statistiques</a></li>
           <li><a href="{{ route('admin.newsletters') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> Newsletter</a></li>
+          @role('admin')
+          <li><a href="{{ route('admin.ressources.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.ressources*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">library_books</span> Ressources</a></li>
+          @endrole
         </ul>
       </div>
       @role('admin')
@@ -60,6 +65,7 @@
         <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Configuration</h3>
         <ul class="space-y-0.5">
           <li><a href="{{ route('admin.parametres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> Paramètres</a></li>
+          <li><a href="{{ route('admin.pilotage') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.pilotage') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">shield</span> Pilotage & sécurité</a></li>
         </ul>
       </div>
       @endrole

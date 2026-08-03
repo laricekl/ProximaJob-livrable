@@ -10,6 +10,10 @@ class Entreprise extends Model
 {
     use HasFactory, SoftDeletes;
 
+    private const STATUS_ALIASES = [
+        'email_verification_pending' => 'pending',
+    ];
+
     protected $fillable = [
         'user_id',
         'company_name',
@@ -18,6 +22,7 @@ class Entreprise extends Model
         'logo',
         'neq',
         'status',
+        'rejection_reason',
         'verified_at',
         'is_featured',
     ];
@@ -37,5 +42,20 @@ class Entreprise extends Model
     public function offres()
     {
         return $this->hasMany(Offre::class);
+    }
+
+    public function candidatures()
+    {
+        return $this->hasManyThrough(Postulation::class, Offre::class, 'entreprise_id', 'offre_id');
+    }
+
+    public static function statusVariants(string $status): array
+    {
+        return array_merge([$status], array_keys(self::STATUS_ALIASES, $status, true));
+    }
+
+    public function getNormalizedStatusAttribute(): string
+    {
+        return self::STATUS_ALIASES[$this->status] ?? ($this->status ?: 'pending');
     }
 }

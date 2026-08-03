@@ -15,9 +15,15 @@ class EnsureDatabaseExists
 
     public function handle(Request $request, Closure $next)
     {
-        if (!self::$checked) {
+        // En production, les migrations sont une étape explicite du
+        // déploiement et ne doivent jamais être lancées par une requête web.
+        if (! app()->environment(['local', 'testing'])) {
+            return $next($request);
+        }
+
+        if (! self::$checked) {
             self::$checked = true;
-            
+
             try {
                 $this->ensureUsableConnection();
 
@@ -63,7 +69,7 @@ class EnsureDatabaseExists
         $requiredTables = ['roles', 'entreprises', 'offres', 'candidate_sectors'];
 
         foreach ($requiredTables as $table) {
-            if (!Schema::hasTable($table)) {
+            if (! Schema::hasTable($table)) {
                 return false;
             }
         }

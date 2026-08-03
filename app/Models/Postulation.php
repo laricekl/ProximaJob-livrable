@@ -10,6 +10,11 @@ class Postulation extends Model
 {
     use HasFactory, SoftDeletes;
 
+    private const STATUS_ALIASES = [
+        'acceptee' => 'accepted',
+        'refusee' => 'rejected',
+    ];
+
     protected $fillable = [
         'user_id',
         'offre_id',
@@ -22,6 +27,7 @@ class Postulation extends Model
         'application_date',
         'algorithm_version',
         'match_details',
+        'admin_notes',
     ];
 
     protected $casts = [
@@ -38,8 +44,24 @@ class Postulation extends Model
 
     public function offre()
     {
-        return $this->belongsTo(Offre::class , 'offre_id');
+        return $this->belongsTo(Offre::class, 'offre_id');
     }
+
+    public static function normalizeStatus(?string $status): string
+    {
+        return self::STATUS_ALIASES[$status] ?? ($status ?: 'en_attente');
+    }
+
+    public static function statusVariants(string $status): array
+    {
+        return array_merge([$status], array_keys(self::STATUS_ALIASES, $status, true));
+    }
+
+    public function getNormalizedStatusAttribute(): string
+    {
+        return self::normalizeStatus($this->status);
+    }
+
     public function autresDocs()
     {
         return $this->hasMany(AutresDoc::class, 'id_postulation');

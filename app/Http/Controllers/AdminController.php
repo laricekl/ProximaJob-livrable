@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Spatie\Permission\Models\Role;
-use App\Models\User;
-use App\Models\Offre;
-use App\Models\UserAbonnement;
-use App\Models\Abonnement; 
-use App\Models\AbonnementFonctionnalite;
-use App\Models\Entreprise;
-use App\Models\Notification;
-use App\Models\Postulation;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use App\Models\SiteSetting;
-use Illuminate\Support\Facades\Validator;
-
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Log;
 use App\Mail\EntrepriseValidated;
 use App\Mail\NewsletterCampaignMail;
+use App\Models\Abonnement;
+use App\Models\AbonnementFonctionnalite;
+use App\Models\Entreprise;
+use App\Models\NewsletterCampagne;
+use App\Models\Notification;
+use App\Models\Offre;
+use App\Models\Postulation;
+use App\Models\SiteSetting;
+use App\Models\User;
+use App\Models\UserAbonnement;
+use App\Support\AdminPasswordPolicy;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Role;
 use Throwable;
-
 
 class AdminController extends Controller
 {
@@ -35,49 +36,48 @@ class AdminController extends Controller
      */
     public function index()
     {
-         $users = User::with(['roles', 'entreprise'])
-                    ->latest()
-                    ->take(5)
-                    ->get();
+        $users = User::with(['roles', 'entreprise'])
+            ->latest()
+            ->take(5)
+            ->get();
 
-         $entrepriseStats = [
+        $entrepriseStats = [
             'count' => User::role('entreprise')->count(),
-            'monthlyGrowth' => $this->calculateMonthlyGrowth('entreprise')
+            'monthlyGrowth' => $this->calculateMonthlyGrowth('entreprise'),
         ];
 
         $offreStats = [
             'count' => Offre::count(),
-            'monthlyGrowth' => $this->calculateOffreMonthlyGrowth(Offre::class)
+            'monthlyGrowth' => $this->calculateOffreMonthlyGrowth(Offre::class),
         ];
 
         $candidateStats = [
             'count' => User::role('candidat')->count(),
-            'monthlyGrowth' => $this->calculateMonthlyGrowth('candidat')
+            'monthlyGrowth' => $this->calculateMonthlyGrowth('candidat'),
         ];
 
         $matchStats = [
             'count' => Postulation::count(),
-            'monthlyGrowth' => $this->calculateOffreMonthlyGrowth(Postulation::class)
+            'monthlyGrowth' => $this->calculateOffreMonthlyGrowth(Postulation::class),
         ];
 
-         $userChartData = $this->getMonthlyData(User::class);
-         $offerChartData = $this->getMonthlyData(Offre::class);
+        $userChartData = $this->getMonthlyData(User::class);
+        $offerChartData = $this->getMonthlyData(Offre::class);
 
-
-         return view("admin.index", compact('users', 'entrepriseStats', 'offreStats', 'candidateStats', 'matchStats', 'userChartData', 'offerChartData'));
+        return view('admin.index', compact('users', 'entrepriseStats', 'offreStats', 'candidateStats', 'matchStats', 'userChartData', 'offerChartData'));
     }
 
     private function calculateMonthlyGrowth($role): ?float
     {
         $currentMonthCount = User::role($role)
-                            ->whereYear('created_at', now()->year)
-                            ->whereMonth('created_at', now()->month)
-                            ->count();
+            ->whereYear('created_at', now()->year)
+            ->whereMonth('created_at', now()->month)
+            ->count();
 
         $previousMonthCount = User::role($role)
-                            ->whereYear('created_at', now()->subMonth()->year)
-                            ->whereMonth('created_at', now()->subMonth()->month)
-                            ->count();
+            ->whereYear('created_at', now()->subMonth()->year)
+            ->whereMonth('created_at', now()->subMonth()->month)
+            ->count();
 
         if ($previousMonthCount === 0) {
             return null;
@@ -102,223 +102,222 @@ class AdminController extends Controller
     {
         $currentYear = now()->year;
         $data = [];
-        
+
         for ($i = 1; $i <= 12; $i++) {
             $count = $model::whereYear('created_at', $currentYear)
-                        ->whereMonth('created_at', $i)
-                        ->count();
+                ->whereMonth('created_at', $i)
+                ->count();
             $data[] = $count;
         }
-        
+
         return [
             'labels' => ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
             'data' => $data,
-            'currentYear' => $currentYear
+            'currentYear' => $currentYear,
         ];
     }
 
-public function getChartData(Request $request)
-{
-    $type = $request->query('type');
-    $period = $request->query('period', '12');
-    
-    // Validation des paramètres
-    if (!in_array($type, ['users', 'offers'])) {
-        return response()->json(['error' => 'Type invalide'], 400);
-    }
-    
-    if (!in_array($period, ['12', '3', '1', '7'])) {
-        return response()->json(['error' => 'Période invalide'], 400);
-    }
-    
-    $model = $type === 'users' ? User::class : Offre::class;
-    
-    $endDate = now();
-    $startDate = clone $endDate;
-    
-    $data = [];
-    $labels = [];
-    
-    switch ($period) {
-        case '3': // 3 derniers mois
-            $startDate->subMonths(3);
-            $data = $this->getMonthlyDataForPeriod($model, $startDate, $endDate);
-            $labels = $this->getMonthLabels($startDate, $endDate);
-            break;
-            
-        case '1': // 1 semaine (7 derniers jours)
-            $startDate->subDays(7);
-            $data = $this->getDailyDataForPeriod($model, $startDate, $endDate);
-            $labels = $this->getDayLabels($startDate, $endDate);
-            break;
-            
-        case '7': // 24 heures (par heure)
-            $startDate->subDay();
-            $data = $this->getHourlyDataForPeriod($model, $startDate, $endDate);
-            $labels = $this->getHourLabels($startDate, $endDate);
-            break;
-            
-        default: // 12 derniers mois
-            $startDate->subMonths(12);
-            $data = $this->getMonthlyDataForPeriod($model, $startDate, $endDate);
-            $labels = $this->getMonthLabels($startDate, $endDate);
-    }
-    
-    return response()->json([
-        'labels' => $labels,
-        'data' => $data,
-        'period' => $period,
-        'type' => $type
-    ]);
-}
+    public function getChartData(Request $request)
+    {
+        $type = $request->query('type');
+        $period = $request->query('period', '12');
 
-private function getMonthlyDataForPeriod($model, $startDate, $endDate)
-{
-    $data = $model::whereBetween('created_at', [$startDate, $endDate])
-                ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as date, COUNT(*) as count")
-                ->groupBy('date')
-                ->orderBy('date')
-                ->get()
-                ->pluck('count', 'date');
-    
-    $result = [];
-    $current = clone $startDate;
-    
-    while ($current <= $endDate) {
-        $key = $current->format('Y-m');
-        $result[] = $data->get($key, 0);
-        $current->addMonth();
-    }
-    
-    return $result;
-}
+        // Validation des paramètres
+        if (! in_array($type, ['users', 'offers'])) {
+            return response()->json(['error' => 'Type invalide'], 400);
+        }
 
-private function getDailyDataForPeriod($model, $startDate, $endDate)
-{
-    $data = $model::whereBetween('created_at', [$startDate, $endDate])
-                ->selectRaw("DATE(created_at) as date, COUNT(*) as count")
-                ->groupBy('date')
-                ->orderBy('date')
-                ->get()
-                ->pluck('count', 'date');
-    
-    $result = [];
-    $current = clone $startDate;
-    
-    while ($current <= $endDate) {
-        $key = $current->format('Y-m-d');
-        $result[] = $data->get($key, 0);
-        $current->addDay();
-    }
-    
-    return $result;
-}
+        if (! in_array($period, ['12', '3', '1', '7'])) {
+            return response()->json(['error' => 'Période invalide'], 400);
+        }
 
-private function getHourlyDataForPeriod($model, $startDate, $endDate)
-{
-    $data = $model::whereBetween('created_at', [$startDate, $endDate])
-                ->selectRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') as date, COUNT(*) as count")
-                ->groupBy('date')
-                ->orderBy('date')
-                ->get()
-                ->pluck('count', 'date');
-    
-    $result = [];
-    $current = clone $startDate;
-    
-    while ($current <= $endDate) {
-        $key = $current->format('Y-m-d H:00:00');
-        $result[] = $data->get($key, 0);
-        $current->addHour();
-    }
-    
-    return $result;
-}
+        $model = $type === 'users' ? User::class : Offre::class;
 
-private function getMonthLabels($startDate, $endDate)
-{
-    $labels = [];
-    $current = clone $startDate;
-    
-    while ($current <= $endDate) {
-        $labels[] = $current->isoFormat('MMM YYYY');
-        $current->addMonth();
-    }
-    
-    return $labels;
-}
+        $endDate = now();
+        $startDate = clone $endDate;
 
-private function getDayLabels($startDate, $endDate)
-{
-    $labels = [];
-    $current = clone $startDate;
-    
-    while ($current <= $endDate) {
-        $labels[] = $current->isoFormat('DD MMM');
-        $current->addDay();
-    }
-    
-    return $labels;
-}
+        $data = [];
+        $labels = [];
 
-private function getHourLabels($startDate, $endDate)
-{
-    $labels = [];
-    $current = clone $startDate;
-    
-    while ($current <= $endDate) {
-        $labels[] = $current->format('H:i');
-        $current->addHour();
-    }
-    
-    return $labels;
-}
+        switch ($period) {
+            case '3': // 3 derniers mois
+                $startDate->subMonths(3);
+                $data = $this->getMonthlyDataForPeriod($model, $startDate, $endDate);
+                $labels = $this->getMonthLabels($startDate, $endDate);
+                break;
 
- public function users(Request $request)
-{
-    $query = User::with(['roles', 'entreprise'])->orderBy('name');
-    
-    
-    if ($request->has('search') && !empty($request->search)) {
-        $search = $request->search;
-        $query->where(function($q) use ($search) {
-            $q->where('name', 'like', "%$search%")
-              ->orWhere('prenom', 'like', "%$search%")
-              ->orWhere('email', 'like', "%$search%")
-              ->orWhereHas('entreprise', function ($entrepriseQuery) use ($search) {
-                  $entrepriseQuery->where('company_name', 'like', "%$search%");
-              });
-        });
-    }
-    
-    // Filtre par rôle
-    if ($request->has('role') && !empty($request->role)) {
-        $query->whereHas('roles', function($q) use ($request) {
-            $q->where('name', $request->role);
-        });
-    }
-    
-    // Filtre par statut
-    if ($request->has('status') && !empty($request->status)) {
-        $status = $request->status;
+            case '1': // 1 semaine (7 derniers jours)
+                $startDate->subDays(7);
+                $data = $this->getDailyDataForPeriod($model, $startDate, $endDate);
+                $labels = $this->getDayLabels($startDate, $endDate);
+                break;
 
-        $query->where(function ($statusQuery) use ($status) {
-            $statusQuery->where('status', $status)
-                ->orWhereHas('entreprise', function ($entrepriseQuery) use ($status) {
-                    $entrepriseQuery->where('status', $status);
-                });
-        });
+            case '7': // 24 heures (par heure)
+                $startDate->subDay();
+                $data = $this->getHourlyDataForPeriod($model, $startDate, $endDate);
+                $labels = $this->getHourLabels($startDate, $endDate);
+                break;
+
+            default: // 12 derniers mois
+                $startDate->subMonths(12);
+                $data = $this->getMonthlyDataForPeriod($model, $startDate, $endDate);
+                $labels = $this->getMonthLabels($startDate, $endDate);
+        }
+
+        return response()->json([
+            'labels' => $labels,
+            'data' => $data,
+            'period' => $period,
+            'type' => $type,
+        ]);
     }
-    
-    $users = $query->paginate(10)->withQueryString();
-    
-    // Pour conserver les paramètres de filtre dans la pagination
-    if ($request->ajax()) {
-        return response()->json(['users' => $users]);
+
+    private function getMonthlyDataForPeriod($model, $startDate, $endDate)
+    {
+        $data = $model::whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as date, COUNT(*) as count")
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('count', 'date');
+
+        $result = [];
+        $current = clone $startDate;
+
+        while ($current <= $endDate) {
+            $key = $current->format('Y-m');
+            $result[] = $data->get($key, 0);
+            $current->addMonth();
+        }
+
+        return $result;
     }
-    
-    return view("admin.users", compact('users'));
-}
+
+    private function getDailyDataForPeriod($model, $startDate, $endDate)
+    {
+        $data = $model::whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw('DATE(created_at) as date, COUNT(*) as count')
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('count', 'date');
+
+        $result = [];
+        $current = clone $startDate;
+
+        while ($current <= $endDate) {
+            $key = $current->format('Y-m-d');
+            $result[] = $data->get($key, 0);
+            $current->addDay();
+        }
+
+        return $result;
+    }
+
+    private function getHourlyDataForPeriod($model, $startDate, $endDate)
+    {
+        $data = $model::whereBetween('created_at', [$startDate, $endDate])
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m-%d %H:00:00') as date, COUNT(*) as count")
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->pluck('count', 'date');
+
+        $result = [];
+        $current = clone $startDate;
+
+        while ($current <= $endDate) {
+            $key = $current->format('Y-m-d H:00:00');
+            $result[] = $data->get($key, 0);
+            $current->addHour();
+        }
+
+        return $result;
+    }
+
+    private function getMonthLabels($startDate, $endDate)
+    {
+        $labels = [];
+        $current = clone $startDate;
+
+        while ($current <= $endDate) {
+            $labels[] = $current->isoFormat('MMM YYYY');
+            $current->addMonth();
+        }
+
+        return $labels;
+    }
+
+    private function getDayLabels($startDate, $endDate)
+    {
+        $labels = [];
+        $current = clone $startDate;
+
+        while ($current <= $endDate) {
+            $labels[] = $current->isoFormat('DD MMM');
+            $current->addDay();
+        }
+
+        return $labels;
+    }
+
+    private function getHourLabels($startDate, $endDate)
+    {
+        $labels = [];
+        $current = clone $startDate;
+
+        while ($current <= $endDate) {
+            $labels[] = $current->format('H:i');
+            $current->addHour();
+        }
+
+        return $labels;
+    }
+
+    public function users(Request $request)
+    {
+        $query = User::with(['roles', 'entreprise'])->orderBy('name');
+
+        if ($request->has('search') && ! empty($request->search)) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%$search%")
+                    ->orWhere('prenom', 'like', "%$search%")
+                    ->orWhere('email', 'like', "%$search%")
+                    ->orWhereHas('entreprise', function ($entrepriseQuery) use ($search) {
+                        $entrepriseQuery->where('company_name', 'like', "%$search%");
+                    });
+            });
+        }
+
+        // Filtre par rôle
+        if ($request->has('role') && ! empty($request->role)) {
+            $query->whereHas('roles', function ($q) use ($request) {
+                $q->where('name', $request->role);
+            });
+        }
+
+        // Filtre par statut
+        if ($request->has('status') && ! empty($request->status)) {
+            $status = $request->status;
+
+            $query->where(function ($statusQuery) use ($status) {
+                $statusQuery->where('status', $status)
+                    ->orWhereHas('entreprise', function ($entrepriseQuery) use ($status) {
+                        $entrepriseQuery->where('status', $status);
+                    });
+            });
+        }
+
+        $users = $query->paginate(10)->withQueryString();
+
+        // Pour conserver les paramètres de filtre dans la pagination
+        if ($request->ajax()) {
+            return response()->json(['users' => $users]);
+        }
+
+        return view('admin.users', compact('users'));
+    }
 
     public function offres(Request $request)
     {
@@ -350,219 +349,217 @@ private function getHourLabels($startDate, $endDate)
             } else {
                 $query->where('status', $request->status);
             }
-        } 
+        }
         $query->orderBy('created_at', 'desc');
         $offers = $query->paginate(10)->appends($request->query());
         $entreprises = Entreprise::get();
-        
-        return view("admin.offres", compact('offers', 'entreprises'));
+
+        return view('admin.offres', compact('offers', 'entreprises'));
     }
 
     public function deactivateOffer($id)
-{
-    try {
-        $offer = Offre::findOrFail($id);
-        
-        // Mettre à jour le statut
-        $offer->status = 'desactive';
-        $offer->save();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Offre désactivée avec succès'
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la désactivation de l\'offre'
-        ], 500);
-    }
-}
+    {
+        try {
+            $offer = Offre::findOrFail($id);
 
- 
-/**
- * Réactiver une offre
- */
-public function reactivateOffer($id)
-{
-    try {
-        $offer = Offre::findOrFail($id);
-        
-        // Déterminer le nouveau statut
-        $now = \Carbon\Carbon::now();
-        $expirationDate = \Carbon\Carbon::parse($offer->date_fin);
-        
-        if ($now->gt($expirationDate)) {
-            $newStatus = 'expire';
-        } else {
-            $newStatus = 'active';
-        }
-        
-        // Mettre à jour le statut
-        $offer->status = $newStatus;
-        $offer->save();
-        
-        $message = $newStatus === 'expire' 
-            ? 'Offre réactivée avec succès (mais expirée car la date limite est dépassée)'
-            : 'Offre réactivée avec succès';
-        
-        return response()->json([
-            'success' => true,
-            'message' => $message,
-            'status' => $newStatus
-        ]);
-        
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la réactivation de l\'offre'
-        ], 500);
-    }
-}
+            // Mettre à jour le statut
+            $offer->status = 'desactive';
+            $offer->save();
 
-public function abonnements(Request $request)
-{
-   
-    $activeSubscriptions = UserAbonnement::current()->count();
-    $expiredSubscriptions = UserAbonnement::where('date_fin', '<', now())->count();
-    
-    // Calcul du revenu mensuel (version optimisée avec la nouvelle structure)
-    $monthlyRevenue = UserAbonnement::whereBetween('date_debut', [now()->startOfMonth(), now()->endOfMonth()])
-        ->join('abonnements', 'user_abonnements.abonnement_id', '=', 'abonnements.id')
-        ->sum('abonnements.montant');
+            return response()->json([
+                'success' => true,
+                'message' => 'Offre désactivée avec succès',
+            ]);
 
-    // Abonnements à renouveler (expirent dans 7 jours)
-    $toRenew = UserAbonnement::whereBetween('date_fin', [now(), now()->addDays(7)])->count();
-
-    // Calcul de l'évolution des abonnements actifs
-    $lastMonthActive = UserAbonnement::whereBetween('date_fin', [
-        now()->subMonth()->startOfMonth(),
-        now()->subMonth()->endOfMonth()
-    ])->count();
-    
-    $activeChange = $lastMonthActive > 0 
-        ? (($activeSubscriptions - $lastMonthActive) / $lastMonthActive * 100) 
-        : 0;
-
-
-    $query = UserAbonnement::with(['user.entreprise', 'abonnement'])
-        ->orderBy('date_fin', 'desc');
-
-    // Filtre par statut
-    if ($request->has('status')) {
-        switch ($request->status) {
-            case 'active':
-                $query->where('date_fin', '>=', now());
-                break;
-            case 'expired':
-                $query->where('date_fin', '<', now());
-                break;
-            case 'pending':
-                $query->where('status', 'En attente');
-                break;
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la désactivation de l\'offre',
+            ], 500);
         }
     }
-    
-    // Filtre par plan
-    if ($request->filled('plan')) {
-        $query->where('abonnement_id', $request->plan);
+
+    /**
+     * Réactiver une offre
+     */
+    public function reactivateOffer($id)
+    {
+        try {
+            $offer = Offre::findOrFail($id);
+
+            // Déterminer le nouveau statut
+            $now = Carbon::now();
+            $expirationDate = Carbon::parse($offer->date_fin);
+
+            if ($now->gt($expirationDate)) {
+                $newStatus = 'expire';
+            } else {
+                $newStatus = 'active';
+            }
+
+            // Mettre à jour le statut
+            $offer->status = $newStatus;
+            $offer->save();
+
+            $message = $newStatus === 'expire'
+                ? 'Offre réactivée avec succès (mais expirée car la date limite est dépassée)'
+                : 'Offre réactivée avec succès';
+
+            return response()->json([
+                'success' => true,
+                'message' => $message,
+                'status' => $newStatus,
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la réactivation de l\'offre',
+            ], 500);
+        }
     }
 
-    // Pagination
-    $abonnements = $query->paginate(10);
-    
-    // Liste des plans pour le filtre
-    $plans = Abonnement::pluck('nom', 'id');
-    $abonnementSummaries = Abonnement::withCount('users')
-        ->orderByDesc('users_count')
-        ->get();
+    public function abonnements(Request $request)
+    {
 
-    // Debug (optionnel)
-    logger('Stats abonnements', [
-        'total_actifs' => $activeSubscriptions,
-        'total_expires' => $expiredSubscriptions,
-        'revenue_mensuel' => $monthlyRevenue
-    ]);
+        $activeSubscriptions = UserAbonnement::current()->count();
+        $expiredSubscriptions = UserAbonnement::where('date_fin', '<', now())->count();
 
-    return view("admin.abonnements", compact(
-        'abonnements',
-        'activeSubscriptions',
-        'expiredSubscriptions',
-        'monthlyRevenue',
-        'toRenew',
-        'activeChange',
-        'plans',
-        'abonnementSummaries'
-    ));
-}
+        // Calcul du revenu mensuel (version optimisée avec la nouvelle structure)
+        $monthlyRevenue = UserAbonnement::whereBetween('date_debut', [now()->startOfMonth(), now()->endOfMonth()])
+            ->join('abonnements', 'user_abonnements.abonnement_id', '=', 'abonnements.id')
+            ->sum('abonnements.montant');
 
-public function activateSubscription(UserAbonnement $subscription)
-{
-    $duration = max(1, (int) ($subscription->abonnement?->duree ?? 30));
-    $subscription->update([
-        'status' => 'Actif',
-        'date_debut' => now(),
-        'date_fin' => now()->addDays($duration),
-    ]);
+        // Abonnements à renouveler (expirent dans 7 jours)
+        $toRenew = UserAbonnement::whereBetween('date_fin', [now(), now()->addDays(7)])->count();
 
-    return back()->with('success', 'Abonnement activé après validation.');
-}
+        // Calcul de l'évolution des abonnements actifs
+        $lastMonthActive = UserAbonnement::whereBetween('date_fin', [
+            now()->subMonth()->startOfMonth(),
+            now()->subMonth()->endOfMonth(),
+        ])->count();
 
-public function cancelSubscription(UserAbonnement $subscription)
-{
-    $subscription->update([
-        'status' => 'Annulé',
-        'date_fin' => now(),
-    ]);
+        $activeChange = $lastMonthActive > 0
+            ? (($activeSubscriptions - $lastMonthActive) / $lastMonthActive * 100)
+            : 0;
 
-    return back()->with('success', 'Abonnement annulé.');
-}
+        $query = UserAbonnement::with(['user.entreprise', 'abonnement'])
+            ->orderBy('date_fin', 'desc');
+
+        // Filtre par statut
+        if ($request->has('status')) {
+            switch ($request->status) {
+                case 'active':
+                    $query->where('date_fin', '>=', now());
+                    break;
+                case 'expired':
+                    $query->where('date_fin', '<', now());
+                    break;
+                case 'pending':
+                    $query->where('status', 'En attente');
+                    break;
+            }
+        }
+
+        // Filtre par plan
+        if ($request->filled('plan')) {
+            $query->where('abonnement_id', $request->plan);
+        }
+
+        // Pagination
+        $abonnements = $query->paginate(10);
+
+        // Liste des plans pour le filtre
+        $plans = Abonnement::pluck('nom', 'id');
+        $abonnementSummaries = Abonnement::withCount('users')
+            ->orderByDesc('users_count')
+            ->get();
+
+        // Debug (optionnel)
+        logger('Stats abonnements', [
+            'total_actifs' => $activeSubscriptions,
+            'total_expires' => $expiredSubscriptions,
+            'revenue_mensuel' => $monthlyRevenue,
+        ]);
+
+        return view('admin.abonnements', compact(
+            'abonnements',
+            'activeSubscriptions',
+            'expiredSubscriptions',
+            'monthlyRevenue',
+            'toRenew',
+            'activeChange',
+            'plans',
+            'abonnementSummaries'
+        ));
+    }
+
+    public function activateSubscription(UserAbonnement $subscription)
+    {
+        $duration = max(1, (int) ($subscription->abonnement?->duree ?? 30));
+        $subscription->update([
+            'status' => 'Actif',
+            'date_debut' => now(),
+            'date_fin' => now()->addDays($duration),
+        ]);
+
+        return back()->with('success', 'Abonnement activé après validation.');
+    }
+
+    public function cancelSubscription(UserAbonnement $subscription)
+    {
+        $subscription->update([
+            'status' => 'Annulé',
+            'date_fin' => now(),
+        ]);
+
+        return back()->with('success', 'Abonnement annulé.');
+    }
 
     public function statistiques()
     {
-         $users = User::with('roles')
-                    ->latest()
-                    ->take(3)
-                    ->get();
+        $users = User::with('roles')
+            ->latest()
+            ->take(3)
+            ->get();
 
-         $entrepriseStats = [
+        $entrepriseStats = [
             'count' => User::role('entreprise')->count(),
-            'monthlyGrowth' => $this->calculateMonthlyGrowth('entreprise')
+            'monthlyGrowth' => $this->calculateMonthlyGrowth('entreprise'),
         ];
 
         $offreStats = [
             'count' => Offre::count(),
-            'monthlyGrowth' => $this->calculateOffreMonthlyGrowth(Offre::class)
+            'monthlyGrowth' => $this->calculateOffreMonthlyGrowth(Offre::class),
         ];
 
-         $userChartData = $this->getMonthlyData(User::class);
-         $offerChartData = $this->getMonthlyData(Offre::class);
+        $userChartData = $this->getMonthlyData(User::class);
+        $offerChartData = $this->getMonthlyData(Offre::class);
 
-         $totalUsers = max(User::count(), 1);
-         $roleDistribution = [
+        $totalUsers = max(User::count(), 1);
+        $roleDistribution = [
             ['label' => 'Candidats', 'count' => User::role('candidat')->count(), 'color' => 'bg-secondary-container'],
             ['label' => 'Entreprises', 'count' => User::role('entreprise')->count(), 'color' => 'bg-blue-500'],
             ['label' => 'Admins', 'count' => User::role('admin')->count(), 'color' => 'bg-primary-container'],
-         ];
+        ];
 
-         $totalPostulations = max(Postulation::count(), 1);
-         $applicationStatusDistribution = collect([
+        $totalPostulations = max(Postulation::count(), 1);
+        $applicationStatusDistribution = collect([
             ['label' => 'À examiner', 'count' => Postulation::where('status', 'en_attente')->count(), 'color' => 'bg-amber-400'],
             ['label' => 'Présélectionnées', 'count' => Postulation::where('status', 'shortlisted')->count(), 'color' => 'bg-secondary-container'],
             ['label' => 'Contactées', 'count' => Postulation::where('status', 'contacted')->count(), 'color' => 'bg-blue-400'],
             ['label' => 'Entretiens', 'count' => Postulation::where('status', 'interview')->count(), 'color' => 'bg-blue-600'],
             ['label' => 'Acceptées', 'count' => Postulation::where('status', 'accepted')->count(), 'color' => 'bg-green-500'],
             ['label' => 'Refusées', 'count' => Postulation::where('status', 'rejected')->count(), 'color' => 'bg-red-400'],
-         ])->filter(fn ($item) => $item['count'] > 0)->values();
+        ])->filter(fn ($item) => $item['count'] > 0)->values();
 
-         if ($applicationStatusDistribution->isEmpty()) {
+        if ($applicationStatusDistribution->isEmpty()) {
             $applicationStatusDistribution = collect([
                 ['label' => 'En cours', 'count' => Postulation::count(), 'color' => 'bg-secondary-container'],
             ]);
-         }
+        }
 
-         $topEntreprises = Entreprise::withCount('offres')
+        $topEntreprises = Entreprise::withCount('offres')
             ->with(['offres.postulations'])
             ->get()
             ->map(function (Entreprise $entreprise) {
@@ -580,7 +577,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             ->take(5)
             ->values();
 
-         return view("admin.statistiques", compact(
+        return view('admin.statistiques', compact(
             'users',
             'entrepriseStats',
             'offreStats',
@@ -591,22 +588,23 @@ public function cancelSubscription(UserAbonnement $subscription)
             'applicationStatusDistribution',
             'totalPostulations',
             'topEntreprises'
-         ));
+        ));
     }
 
     public function newsletters()
     {
-        $campagnes = \App\Models\NewsletterCampagne::latest()->take(20)->get();
-        return view("admin.newsletters", compact('campagnes'));
+        $campagnes = NewsletterCampagne::latest()->take(20)->get();
+
+        return view('admin.newsletters', compact('campagnes'));
     }
 
     public function newsletterStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'sujet'    => 'required|string|max:255',
-            'contenu'  => 'required|string',
+            'sujet' => 'required|string|max:255',
+            'contenu' => 'required|string',
             'audience' => 'required|in:tous,candidats,entreprises,premium',
-            'action'   => 'required|in:brouillon,envoyer',
+            'action' => 'required|in:brouillon,envoyer',
         ]);
 
         if ($validator->fails()) {
@@ -626,12 +624,12 @@ public function cancelSubscription(UserAbonnement $subscription)
         $count = (clone $recipients)->count();
         $isSending = $request->action === 'envoyer';
 
-        $campaign = \App\Models\NewsletterCampagne::create([
-            'sujet'               => $request->sujet,
-            'contenu'             => $request->contenu,
-            'audience'            => $request->audience,
-            'statut'              => $isSending ? 'en_cours' : 'brouillon',
-            'envoyee_le'          => null,
+        $campaign = NewsletterCampagne::create([
+            'sujet' => $request->sujet,
+            'contenu' => $request->contenu,
+            'audience' => $request->audience,
+            'statut' => $isSending ? 'en_cours' : 'brouillon',
+            'envoyee_le' => null,
             'destinataires_count' => $count,
         ]);
 
@@ -658,16 +656,16 @@ public function cancelSubscription(UserAbonnement $subscription)
         }
 
         $message = $isSending
-            ? 'Newsletter « ' . $request->sujet . ' » mise en file pour ' . number_format($count) . ' destinataire(s).'
-            : 'Newsletter « ' . $request->sujet . ' » sauvegardée en brouillon.';
+            ? 'Newsletter « '.$request->sujet.' » mise en file pour '.number_format($count).' destinataire(s).'
+            : 'Newsletter « '.$request->sujet.' » sauvegardée en brouillon.';
 
         return redirect()->route('admin.newsletters')->with('success', $message);
     }
 
     public function parametres()
     {
-         $abonnements = Abonnement::with('fonctionnalites')->get();
-    
+        $abonnements = Abonnement::with('fonctionnalites')->get();
+
         // Récupérer les paramètres existants ou créer un enregistrement par défaut
         $settings = SiteSetting::firstOrCreate([], SiteSetting::defaults());
 
@@ -683,7 +681,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             'Australia/Sydney' => 'Australia/Sydney (UTC+10)',
         ];
 
-        return view("admin.parametres", compact('settings', 'timezones', 'abonnements'));
+        return view('admin.parametres', compact('settings', 'timezones', 'abonnements'));
     }
 
     public function updateGeneral(Request $request)
@@ -717,7 +715,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur de validation',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -740,7 +738,7 @@ public function cancelSubscription(UserAbonnement $subscription)
                 if ($settings->logo && Storage::disk('public')->exists($settings->logo)) {
                     Storage::disk('public')->delete($settings->logo);
                 }
-                
+
                 // Sauvegarder le nouveau logo
                 $logoPath = $request->file('logo')->store('settings', 'public');
                 $settings->logo = $logoPath;
@@ -752,7 +750,7 @@ public function cancelSubscription(UserAbonnement $subscription)
                 if ($settings->favicon && Storage::disk('public')->exists($settings->favicon)) {
                     Storage::disk('public')->delete($settings->favicon);
                 }
-                
+
                 // Sauvegarder le nouveau favicon
                 $faviconPath = $request->file('favicon')->store('settings', 'public');
                 $settings->favicon = $faviconPath;
@@ -767,7 +765,7 @@ public function cancelSubscription(UserAbonnement $subscription)
                     'data' => [
                         'logo_url' => $settings->logo_url,
                         'favicon_url' => $settings->favicon_url,
-                    ]
+                    ],
                 ]);
             }
 
@@ -777,7 +775,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erreur lors de la sauvegarde : ' . $e->getMessage()
+                    'message' => 'La sauvegarde des paramètres a échoué.',
                 ], 500);
             }
 
@@ -791,13 +789,13 @@ public function cancelSubscription(UserAbonnement $subscription)
     {
         try {
             $settings = SiteSetting::first();
-            
+
             if ($settings && $settings->logo) {
                 // Supprimer le fichier du storage
                 if (Storage::disk('public')->exists($settings->logo)) {
                     Storage::disk('public')->delete($settings->logo);
                 }
-                
+
                 // Mettre à jour la base de données
                 $settings->logo = null;
                 $settings->save();
@@ -806,7 +804,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Logo supprimé avec succès !'
+                    'message' => 'Logo supprimé avec succès !',
                 ]);
             }
 
@@ -816,7 +814,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
+                    'message' => 'La suppression du logo a échoué.',
                 ], 500);
             }
 
@@ -830,13 +828,13 @@ public function cancelSubscription(UserAbonnement $subscription)
     {
         try {
             $settings = SiteSetting::first();
-            
+
             if ($settings && $settings->favicon) {
                 // Supprimer le fichier du storage
                 if (Storage::disk('public')->exists($settings->favicon)) {
                     Storage::disk('public')->delete($settings->favicon);
                 }
-                
+
                 // Mettre à jour la base de données
                 $settings->favicon = null;
                 $settings->save();
@@ -845,7 +843,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => true,
-                    'message' => 'Favicon supprimé avec succès !'
+                    'message' => 'Favicon supprimé avec succès !',
                 ]);
             }
 
@@ -855,7 +853,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             if ($request->expectsJson()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Erreur lors de la suppression : ' . $e->getMessage()
+                    'message' => 'La suppression du favicon a échoué.',
                 ], 500);
             }
 
@@ -867,7 +865,7 @@ public function cancelSubscription(UserAbonnement $subscription)
 
     private function getUserInitials(User $user): string
     {
-        return strtoupper(substr($user->name, 0, 1) . substr($user->prenom, 0, 1));
+        return strtoupper(substr($user->name, 0, 1).substr($user->prenom, 0, 1));
     }
 
     private function getUserColor(User $user): string
@@ -880,6 +878,7 @@ public function cancelSubscription(UserAbonnement $subscription)
             return '#10B981'; // vert
         }
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -899,7 +898,7 @@ public function cancelSubscription(UserAbonnement $subscription)
                 'name' => 'required|string|max:255',
                 'prenom' => 'required|string|max:255',
                 'email' => 'required|email|unique:users,email',
-                'password' => 'required|string|min:8|confirmed',
+                'password' => ['required', 'string', AdminPasswordPolicy::rule(role: $request->input('role')), 'confirmed'],
                 'role' => 'required|in:admin,entreprise,candidat,Marketing',
                 'telephone' => 'nullable|string|max:20',
                 'adresse' => 'nullable|string|max:255',
@@ -927,24 +926,25 @@ public function cancelSubscription(UserAbonnement $subscription)
                 'prenom' => $validatedData['prenom'],
                 'email' => $validatedData['email'],
                 'password' => Hash::make($validatedData['password']),
+                'password_changed_at' => now(),
                 'telephone' => $validatedData['telephone'] ?? null,
                 'adresse' => $validatedData['adresse'] ?? null,
-                'status' => 'Actif'
+                'status' => 'Actif',
             ]);
 
             // Assigner le rôle
-           // $user->assignRole($validatedData['role']);
+            // $user->assignRole($validatedData['role']);
             $user->syncRoles([$validatedData['role']]);
 
             // Gérer la photo de profil
             if ($request->hasFile('profile_photo')) {
                 $photo = $request->file('profile_photo');
-                $photoName = time() . '_' . $user->id . '.' . $photo->getClientOriginalExtension();
+                $photoName = time().'_'.$user->id.'.'.$photo->getClientOriginalExtension();
                 $photo->move(public_path('assets/images/user_pdp'), $photoName);
                 $user->update(['profile_photo_path' => $photoName]);
             }
 
-            // Créer les données entreprise  
+            // Créer les données entreprise
             if ($validatedData['role'] === 'entreprise') {
                 $entrepriseData = [
                     'user_id' => $user->id,
@@ -959,7 +959,7 @@ public function cancelSubscription(UserAbonnement $subscription)
                 // Gérer le logo
                 if ($request->hasFile('logo')) {
                     $logo = $request->file('logo');
-                    $logoName = time() . '_' . $user->id . '_logo.' . $logo->getClientOriginalExtension();
+                    $logoName = time().'_'.$user->id.'_logo.'.$logo->getClientOriginalExtension();
                     $logo->move(public_path('assets/images/company_logos'), $logoName);
                     $entrepriseData['logo'] = $logoName;
                 }
@@ -967,7 +967,7 @@ public function cancelSubscription(UserAbonnement $subscription)
                 // Gérer l'extrait RCCM
                 if ($request->hasFile('extrait_rccm')) {
                     $extrait = $request->file('extrait_rccm');
-                    $extraitName = time() . '_' . $user->id . '_extrait.' . $extrait->getClientOriginalExtension();
+                    $extraitName = time().'_'.$user->id.'_extrait.'.$extrait->getClientOriginalExtension();
                     $extrait->move(public_path('assets/documents/rccm'), $extraitName);
                     $entrepriseData['extrait_rccm'] = $extraitName;
                 }
@@ -977,291 +977,155 @@ public function cancelSubscription(UserAbonnement $subscription)
 
             DB::commit();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Utilisateur créé avec succès !'
-            ]);
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Utilisateur créé avec succès !']);
+            }
+
+            return redirect()->route('admin.users')->with('success', 'Utilisateur créé avec succès !');
 
         } catch (ValidationException $e) {
             DB::rollBack();
+            if (! $request->expectsJson()) {
+                return back()->withErrors($e->errors())->withInput();
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur de validation',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
-            
+
         } catch (Throwable $e) {
             DB::rollBack();
+            Log::error('Échec de création d’un utilisateur administrateur', ['error' => $e->getMessage()]);
+            if (! $request->expectsJson()) {
+                return back()->withErrors(['creation' => 'La création du compte a échoué. Veuillez réessayer.'])->withInput();
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue lors de la création : ' . $e->getMessage()
+                'message' => 'Une erreur est survenue lors de la création.',
             ], 500);
         }
     }
 
-
-       public function abonstore(Request $request)
+    public function abonstore(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:255',
-            'description' => 'required|string',
-            'montant' => 'required|numeric|min:0',
-            'duree' => 'required|integer',
-            'couleur' => 'nullable|string',
-            'populaire' => 'boolean',
-            'actif' => 'boolean',
-            'fonctionnalites' => 'required|json'
-        ]);
+        $data = $this->validatePlan($request);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur de validation',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        DB::transaction(function () use ($data) {
+            $plan = Abonnement::create(collect($data)->except('fonctionnalites')->all());
+            $this->syncPlanFeatures($plan, $data['fonctionnalites']);
+        });
 
-        DB::beginTransaction();
-        try {
-            // Créer l'abonnement
-            $abonnement = Abonnement::create([
-                'nom' => $request->nom,
-                'description' => $request->description,
-                'montant' => $request->montant,
-                'duree' => $request->duree,
-                'couleur' => $request->couleur,
-                'populaire' => $request->boolean('populaire'),
-                'actif' => $request->boolean('actif')
-            ]);
-
-            // Créer les fonctionnalités
-            $fonctionnalites = json_decode($request->fonctionnalites, true);
-            
-            foreach ($fonctionnalites as $index => $fonctionnalite) {
-                AbonnementFonctionnalite::create([
-                    'abonnement_id' => $abonnement->id,
-                    'nom' => $fonctionnalite['nom'],
-                    'icone' => $fonctionnalite['icone'] ?? null,
-                    'ordre' => $fonctionnalite['ordre'] ?? $index,
-                    'actif' => $fonctionnalite['actif'] ?? true
-                ]);
-            }
-
-            DB::commit();
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Abonnement créé avec succès',
-                'data' => $abonnement
-            ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur lors de la création: ' . $e->getMessage()
-            ], 500);
-        }
+        return redirect()->route('admin.abonnements')->with('success', 'Plan créé avec succès.');
     }
 
     public function getFonctionnalites($id)
     {
         try {
             $abonnement = Abonnement::with('fonctionnalites')->findOrFail($id);
+
             return response()->json($abonnement->fonctionnalites);
         } catch (\Exception $e) {
-            \Log::error('Erreur chargement fonctionnalités: ' . $e->getMessage());
+            \Log::error('Erreur chargement fonctionnalités: '.$e->getMessage());
+
             return response()->json([], 500);
         }
     }
 
+    public function abonupdate(Request $request, $id)
+    {
+        $plan = Abonnement::findOrFail($id);
+        $data = $this->validatePlan($request);
 
-public function abonupdate(Request $request, $id)
-{
-    DB::beginTransaction();
-    
-    try {
-        $abonnement = Abonnement::findOrFail($id);
-        
-        // Validation des données avec des règles plus flexibles
-        $validator = Validator::make($request->all(), [
-            'nom' => 'required|string|max:255',
-            'description' => 'required|string',
-            'montant' => 'required|numeric|min:0',
-            'duree' => 'required|integer|min:0',
-            'couleur' => 'nullable|string',
-            'populaire' => 'sometimes|in:0,1',
-            'actif' => 'sometimes|in:0,1',
-            'fonctionnalites' => 'required|string' // JSON string, pas json validation
-        ]);
+        DB::transaction(function () use ($plan, $data) {
+            $plan->update(collect($data)->except('fonctionnalites')->all());
+            $this->syncPlanFeatures($plan, $data['fonctionnalites']);
+        });
 
-        if ($validator->fails()) {
-            \Log::info('Erreurs de validation:', $validator->errors()->toArray());
-            return response()->json([
-                'success' => false,
-                'message' => 'Erreur de validation',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-        
-        // Mise à jour de l'abonnement avec gestion des valeurs par défaut
-        $abonnement->update([
-            'nom' => $request->nom,
-            'description' => $request->description,
-            'montant' => $request->montant,
-            'duree' => $request->duree,
-            'couleur' => $request->couleur,
-            'populaire' => $request->populaire == '1' ? true : false,
-            'actif' => $request->actif == '1' ? true : false
-        ]);
-        
-        // Gestion des fonctionnalités
-        $fonctionnalitesJson = $request->fonctionnalites;
-        \Log::info('JSON fonctionnalités reçu:', ['json' => $fonctionnalitesJson]);
-        
-        $fonctionnalites = json_decode($fonctionnalitesJson, true);
-        
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            throw new \Exception('Erreur de décodage JSON des fonctionnalités: ' . json_last_error_msg());
-        }
-        
-        \Log::info('Fonctionnalités décodées:', ['fonctionnalites' => $fonctionnalites]);
-        
-        // Supprimer les anciennes fonctionnalités
-        $abonnement->fonctionnalites()->delete();
-        
-        // Ajouter les nouvelles fonctionnalités
-        foreach ($fonctionnalites as $index => $fnData) {
-            if (!empty($fnData['nom'])) {
-                $newFonctionnalite = AbonnementFonctionnalite::create([
-                    'abonnement_id' => $abonnement->id,
-                    'nom' => $fnData['nom'],
-                    'icone' => $fnData['icone'] ?? null,
-                    'ordre' => $fnData['ordre'] ?? $index,
-                    'actif' => isset($fnData['actif']) ? (bool) $fnData['actif'] : true,
-                ]);
-                
-                \Log::info('Fonctionnalité créée:', ['fonctionnalite' => $newFonctionnalite->toArray()]);
-            }
-        }
-        
-        DB::commit();
-        
-        return response()->json([
-            'success' => true,
-            'message' => 'Abonnement mis à jour avec succès',
-            'data' => $abonnement->load('fonctionnalites')
-        ]);
-        
-    } catch (\Exception $e) {
-        DB::rollBack();
-        
-        \Log::error('Erreur mise à jour abonnement: ' . $e->getMessage(), [
-            'exception' => $e,
-            'abonnement_id' => $id,
-            'request_data' => $request->except(['password', 'password_confirmation', 'logo', 'profile_photo', 'token', 'current_password']),
-            'trace' => $e->getTraceAsString()
-        ]);
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la mise à jour: ' . $e->getMessage()
-        ], 500);
+        return redirect()->route('admin.abonnements')->with('success', 'Plan mis à jour avec succès.');
     }
-}
 
- public function abondestroy($id)
-{
-    DB::beginTransaction();
-    
-    try {
-        $abonnement = Abonnement::with(['users', 'fonctionnalites'])->findOrFail($id);
-        
-                
-        // Log avant suppression
-        \Log::info('Suppression d\'abonnement demandée', [
-            'abonnement_id' => $id,
-            'nom' => $abonnement->nom,
-            'fonctionnalites_count' => $abonnement->fonctionnalites->count(),
-            'utilisateurs_historique' => $abonnement->users->count()
-        ]);
-        
-        // Supprimer les fonctionnalités associées
-        $fonctionnalitesCount = $abonnement->fonctionnalites->count();
-        $abonnement->fonctionnalites()->delete();
-        
-        // Détacher tous les utilisateurs (supprimer les enregistrements pivot)
-        $abonnement->users()->detach();
-        
-        // Supprimer l'abonnement
-        $nomAbonnement = $abonnement->nom;
-        $abonnement->delete();
-        
-        DB::commit();
-        
-        \Log::info('Abonnement supprimé avec succès', [
-            'abonnement_id' => $id,
-            'nom' => $nomAbonnement,
-            'fonctionnalites_supprimees' => $fonctionnalitesCount
-        ]);
-        
-        return response()->json([
-            'success' => true,
-            'message' => "L'abonnement \"{$nomAbonnement}\" et ses {$fonctionnalitesCount} fonctionnalités ont été supprimés avec succès."
-        ]);
-        
-    } catch (ModelNotFoundException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Abonnement non trouvé.'
-        ], 404);
-        
-    } catch (\Exception $e) {
-        DB::rollBack();
-        
-        \Log::error('Erreur lors de la suppression d\'abonnement', [
-            'abonnement_id' => $id,
-            'error' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        
-        return response()->json([
-            'success' => false,
-            'message' => 'Erreur lors de la suppression: ' . $e->getMessage()
-        ], 500);
+    public function abondestroy($id)
+    {
+        $plan = Abonnement::withCount('users')->findOrFail($id);
+        if ($plan->users_count > 0) {
+            return back()->withErrors(['plan' => 'Ce plan possède un historique d’abonnements. Désactivez-le au lieu de le supprimer.']);
+        }
+
+        DB::transaction(function () use ($plan) {
+            $plan->fonctionnalites()->delete();
+            $plan->delete();
+        });
+
+        return redirect()->route('admin.abonnements')->with('success', 'Plan supprimé avec succès.');
     }
-}
+
+    private function validatePlan(Request $request): array
+    {
+        $data = $request->validate([
+            'nom' => ['required', 'string', 'max:255'],
+            'description' => ['required', 'string', 'max:2000'],
+            'montant' => ['required', 'numeric', 'min:0'],
+            'duree' => ['required', 'integer', 'min:1', 'max:3650'],
+            'couleur' => ['nullable', 'string', 'max:30'],
+            'populaire' => ['nullable', 'boolean'],
+            'actif' => ['nullable', 'boolean'],
+            'fonctionnalites' => ['required', 'array', 'min:1', 'max:20'],
+            'fonctionnalites.*' => ['nullable', 'string', 'max:255'],
+        ]);
+        $data['fonctionnalites'] = collect($data['fonctionnalites'])->map(fn ($feature) => trim((string) $feature))->filter()->values()->all();
+        if ($data['fonctionnalites'] === []) {
+            throw ValidationException::withMessages(['fonctionnalites' => 'Ajoutez au moins une fonctionnalité.']);
+        }
+        $data['actif'] = $request->boolean('actif');
+        $data['populaire'] = $request->boolean('populaire');
+
+        return $data;
+    }
+
+    private function syncPlanFeatures(Abonnement $plan, array $features): void
+    {
+        $plan->fonctionnalites()->delete();
+        foreach ($features as $order => $name) {
+            AbonnementFonctionnalite::create([
+                'abonnement_id' => $plan->id,
+                'nom' => $name,
+                'ordre' => $order,
+                'actif' => true,
+            ]);
+        }
+    }
+
     /**
      * Display the specified resource.
      */
-public function show($id)
-{
-    $user = User::with([
-                'entreprise',
-                'roles',
-                'postulations.offre.entreprise',
-                'abonnements' => fn ($query) => $query->orderByDesc('user_abonnements.created_at'),
-            ])
-                ->findOrFail($id);
+    public function show($id)
+    {
+        $user = User::with([
+            'entreprise',
+            'roles',
+            'postulations.offre.entreprise',
+            'abonnements' => fn ($query) => $query->orderByDesc('user_abonnements.created_at'),
+        ])
+            ->findOrFail($id);
 
-    return view('admin.users-show', compact('user'));
-}
+        return view('admin.users-show', compact('user'));
+    }
 
-
-    
     /**
      * Show the form for editing the specified resource.
      */
-    
 
-/**
- * Récupère les données d'un utilisateur pour l'édition
- */
- public function edit($id)
+    /**
+     * Récupère les données d'un utilisateur pour l'édition
+     */
+    public function edit($id)
     {
         try {
             $user = User::with(['roles', 'entreprise'])->findOrFail($id);
-            
+
             // Formatter les données pour le frontend
             $userData = [
                 'id' => $user->id,
@@ -1272,42 +1136,43 @@ public function show($id)
                 'adresse' => $user->adresse,
                 'profile_photo_path' => $user->profile_photo_path,
                 'roles' => $user->roles->pluck('name')->toArray(),
-                'entreprise' => $user->entreprise
+                'entreprise' => $user->entreprise,
             ];
-            
+
             return response()->json([
                 'success' => true,
-                'user' => $userData
+                'user' => $userData,
             ]);
         } catch (\Exception $e) {
-            \Log::error('Erreur lors du chargement des données utilisateur: ' . $e->getMessage());
+            \Log::error('Erreur lors du chargement des données utilisateur: '.$e->getMessage());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Utilisateur non trouvé'
+                'message' => 'Utilisateur non trouvé',
             ], 404);
         }
     }
 
-/**
- * Met à jour un utilisateur
- */
-     public function update(Request $request, $id)
+    /**
+     * Met à jour un utilisateur
+     */
+    public function update(Request $request, $id)
     {
         try {
             $user = User::findOrFail($id);
-            
+
             // Validation des données
             $rules = [
                 'name' => 'required|string|max:255',
                 'prenom' => 'required|string|max:255',
-                'email' => 'required|email|unique:users,email,' . $id,
+                'email' => 'required|email|unique:users,email,'.$id,
                 'telephone' => 'nullable|string|max:20',
                 'adresse' => 'nullable|string|max:255',
                 'role' => 'required|in:admin,entreprise,candidat,Marketing',
                 'password' => 'nullable|min:8|confirmed',
-                'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+                'profile_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ];
-            
+
             // Règles supplémentaires pour les entreprises
             if ($request->role === 'entreprise') {
                 $rules = array_merge($rules, [
@@ -1317,15 +1182,15 @@ public function show($id)
                     'neq' => 'nullable|string|max:50',
                     'rccm' => 'nullable|string|max:50',
                     'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-                    'extrait_rccm' => 'nullable|file|mimes:pdf,doc,docx|max:5120'
+                    'extrait_rccm' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
                 ]);
             }
-            
+
             $validatedData = $request->validate($rules);
-            
+
             // Commencer une transaction
             DB::beginTransaction();
-            
+
             // Mettre à jour les informations utilisateur
             $userData = [
                 'name' => $validatedData['name'],
@@ -1334,35 +1199,35 @@ public function show($id)
                 'telephone' => $validatedData['telephone'] ?? null,
                 'adresse' => $validatedData['adresse'] ?? null,
             ];
-            
+
             // Gérer le mot de passe s'il est fourni
-            if (!empty($validatedData['password'])) {
+            if (! empty($validatedData['password'])) {
                 $userData['password'] = Hash::make($validatedData['password']);
             }
-            
+
             // Gérer l'upload de la photo de profil
             if ($request->hasFile('profile_photo')) {
                 // Supprimer l'ancienne photo si elle existe
                 if ($user->profile_photo_path) {
-                    $oldPhotoPath = public_path('assets/images/user_pdp/' . $user->profile_photo_path);
+                    $oldPhotoPath = public_path('assets/images/user_pdp/'.$user->profile_photo_path);
                     if (file_exists($oldPhotoPath)) {
                         unlink($oldPhotoPath);
                     }
                 }
-                
+
                 // Uploader la nouvelle photo
                 $photo = $request->file('profile_photo');
-                $photoName = time() . '_' . uniqid() . '.' . $photo->getClientOriginalExtension();
+                $photoName = time().'_'.uniqid().'.'.$photo->getClientOriginalExtension();
                 $photo->move(public_path('assets/images/user_pdp'), $photoName);
                 $userData['profile_photo_path'] = $photoName;
             }
-            
+
             // Mettre à jour l'utilisateur
             $user->update($userData);
-            
+
             // Gérer les rôles
             $user->syncRoles([$validatedData['role']]);
-            
+
             // Si le rôle est entreprise, gérer les données entreprise
             if ($validatedData['role'] === 'entreprise') {
                 $entrepriseData = [
@@ -1372,41 +1237,41 @@ public function show($id)
                     'neq' => $validatedData['neq'] ?? null,
                     'rccm' => $validatedData['rccm'] ?? null,
                 ];
-                
+
                 $entreprise = $user->entreprise;
-                
+
                 // Gérer l'upload du logo
                 if ($request->hasFile('logo')) {
                     // Supprimer l'ancien logo si il existe
                     if ($entreprise && $entreprise->logo) {
-                        $oldLogoPath = public_path('assets/images/company_logos/' . $entreprise->logo);
+                        $oldLogoPath = public_path('assets/images/company_logos/'.$entreprise->logo);
                         if (file_exists($oldLogoPath)) {
                             unlink($oldLogoPath);
                         }
                     }
-                    
+
                     $logo = $request->file('logo');
-                    $logoName = time() . '_' . uniqid() . '.' . $logo->getClientOriginalExtension();
+                    $logoName = time().'_'.uniqid().'.'.$logo->getClientOriginalExtension();
                     $logo->move(public_path('assets/images/company_logos'), $logoName);
                     $entrepriseData['logo'] = $logoName;
                 }
-                
+
                 // Gérer l'upload de l'extrait RCCM
                 if ($request->hasFile('extrait_rccm')) {
                     // Supprimer l'ancien fichier si il existe
                     if ($entreprise && $entreprise->extrait_rccm) {
-                        $oldFilePath = public_path('assets/documents/rccm/' . $entreprise->extrait_rccm);
+                        $oldFilePath = public_path('assets/documents/rccm/'.$entreprise->extrait_rccm);
                         if (file_exists($oldFilePath)) {
                             unlink($oldFilePath);
                         }
                     }
-                    
+
                     $file = $request->file('extrait_rccm');
-                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
                     $file->move(public_path('assets/documents/rccm'), $fileName);
                     $entrepriseData['extrait_rccm'] = $fileName;
                 }
-                
+
                 // Créer ou mettre à jour l'entreprise
                 if ($entreprise) {
                     $entreprise->update($entrepriseData);
@@ -1419,13 +1284,13 @@ public function show($id)
                 if ($user->entreprise) {
                     // Supprimer les fichiers associés
                     if ($user->entreprise->logo) {
-                        $logoPath = public_path('assets/images/company_logos/' . $user->entreprise->logo);
+                        $logoPath = public_path('assets/images/company_logos/'.$user->entreprise->logo);
                         if (file_exists($logoPath)) {
                             unlink($logoPath);
                         }
                     }
                     if ($user->entreprise->extrait_rccm) {
-                        $filePath = public_path('assets/documents/rccm/' . $user->entreprise->extrait_rccm);
+                        $filePath = public_path('assets/documents/rccm/'.$user->entreprise->extrait_rccm);
                         if (file_exists($filePath)) {
                             unlink($filePath);
                         }
@@ -1433,27 +1298,36 @@ public function show($id)
                     $user->entreprise->delete();
                 }
             }
-            
+
             DB::commit();
-            
-            return response()->json([
-                'success' => true,
-                'message' => 'Utilisateur modifié avec succès'
-            ]);
-            
-        } catch (\Illuminate\Validation\ValidationException $e) {
+
+            if ($request->expectsJson()) {
+                return response()->json(['success' => true, 'message' => 'Utilisateur modifié avec succès']);
+            }
+
+            return redirect()->route('admin.users.show', $user)->with('success', 'Utilisateur modifié avec succès.');
+
+        } catch (ValidationException $e) {
             DB::rollback();
+            if (! $request->expectsJson()) {
+                return back()->withErrors($e->errors())->withInput();
+            }
+
             return response()->json([
                 'success' => false,
                 'message' => 'Erreur de validation',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         } catch (\Exception $e) {
             DB::rollback();
-            \Log::error('Erreur lors de la modification utilisateur: ' . $e->getMessage());
+            \Log::error('Erreur lors de la modification utilisateur: '.$e->getMessage());
+            if (! $request->expectsJson()) {
+                return back()->withErrors(['edition' => 'La modification du compte a échoué.'])->withInput();
+            }
+
             return response()->json([
                 'success' => false,
-                'message' => 'Erreur lors de la modification: ' . $e->getMessage()
+                'message' => 'Erreur lors de la modification du compte.',
             ], 500);
         }
     }
@@ -1461,335 +1335,333 @@ public function show($id)
     /**
      * Remove the specified resource from storage.
      */
-   public function deleteUser(Request $request, $id)
-{
-    try {
-        // Validation des données
-        $request->validate([
-            'password' => 'required|string|min:6',
-        ]);
-
-        // Vérifier le mot de passe de l'administrateur connecté
-        if (!Hash::check($request->password, Auth::user()->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mot de passe incorrect. Vérifiez votre mot de passe et réessayez.'
-            ], 422);
-        }
-
-        // Trouver l'utilisateur à supprimer
-        $userToDelete = User::findOrFail($id);
-
-        // Empêcher l'auto-suppression
-        if ($userToDelete->id === Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Vous ne pouvez pas supprimer votre propre compte.'
-            ], 422);
-        }
-
-        // Empêcher la suppression du super admin (optionnel)
-        if ($userToDelete->hasRole('super-admin')) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Impossible de supprimer un super administrateur.'
-            ], 422);
-        }
-
-        // Sauvegarder les informations pour le message de retour
-        $userName = $userToDelete->name . ' ' . $userToDelete->prenom;
-
-        // Supprimer les fichiers associés
-        $this->deleteUserFiles($userToDelete);
-
-        // Supprimer l'utilisateur
-        $userToDelete->delete();
-
-        // Log de l'action (optionnel)
-        \Log::info("Utilisateur supprimé", [
-            'admin_id' => Auth::id(),
-            'admin_name' => Auth::user()->name,
-            'deleted_user_id' => $id,
-            'deleted_user_name' => $userName,
-            'timestamp' => now()
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => "L'utilisateur {$userName} a été supprimé avec succès."
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Données invalides.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Utilisateur non trouvé.'
-        ], 404);
-    } catch (\Exception $e) {
-        \Log::error("Erreur lors de la suppression de l'utilisateur", [
-            'error' => $e->getMessage(),
-            'user_id' => $id,
-            'admin_id' => Auth::id()
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Une erreur est survenue lors de la suppression.'
-        ], 500);
-    }
-}
-
-/**
- * Supprimer les fichiers associés à un utilisateur
- */
-private function deleteUserFiles(User $user)
-{
-    // Supprimer la photo de profil
-    if ($user->profile_photo_path && Storage::disk('public')->exists('assets/images/user_pdp/' . $user->profile_photo_path)) {
-        Storage::disk('public')->delete('assets/images/user_pdp/' . $user->profile_photo_path);
-    }
-
-    // Si c'est une entreprise, supprimer les fichiers d'entreprise
-    if ($user->hasRole('entreprise') && $user->entreprise) {
-        $entreprise = $user->entreprise;
-        
-        // Supprimer le logo
-        if ($entreprise->logo && Storage::disk('public')->exists('assets/images/company_logos/' . $entreprise->logo)) {
-            Storage::disk('public')->delete('assets/images/company_logos/' . $entreprise->logo);
-        }
-        
-        // Supprimer l'extrait RCCM
-        if ($entreprise->extrait_rccm && Storage::disk('public')->exists('assets/documents/rccm/' . $entreprise->extrait_rccm)) {
-            Storage::disk('public')->delete('assets/documents/rccm/' . $entreprise->extrait_rccm);
-        }
-    }
-}
-
-public function suspendUser(Request $request, $id)
-{
-    try {
-        // Validation des données
-        $request->validate([
-            'password' => 'required|string|min:6',
-        ]);
-
-        // Vérifier le mot de passe de l'administrateur connecté
-        if (!Hash::check($request->password, Auth::user()->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mot de passe incorrect. Vérifiez votre mot de passe et réessayez.'
-            ], 422);
-        }
-
-        // Trouver l'utilisateur à suspendre
-        $userToSuspend = User::findOrFail($id);
-
-        // Empêcher l'auto-suspension
-        if ($userToSuspend->id === Auth::id()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Vous ne pouvez pas suspendre votre propre compte.'
-            ], 422);
-        }
-
-        
-      //  if ($userToSuspend->hasRole('super-admin')) {
-        //    return response()->json([
-          //      'success' => false,
-          //      'message' => 'Impossible de suspendre un super administrateur.'
-          //  ], 422);
-       // }
-
-        // Vérifier si l'utilisateur n'est pas déjà suspendu
-        if ($userToSuspend->status === 'Suspendu') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cet utilisateur est déjà suspendu.'
-            ], 422);
-        }
-
-        // Sauvegarder les informations pour le message de retour
-        $userName = $userToSuspend->name . ' ' . $userToSuspend->prenom;
-
-        // Suspendre l'utilisateur
-        $userToSuspend->update([
-            'status' => 'Suspendu'
-        ]);
-
-        // Log de l'action (optionnel)
-        \Log::info("Utilisateur suspendu", [
-            'admin_id' => Auth::id(),
-            'admin_name' => Auth::user()->name,
-            'suspended_user_id' => $id,
-            'suspended_user_name' => $userName,
-            'timestamp' => now()
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => "L'utilisateur {$userName} a été suspendu avec succès."
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Données invalides.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Utilisateur non trouvé.'
-        ], 404);
-    } catch (\Exception $e) {
-        \Log::error("Erreur lors de la suspension de l'utilisateur", [
-            'error' => $e->getMessage(),
-            'user_id' => $id,
-            'admin_id' => Auth::id()
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Une erreur est survenue lors de la suspension.'
-        ], 500);
-    }
-}
-
-/**
- * Réactiver un utilisateur suspendu avec vérification du mot de passe
- */
-public function reactivateUser(Request $request, $id)
-{
-    try {
-        // Validation des données
-        $request->validate([
-            'password' => 'required|string|min:6',
-        ]);
-
-        // Vérifier le mot de passe de l'administrateur connecté
-        if (!Hash::check($request->password, Auth::user()->password)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Mot de passe incorrect. Vérifiez votre mot de passe et réessayez.'
-            ], 422);
-        }
-
-        // Trouver l'utilisateur à réactiver
-        $userToReactivate = User::findOrFail($id);
-
-        // Vérifier si l'utilisateur est bien suspendu
-        if ($userToReactivate->status === 'Actif') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Cet utilisateur n\'est pas suspendu.'
-            ], 422);
-        }
-
-        // Sauvegarder les informations pour le message de retour
-        $userName = $userToReactivate->name . ' ' . $userToReactivate->prenom;
-
-        // Réactiver l'utilisateur
-        $userToReactivate->update([
-            'status' => 'Actif'
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'message' => "L'utilisateur {$userName} a été réactivé avec succès."
-        ]);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Données invalides.',
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Utilisateur non trouvé.'
-        ], 404);
-    } catch (\Exception $e) {
-        \Log::error("Erreur lors de la réactivation de l'utilisateur", [
-            'error' => $e->getMessage(),
-            'user_id' => $id,
-            'admin_id' => Auth::id()
-        ]);
-
-        return response()->json([
-            'success' => false,
-            'message' => 'Une erreur est survenue lors de la réactivation.'
-        ], 500);
-    }
-}
-
-
-  /*  public function validateEntreprise(Request $request)
+    public function deleteUser(Request $request, $id)
     {
         try {
-            // Validation des données d'entrée
+            // Validation des données
             $request->validate([
-                'user_id' => 'required|exists:users,id',
-                'password' => 'required|string'
+                'password' => 'required|string|min:6',
             ]);
 
-            // Vérifier le mot de passe admin
-            if (!Hash::check($request->password, Auth::user()->password)) {
+            // Vérifier le mot de passe de l'administrateur connecté
+            if (! Hash::check($request->password, Auth::user()->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Mot de passe incorrect'
+                    'message' => 'Mot de passe incorrect. Vérifiez votre mot de passe et réessayez.',
                 ], 422);
             }
 
-            // Récupérer l'utilisateur avec son entreprise
-            $user = User::with('entreprise')->find($request->user_id);
+            // Trouver l'utilisateur à supprimer
+            $userToDelete = User::findOrFail($id);
 
-            // Vérifier que l'utilisateur a une entreprise
-            if (!$user->entreprise) {
+            // Empêcher l'auto-suppression
+            if ($userToDelete->id === Auth::id()) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Aucune entreprise trouvée pour cet utilisateur'
-                ], 404);
+                    'message' => 'Vous ne pouvez pas supprimer votre propre compte.',
+                ], 422);
             }
 
-            // Valider l'entreprise
-            $user->entreprise->update([
-                'status' => 'approved',
-                'verified_at' => now()
+            // Empêcher la suppression du super admin (optionnel)
+            if ($userToDelete->hasRole('super-admin')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Impossible de supprimer un super administrateur.',
+                ], 422);
+            }
+
+            // Sauvegarder les informations pour le message de retour
+            $userName = $userToDelete->name.' '.$userToDelete->prenom;
+
+            // Supprimer les fichiers associés
+            $this->deleteUserFiles($userToDelete);
+
+            // Supprimer l'utilisateur
+            $userToDelete->delete();
+
+            // Log de l'action (optionnel)
+            \Log::info('Utilisateur supprimé', [
+                'admin_id' => Auth::id(),
+                'admin_name' => Auth::user()->name,
+                'deleted_user_id' => $id,
+                'deleted_user_name' => $userName,
+                'timestamp' => now(),
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Entreprise validée avec succès'
+                'message' => "L'utilisateur {$userName} a été supprimé avec succès.",
             ]);
 
-        } catch (\Exception $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue: ' . $e->getMessage()
+                'message' => 'Données invalides.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilisateur non trouvé.',
+            ], 404);
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors de la suppression de l'utilisateur", [
+                'error' => $e->getMessage(),
+                'user_id' => $id,
+                'admin_id' => Auth::id(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la suppression.',
             ], 500);
         }
-    }*/
+    }
 
-         public function validateEntreprise(Request $request)
+    /**
+     * Supprimer les fichiers associés à un utilisateur
+     */
+    private function deleteUserFiles(User $user)
+    {
+        // Supprimer la photo de profil
+        if ($user->profile_photo_path && Storage::disk('public')->exists('assets/images/user_pdp/'.$user->profile_photo_path)) {
+            Storage::disk('public')->delete('assets/images/user_pdp/'.$user->profile_photo_path);
+        }
+
+        // Si c'est une entreprise, supprimer les fichiers d'entreprise
+        if ($user->hasRole('entreprise') && $user->entreprise) {
+            $entreprise = $user->entreprise;
+
+            // Supprimer le logo
+            if ($entreprise->logo && Storage::disk('public')->exists('assets/images/company_logos/'.$entreprise->logo)) {
+                Storage::disk('public')->delete('assets/images/company_logos/'.$entreprise->logo);
+            }
+
+            // Supprimer l'extrait RCCM
+            if ($entreprise->extrait_rccm && Storage::disk('public')->exists('assets/documents/rccm/'.$entreprise->extrait_rccm)) {
+                Storage::disk('public')->delete('assets/documents/rccm/'.$entreprise->extrait_rccm);
+            }
+        }
+    }
+
+    public function suspendUser(Request $request, $id)
+    {
+        try {
+            // Validation des données
+            $request->validate([
+                'password' => 'required|string|min:6',
+            ]);
+
+            // Vérifier le mot de passe de l'administrateur connecté
+            if (! Hash::check($request->password, Auth::user()->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mot de passe incorrect. Vérifiez votre mot de passe et réessayez.',
+                ], 422);
+            }
+
+            // Trouver l'utilisateur à suspendre
+            $userToSuspend = User::findOrFail($id);
+
+            // Empêcher l'auto-suspension
+            if ($userToSuspend->id === Auth::id()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vous ne pouvez pas suspendre votre propre compte.',
+                ], 422);
+            }
+
+            //  if ($userToSuspend->hasRole('super-admin')) {
+            //    return response()->json([
+            //      'success' => false,
+            //      'message' => 'Impossible de suspendre un super administrateur.'
+            //  ], 422);
+            // }
+
+            // Vérifier si l'utilisateur n'est pas déjà suspendu
+            if ($userToSuspend->status === 'Suspendu') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cet utilisateur est déjà suspendu.',
+                ], 422);
+            }
+
+            // Sauvegarder les informations pour le message de retour
+            $userName = $userToSuspend->name.' '.$userToSuspend->prenom;
+
+            // Suspendre l'utilisateur
+            $userToSuspend->update([
+                'status' => 'Suspendu',
+            ]);
+
+            // Log de l'action (optionnel)
+            \Log::info('Utilisateur suspendu', [
+                'admin_id' => Auth::id(),
+                'admin_name' => Auth::user()->name,
+                'suspended_user_id' => $id,
+                'suspended_user_name' => $userName,
+                'timestamp' => now(),
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => "L'utilisateur {$userName} a été suspendu avec succès.",
+            ]);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Données invalides.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilisateur non trouvé.',
+            ], 404);
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors de la suspension de l'utilisateur", [
+                'error' => $e->getMessage(),
+                'user_id' => $id,
+                'admin_id' => Auth::id(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la suspension.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Réactiver un utilisateur suspendu avec vérification du mot de passe
+     */
+    public function reactivateUser(Request $request, $id)
+    {
+        try {
+            // Validation des données
+            $request->validate([
+                'password' => 'required|string|min:6',
+            ]);
+
+            // Vérifier le mot de passe de l'administrateur connecté
+            if (! Hash::check($request->password, Auth::user()->password)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Mot de passe incorrect. Vérifiez votre mot de passe et réessayez.',
+                ], 422);
+            }
+
+            // Trouver l'utilisateur à réactiver
+            $userToReactivate = User::findOrFail($id);
+
+            // Vérifier si l'utilisateur est bien suspendu
+            if ($userToReactivate->status === 'Actif') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Cet utilisateur n\'est pas suspendu.',
+                ], 422);
+            }
+
+            // Sauvegarder les informations pour le message de retour
+            $userName = $userToReactivate->name.' '.$userToReactivate->prenom;
+
+            // Réactiver l'utilisateur
+            $userToReactivate->update([
+                'status' => 'Actif',
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => "L'utilisateur {$userName} a été réactivé avec succès.",
+            ]);
+
+        } catch (ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Données invalides.',
+                'errors' => $e->errors(),
+            ], 422);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Utilisateur non trouvé.',
+            ], 404);
+        } catch (\Exception $e) {
+            \Log::error("Erreur lors de la réactivation de l'utilisateur", [
+                'error' => $e->getMessage(),
+                'user_id' => $id,
+                'admin_id' => Auth::id(),
+            ]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur est survenue lors de la réactivation.',
+            ], 500);
+        }
+    }
+
+    /*  public function validateEntreprise(Request $request)
+      {
+          try {
+              // Validation des données d'entrée
+              $request->validate([
+                  'user_id' => 'required|exists:users,id',
+                  'password' => 'required|string'
+              ]);
+
+              // Vérifier le mot de passe admin
+              if (!Hash::check($request->password, Auth::user()->password)) {
+                  return response()->json([
+                      'success' => false,
+                      'message' => 'Mot de passe incorrect'
+                  ], 422);
+              }
+
+              // Récupérer l'utilisateur avec son entreprise
+              $user = User::with('entreprise')->find($request->user_id);
+
+              // Vérifier que l'utilisateur a une entreprise
+              if (!$user->entreprise) {
+                  return response()->json([
+                      'success' => false,
+                      'message' => 'Aucune entreprise trouvée pour cet utilisateur'
+                  ], 404);
+              }
+
+              // Valider l'entreprise
+              $user->entreprise->update([
+                  'status' => 'approved',
+                  'verified_at' => now()
+              ]);
+
+              return response()->json([
+                  'success' => true,
+                  'message' => 'Entreprise validée avec succès'
+              ]);
+
+          } catch (\Exception $e) {
+              return response()->json([
+                  'success' => false,
+                  'message' => 'Une erreur est survenue: ' . $e->getMessage()
+              ], 500);
+          }
+      }*/
+
+    public function validateEntreprise(Request $request)
     {
         try {
             // Validation des données d'entrée
             $request->validate([
                 'user_id' => 'required|exists:users,id',
-                'password' => 'required|string'
+                'password' => 'required|string',
             ]);
 
             // Vérifier le mot de passe admin
-            if (!Hash::check($request->password, Auth::user()->password)) {
+            if (! Hash::check($request->password, Auth::user()->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Mot de passe incorrect'
+                    'message' => 'Mot de passe incorrect',
                 ], 422);
             }
 
@@ -1797,10 +1669,10 @@ public function reactivateUser(Request $request, $id)
             $user = User::with('entreprise')->find($request->user_id);
 
             // Vérifier que l'utilisateur a une entreprise
-            if (!$user->entreprise) {
+            if (! $user->entreprise) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Aucune entreprise trouvée pour cet utilisateur'
+                    'message' => 'Aucune entreprise trouvée pour cet utilisateur',
                 ], 404);
             }
 
@@ -1808,14 +1680,14 @@ public function reactivateUser(Request $request, $id)
             if ($user->entreprise->status === 'approved') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Cette entreprise est déjà validée'
+                    'message' => 'Cette entreprise est déjà validée',
                 ], 422);
             }
 
             // Valider l'entreprise
             $user->entreprise->update([
                 'status' => 'approved',
-                'verified_at' => now()
+                'verified_at' => now(),
             ]);
 
             // Activer le compte utilisateur si nécessaire
@@ -1826,16 +1698,16 @@ public function reactivateUser(Request $request, $id)
             // Envoyer l'email de confirmation
             try {
                 Mail::to($user->email)->send(new EntrepriseValidated($user));
-                
+
                 Log::info('Email de validation entreprise envoyé', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'company_name' => $user->entreprise->company_name
+                    'company_name' => $user->entreprise->company_name,
                 ]);
 
                 return response()->json([
                     'success' => true,
-                    'message' => 'Entreprise validée avec succès et email de confirmation envoyé à ' . $user->email
+                    'message' => 'Entreprise validée avec succès et email de confirmation envoyé à '.$user->email,
                 ]);
 
             } catch (\Exception $mailException) {
@@ -1843,34 +1715,34 @@ public function reactivateUser(Request $request, $id)
                 Log::error('Erreur lors de l\'envoi de l\'email de validation entreprise', [
                     'user_id' => $user->id,
                     'email' => $user->email,
-                    'error' => $mailException->getMessage()
+                    'error' => $mailException->getMessage(),
                 ]);
 
                 // L'entreprise est validée mais l'email n'a pas pu être envoyé
                 return response()->json([
                     'success' => true,
                     'message' => 'Entreprise validée avec succès, mais l\'email de confirmation n\'a pas pu être envoyé. Veuillez contacter l\'utilisateur manuellement.',
-                    'warning' => 'Email non envoyé'
+                    'warning' => 'Email non envoyé',
                 ]);
             }
 
-        } catch (\Illuminate\Validation\ValidationException $e) {
+        } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Données de validation invalides',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
 
         } catch (\Exception $e) {
             Log::error('Erreur lors de la validation de l\'entreprise', [
                 'user_id' => $request->user_id ?? null,
                 'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue lors de la validation: ' . $e->getMessage()
+                'message' => 'La validation de l’entreprise a échoué.',
             ], 500);
         }
     }
@@ -1884,28 +1756,28 @@ public function reactivateUser(Request $request, $id)
             $request->validate([
                 'user_id' => 'required|exists:users,id',
                 'password' => 'required|string',
-                'reason' => 'nullable|string|max:500'
+                'reason' => 'nullable|string|max:500',
             ]);
 
-            if (!Hash::check($request->password, Auth::user()->password)) {
+            if (! Hash::check($request->password, Auth::user()->password)) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Mot de passe incorrect'
+                    'message' => 'Mot de passe incorrect',
                 ], 422);
             }
 
             $user = User::with('entreprise')->find($request->user_id);
 
-            if (!$user->entreprise) {
+            if (! $user->entreprise) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Aucune entreprise trouvée pour cet utilisateur'
+                    'message' => 'Aucune entreprise trouvée pour cet utilisateur',
                 ], 404);
             }
 
             $user->entreprise->update([
                 'status' => 'rejected',
-                'rejection_reason' => $request->reason
+                'rejection_reason' => $request->reason,
             ]);
 
             // Vous pouvez également envoyer un email de rejet ici si vous créez un autre Mailable
@@ -1913,85 +1785,84 @@ public function reactivateUser(Request $request, $id)
             Log::info('Entreprise rejetée', [
                 'user_id' => $user->id,
                 'company_name' => $user->entreprise->company_name,
-                'reason' => $request->reason
+                'reason' => $request->reason,
             ]);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Entreprise rejetée avec succès'
+                'message' => 'Entreprise rejetée avec succès',
             ]);
 
         } catch (\Exception $e) {
             Log::error('Erreur lors du rejet de l\'entreprise', [
                 'user_id' => $request->user_id ?? null,
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
 
             return response()->json([
                 'success' => false,
-                'message' => 'Une erreur est survenue: ' . $e->getMessage()
+                'message' => 'Le refus de l’entreprise a échoué.',
             ], 500);
         }
     }
 
- public function activate(Request $request)
-{
-    $request->validate([
-        'user_id' => 'required|exists:users,id',
-        'password' => 'required|string'
-    ]);
-
-    // Vérifier le mot de passe de l'admin
-    if (!Hash::check($request->password, auth()->user()->password)) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Mot de passe incorrect'
-        ], 403);
-    }
-
-    // Récupérer l'utilisateur par son ID
-    $user = User::findOrFail($request->user_id);
-
-    // Activer l'utilisateur
-    $user->update([
-        'status' => 'Actif',
-        'is_active' => true
-    ]);
-
-    // Si c'est une entreprise, activer aussi l'entreprise
-   /* if ($user->entreprise) {
-        $user->entreprise->update([
-            'status' => 'approved',
-            'verified_at' => now()
+    public function activate(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'password' => 'required|string',
         ]);
-    } */
 
-    // Envoyer une notification à l'utilisateur
-    Notification::create([
-        'user_id' => $user->id,
-        'role' => $user->getRoleNames()->first(),
-        'title' => 'Votre compte a été activé',
-        'message' => 'Votre compte sur ProximaJob a été activé par un administrateur. Vous pouvez maintenant vous connecter et utiliser toutes les fonctionnalités.',
-        'link' => '/login',
-        'is_read' => false,
-    ]);
+        // Vérifier le mot de passe de l'admin
+        if (! Hash::check($request->password, auth()->user()->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mot de passe incorrect',
+            ], 403);
+        }
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Compte activé avec succès'
-    ]);
-}
+        // Récupérer l'utilisateur par son ID
+        $user = User::findOrFail($request->user_id);
 
+        // Activer l'utilisateur
+        $user->update([
+            'status' => 'Actif',
+            'is_active' => true,
+        ]);
 
+        // Si c'est une entreprise, activer aussi l'entreprise
+        /* if ($user->entreprise) {
+             $user->entreprise->update([
+                 'status' => 'approved',
+                 'verified_at' => now()
+             ]);
+         } */
+
+        // Envoyer une notification à l'utilisateur
+        Notification::create([
+            'user_id' => $user->id,
+            'role' => $user->getRoleNames()->first(),
+            'title' => 'Votre compte a été activé',
+            'message' => 'Votre compte sur ProximaJob a été activé par un administrateur. Vous pouvez maintenant vous connecter et utiliser toutes les fonctionnalités.',
+            'link' => '/login',
+            'is_read' => false,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Compte activé avec succès',
+        ]);
+    }
 
     /**
      * Toggle featured status for an entreprise.
      */
     public function toggleFeatured($id)
     {
-        $entreprise = \App\Models\Entreprise::findOrFail($id);
-        $entreprise->update(['is_featured' => !$entreprise->is_featured]);
+        $entreprise = Entreprise::findOrFail($id);
+        $entreprise->update(['is_featured' => ! $entreprise->is_featured]);
         $status = $entreprise->is_featured ? 'mise en vedette' : 'retiree des vedettes';
-        return redirect()->back()->with('success', $entreprise->company_name . ' ' . $status . '.');
+
+        return redirect()->back()->with('success', $entreprise->company_name.' '.$status.'.');
     }
 }

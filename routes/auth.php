@@ -39,6 +39,11 @@ Route::middleware('guest')->group(function () {
         ->name('admin.login'); 
 
     Route::post('admin.login', [AuthenticatedSessionController::class, 'adminstore'])->name('admin.login.post');
+    Route::get('admin/verification-securite', [AuthenticatedSessionController::class, 'showAdminTwoFactor'])
+        ->name('admin.2fa.form');
+    Route::post('admin/verification-securite', [AuthenticatedSessionController::class, 'verifyAdminTwoFactor'])
+        ->middleware('throttle:5,1')
+        ->name('admin.2fa.verify');
 
     //security
 

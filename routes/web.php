@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminOperationsController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OffresController;
 use App\Http\Controllers\ParametresController;
@@ -213,31 +214,50 @@ Route::get('/notifications/unread-count', [NotificationController::class, 'unrea
 //Routes admin
 
 
-Route::prefix('/admin')->middleware(['auth', 'verified'])->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'verified', 'admin.security', 'admin.audit'])->group(function () {
     Route::middleware('role:admin|Marketing')->group(function () {
         Route::get('/', [AdminController::class, 'index'])->name('admin.dashboard');
         Route::get('/Gestion/statistiques', [AdminController::class, 'statistiques'])->name('admin.statistiques');
         Route::get('/Gestion/newsletters', [AdminController::class, 'newsletters'])->name('admin.newsletters');
         Route::post('/Gestion/newsletters', [AdminController::class, 'newsletterStore'])->name('admin.newsletters.store');
+        Route::put('/Gestion/newsletters/{campagne}', [AdminOperationsController::class, 'updateNewsletter'])->name('admin.newsletters.update');
+        Route::delete('/Gestion/newsletters/{campagne}', [AdminOperationsController::class, 'destroyNewsletter'])->name('admin.newsletters.destroy');
         Route::get('/chart-data', [AdminController::class, 'getChartData'])->name('admin.chart-data');
     });
 
     Route::middleware('role:admin')->group(function () {
-    Route::redirect('/utilisateurs', '/admin/Gestion/utilisateurs');
-    Route::redirect('/offres', '/admin/Gestion/offres');
-    Route::redirect('/abonnements', '/admin/Gestion/abonnements');
-    Route::redirect('/statistiques', '/admin/Gestion/statistiques');
-    Route::redirect('/newsletters', '/admin/Gestion/newsletters');
-    Route::redirect('/parametres', '/admin/Gestion/parametres');
+    Route::get('/utilisateurs', fn () => redirect()->route('admin.users'));
+    Route::get('/offres', fn () => redirect()->route('admin.offres'));
+    Route::get('/abonnements', fn () => redirect()->route('admin.abonnements'));
+    Route::get('/statistiques', fn () => redirect()->route('admin.statistiques'));
+    Route::get('/newsletters', fn () => redirect()->route('admin.newsletters'));
+    Route::get('/parametres', fn () => redirect()->route('admin.parametres'));
     Route::get("/Gestion/utilisateurs",[AdminController::class, 'users'])->name("admin.users");
     Route::get("/Gestion/offres",[AdminController::class, 'offres'])->name("admin.offres");
     Route::get("/Gestion/abonnements",[AdminController::class, 'abonnements'])->name("admin.abonnements");
     Route::get("/Gestion/parametres",[AdminController::class, 'parametres'])->name("admin.parametres");
-    Route::get('/users/{user}/edit', [AdminController::class, 'edit'])->name('admin.users.edit');
+    Route::get('/Gestion/entreprises', [AdminOperationsController::class, 'entreprises'])->name('admin.entreprises.index');
+    Route::patch('/Gestion/entreprises/{entreprise}/statut', [AdminOperationsController::class, 'updateEntrepriseStatus'])->name('admin.entreprises.status');
+    Route::patch('/Gestion/entreprises/{entreprise}/vedette', [AdminOperationsController::class, 'toggleEntrepriseFeatured'])->name('admin.entreprises.featured');
+    Route::get('/Gestion/candidatures', [AdminOperationsController::class, 'candidatures'])->name('admin.candidatures.index');
+    Route::get('/Gestion/candidatures/{postulation}', [AdminOperationsController::class, 'showCandidature'])->name('admin.candidatures.show');
+    Route::get('/Gestion/candidatures/{postulation}/documents/{type}', [AdminOperationsController::class, 'candidatureDocument'])
+        ->whereIn('type', ['cv', 'motivation'])->name('admin.candidatures.document');
+    Route::get('/Gestion/candidatures/{postulation}/documents/autres/{document}', [AdminOperationsController::class, 'candidatureOtherDocument'])
+        ->whereNumber('document')->name('admin.candidatures.other-document');
+    Route::patch('/Gestion/candidatures/{postulation}/statut', [AdminOperationsController::class, 'updateCandidatureStatus'])->name('admin.candidatures.status');
+    Route::patch('/Gestion/candidatures/{postulation}/notes', [AdminOperationsController::class, 'updateCandidatureNotes'])->name('admin.candidatures.notes');
+    Route::get('/Gestion/ressources', [AdminOperationsController::class, 'ressources'])->name('admin.ressources.index');
+    Route::post('/Gestion/ressources', [AdminOperationsController::class, 'storeRessource'])->name('admin.ressources.store');
+    Route::put('/Gestion/ressources/{ressource}', [AdminOperationsController::class, 'updateRessource'])->name('admin.ressources.update');
+    Route::delete('/Gestion/ressources/{ressource}', [AdminOperationsController::class, 'destroyRessource'])->name('admin.ressources.destroy');
+    Route::get('/Gestion/pilotage', [AdminOperationsController::class, 'pilotage'])->name('admin.pilotage');
+    Route::patch('/Gestion/pilotage/securite', [AdminOperationsController::class, 'updateSecurity'])->name('admin.security.update');
+    Route::patch('/Gestion/pilotage/roles/{role}', [AdminOperationsController::class, 'updateRole'])->name('admin.roles.update');
+    Route::post('/Gestion/pilotage/recalculer-matching', [AdminOperationsController::class, 'recalculateMatching'])->name('admin.matching.recalculate');
     Route::put('/users/{user}', [AdminController::class, 'update'])->name('admin.users.update');
     Route::post('/users/{id}/delete', [AdminController::class, 'deleteUser'])->name('admin.users.delete');
     Route::post('/users/{id}/suspend', [AdminController::class, 'suspendUser']) ->name('admin.users.suspend');
-    Route::post('/entreprises/{id}/toggle-featured', [AdminController::class, 'toggleFeatured'])->name('admin.entreprises.toggle-featured');
     Route::post('/users/{id}/reactivate', [AdminController::class, 'reactivateUser'])->name('admin.users.reactivate');
 
 
@@ -258,10 +278,8 @@ Route::prefix('/admin')->middleware(['auth', 'verified'])->group(function () {
     Route::delete('/parametres/remove-favicon', [AdminController::class, 'removeFavicon'])->name('parametres.remove-favicon');
 
     Route::get('/users-details/{user}', [AdminController::class, 'show'])->name('admin.users.show');
-    Route::post('entreprises/validate', [AdminController::class, 'validateEntreprise']) ->name('entreprises.validate');
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'adminmarkAsRead'])->name('admin.notifications.read');
     Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllAsRead'])->name('admin.allnotifications.read');
-    Route::post('/users/{user}/activate', [AdminController::class, 'activate'])->name('admin.users.activate');
 
 
     // abonnement
@@ -277,6 +295,7 @@ Route::prefix('/admin')->middleware(['auth', 'verified'])->group(function () {
     // Routes pour les référentiels (catégories, types d'offres, secteurs, skills, diplômes)
     Route::resource('categories', \App\Http\Controllers\Admin\CategorieController::class)
         ->except(['show', 'create', 'edit'])
+        ->parameters(['categories' => 'categorie'])
         ->names([
             'index'   => 'admin.categories.index',
             'store'   => 'admin.categories.store',
@@ -285,6 +304,7 @@ Route::prefix('/admin')->middleware(['auth', 'verified'])->group(function () {
         ]);
     Route::resource('types-offres', \App\Http\Controllers\Admin\TypeOffreController::class)
         ->except(['show', 'create', 'edit'])
+        ->parameters(['types-offres' => 'typeOffre'])
         ->names([
             'index'   => 'admin.types-offres.index',
             'store'   => 'admin.types-offres.store',

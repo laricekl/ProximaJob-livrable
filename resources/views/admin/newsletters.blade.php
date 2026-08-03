@@ -70,6 +70,9 @@
               <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">mail</span> {{ number_format($campagne->destinataires_count) }}</span>
             @endif
           </div>
+          @if(in_array($campagne->statut, ['brouillon', 'echec'], true))
+            <details class="mt-3 rounded-xl border border-outline-variant/20"><summary class="cursor-pointer list-none px-3 py-2 text-xs font-bold text-secondary-container">Modifier le brouillon</summary><form method="POST" action="{{ route('admin.newsletters.update',$campagne) }}" class="space-y-2 border-t p-3">@csrf @method('PUT')<input name="sujet" value="{{ $campagne->sujet }}" required class="w-full rounded-lg border-outline-variant/30 text-xs"><select name="audience" class="w-full rounded-lg border-outline-variant/30 text-xs">@foreach(['tous','candidats','entreprises','premium'] as $audience)<option value="{{ $audience }}" @selected($campagne->audience===$audience)>{{ ucfirst($audience) }}</option>@endforeach</select><textarea name="contenu" required rows="4" class="w-full rounded-lg border-outline-variant/30 text-xs">{{ $campagne->contenu }}</textarea><button class="rounded-lg bg-primary-container px-3 py-2 text-xs font-bold text-white">Enregistrer</button></form><form method="POST" action="{{ route('admin.newsletters.destroy',$campagne) }}" class="px-3 pb-3 text-right" data-proxima-confirm="Supprimer ce brouillon ?" data-proxima-title="Supprimer la campagne" data-proxima-confirm-label="Supprimer" data-proxima-tone="danger">@csrf @method('DELETE')<button class="text-xs font-bold text-red-600">Supprimer</button></form></details>
+          @endif
         </div>
       @empty
         <div class="p-6 text-center text-sm text-outline">Aucune campagne pour le moment.</div>
