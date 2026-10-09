@@ -88,6 +88,58 @@ class ViewRefactorGuardTest extends TestCase
         }
     }
 
+    public function test_all_blade_extends_and_includes_reference_existing_views(): void
+    {
+        // Verrou : chaque @extends/@include/@component/@each avec un nom littéral
+        // doit pointer vers un fichier Blade existant.
+        // (Aurait détecté : auth/admin-two-factor étendait layouts.app inexistant.)
+        $views = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator(
+                resource_path('views'),
+                \FilesystemIterator::SKIP_DOTS
+            )
+        );
+
+        $missing = [];
+
+        foreach ($views as $view) {
+            if (!str_ends_with($view->getFilename(), '.blade.php')) {
+                continue;
+            }
+
+            $content = file_get_contents($view->getPathname());
+
+            foreach (['extends', 'include', 'includeIf', 'includeWhen', 'includeUnless', 'component', 'each'] as $directive) {
+                if (!preg_match_all("/@{$directive}\(\s*['\"]([^'\"]+)['\"]/", $content, $m)) {
+                    continue;
+                }
+                foreach ($m[1] as $name) {
+                    if (str_starts_with($name, 'mail::')
+                        || str_starts_with($name, '/')
+                        || str_contains($name, '$')
+                        || str_contains($name, '{')) {
+                        continue;
+                    }
+                    $path = resource_path('views/' . str_replace('.', '/', $name) . '.blade.php');
+                    if (!file_exists($path)) {
+                        $missing[] = sprintf(
+                            '%s -> @%s(\'%s\') introuvable',
+                            str_replace(base_path() . '/', '', $view->getPathname()),
+                            $directive,
+                            $name
+                        );
+                    }
+                }
+            }
+        }
+
+        $this->assertSame(
+            [],
+            $missing,
+            "Références Blade vers des vues inexistantes :\n" . implode("\n", $missing)
+        );
+    }
+
     public function test_shared_interface_exposes_consistent_loading_and_motion_states(): void
     {
         $script = file_get_contents(public_path('js/proxima-ui.js'));
