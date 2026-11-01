@@ -312,6 +312,27 @@ private function calculateStatsWithAutoPostulations($entrepriseId)
 
         return back()->with('success', 'Votre demande a été transmise. L’activation sera confirmée après validation du paiement.');
     }
+
+    /**
+     * Annulation en libre-service (audit G5) : même sémantique que le flux
+     * candidat (UserController@cancelSubscription) — on clôt l'abonnement
+     * ouvert le plus récent du compte (statut « Annulé », fin immédiate).
+     */
+    public function cancelSubscription(Request $request)
+    {
+        $subscription = UserAbonnement::where('user_id', Auth::id())
+            ->whereIn('status', ['Actif', 'En attente'])
+            ->latest('date_fin')
+            ->firstOrFail();
+
+        $subscription->update([
+            'status' => 'Annulé',
+            'date_fin' => now(),
+        ]);
+
+        return redirect()->route('entreprise.abonnements')
+            ->with('success', 'Votre abonnement a été annulé.');
+    }
      public function promotion()
     {
         $entreprise = Auth::user()->entreprise;

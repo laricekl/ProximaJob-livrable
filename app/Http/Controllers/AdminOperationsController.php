@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\EntrepriseValidated;
 use App\Models\AdminAuditLog;
 use App\Models\CvGenere;
 use App\Models\CvProfile;
@@ -14,6 +15,8 @@ use App\Services\AdminAuditService;
 use App\Services\JobMatchingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
@@ -59,6 +62,8 @@ class AdminOperationsController extends Controller
             'reason' => ['nullable', 'string', 'max:1000', Rule::requiredIf($request->status === 'rejected')],
         ]);
 
+        $previousStatus = $entreprise->status;
+
         $entreprise->forceFill([
             'status' => $data['status'],
             'verified_at' => $data['status'] === 'approved' ? now() : null,
@@ -66,6 +71,26 @@ class AdminOperationsController extends Controller
         ])->save();
 
         $this->audit('entreprise.status', $entreprise, "Statut de {$entreprise->company_name} modifié : {$data['status']}.");
+
+        // Courriel « compte activé » promis à l'inscription (audit B2) :
+        // envoyé uniquement à la transition vers « approved », et un échec
+        // d'envoi ne doit jamais faire échouer la validation elle-même.
+        if ($data['status'] === 'approved' && $previousStatus !== 'approved' && $entreprise->user) {
+            try {
+                Mail::to($entreprise->user->email)->send(new EntrepriseValidated($entreprise->user));
+
+                Log::info('Email de validation entreprise envoyé', [
+                    'user_id' => $entreprise->user->id,
+                    'email' => $entreprise->user->email,
+                    'company_name' => $entreprise->company_name,
+                ]);
+            } catch (\Throwable $e) {
+                Log::warning('Échec de l’envoi du courriel de validation entreprise', [
+                    'entreprise_id' => $entreprise->id,
+                    'error' => $e->getMessage(),
+                ]);
+            }
+        }
 
         return back()->with('success', 'Le statut de l’entreprise a été mis à jour.');
     }

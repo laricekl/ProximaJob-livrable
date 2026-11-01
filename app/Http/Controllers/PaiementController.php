@@ -64,6 +64,25 @@ class PaiementController extends Controller
             ->with('error', 'Paiement annulé : aucun montant n\'a été prélevé. Votre abonnement reste en attente, vous pouvez réessayer quand vous voulez.');
     }
 
+    /**
+     * Reçu imprimable d'un abonnement payé (audit G4), réservé à son
+     * propriétaire. Un abonnement encore « En attente » n'a pas de reçu :
+     * le paiement n'a pas été confirmé.
+     */
+    public function recu(UserAbonnement $userAbonnement)
+    {
+        abort_unless($userAbonnement->user_id === Auth::id(), 403);
+
+        if ($userAbonnement->status === 'En attente') {
+            return redirect($this->abonnementUrl())
+                ->with('error', 'Le reçu sera disponible dès que le paiement de cet abonnement aura été confirmé.');
+        }
+
+        $userAbonnement->load(['abonnement', 'user.entreprise']);
+
+        return view('paiement.recu', compact('userAbonnement'));
+    }
+
     private function refuse(Request $request, string $message, int $status)
     {
         if ($request->expectsJson()) {

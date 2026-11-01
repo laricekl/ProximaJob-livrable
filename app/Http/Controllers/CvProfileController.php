@@ -808,7 +808,9 @@ PROMPT;
         ])->where('user_id', auth()->id())->first();
 
         if (!$cvProfile) {
-            abort(404, 'Aucun profil CV trouvé. Veuillez d\'abord créer votre CV.');
+            // Retour guidé plutôt qu'un 404 plein écran (audit G2).
+            return redirect()->route('infos.cv')
+                ->with('error', 'Aucun profil CV trouvé. Veuillez d’abord créer votre CV.');
         }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.personalized-template', $this->principalPdfData($cvProfile));
@@ -828,7 +830,9 @@ PROMPT;
         ])->where('user_id', auth()->id())->first();
 
         if (!$cvProfile) {
-            abort(404, 'Aucun profil CV trouvé. Veuillez d\'abord créer votre CV.');
+            // Retour guidé plutôt qu'un 404 plein écran (audit G2).
+            return redirect()->route('infos.cv')
+                ->with('error', 'Aucun profil CV trouvé. Veuillez d’abord créer votre CV.');
         }
 
         $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('cv.personalized-template', $this->principalPdfData($cvProfile));

@@ -110,7 +110,11 @@ class NavigationLinksTest extends TestCase
             ->assertSee('href="'.route('entreprise.promotion').'"', false)
             ->assertSee('href="'.route('entreprise.abonnements').'"', false)
             ->assertSee(route('cookies.policy'), false)
-            ->assertDontSee('aria-label="Notifications"', false);
+            // Corrigé (audit B1) : la navigation entreprise donne accès aux
+            // notifications, comme celle du candidat — l'ancien assertDontSee
+            // figeait le trou (notifications entreprise illisibles).
+            ->assertSee('href="'.route('notifications.index').'"', false)
+            ->assertSee('aria-label="Notifications"', false);
     }
 
     public function test_admin_navigation_renders_expected_links(): void

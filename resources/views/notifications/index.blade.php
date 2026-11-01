@@ -1,4 +1,4 @@
-@extends('layouts.candidat')
+@extends($layout ?? 'layouts.candidat')
 
 @section('title', 'Notifications')
 
@@ -32,7 +32,7 @@
 @section('content')
   <main class="flex-grow pb-16">
     <section class="px-4 md:px-10">
-      <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; Retour au tableau de bord</a>
+      <a href="{{ $dashboardUrl ?? route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; Retour au tableau de bord</a>
       <div class="max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>

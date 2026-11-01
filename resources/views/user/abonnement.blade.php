@@ -76,6 +76,11 @@
                         </button>
                       </form>
                     @endif
+                    @if ($userAbonnement->status !== 'En attente')
+                      <a href="{{ route('paiement.recu', $userAbonnement) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 border border-outline-variant/30 text-primary text-sm font-bold rounded-xl hover:bg-surface-container-low transition-colors">
+                        <span class="material-symbols-outlined text-lg">receipt_long</span> Voir le reçu
+                      </a>
+                    @endif
                   </div>
                 </div>
               </div>

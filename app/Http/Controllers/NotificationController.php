@@ -158,8 +158,14 @@ class NotificationController extends Controller
                 ->orderBy('created_at', 'desc')
                 ->paginate(15);
 
-            return view('notifications.index', compact('notifications'));
-            
+            // Même page pour le candidat et l'entreprise (audit B1) :
+            // seule la coquille (navigation) change selon le rôle.
+            $isEntreprise = Auth::user()->hasRole('entreprise');
+            $layout = $isEntreprise ? 'layouts.entreprise' : 'layouts.candidat';
+            $dashboardUrl = $isEntreprise ? route('offres.publies') : route('user.home');
+
+            return view('notifications.index', compact('notifications', 'layout', 'dashboardUrl'));
+
         } catch (\Exception $e) {
             Log::error('Erreur notifications index: ' . $e->getMessage());
             return back()->withError('Erreur lors du chargement des notifications');

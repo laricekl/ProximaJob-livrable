@@ -80,6 +80,21 @@
                     </button>
                   </form>
                 @endif
+
+                @if ($userAbonnement->status !== 'En attente')
+                  <a href="{{ route('paiement.recu', $userAbonnement) }}" target="_blank" rel="noopener" class="mt-5 inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 border border-outline-variant/30 text-primary text-sm font-bold rounded-xl hover:bg-surface-container-low transition-colors">
+                    <span class="material-symbols-outlined text-lg">receipt_long</span> Voir le reçu
+                  </a>
+                @endif
+
+                @if (in_array($userAbonnement->effective_status, ['Actif', 'En attente'], true))
+                  <form method="POST" action="{{ route('entreprise.abonnements.cancel') }}" class="mt-3" data-proxima-confirm="Confirmer l’annulation de cet abonnement ?" data-proxima-title="Annuler l’abonnement" data-proxima-confirm-label="Annuler l’abonnement" data-proxima-tone="danger">
+                    @csrf
+                    <button class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 border border-error/30 text-error-dark text-sm font-bold rounded-xl hover:bg-error-light transition-colors">
+                      <span class="material-symbols-outlined text-lg">cancel</span> Annuler l’abonnement
+                    </button>
+                  </form>
+                @endif
               </div>
             </div>
           @empty

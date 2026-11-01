@@ -93,6 +93,7 @@ Route::get('/abonnement', [ParametresController::class, 'abonnement'])->name('ab
 // Paiement des abonnements (Stripe Checkout) — l'activation arrive par webhook.
 Route::middleware('auth')->group(function () {
     Route::post('/paiement/checkout/{userAbonnement}', [PaiementController::class, 'checkout'])->name('paiement.checkout');
+    Route::get('/paiement/recu/{userAbonnement}', [PaiementController::class, 'recu'])->name('paiement.recu');
     Route::get('/paiement/succes', [PaiementController::class, 'succes'])->name('paiement.succes');
     Route::get('/paiement/annule', [PaiementController::class, 'annule'])->name('paiement.annule');
 });
@@ -175,6 +176,7 @@ Route::prefix("/entreprise") ->middleware(['auth', 'verified', 'entreprise.acces
     Route::get("/candidatures-ia",[EntreprisesController::class, 'historique_ia'])->name("entreprise.candidatures_ia");
     Route::get("/abonnements",[EntreprisesController::class, 'abonnements'])->name("entreprise.abonnements");
     Route::post("/abonnements/souscrire",[EntreprisesController::class, 'souscrire'])->name("entreprise.abonnements.souscrire");
+    Route::post("/abonnements/annuler",[EntreprisesController::class, 'cancelSubscription'])->name("entreprise.abonnements.cancel");
     Route::get("/promotion",[EntreprisesController::class, 'promotion'])->name("entreprise.promotion");
     Route::get('/candidatures', [CandidatureController::class, 'entrepriseIndex'])
         ->name('entreprise.candidatures.index');
@@ -207,8 +209,12 @@ Route::prefix("/entreprise") ->middleware(['auth', 'verified', 'entreprise.acces
 
 
 //notifications
+// Page partagée candidat/entreprise : le contrôleur ne montre que les
+// notifications de l'utilisateur connecté (filtre user_id). Ne pas la
+// verrouiller au rôle candidat (audit B1 : l'entreprise recevait des
+// notifications qu'elle ne pouvait jamais ouvrir).
 Route::get('/notifications', [NotificationController::class, 'index'])
-    ->middleware(['auth', 'verified', 'candidate.access', 'user.status'])
+    ->middleware(['auth', 'verified', 'user.status'])
     ->name('notifications.index');
 
 Route::post('/notifications/{notification}/mark-as-read', [NotificationController::class, 'markAsRead'])
@@ -376,6 +382,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Export des données personnelles (Loi 25 — audit G6)
+    Route::get('/profile/export-donnees', \App\Http\Controllers\DataExportController::class)->name('profile.export-donnees');
 });
 
 require __DIR__.'/auth.php';

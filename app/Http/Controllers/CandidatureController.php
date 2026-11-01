@@ -450,14 +450,18 @@ public function previewCVForEnterprise($candidatureId)
         
         // Utiliser la même logique que previewCVia mais avec un logging spécifique
         return $this->previewCVia($candidatureId);
-        
+
+    } catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e) {
+        // Laisser passer les erreurs HTTP légitimes (403, 404 « CV non
+        // trouvé » de previewCVia) au lieu de les convertir en 500 (audit G1).
+        throw $e;
     } catch (\Exception $e) {
         Log::error('Erreur entreprise lors de la prévisualisation du CV', [
             'candidature_id' => $candidatureId,
             'entreprise_id' => auth()->id(),
             'error' => $e->getMessage()
         ]);
-        
+
         abort(500, 'Erreur lors de l\'ouverture du CV');
     }
 }
@@ -697,7 +701,12 @@ private function servePublicFile($filePath, $candidature)
                 ]);
             }
 
-            return back()->with('status', 'Le statut de la candidature a été mis à jour.');
+            // Redirection explicite vers la liste des candidatures de
+            // l'offre (audit G3) : l'ancien back() dépendait de la page
+            // d'origine et pouvait renvoyer l'entreprise vers /notifications,
+            // qui lui était interdite.
+            return redirect()->route('entreprise.offres.candidatures', $postulation->offre_id)
+                ->with('status', 'Le statut de la candidature a été mis à jour.');
 
         } catch (ModelNotFoundException $e) {
             if ($request->expectsJson()) {
@@ -752,11 +761,12 @@ private function getStatusMessage($status)
         $fileName = 'Lettre_Motivation_' . Str::slug($postulation->user->name) . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
         $fullPath = $this->resolveLetterPath($filePath);
     } else {
-        abort(404, 'Fichier non trouvé');
+        // Retour guidé plutôt qu'un 404 plein écran (audit G2).
+        return back()->with('error', 'Aucun fichier de ce type n’est joint à cette candidature.');
     }
 
     if (!File::exists($fullPath)) {
-        abort(404, 'Fichier introuvable');
+        return back()->with('error', 'Le fichier demandé est introuvable.');
     }
 
     $realPath = realpath($fullPath);

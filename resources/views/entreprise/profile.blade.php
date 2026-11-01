@@ -157,6 +157,18 @@
               <button type="submit" class="px-5 py-3 bg-primary-container text-white text-sm font-bold rounded-xl hover:bg-primary transition-colors">Mettre à jour le mot de passe</button>
             </form>
           </section>
+
+          <section id="donnees" class="card-glow rounded-2xl overflow-hidden scroll-mt-32">
+            <div class="px-6 md:px-8 py-5 border-b border-outline-variant/10">
+              <h2 class="text-xl font-bold font-serif text-primary">Mes données personnelles</h2>
+              <p class="text-sm text-on-surface-variant mt-1">Téléchargez une copie des données que ProximaJob détient sur votre compte : profil, entreprise, offres publiées, abonnements et notifications (format JSON).</p>
+            </div>
+            <div class="p-6 md:p-8">
+              <a href="{{ route('profile.export-donnees') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-container text-white text-sm font-bold rounded-xl hover:bg-primary transition-colors">
+                <span class="material-symbols-outlined text-lg">download</span> Exporter mes données
+              </a>
+            </div>
+          </section>
         </div>
       </div>
     </div>
