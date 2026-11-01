@@ -21,6 +21,8 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\AutresDoc;
 use App\Models\CvGenere;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApplicationStatusUpdated;
 
 class CandidatureController extends Controller
 {
@@ -669,29 +671,23 @@ private function servePublicFile($filePath, $candidature)
                 ->findOrFail($id);
 
             $postulation->update($validated);
-            $autopostulation = $postulation->autopostulation;
-            if($autopostulation) {
 
-                Notification::create([
-                    'user_id' => $postulation->user_id, 
-                    'role' => 'candidat',
-                    'type' => 'application',
-                    'title' => 'Mise à jour de votre candidature',
-                    'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
-                    'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
-                    'is_read' => false,
-                ]);
-             }else {
-                      Notification::create([
-                    'user_id' => $postulation->user_id, 
-                    'role' => 'candidat',
-                    'type' => 'application',
-                    'title' => 'Mise à jour de votre candidature',
-                    'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
-                    'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
-                    'is_read' => false,
-                ]);
-             }
+            // Notification interne au candidat (un seul bloc : l'ancien code
+            // dupliquait exactement le même envoi dans un if/else sur
+            // l'autopostulation — retiré le 31 oct. 2026, Phase 0).
+            Notification::create([
+                'user_id' => $postulation->user_id,
+                'role' => 'candidat',
+                'type' => 'application',
+                'title' => 'Mise à jour de votre candidature',
+                'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
+                'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
+                'is_read' => false,
+            ]);
+
+            // Courriel au candidat (Phase 0) : ne jamais faire échouer la
+            // mise à jour du statut si l'envoi échoue.
+            $this->sendStatusNotification($postulation);
 
 
             if ($request->expectsJson()) {
@@ -795,10 +791,27 @@ private function getStatusMessage($status)
 
 
 
-    // Méthode optionnelle pour envoyer une notification
+    // Envoie le courriel de changement de statut au candidat.
+    // Échec silencieux (journalisé) : le courriel est un complément à la
+    // notification interne, jamais un motif d'échec de la mise à jour.
     protected function sendStatusNotification($postulation)
     {
-        // Implémentez l'envoi d'email ici
+        try {
+            $candidate = $postulation->user;
+
+            if (!$candidate || !$candidate->email) {
+                return;
+            }
+
+            Mail::to($candidate->email)->send(
+                new ApplicationStatusUpdated($postulation, $this->getStatusMessage($postulation->status))
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Échec de l\'envoi du courriel de statut de candidature', [
+                'postulation_id' => $postulation->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
     /**
      * Display the specified resource.

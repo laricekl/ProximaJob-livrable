@@ -18,6 +18,8 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\CvPersonalizationController ; 
 use App\Http\Controllers\CvProfileController;
 use App\Http\Controllers\Auth\ResendVerificationEmailController;
+use App\Http\Controllers\PaiementController;
+use App\Http\Controllers\StripeWebhookController;
 
 /*
 |--------------------------------------------------------------------------
@@ -87,6 +89,14 @@ Route::post('/contact', [ParametresController::class, 'submitContact'])
     ->middleware('throttle:5,1')
     ->name('contact.submit');
 Route::get('/abonnement', [ParametresController::class, 'abonnement'])->name('abonnement');
+
+// Paiement des abonnements (Stripe Checkout) — l'activation arrive par webhook.
+Route::middleware('auth')->group(function () {
+    Route::post('/paiement/checkout/{userAbonnement}', [PaiementController::class, 'checkout'])->name('paiement.checkout');
+    Route::get('/paiement/succes', [PaiementController::class, 'succes'])->name('paiement.succes');
+    Route::get('/paiement/annule', [PaiementController::class, 'annule'])->name('paiement.annule');
+});
+Route::post('/stripe/webhook', StripeWebhookController::class)->name('stripe.webhook');
 
 //Ressources
 Route::get('/ressources', [RessourcesController::class, 'index'])->name('ressources');

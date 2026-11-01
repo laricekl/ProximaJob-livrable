@@ -19,52 +19,10 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-// Commande pour lancer le matching automatique manuellement
-Artisan::command('jobs:match', function () {
-    $this->info('Lancement du matching automatique...');
-    
-    try {
-        // Dispatcher le job de matching
-        \App\Jobs\AutoMatchingJob::dispatch(1); //  
-        
-        $this->info(' Job de matching dispatché avec succès !');
-        $this->line('Le traitement se fait en arrière-plan via la queue.');
-        
-    } catch (\Exception $e) {
-        $this->error(' Erreur lors du lancement : ' . $e->getMessage());
-    }
-    
-})->purpose('Lance le matching automatique des emplois');
-
-// Commande pour traiter immédiatement le matching (sans queue)
-Artisan::command('jobs:match-now', function () {
-    $this->info('Traitement immédiat du matching automatique...');
-    
-    try {
-        $matchingService = app(\App\Services\JobMatchingService::class);
-        $results = $matchingService->processAutoMatching();
-        
-        $this->info('Matching terminé !');
-        $this->table(['Métrique', 'Valeur'], [
-            ['Offres traitées', $results['processed_offers']],
-            ['Candidats matchés', $results['candidates_matched']],
-            ['Candidatures créées', $results['applications_created']],
-            ['Notifications envoyées', $results['notifications_sent']],
-            ['Erreurs', count($results['errors'])]
-        ]);
-        
-        if (!empty($results['errors'])) {
-            $this->warn('Erreurs rencontrées :');
-            foreach ($results['errors'] as $error) {
-                $this->line('  • ' . $error);
-            }
-        }
-        
-    } catch (\Exception $e) {
-        $this->error(' Erreur lors du traitement : ' . $e->getMessage());
-    }
-    
-})->purpose('Traite immédiatement le matching automatique (sans queue)');
+// NOTE : la commande « jobs:match » est définie par la classe
+// App\Console\Commands\RunJobMatching (app/Console/Commands/RunJobMatching.php).
+// Ne pas la redéfinir ici : un doublon historique (closure qui dispatchait
+// AutoMatchingJob avec un ID codé en dur) a été retiré le 31 oct. 2026 (Phase 0).
 
 Artisan::command('matching:recalculate {--offer= : Limiter le recalcul à une offre}', function () {
     $offerId = $this->option('offer');
@@ -94,13 +52,6 @@ Schedule::command('jobs:match')
     ->onFailure(function () {
         \Illuminate\Support\Facades\Log::error('Échec du matching automatique programmé');
     });
-
-//  MATCHING INTENSIF LE MATIN (optionnel - plus de chances de matches)
-Schedule::command('jobs:match')
-    ->dailyAt('08:00')
-    ->withoutOverlapping()
-    ->runInBackground()
-    ->description('Matching automatique matinal intensif');
 
 //  NETTOYAGE NOCTURNE (optionnel - pour nettoyer les logs, expired jobs, etc.)
 Schedule::command('queue:prune-batches --hours=48')

@@ -16,7 +16,9 @@ class UserAbonnement extends Model
         'abonnement_id',
         'date_debut',
         'date_fin',
-        'status'
+        'status',
+        'stripe_checkout_session_id',
+        'stripe_payment_intent_id'
     ];
 
     protected $casts = [

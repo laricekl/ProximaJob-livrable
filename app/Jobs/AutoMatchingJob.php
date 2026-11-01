@@ -42,8 +42,9 @@ class AutoMatchingJob implements ShouldQueue
         try {
             Log::info('Début auto-matching pour utilisateur', ['user_id' => $this->userId]);
             
-            // Lancer le processus de matching
-            $results = $matchingService->processAutoMatching();
+            // Lancer le processus de matching POUR CE CANDIDAT
+            // (avant la Phase 0, l'ID était ignoré et le balayage était global)
+            $results = $matchingService->processAutoMatching($this->userId);
             
             Log::info('Auto-matching terminé pour utilisateur', [
                 'user_id' => $this->userId,

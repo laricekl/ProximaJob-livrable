@@ -177,7 +177,7 @@
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de ProximaJob, y compris la personnalisation de CV par IA, les candidatures illimitées, et la mise en avant de votre profil auprès des employeurs.
+              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de ProximaJob, y compris la personnalisation de CV par IA et les candidatures illimitées.
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
@@ -205,7 +205,7 @@
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Depuis votre espace, choisissez le forfait souhaité et envoyez votre demande. Il apparaît alors « En attente » jusqu’à sa confirmation par l’équipe ProximaJob.
+              Depuis votre espace, choisissez le forfait souhaité et envoyez votre demande. Elle apparaît alors « En attente » : payez en ligne depuis votre espace d'abonnement et l'activation est automatique, dès la confirmation du paiement. Sans paiement en ligne, l'équipe peut aussi activer votre forfait manuellement.
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">

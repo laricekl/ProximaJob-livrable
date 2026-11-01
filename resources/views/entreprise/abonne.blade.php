@@ -71,6 +71,15 @@
                   <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">event</span> Se termine le {{ optional($userAbonnement->date_fin)->format('d/m/Y') ?? 'À confirmer' }}</div>
                   <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">schedule</span> Durée {{ $plan?->periode_formattee ?? 'non définie' }}</div>
                 </div>
+
+                @if ($userAbonnement->effective_status === 'En attente' && (float) ($plan?->montant ?? 0) > 0)
+                  <form method="POST" action="{{ route('paiement.checkout', $userAbonnement) }}" class="mt-5">
+                    @csrf
+                    <button class="inline-flex w-full items-center justify-center gap-2 px-5 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                      <span class="material-symbols-outlined text-lg">payments</span> Payer maintenant
+                    </button>
+                  </form>
+                @endif
               </div>
             </div>
           @empty

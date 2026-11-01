@@ -1001,7 +1001,6 @@
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitées</li>
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalisé par IA</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Mise en avant du profil</li>
                 </ul>
                 <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Commencer</a>
               </div>

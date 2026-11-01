@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Models\SiteSetting;
+use App\Services\Payments\PaymentGateway;
+use App\Services\Payments\StripeGateway;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Pagination\Paginator;
@@ -26,6 +28,10 @@ class AppServiceProvider extends ServiceProvider
                 touch($dbPath);
             }
         }
+
+        // Paiement en ligne : la passerelle réelle est Stripe ; les tests
+        // lient une fausse passerelle, aucun appel réseau en test.
+        $this->app->bind(PaymentGateway::class, StripeGateway::class);
     }
 
     public function boot()
