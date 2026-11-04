@@ -276,24 +276,27 @@ class AuditJourneysTest extends TestCase
         $gateway = new AuditFakeGateway;
         $this->app->instance(PaymentGateway::class, $gateway);
 
-        $candidate = $this->createCandidate(['email' => 'parcours-paiement@example.com'], false);
+        // Depuis la décision du 1er nov. 2026 (candidats gratuits), le parcours
+        // payant est celui de l'ENTREPRISE sur le plan Entreprise — le candidat
+        // ne peut plus souscrire à un plan payant (voir CandidateFreePlanTest).
+        $enterprise = $this->createEnterprise(['email' => 'parcours-paiement@example.com'], [], false);
         $plan = Abonnement::create([
-            'nom' => 'Pro',
-            'description' => 'Plan Pro du parcours paiement.',
-            'montant' => 49,
-            'duree' => 30,
+            'nom' => 'Entreprise',
+            'description' => 'Plan Entreprise du parcours paiement.',
+            'montant' => 399,
+            'duree' => 365,
             'actif' => true,
         ]);
 
         // 1. Souscription (crée l’abonnement « En attente »)
-        $response = $this->actingAs($candidate)->post(route('abonnements.souscrire'), ['abonnement_id' => $plan->id]);
-        $this->step($j, 'POST souscrire au plan Pro', $response);
-        $subscription = UserAbonnement::where('user_id', $candidate->id)->latest('id')->first();
+        $response = $this->actingAs($enterprise)->post(route('entreprise.abonnements.souscrire'), ['abonnement_id' => $plan->id]);
+        $this->step($j, 'POST souscrire au plan Entreprise', $response);
+        $subscription = UserAbonnement::where('user_id', $enterprise->id)->latest('id')->first();
         $this->assertNotNull($subscription);
         $this->step($j, 'statut après souscription', (string) $subscription->status);
 
         // 2. Checkout (fausse passerelle) : redirection vers Stripe hébergé
-        $response = $this->actingAs($candidate)->post(route('paiement.checkout', $subscription));
+        $response = $this->actingAs($enterprise)->post(route('paiement.checkout', $subscription));
         $this->step($j, 'POST checkout', $response);
         $response->assertRedirect('https://checkout.stripe.test/pay/cs_audit_123');
 
@@ -311,8 +314,8 @@ class AuditJourneysTest extends TestCase
         $this->step($j, 'POST webhook checkout.session.completed', $response);
         $this->assertSame('Actif', $subscription->fresh()->status);
 
-        // 5. L’abonnement actif est visible par le candidat
-        $response = $this->actingAs($candidate)->get(route('user.abonnement'));
-        $this->step($j, 'GET /user/abonnement après activation', $response);
+        // 5. L’abonnement actif est visible par l’entreprise
+        $response = $this->actingAs($enterprise)->get(route('entreprise.abonnements'));
+        $this->step($j, 'GET /entreprise/abonnements après activation', $response);
     }
 }

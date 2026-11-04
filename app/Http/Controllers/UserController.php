@@ -363,7 +363,10 @@ public function jobdetails($slug)
     public function planabonnement()
     {
 
+         // Décision du 1er nov. 2026 : les candidats sont gratuits — seuls les
+         // plans sans frais leur sont offerts (le plan Pro candidat n'est plus vendu).
          $abonnements = Abonnement::where('actif', true)
+             ->where('montant', '<=', 0)
              ->whereRaw('LOWER(nom) != ?', ['entreprise'])
              ->get();
     
@@ -404,7 +407,10 @@ public function jobdetails($slug)
         $request->validate(['abonnement_id' => ['required', 'integer']]);
 
         // Vérifier que l'abonnement existe
+        // Même règle qu'à l'affichage : un candidat ne peut souscrire qu'à un
+        // plan gratuit (décision du 1er nov. 2026, candidats gratuits).
         $abonnement = Abonnement::where('actif', true)
+            ->where('montant', '<=', 0)
             ->whereRaw('LOWER(nom) != ?', ['entreprise'])
             ->find($request->abonnement_id);
 

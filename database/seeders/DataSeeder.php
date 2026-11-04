@@ -141,13 +141,16 @@ class DataSeeder extends Seeder
                 'actif' => true,
             ],
             [
+                // Retiré de la vente le 1er nov. 2026 : les candidats sont
+                // gratuits (décision de Larice). Le plan reste en base pour
+                // l'historique et les abonnements déjà en cours.
                 'nom' => 'Pro',
                 'duree' => 30,
                 'montant' => 49,
                 'description' => 'Pour personnaliser vos candidatures et profiter du matching intelligent.',
                 'couleur' => '#f97316',
                 'populaire' => true,
-                'actif' => true,
+                'actif' => false,
             ],
             [
                 'nom' => 'Entreprise',
