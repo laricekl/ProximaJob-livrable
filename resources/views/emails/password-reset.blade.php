@@ -8,7 +8,7 @@
 <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
     
     <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
-        <h1 style="color: white; margin: 0; font-size: 28px;">ProximaJob</h1>
+        <h1 style="color: white; margin: 0; font-size: 28px;">MatchJuste</h1>
         <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0;">Réinitialisation de mot de passe</p>
     </div>
 
@@ -47,7 +47,7 @@
 
         <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
             <p style="color: #999; font-size: 12px; margin: 0;">
-                © {{ date('Y') }} ProximaJob. Tous droits réservés.
+                © {{ date('Y') }} MatchJuste. Tous droits réservés.
             </p>
         </div>
     </div>

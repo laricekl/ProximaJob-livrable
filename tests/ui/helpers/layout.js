@@ -41,7 +41,7 @@ export async function expectFooterVisible(page) {
 
   await footer.scrollIntoViewIfNeeded();
   await expect(footer).toBeVisible();
-  await expect(footer).toContainText(/ProximaJob/i);
+  await expect(footer).toContainText(/MatchJuste/i);
   await expect(footer.getByRole('link', { name: /Contact/i })).toBeVisible();
 }
 

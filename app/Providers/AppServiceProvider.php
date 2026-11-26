@@ -74,7 +74,7 @@ class AppServiceProvider extends ServiceProvider
 
             return (new MailMessage)
                 ->view('emails.password-reset', ['url' => $url])
-                ->subject('Réinitialisation de votre mot de passe - ProximaJob');
+                ->subject('Réinitialisation de votre mot de passe - MatchJuste');
         });
 
         // Règles de mot de passe

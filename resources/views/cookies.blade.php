@@ -14,7 +14,7 @@
         <div class="prose prose-lg max-w-none space-y-8 text-on-surface-variant leading-relaxed">
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">1. Pourquoi nous utilisons des cookies</h2>
-            <p>ProximaJob utilise des cookies et technologies similaires pour assurer le bon fonctionnement du site, protéger les comptes, mémoriser certains choix et, si vous y consentez, mesurer l'audience ou activer des services marketing.</p>
+            <p>MatchJuste utilise des cookies et technologies similaires pour assurer le bon fonctionnement du site, protéger les comptes, mémoriser certains choix et, si vous y consentez, mesurer l'audience ou activer des services marketing.</p>
           </div>
 
           <div>

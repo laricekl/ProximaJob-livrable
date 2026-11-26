@@ -12,13 +12,13 @@ class TestEmail extends Command
 
     public function handle()
     {
-        $email = $this->argument('email') ?: 'admin@proximajob.fr';
+        $email = $this->argument('email') ?: 'admin@matchjuste.ca';
 
         $this->info("Envoi d'un email de test à : {$email}");
 
         try {
-            Mail::raw("Test email envoyé depuis ProximaJob à " . now()->format('d/m/Y H:i'), function ($message) use ($email) {
-                $message->to($email)->subject('Test ProximaJob');
+            Mail::raw("Test email envoyé depuis MatchJuste à " . now()->format('d/m/Y H:i'), function ($message) use ($email) {
+                $message->to($email)->subject('Test MatchJuste');
             });
 
             $this->info('✅ Email envoyé avec succès !');

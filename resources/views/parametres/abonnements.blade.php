@@ -177,7 +177,7 @@
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de ProximaJob, y compris la personnalisation de CV par IA et les candidatures illimitées.
+              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de MatchJuste, y compris la personnalisation de CV par IA et les candidatures illimitées.
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">

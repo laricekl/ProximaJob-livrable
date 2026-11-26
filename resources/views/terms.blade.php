@@ -14,12 +14,12 @@
         <div class="prose prose-lg max-w-none space-y-8 text-on-surface-variant leading-relaxed">
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">1. Acceptation des conditions</h2>
-            <p>En accédant et en utilisant les services de ProximaJob, vous acceptez d'être lié par les présentes conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.</p>
+            <p>En accédant et en utilisant les services de MatchJuste, vous acceptez d'être lié par les présentes conditions d'utilisation. Si vous n'acceptez pas ces conditions, veuillez ne pas utiliser nos services.</p>
           </div>
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">2. Description du service</h2>
-            <p>ProximaJob est une plateforme de mise en relation entre candidats et employeurs. Nous proposons des services de recherche d'emploi, de publication d'offres, de personnalisation de CV par intelligence artificielle et de gestion de candidatures.</p>
+            <p>MatchJuste est une plateforme de mise en relation entre candidats et employeurs. Nous proposons des services de recherche d'emploi, de publication d'offres, de personnalisation de CV par intelligence artificielle et de gestion de candidatures.</p>
           </div>
 
           <div>
@@ -39,12 +39,12 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">6. Propriété intellectuelle</h2>
-            <p>Tout le contenu de la plateforme, y compris les textes, logos, graphiques et code source, est la propriété exclusive de ProximaJob. Toute reproduction sans autorisation est interdite.</p>
+            <p>Tout le contenu de la plateforme, y compris les textes, logos, graphiques et code source, est la propriété exclusive de MatchJuste. Toute reproduction sans autorisation est interdite.</p>
           </div>
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">7. Limitation de responsabilité</h2>
-            <p>ProximaJob ne peut être tenue responsable des dommages indirects liés à l'utilisation de la plateforme. Nous ne garantissons pas l'exactitude des offres d'emploi publiées par les employeurs tiers.</p>
+            <p>MatchJuste ne peut être tenue responsable des dommages indirects liés à l'utilisation de la plateforme. Nous ne garantissons pas l'exactitude des offres d'emploi publiées par les employeurs tiers.</p>
           </div>
 
           <div>
@@ -54,7 +54,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">9. Contact</h2>
-            <p>Pour toute question concernant ces conditions, contactez-nous à l'adresse <a href="mailto:juridique@proximajob.com" class="text-secondary-container font-semibold hover:underline">juridique@proximajob.com</a>.</p>
+            <p>Pour toute question concernant ces conditions, contactez-nous à l'adresse <a href="mailto:juridique@matchjuste.ca" class="text-secondary-container font-semibold hover:underline">juridique@matchjuste.ca</a>.</p>
           </div>
         </div>
       </div>

@@ -90,7 +90,7 @@ class DataExportController extends Controller
             ])->all(),
         ];
 
-        $filename = 'mes-donnees-proximajob-'.now()->format('Ymd').'.json';
+        $filename = 'mes-donnees-matchjuste-'.now()->format('Ymd').'.json';
 
         return response(
             json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),

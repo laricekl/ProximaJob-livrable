@@ -1,5 +1,5 @@
 @php
-  $brandName = $siteSettings?->site_nom ?: 'ProximaJob';
+  $brandName = $siteSettings?->site_nom ?: 'MatchJuste';
   $brandFavicon = $siteSettings?->favicon_url ?: asset('favicon.ico');
 @endphp
 
@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
-<link rel="preload" as="image" href="{{ asset('img/proxi-mark.png') }}" fetchpriority="high" />
+<link rel="preload" as="image" href="{{ asset('img/matchjuste-logo.png') }}" fetchpriority="high" />
 @if (request()->routeIs('welcome'))
   <link rel="preload" as="image" href="{{ asset('img/votre-hero.png') }}" fetchpriority="high" />
 @endif

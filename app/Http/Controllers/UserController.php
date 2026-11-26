@@ -375,8 +375,8 @@ public function jobdetails($slug)
         
         if (!$settings) {
             $settings = SiteSetting::create([
-                'site_nom' => 'Proximalob',
-                'email' => 'contact@proximalob.com',
+                'site_nom' => 'MatchJuste',
+                'email' => 'contact@matchjuste.ca',
                 'timezone' => 'Europe/Paris',
             ]);
         }

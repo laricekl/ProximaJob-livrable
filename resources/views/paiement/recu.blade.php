@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reçu — {{ $userAbonnement->abonnement->nom ?? 'Abonnement' }} — ProximaJob</title>
+  <title>Reçu — {{ $userAbonnement->abonnement->nom ?? 'Abonnement' }} — MatchJuste</title>
   <style>
     body { font-family: Arial, Helvetica, sans-serif; color: #1a1a2e; margin: 0; background: #f4f4f6; }
     .sheet { max-width: 720px; margin: 32px auto; background: #fff; padding: 40px 44px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
@@ -33,7 +33,7 @@
   @endphp
 
   <div class="sheet">
-    <div class="brand">ProximaJob</div>
+    <div class="brand">MatchJuste</div>
     <p class="muted">Reçu d’abonnement — document généré le {{ now()->translatedFormat('d F Y') }}</p>
 
     <h1>{{ $plan->nom ?? 'Abonnement' }}</h1>
@@ -72,7 +72,7 @@
       </tr>
     </table>
 
-    <p class="muted" style="margin-top:28px;">Merci de votre confiance. Pour toute question sur ce reçu, contactez le support via la page Contact de ProximaJob.</p>
+    <p class="muted" style="margin-top:28px;">Merci de votre confiance. Pour toute question sur ce reçu, contactez le support via la page Contact de MatchJuste.</p>
   </div>
 
   <div class="actions">

@@ -9,11 +9,11 @@ import {
 } from './helpers/layout.js';
 
 const publicPages = [
-  { path: '/', title: /Accueil|ProximaJob/i, landmark: /Accueil|Offres/i },
-  { path: '/offres', title: /Offres|ProximaJob/i, landmark: /offres/i },
-  { path: '/contact', title: /Contact|ProximaJob/i, landmark: /contact/i },
-  { path: '/ressources', title: /Ressources|ProximaJob/i, landmark: /ressources/i },
-  { path: '/abonnement', title: /Abonnement|Forfaits|ProximaJob/i, landmark: /abonnement|forfaits/i },
+  { path: '/', title: /Accueil|MatchJuste/i, landmark: /Accueil|Offres/i },
+  { path: '/offres', title: /Offres|MatchJuste/i, landmark: /offres/i },
+  { path: '/contact', title: /Contact|MatchJuste/i, landmark: /contact/i },
+  { path: '/ressources', title: /Ressources|MatchJuste/i, landmark: /ressources/i },
+  { path: '/abonnement', title: /Abonnement|Forfaits|MatchJuste/i, landmark: /abonnement|forfaits/i },
 ];
 
 test.describe('public area', () => {
@@ -59,7 +59,7 @@ test.describe('public area', () => {
     const response = await page.goto('/');
 
     await expectHealthyResponse(response, page);
-    await expect(page).toHaveTitle(/Accueil|ProximaJob/i);
+    await expect(page).toHaveTitle(/Accueil|MatchJuste/i);
     await expectNoHorizontalOverflow(page);
     await expectRevealContentVisible(page);
 

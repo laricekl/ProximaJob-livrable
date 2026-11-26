@@ -191,8 +191,8 @@ class AdminManagementTest extends TestCase
         $admin = $this->createAdmin();
 
         $response = $this->actingAs($admin)->post(route('parametres.update-general'), [
-            'site_nom' => 'ProximaJob Demo',
-            'email' => 'equipe@proximajob.test',
+            'site_nom' => 'MatchJuste Demo',
+            'email' => 'equipe@matchjuste.ca',
             'tel' => '+1 555 100 2000',
             'localisation' => 'Montreal, Canada',
             'timezone' => 'America/New_York',
@@ -207,8 +207,8 @@ class AdminManagementTest extends TestCase
 
         $settings = SiteSetting::first();
 
-        $this->assertSame('ProximaJob Demo', $settings->site_nom);
-        $this->assertSame('equipe@proximajob.test', $settings->email);
+        $this->assertSame('MatchJuste Demo', $settings->site_nom);
+        $this->assertSame('equipe@matchjuste.ca', $settings->email);
         $this->assertSame('+1 555 100 2000', $settings->tel);
         $this->assertSame('Montreal, Canada', $settings->localisation);
         $this->assertSame('America/New_York', $settings->timezone);

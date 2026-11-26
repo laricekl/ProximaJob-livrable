@@ -55,7 +55,7 @@
         : collect();
     $logiciels = $visibleSections->contains('software') ? $limitText($logiciels ?? '', 260) : '';
     $professionalSummary = $limitText($langues_competences ?? '', 520);
-    $fullName = trim(($prenom ?? '').' '.($nom ?? '')) ?: 'Candidat ProximaJob';
+    $fullName = trim(($prenom ?? '').' '.($nom ?? '')) ?: 'Candidat MatchJuste';
     $location = collect([$ville ?? null, $province ?? null])->filter()->implode(', ');
     $targetTitle = trim((string) ($offer_title ?? ''));
     $templateStyle = array_key_exists($options['template_style'], config('cv_templates', []))

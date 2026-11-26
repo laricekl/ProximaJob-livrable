@@ -97,7 +97,7 @@ class RegisteredUserController extends Controller
        /* Notification::create([
         'user_id' => $user->id,
         'role' => 'user',
-        'title' => 'Bienvenue sur ProximaJob ! ',
+        'title' => 'Bienvenue sur MatchJuste ! ',
         'message' => 'Complétez votre profil pour optimiser votre expérience et augmenter vos chances de succès.',
         'link' => 'javascript:void(0)',  
         'is_read' => false,

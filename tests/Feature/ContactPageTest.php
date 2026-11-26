@@ -15,7 +15,7 @@ class ContactPageTest extends TestCase
             'name' => 'Doe',
             'firstname' => 'Jane',
             'email' => 'jane@example.com',
-            'message' => 'Bonjour, je souhaite en savoir plus sur ProximaJob.',
+            'message' => 'Bonjour, je souhaite en savoir plus sur MatchJuste.',
         ]);
 
         $response

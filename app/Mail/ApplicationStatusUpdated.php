@@ -33,7 +33,7 @@ class ApplicationStatusUpdated extends Mailable
         $candidate = $this->postulation->user;
         $offer = $this->postulation->offre;
 
-        return $this->subject('Votre candidature a été ' . $this->statusMessage . ' - ProximaJob')
+        return $this->subject('Votre candidature a été ' . $this->statusMessage . ' - MatchJuste')
                     ->view('emails.application-status-updated')
                     ->with([
                         'candidateName' => trim(($candidate->name ?? '') . ' ' . ($candidate->prenom ?? '')),

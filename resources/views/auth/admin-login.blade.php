@@ -16,7 +16,7 @@
           @csrf
           <div>
             <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail</label>
-            <input type="email" id="email" name="email" placeholder="admin@proximajob.com" required
+            <input type="email" id="email" name="email" placeholder="admin@matchjuste.ca" required
               class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
           </div>
 

@@ -118,7 +118,7 @@
         <div class="card-glow border border-outline-variant/20 rounded-2xl overflow-hidden">
           <div class="px-8 py-5 border-b border-outline-variant/10">
             <h2 class="text-xl font-bold font-serif text-primary">Mes données personnelles</h2>
-            <p class="text-sm text-on-surface-variant mt-0.5">Téléchargez une copie des données que ProximaJob détient sur vous : compte, profil CV, candidatures, abonnements et notifications (format JSON).</p>
+            <p class="text-sm text-on-surface-variant mt-0.5">Téléchargez une copie des données que MatchJuste détient sur vous : compte, profil CV, candidatures, abonnements et notifications (format JSON).</p>
           </div>
           <div class="p-8">
             <a href="{{ route('profile.export-donnees') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-container text-white text-sm font-bold rounded-xl hover:bg-primary transition-all">

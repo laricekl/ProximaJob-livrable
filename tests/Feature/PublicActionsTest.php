@@ -65,7 +65,7 @@ class PublicActionsTest extends TestCase
     public function test_public_pages_use_centralized_site_settings_for_branding_and_map(): void
     {
         SiteSetting::create([
-            'site_nom' => 'ProximaJob Showcase',
+            'site_nom' => 'MatchJuste Showcase',
             'email' => 'contact@showcase.test',
             'tel' => '+1 555 000 1111',
             'localisation' => 'Quebec, Canada',
@@ -75,7 +75,7 @@ class PublicActionsTest extends TestCase
 
         $this->get('/')
             ->assertOk()
-            ->assertSee('ProximaJob Showcase');
+            ->assertSee('MatchJuste Showcase');
 
         $this->get('/contact')
             ->assertOk()

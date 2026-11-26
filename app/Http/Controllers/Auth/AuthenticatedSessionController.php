@@ -163,8 +163,8 @@ class AuthenticatedSessionController extends Controller
 
         try {
             Mail::raw(
-                "Votre code de sécurité ProximaJob est {$code}. Il expire dans 10 minutes.",
-                fn ($message) => $message->to($user->email)->subject('Code de sécurité ProximaJob')
+                "Votre code de sécurité MatchJuste est {$code}. Il expire dans 10 minutes.",
+                fn ($message) => $message->to($user->email)->subject('Code de sécurité MatchJuste')
             );
         } catch (\Throwable $exception) {
             $request->session()->forget('admin_2fa');

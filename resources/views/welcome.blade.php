@@ -494,7 +494,7 @@
                 <stop offset="70%" stop-color="#e2e5ee"></stop>
                 <stop offset="100%" stop-color="#cdd1de"></stop>
               </radialGradient>
-              <!-- ── Faceplate gradient ── aux couleurs de ProximaJob (Bleu nuit profond) -->
+              <!-- ── Faceplate gradient ── aux couleurs de MatchJuste (Bleu nuit profond) -->
               <radialGradient cx="50%" cy="30%" id="fpGrad" r="70%">
                 <stop offset="0%" stop-color="#0b1b36"></stop>
                 <stop offset="100%" stop-color="#020814"></stop>
@@ -505,7 +505,7 @@
                 <stop offset="60%" stop-color="#d8dbe8"></stop>
                 <stop offset="100%" stop-color="#c8ccd8"></stop>
               </radialGradient>
-              <!-- ── Iris gradient ── Bleu vibrant ProximaJob -->
+              <!-- ── Iris gradient ── Bleu vibrant MatchJuste -->
               <radialGradient cx="38%" cy="34%" id="irisGrad" r="62%">
                 <stop offset="0%" stop-color="#6bb5f5"></stop>
                 <stop offset="40%" stop-color="#2a85d6"></stop>
@@ -630,7 +630,7 @@
                 stroke-width="1">
               </circle>
             </g>
-            <!-- ══ LOGO PROXIMAJOB (Vectoriel Haute Fidélité) ════════════════════════════ -->
+            <!-- ══ LOGO MATCHJUSTE (Vectoriel Haute Fidélité) ════════════════════════════ -->
             <g id="brand-logo">
               <g transform="translate(62, 228) scale(0.045)">
                 <path fill="var(--pj-accent)" opacity="1.000000" stroke="none"
@@ -647,7 +647,7 @@
                   d=" M450.469269,589.451721 C450.523682,589.419556 450.414856,589.483887 450.469269,589.451721 z" />
               </g>
               <text x="112" y="251" font-family="'Inter', sans-serif" font-weight="700" font-size="20" fill="#023467"
-                letter-spacing="-0.3">ProximaJob</text>
+                letter-spacing="-0.3">MatchJuste</text>
             </g>
             <!-- ══ DÉTAILS BAS ════════════════════════════════════════════ -->
             <rect fill="#c0c4d4" height="2.5" opacity="0.35" rx="1.2" width="46" x="137" y="226"></rect>
@@ -661,7 +661,7 @@
           <span class="text-secondary-container">propulsée par l'IA.</span>
         </h1>
         <p class="hero-reveal hero-reveal--2 text-base md:text-lg text-on-surface-variant max-w-2xl mx-auto mt-4 md:mt-6 leading-relaxed">
-          Déposez votre CV et laissez ProximaJob analyser votre profil pour vous connecter aux meilleures opportunités
+          Déposez votre CV et laissez MatchJuste analyser votre profil pour vous connecter aux meilleures opportunités
           adaptées à vos compétences.
         </p>
 
@@ -769,7 +769,7 @@
                         <span class="px-2 py-0.5 rounded bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-wider border border-secondary-container/20">Partenaire Élite</span>
                         <span class="text-2xs text-primary/40 font-medium italic">Solution recrutement</span>
                       </div>
-                      <h3 class="text-xl md:text-2xl font-bold text-primary truncate" id="spotlight2-name">ProximaJob Entreprise</h3>
+                      <h3 class="text-xl md:text-2xl font-bold text-primary truncate" id="spotlight2-name">MatchJuste Entreprise</h3>
                       <p class="text-primary/60 text-sm italic font-medium line-clamp-3 min-h-[3.5rem]" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, évaluer et recruter les meilleurs talents."</p>
                     </div>
                   </div>
@@ -793,7 +793,7 @@
         <div class="w-full lg:w-3/5 relative">
           <div
             class="relative rounded-2xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-700">
-            <img src="{{ asset('img/votre-hero.png') }}" alt="Professionnelle ProximaJob"
+            <img src="{{ asset('img/votre-hero.png') }}" alt="Professionnelle MatchJuste"
               class="w-full h-[280px] sm:h-[380px] md:h-[450px] object-cover" loading="eager" decoding="async" fetchpriority="high" />
             <div
               class="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 right-3 sm:right-6 bg-white/20 backdrop-blur-xl border border-white/30 p-3 sm:p-5 rounded-xl">
@@ -806,7 +806,7 @@
                   <p class="text-white/80 text-xs">Directrice Marketing, TechNova</p>
                 </div>
               </div>
-              <p class="mt-2 text-white/90 italic text-sm">"ProximaJob a identifié des opportunités que je n'aurais
+              <p class="mt-2 text-white/90 italic text-sm">"MatchJuste a identifié des opportunités que je n'aurais
                 jamais trouvées seule."</p>
             </div>
           </div>

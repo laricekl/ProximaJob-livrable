@@ -34,7 +34,7 @@
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight">Bonjour, {{ auth()->user()->prenom ?? auth()->user()->name ?? 'candidat' }}</h1>
-            <p class="text-on-surface-variant mt-2">Bienvenue sur votre espace ProximaJob</p>
+            <p class="text-on-surface-variant mt-2">Bienvenue sur votre espace MatchJuste</p>
           </div>
           <a href="{{ route('offres') }}" class="inline-flex items-center gap-2 bg-secondary-container text-white font-bold px-6 py-3 rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20">
             <span class="material-symbols-outlined text-lg">search</span> Chercher des offres

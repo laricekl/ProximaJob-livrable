@@ -18,7 +18,7 @@ class PublicContactMessage extends Mailable
     {
         return $this
             ->replyTo($this->contact['email'], trim($this->contact['firstname'].' '.$this->contact['name']))
-            ->subject('Nouveau message reçu depuis ProximaJob')
+            ->subject('Nouveau message reçu depuis MatchJuste')
             ->view('emails.public-contact');
     }
 }

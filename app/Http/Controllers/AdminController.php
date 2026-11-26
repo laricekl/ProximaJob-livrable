@@ -1843,7 +1843,7 @@ class AdminController extends Controller
             'user_id' => $user->id,
             'role' => $user->getRoleNames()->first(),
             'title' => 'Votre compte a été activé',
-            'message' => 'Votre compte sur ProximaJob a été activé par un administrateur. Vous pouvez maintenant vous connecter et utiliser toutes les fonctionnalités.',
+            'message' => 'Votre compte sur MatchJuste a été activé par un administrateur. Vous pouvez maintenant vous connecter et utiliser toutes les fonctionnalités.',
             'link' => '/login',
             'is_read' => false,
         ]);

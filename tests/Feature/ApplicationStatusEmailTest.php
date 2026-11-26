@@ -67,7 +67,7 @@ class ApplicationStatusEmailTest extends TestCase
         $mailable->build();
 
         $this->assertSame(
-            'Votre candidature a été présélectionnée - ProximaJob',
+            'Votre candidature a été présélectionnée - MatchJuste',
             $mailable->subject
         );
     }

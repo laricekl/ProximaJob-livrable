@@ -30,7 +30,7 @@
               </li>
               <li class="flex gap-3">
                 <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-white">2</span>
-                <span>Cliquez sur le lien de verification envoye par ProximaJob.</span>
+                <span>Cliquez sur le lien de verification envoye par MatchJuste.</span>
               </li>
               <li class="flex gap-3">
                 <span class="mt-0.5 flex h-6 w-6 flex-none items-center justify-center rounded-full bg-secondary-container text-xs font-bold text-white">3</span>
