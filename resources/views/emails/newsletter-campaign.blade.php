@@ -5,7 +5,7 @@
     <h1 style="color:#111827">{{ $campaignSubject }}</h1>
     <div>{!! nl2br(e($campaignContent)) !!}</div>
     <hr style="margin-top:32px;border:0;border-top:1px solid #e5e7eb">
-    <p style="font-size:12px;color:#6b7280">Vous recevez ce message parce que vous possédez un compte ProximaJob.</p>
+    <p style="font-size:12px;color:#6b7280">Vous recevez ce message parce que vous possédez un compte MatchJuste.</p>
   </div>
 </body>
 </html>

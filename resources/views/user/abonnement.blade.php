@@ -60,6 +60,14 @@
                     <a href="{{ route('plan.abonnement') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
                       <span class="material-symbols-outlined text-lg">upgrade</span> Changer de plan
                     </a>
+                    @if ($userAbonnement->effective_status === 'En attente' && (float) ($userAbonnement->abonnement->montant ?? 0) > 0)
+                      <form method="POST" action="{{ route('paiement.checkout', $userAbonnement) }}">
+                        @csrf
+                        <button class="inline-flex items-center gap-2 px-5 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
+                          <span class="material-symbols-outlined text-lg">payments</span> Payer maintenant
+                        </button>
+                      </form>
+                    @endif
                     @if (in_array($userAbonnement->effective_status, ['Actif', 'En attente'], true))
                       <form method="POST" action="{{ route('abonnements.cancel') }}" data-proxima-confirm="Confirmer l’annulation de cet abonnement ?" data-proxima-title="Annuler l’abonnement" data-proxima-confirm-label="Annuler l’abonnement" data-proxima-tone="danger">
                         @csrf
@@ -67,6 +75,11 @@
                           <span class="material-symbols-outlined text-lg">cancel</span> Annuler l’abonnement
                         </button>
                       </form>
+                    @endif
+                    @if ($userAbonnement->status !== 'En attente')
+                      <a href="{{ route('paiement.recu', $userAbonnement) }}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 px-5 py-2.5 border border-outline-variant/30 text-primary text-sm font-bold rounded-xl hover:bg-surface-container-low transition-colors">
+                        <span class="material-symbols-outlined text-lg">receipt_long</span> Voir le reçu
+                      </a>
                     @endif
                   </div>
                 </div>

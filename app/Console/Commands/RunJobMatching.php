@@ -29,7 +29,10 @@ class RunJobMatching extends Command
         $startTime = now();
         
         try {
-            $results = $this->matchingService->processAutoMatching();
+            // Le mode simulation est RÉELLEMENT transmis au service :
+            // avant la Phase 0, l'option --dry-run affichait un avertissement
+            // mais le service créait quand même les postulations.
+            $results = $this->matchingService->processAutoMatching(null, (bool) $this->option('dry-run'));
             
             $this->displayResults($results, $startTime);
             
@@ -62,6 +65,8 @@ class RunJobMatching extends Command
                 ['Offres traitées', $results['processed_offers']],
                 ['Candidats analysés', $results['candidates_matched']],
                 ['Postulations créées', $results['applications_created']],
+                ['Postulations simulées (dry-run)', $results['applications_simulated'] ?? 0],
+                ['Postulations plafonnées (max 3/jour/candidat)', $results['applications_capped'] ?? 0],
                 ['Erreurs', count($results['errors'])],
             ]
         );

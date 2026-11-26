@@ -27,6 +27,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withCommands()
     ->withMiddleware(function (Middleware $middleware): void {
+        // Le webhook Stripe arrive sans jeton CSRF : sa signature fait foi.
+        $middleware->validateCsrfTokens(except: ['stripe/webhook']);
         // Extend Laravel's default web group instead of replacing it. The
         // defaults provide encrypted cookies, CSRF protection and bindings.
         $middleware->web(append: [

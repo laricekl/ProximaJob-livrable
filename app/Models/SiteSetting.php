@@ -51,16 +51,16 @@ class SiteSetting extends Model
      * @var array
      */
     protected $attributes = [
-        'site_nom' => 'ProximaJob',
-        'email' => 'contact@proximajob.com',
+        'site_nom' => 'MatchJuste',
+        'email' => 'contact@matchjuste.ca',
         'timezone' => 'UTC',
     ];
 
     public static function defaults(): array
     {
         return [
-            'site_nom' => 'ProximaJob',
-            'email' => 'contact@proximajob.com',
+            'site_nom' => 'MatchJuste',
+            'email' => 'contact@matchjuste.ca',
             'tel' => '+1 234 567 890',
             'localisation' => 'Montreal, QC, Canada',
             'timezone' => 'America/Toronto',

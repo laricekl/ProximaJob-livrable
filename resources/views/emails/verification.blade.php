@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification de votre email - ProximaJob</title>
+    <title>Vérification de votre email - MatchJuste</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -95,7 +95,7 @@
             <div class="greeting">Bonjour {{ $user->prenom }} {{ $user->name }},</div>
             
             <div class="instructions">
-                <p>Merci de vous être inscrit sur <strong>ProximaJob</strong>. Pour activer votre compte et commencer à utiliser nos services, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
+                <p>Merci de vous être inscrit sur <strong>MatchJuste</strong>. Pour activer votre compte et commencer à utiliser nos services, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
             </div>
             
             <div style="text-align: center;">
@@ -113,11 +113,11 @@
             </div>
 
             <p style="color: #718096; font-size: 14px; margin-top: 25px;">
-                Si vous n'avez pas créé de compte sur ProximaJob, veuillez ignorer cet email.
+                Si vous n'avez pas créé de compte sur MatchJuste, veuillez ignorer cet email.
             </p>
         </div>
         <div class="footer">
-            <p>&copy; {{ date('Y') }} ProximaJob. Tous droits réservés.</p>
+            <p>&copy; {{ date('Y') }} MatchJuste. Tous droits réservés.</p>
             <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
         </div>
     </div>

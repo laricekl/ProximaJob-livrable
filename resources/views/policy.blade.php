@@ -54,7 +54,7 @@
 
           <div>
             <h2 class="text-xl font-bold font-serif text-primary mb-3">9. Contact DPO</h2>
-            <p>Pour toute question relative à la protection de vos données, contactez notre Délégué à la Protection des Données à l'adresse <a href="mailto:dpo@proximajob.com" class="text-secondary-container font-semibold hover:underline">dpo@proximajob.com</a>.</p>
+            <p>Pour toute question relative à la protection de vos données, contactez notre Délégué à la Protection des Données à l'adresse <a href="mailto:dpo@matchjuste.ca" class="text-secondary-container font-semibold hover:underline">dpo@matchjuste.ca</a>.</p>
           </div>
         </div>
       </div>

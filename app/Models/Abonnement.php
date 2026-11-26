@@ -17,7 +17,8 @@ class Abonnement extends Model
         'description',
         'couleur',
         'populaire',
-        'actif'
+        'actif',
+        'stripe_price_id',
     ];
 
     protected $casts = [
@@ -26,15 +27,15 @@ class Abonnement extends Model
         'actif' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-        'features' =>'array',
-        'is_premium' =>'boolean'
+        'features' => 'array',
+        'is_premium' => 'boolean',
     ];
 
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_abonnements')
-                    ->withPivot('date_debut', 'date_fin', 'status')
-                    ->withTimestamps();
+            ->withPivot('date_debut', 'date_fin', 'status')
+            ->withTimestamps();
     }
 
     public function fonctionnalites()
@@ -56,7 +57,7 @@ class Abonnement extends Model
     // Méthode pour formater le prix
     public function getPrixFormatteAttribute()
     {
-        return number_format($this->montant, 2, ',', ' ') . '$ CAD';
+        return number_format($this->montant, 2, ',', ' ').'$ CAD';
     }
 
     // Méthode pour obtenir la période formatée
@@ -65,9 +66,9 @@ class Abonnement extends Model
         $periodes = [
             'mensuel' => '/mois',
             'trimestriel' => '/trimestre',
-            'annuel' => '/an'
+            'annuel' => '/an',
         ];
 
-        return $periodes[$this->duree] ?? '/' . $this->duree;
+        return $periodes[$this->duree] ?? '/'.$this->duree;
     }
 }

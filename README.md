@@ -1,4 +1,4 @@
-# ProximaJob
+# MatchJuste
 
 Application de recherche d'emploi et recrutement.
 

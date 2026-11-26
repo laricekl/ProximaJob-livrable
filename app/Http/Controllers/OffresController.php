@@ -435,19 +435,21 @@ class OffresController extends Controller
             JobOfferSkill::insert($allSkills);
         }
 
-        // Déclencher l'auto-matching après création de l'offre
+        // Déclencher l'auto-matching CIBLÉ sur cette offre après sa création
+        // (avant la Phase 0 : AutoMatchingJob recevait l'ID de l'entreprise et
+        // relançait un balayage global de toutes les offres et tous les candidats)
         try {
-            \App\Jobs\AutoMatchingJob::dispatch(Auth::user()->id)
+            \App\Jobs\OfferMatchingJob::dispatch($offre->id)
                 ->delay(now()->addSeconds(10));
-            
-            \Illuminate\Support\Facades\Log::info('Auto-matching Job dispatché après création d\'offre', [
+
+            \Illuminate\Support\Facades\Log::info('OfferMatchingJob dispatché après création d\'offre', [
                 'offre_id' => $offre->id,
                 'entreprise_id' => Auth::user()->entreprise->id,
                 'triggered_by_user_id' => Auth::user()->id
             ]);
-            
+
         } catch (\Exception $e) {
-            \Illuminate\Support\Facades\Log::error('Erreur lors du dispatch AutoMatchingJob pour nouvelle offre', [
+            \Illuminate\Support\Facades\Log::error('Erreur lors du dispatch OfferMatchingJob pour nouvelle offre', [
                 'offre_id' => $offre->id,
                 'error' => $e->getMessage()
             ]);

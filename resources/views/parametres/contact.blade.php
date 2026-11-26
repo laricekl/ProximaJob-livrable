@@ -64,10 +64,10 @@
             </p>
 
             <div class="contact-map-frame lg:flex-1 rounded-[2rem] overflow-hidden shadow-md border border-white bg-surface-container flex items-center justify-center">
-              <a href="{{ $mapSearchUrl }}" target="_blank" rel="noopener" class="relative block h-full w-full group" aria-label="Ouvrir la carte de localisation {{ $infos?->site_nom ?? 'ProximaJob' }}">
+              <a href="{{ $mapSearchUrl }}" target="_blank" rel="noopener" class="relative block h-full w-full group" aria-label="Ouvrir la carte de localisation {{ $infos?->site_nom ?? 'MatchJuste' }}">
                 <img
                   src="{{ asset('img/contact-map-montreal.png') }}"
-                  alt="Carte de localisation {{ $infos?->site_nom ?? 'ProximaJob' }}"
+                  alt="Carte de localisation {{ $infos?->site_nom ?? 'MatchJuste' }}"
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   loading="lazy"
                 />

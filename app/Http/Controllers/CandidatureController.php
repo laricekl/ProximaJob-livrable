@@ -21,6 +21,8 @@ use App\Models\Notification;
 use App\Models\User;
 use App\Models\AutresDoc;
 use App\Models\CvGenere;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ApplicationStatusUpdated;
 
 class CandidatureController extends Controller
 {
@@ -448,14 +450,18 @@ public function previewCVForEnterprise($candidatureId)
         
         // Utiliser la même logique que previewCVia mais avec un logging spécifique
         return $this->previewCVia($candidatureId);
-        
+
+    } catch (\Symfony\Component\HttpKernel\Exception\HttpExceptionInterface $e) {
+        // Laisser passer les erreurs HTTP légitimes (403, 404 « CV non
+        // trouvé » de previewCVia) au lieu de les convertir en 500 (audit G1).
+        throw $e;
     } catch (\Exception $e) {
         Log::error('Erreur entreprise lors de la prévisualisation du CV', [
             'candidature_id' => $candidatureId,
             'entreprise_id' => auth()->id(),
             'error' => $e->getMessage()
         ]);
-        
+
         abort(500, 'Erreur lors de l\'ouverture du CV');
     }
 }
@@ -669,29 +675,23 @@ private function servePublicFile($filePath, $candidature)
                 ->findOrFail($id);
 
             $postulation->update($validated);
-            $autopostulation = $postulation->autopostulation;
-            if($autopostulation) {
 
-                Notification::create([
-                    'user_id' => $postulation->user_id, 
-                    'role' => 'candidat',
-                    'type' => 'application',
-                    'title' => 'Mise à jour de votre candidature',
-                    'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
-                    'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
-                    'is_read' => false,
-                ]);
-             }else {
-                      Notification::create([
-                    'user_id' => $postulation->user_id, 
-                    'role' => 'candidat',
-                    'type' => 'application',
-                    'title' => 'Mise à jour de votre candidature',
-                    'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
-                    'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
-                    'is_read' => false,
-                ]);
-             }
+            // Notification interne au candidat (un seul bloc : l'ancien code
+            // dupliquait exactement le même envoi dans un if/else sur
+            // l'autopostulation — retiré le 31 oct. 2026, Phase 0).
+            Notification::create([
+                'user_id' => $postulation->user_id,
+                'role' => 'candidat',
+                'type' => 'application',
+                'title' => 'Mise à jour de votre candidature',
+                'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
+                'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
+                'is_read' => false,
+            ]);
+
+            // Courriel au candidat (Phase 0) : ne jamais faire échouer la
+            // mise à jour du statut si l'envoi échoue.
+            $this->sendStatusNotification($postulation);
 
 
             if ($request->expectsJson()) {
@@ -701,7 +701,12 @@ private function servePublicFile($filePath, $candidature)
                 ]);
             }
 
-            return back()->with('status', 'Le statut de la candidature a été mis à jour.');
+            // Redirection explicite vers la liste des candidatures de
+            // l'offre (audit G3) : l'ancien back() dépendait de la page
+            // d'origine et pouvait renvoyer l'entreprise vers /notifications,
+            // qui lui était interdite.
+            return redirect()->route('entreprise.offres.candidatures', $postulation->offre_id)
+                ->with('status', 'Le statut de la candidature a été mis à jour.');
 
         } catch (ModelNotFoundException $e) {
             if ($request->expectsJson()) {
@@ -756,11 +761,12 @@ private function getStatusMessage($status)
         $fileName = 'Lettre_Motivation_' . Str::slug($postulation->user->name) . '.' . pathinfo($filePath, PATHINFO_EXTENSION);
         $fullPath = $this->resolveLetterPath($filePath);
     } else {
-        abort(404, 'Fichier non trouvé');
+        // Retour guidé plutôt qu'un 404 plein écran (audit G2).
+        return back()->with('error', 'Aucun fichier de ce type n’est joint à cette candidature.');
     }
 
     if (!File::exists($fullPath)) {
-        abort(404, 'Fichier introuvable');
+        return back()->with('error', 'Le fichier demandé est introuvable.');
     }
 
     $realPath = realpath($fullPath);
@@ -795,10 +801,27 @@ private function getStatusMessage($status)
 
 
 
-    // Méthode optionnelle pour envoyer une notification
+    // Envoie le courriel de changement de statut au candidat.
+    // Échec silencieux (journalisé) : le courriel est un complément à la
+    // notification interne, jamais un motif d'échec de la mise à jour.
     protected function sendStatusNotification($postulation)
     {
-        // Implémentez l'envoi d'email ici
+        try {
+            $candidate = $postulation->user;
+
+            if (!$candidate || !$candidate->email) {
+                return;
+            }
+
+            Mail::to($candidate->email)->send(
+                new ApplicationStatusUpdated($postulation, $this->getStatusMessage($postulation->status))
+            );
+        } catch (\Throwable $e) {
+            Log::warning('Échec de l\'envoi du courriel de statut de candidature', [
+                'postulation_id' => $postulation->id ?? null,
+                'error' => $e->getMessage(),
+            ]);
+        }
     }
     /**
      * Display the specified resource.

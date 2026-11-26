@@ -15,7 +15,7 @@ test.describe('Demo Public', () => {
     let response = await page.goto('/');
     await expectHealthyResponse(response, page);
 
-    await expect(page).toHaveTitle(/Accueil|ProximaJob/i);
+    await expect(page).toHaveTitle(/Accueil|MatchJuste/i);
     await expect(page.locator('body')).toContainText(/Votre recherche d'emploi|propulsée par l'IA/i);
     await expect(page.locator('nav [data-language-switcher]').first()).toBeVisible();
     await expectNoHorizontalOverflow(page);

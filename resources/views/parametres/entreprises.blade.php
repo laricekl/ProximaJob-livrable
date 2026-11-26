@@ -9,7 +9,7 @@
         <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Entreprises partenaires</p>
         <h1 class="mt-3 text-3xl font-bold font-serif text-primary md:text-5xl">Découvrez les entreprises qui recrutent</h1>
         <p class="mt-4 text-sm leading-6 text-on-surface-variant md:text-base">
-          Explorez les entreprises sélectionnées par ProximaJob, consultez leur présentation et découvrez leurs offres actives.
+          Explorez les entreprises sélectionnées par MatchJuste, consultez leur présentation et découvrez leurs offres actives.
         </p>
       </div>
 

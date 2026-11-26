@@ -111,7 +111,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'infos@proximajob.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'infos@matchjuste.ca'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 

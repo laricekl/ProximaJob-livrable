@@ -276,12 +276,14 @@ class JobMatchingService
     /**
      * Lance le processus de matching automatique
      */
-    public function processAutoMatching(?int $candidateId = null): array
+    public function processAutoMatching(?int $candidateId = null, bool $dryRun = false): array
     {
         $results = [
             'processed_offers' => 0,
             'candidates_matched' => 0,
             'applications_created' => 0,
+            'applications_simulated' => 0,
+            'applications_capped' => 0,
             'notifications_sent' => 0,
             'personalized_cvs_generated' => 0,
             'cover_letters_generated'  => 0,
@@ -292,8 +294,8 @@ class JobMatchingService
             $activeOffers = $this->getActiveOffers();
             $results['processed_offers'] = $activeOffers->count();
 
-            $activeOffers->each(function ($offerId) use (&$results, $candidateId) {
-                $this->processOfferMatching($offerId, $results, $candidateId);
+            $activeOffers->each(function ($offerId) use (&$results, $candidateId, $dryRun) {
+                $this->processOfferMatching($offerId, $results, $candidateId, $dryRun);
             });
 
             Log::info('Auto-matching terminé', $results);
@@ -307,26 +309,96 @@ class JobMatchingService
     }
 
     /**
+     * Traite le matching pour UNE offre précise (déclenché à sa création).
+     * Évite le balayage global historique à chaque nouvelle offre.
+     */
+    public function processMatchingForOffer(int $offerId, bool $dryRun = false): array
+    {
+        $results = [
+            'processed_offers' => 1,
+            'candidates_matched' => 0,
+            'applications_created' => 0,
+            'applications_simulated' => 0,
+            'applications_capped' => 0,
+            'notifications_sent' => 0,
+            'personalized_cvs_generated' => 0,
+            'cover_letters_generated'  => 0,
+            'errors' => []
+        ];
+
+        try {
+            $this->processOfferMatching($offerId, $results, null, $dryRun);
+
+            Log::info('Auto-matching ciblé sur une offre terminé', $results);
+        } catch (\Exception $e) {
+            $results['errors'][] = $e->getMessage();
+            Log::error('Erreur dans auto-matching ciblé', ['error' => $e->getMessage()]);
+        }
+
+        return $results;
+    }
+
+    /**
+     * Nombre de candidatures automatiques déjà créées aujourd'hui pour ce candidat.
+     */
+    private function autoApplicationsTodayCount(int $candidateId): int
+    {
+        return Postulation::where('user_id', $candidateId)
+            ->where('autopostulation', true)
+            ->whereDate('application_date', Carbon::today())
+            ->count();
+    }
+
+    /**
+     * Plafond quotidien des candidatures automatiques.
+     * MAX_APPLICATIONS_PER_DAY était déclaré mais jamais appliqué avant la Phase 0.
+     */
+    private function autoApplicationCapReached(int $candidateId): bool
+    {
+        return $this->autoApplicationsTodayCount($candidateId) >= self::MAX_APPLICATIONS_PER_DAY;
+    }
+
+    /**
      * Traite le matching pour une offre spécifique
      */
-    private function processOfferMatching(int $offerId, array &$results, ?int $candidateId = null): void
+    private function processOfferMatching(int $offerId, array &$results, ?int $candidateId = null, bool $dryRun = false): void
     {
         $eligibleCandidates = $this->findEligibleCandidates($offerId, $candidateId);
 
         $results['candidates_details'] = [];
 
-        $eligibleCandidates->each(function ($candidate) use ($offerId, &$results) {
+        $eligibleCandidates->each(function ($candidate) use ($offerId, &$results, $dryRun) {
             // Formater les données du candidat
             $candidateData = $this->formatCandidateData($candidate);
             $results['candidates_details'][] = $candidateData;
 
-            $matchScore = $this->calculateMatchScore($offerId, $candidate->id);
+            // Compatibilité calculée une seule fois : son détail est réutilisé
+            // tel quel par createAutoApplication (avant : recalcul complet).
+            $compatibility = $this->calculateCompatibility($offerId, $candidate->id);
+            $matchScore = $compatibility['score'];
 
-            if ($matchScore >= self::MIN_MATCH_SCORE) {
-                if (!$this->hasAlreadyApplied($candidate->id, $offerId)) {
-                    $this->createAutoApplication($candidate->id, $offerId, $matchScore, $results);
-                }
+            if ($matchScore === null || $matchScore < self::MIN_MATCH_SCORE) {
+                return;
             }
+
+            if ($this->hasAlreadyApplied($candidate->id, $offerId)) {
+                return;
+            }
+
+            // Plafond quotidien des candidatures automatiques (Phase 0).
+            if ($this->autoApplicationCapReached($candidate->id)) {
+                $results['applications_capped'] = ($results['applications_capped'] ?? 0) + 1;
+                return;
+            }
+
+            // Mode simulation (--dry-run) : on compte, on ne crée rien
+            // (aucun appel Gemini, aucune écriture en base).
+            if ($dryRun) {
+                $results['applications_simulated'] = ($results['applications_simulated'] ?? 0) + 1;
+                return;
+            }
+
+            $this->createAutoApplication($candidate->id, $offerId, $matchScore, $results, $compatibility);
         });
 
         $results['candidates_matched'] += $eligibleCandidates->count();
@@ -502,7 +574,7 @@ class JobMatchingService
     /**
      * Crée une postulation automatique avec CV personnalisé
      */
-    private function createAutoApplication(int $candidateId, int $offerId, float $matchScore, array &$results): void
+    private function createAutoApplication(int $candidateId, int $offerId, float $matchScore, array &$results, ?array $compatibility = null): void
     {
         $candidate = User::findOrFail($candidateId);
         $offer = Offre::with('entreprise.user')->findOrFail($offerId);
@@ -523,7 +595,7 @@ class JobMatchingService
     }
 
 
-        $compatibility = $this->calculateCompatibility($offerId, $candidateId);
+        $compatibility = $compatibility ?? $this->calculateCompatibility($offerId, $candidateId);
         $matchDetails = array_merge($compatibility['details'], [
             'personalized_cv_generated' => !empty($personalizedCVPath),
             'cover_letter_generated' => !empty($coverLetterPath),
@@ -653,66 +725,6 @@ class JobMatchingService
         }
     }
 
-    /**
-     * Version ultra-rapide  
-     */
-    private function generateUltraSimpleCV(CvProfile $cvProfile, Offre $offer): ?string
-    {
-        try {
-            $prompt = "CV HTML pour {$cvProfile->prenom} {$cvProfile->nom} - {$offer->poste}. Style professionnel. HTML seulement.";
-            
-            $response = Prism::text()
-                ->using(Provider::Gemini, 'gemini-2.5-flash')
-                ->withPrompt($prompt)
-                ->generate();
-
-            return trim($response->text);
-            
-        } catch (\Exception $e) {
-            Log::warning('Échec version ultra-simple', ['error' => $e->getMessage()]);
-            return null;
-        }
-    }
-
-    /**
-     * Fallback - Génère un CV avec le template classique
-     */
-    private function generateClassicCV(CvProfile $cvProfile, Offre $offer): ?string
-    {
-        try {
-            $personalizedData = $this->personalizeCVData($cvProfile, $offer);
-            $pdf = PDF::loadView('cv.personalized-template', $personalizedData);
-            
-            $filename = $this->generatedCvFilename($cvProfile->user_id, 'classic', (int) $offer->id);
-            $filePath = 'personalized-cvs/' . $filename;
-            
-            Storage::disk('public')->put($filePath, $pdf->output());
-
-            CvGenere::create([
-                'cv_profile_id' => $cvProfile->id,
-                'nom_fichier' => $this->generatedCvLabel($cvProfile),
-                'chemin_fichier' => $filePath,
-                'template_style' => 'classic',
-                'include_photo' => false,
-                'accent_color' => 'anthracite',
-                'font_style' => 'classic',
-                'density' => 'balanced',
-                'section_order' => 'experience_first',
-                'page_limit' => 2,
-                'summary_tone' => 'professional',
-                'visible_sections' => self::DEFAULT_CV_OPTIONS['sections'],
-            ]);
-            
-            return $filePath;
-            
-        } catch (\Exception $e) {
-            Log::error('Erreur génération CV classique', [
-                'error' => $e->getMessage()
-            ]);
-            return null;
-        }
-    }
-    
     /**
      * Prépare les données pour le prompt Gemini
      */
@@ -1030,66 +1042,6 @@ private function normalizePromptList(array|string|null $value): array
         return trim($item);
     }, $parts)));
 }
-
-    public function testCompleteCVGeneration(int $candidateId, int $offerId): array
-    {
-        try {
-            $cvProfile = CvProfile::with([
-                'formations',
-                'competences', 
-                'experiences',
-                'langues',
-                'perfectionnements',
-                'benevolats'
-            ])->where('user_id', $candidateId)->first();
-
-            if (!$cvProfile) {
-                return ['error' => 'Profil CV non trouvé'];
-            }
-
-            // CORRECTION : Charger 'diplomes' au lieu de 'diplome'
-            $offer = Offre::with(['skills.skill', 'diplomes'])->findOrFail($offerId);
-            
-            // CORRECTION : Passer les IDs au lieu des objets
-            $promptData = $this->preparePromptDataForGemini($cvProfile->id, $offer->id);
-            
-            // Log des données pour inspection
-            $debugData = [
-                'candidate' => [
-                    'name' => $cvProfile->prenom . ' ' . $cvProfile->nom,
-                    'formations_count' => count($promptData['candidate']['formations']),
-                    'experiences_count' => count($promptData['candidate']['experiences']),
-                    'competences_count' => count($promptData['candidate']['competences']['specifiques']) + count($promptData['candidate']['competences']['generales'])
-                ],
-                'offer' => [
-                    'poste' => $offer->poste,
-                    'titre' => $offer->titre,
-                    'competences_requises' => $offer->competences
-                ]
-            ];
-            
-            $options = $this->normalizeCvCustomizationOptions();
-            $promptData['customization_options'] = $options;
-            $baseData = $this->personalizeCVData($cvProfile, $offer);
-            $structuredData = $this->generateStructuredCVWithGemini($promptData);
-            $personalizedData = $this->mergeStructuredCVData($baseData, $structuredData);
-            $personalizedData['cv_options'] = $options;
-            $personalizedData['cv_limits'] = $this->cvPageLimits($options['page_limit']);
-
-            return [
-                'success' => true,
-                'cv_data' => $personalizedData,
-                'debug_data' => $debugData
-            ];
-            
-        } catch (\Exception $e) {
-            return [
-                'success' => false,
-                'error' => $e->getMessage()
-            ];
-        }
-    }
-
     /**
      * Génère un CV personnalisé avec Gemini sans créer de postulation  
      */
@@ -1850,20 +1802,6 @@ private function buildCoverLetterPrompt(CvProfile $cvProfile, Offre $offer): str
 
                 return $html;
 }
-
-    /**
-     * Génère un CV de fallback si Gemini échoue
-     */
-    private function generateFallbackCV(CvProfile $cvProfile, $offer): string
-    {
-        $data = [
-            'cvProfile' => $cvProfile,
-            'offer' => $offer,
-            'personalized_note' => null,
-        ];
-
-        return view('cv.fallback-template', $data)->render();
-    }
 
     private function generatedCvLabel(CvProfile $cvProfile): string
     {

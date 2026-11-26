@@ -47,7 +47,7 @@
           $applicationStatus = $postulation?->status ?? 'en_attente';
           $applicationStatusLabel = $statusLabels[$applicationStatus] ?? ucfirst(str_replace('_', ' ', $applicationStatus));
           $candidateName = trim(($cvProfile?->prenom ?? $candidate?->prenom ?? '') . ' ' . ($cvProfile?->nom ?? $candidate?->name ?? ''));
-          $candidateName = $candidateName !== '' ? $candidateName : 'Candidat ProximaJob';
+          $candidateName = $candidateName !== '' ? $candidateName : 'Candidat MatchJuste';
           $candidateHeadline = $cvProfile?->experiences->first()?->poste ?? 'Profil candidat';
           $candidateSkills = $candidate?->skills?->pluck('name')->filter()->take(5)
             ?? collect();

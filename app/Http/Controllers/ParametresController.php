@@ -56,7 +56,9 @@ class ParametresController extends Controller
     public function abonnement()
     {
 
-         $abonnements = Abonnement::get();
+         // Vitrine publique : seuls les plans actifs sont présentés (un plan
+         // désactivé, ex. l'ancien Pro candidat, ne doit plus y être vendu).
+         $abonnements = Abonnement::where('actif', true)->get();
          $fonctionnalites = AbonnementFonctionnalite::get();
         return view("parametres.abonnements", compact('abonnements' , 'fonctionnalites'));
     }

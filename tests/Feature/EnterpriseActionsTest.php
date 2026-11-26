@@ -2,7 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Jobs\AutoMatchingJob;
+use App\Jobs\OfferMatchingJob;
 use App\Models\JobOfferSkill;
 use App\Models\Postulation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -36,7 +36,7 @@ class EnterpriseActionsTest extends TestCase
         ]);
         $this->assertDatabaseCount('offre_diplome', 1);
         $this->assertSame(3, JobOfferSkill::where('job_offer_id', $offerId)->count());
-        Queue::assertPushed(AutoMatchingJob::class);
+        Queue::assertPushed(OfferMatchingJob::class);
 
         $this->actingAs($enterprise)
             ->getJson(route('edit.offres', $offerId))
@@ -95,7 +95,7 @@ class EnterpriseActionsTest extends TestCase
             'titre' => 'Analyste QA Laravel',
             'status' => 'active',
         ]);
-        Queue::assertPushed(AutoMatchingJob::class);
+        Queue::assertPushed(OfferMatchingJob::class);
     }
 
     public function test_enterprise_can_publish_offer_without_selecting_diplomas_from_classic_form(): void
@@ -123,7 +123,7 @@ class EnterpriseActionsTest extends TestCase
             'status' => 'active',
         ]);
         $this->assertDatabaseCount('offre_diplome', 0);
-        Queue::assertPushed(AutoMatchingJob::class);
+        Queue::assertPushed(OfferMatchingJob::class);
     }
 
     public function test_enterprise_offer_validation_errors_are_returned(): void

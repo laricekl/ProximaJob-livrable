@@ -11,6 +11,8 @@ class ProcessAutoMatching implements ShouldQueue
     public function handle(ProfileUpdated $event)
     {
         $matchingService = new JobMatchingService();
-        $matchingService->processAutoMatching();
+        // Ciblé : ne rematcher que le candidat dont le profil vient de changer.
+        // (Avant la Phase 0, cet écouteur relançait un balayage global complet.)
+        $matchingService->processAutoMatching($event->user->id);
     }
 }

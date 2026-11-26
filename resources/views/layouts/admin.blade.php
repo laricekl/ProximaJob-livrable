@@ -10,6 +10,7 @@
     <div class="px-6 py-6 border-b border-white/10">
       <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3">
         <x-brand-logo
+          variant="blanc"
           icon-class="w-9 h-auto"
           text-class="text-lg font-bold font-serif text-white tracking-tight"
         />
@@ -125,7 +126,7 @@
 
     <footer class="border-t border-primary/5 bg-white/40 backdrop-blur-sm mt-auto">
       <div class="max-w-5xl mx-auto py-6 px-4 md:px-10 flex flex-col sm:flex-row justify-between items-center gap-4">
-        <span class="text-xs text-primary/30 font-medium">© {{ date('Y') }} {{ $siteSettings?->site_nom ?? 'ProximaJob' }}.</span>
+        <span class="text-xs text-primary/30 font-medium">© {{ date('Y') }} {{ $siteSettings?->site_nom ?? 'MatchJuste' }}.</span>
         <nav class="flex items-center gap-6 text-xs uppercase tracking-widest text-primary/30 font-bold">
           <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">Confidentialité</a>
           <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">Cookies</a>
