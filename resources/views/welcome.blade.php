@@ -793,22 +793,8 @@
         <div class="w-full lg:w-3/5 relative">
           <div
             class="relative rounded-2xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-700">
-            <img src="{{ asset('img/votre-hero.png') }}" alt="Professionnelle MatchJuste"
+            <img src="{{ asset('img/istockphoto-1434116614-612x612 1.png') }}" alt="Professionnels en collaboration"
               class="w-full h-[280px] sm:h-[380px] md:h-[450px] object-cover" loading="eager" decoding="async" fetchpriority="high" />
-            <div
-              class="absolute bottom-3 sm:bottom-6 left-3 sm:left-6 right-3 sm:right-6 bg-white/20 backdrop-blur-xl border border-white/30 p-3 sm:p-5 rounded-xl">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center text-white">
-                  <span class="material-symbols-outlined text-sm">verified</span>
-                </div>
-                <div>
-                  <p class="font-semibold text-white text-base">Sarah Chen</p>
-                  <p class="text-white/80 text-xs">Directrice Marketing, TechNova</p>
-                </div>
-              </div>
-              <p class="mt-2 text-white/90 italic text-sm">"MatchJuste a identifié des opportunités que je n'aurais
-                jamais trouvées seule."</p>
-            </div>
           </div>
         </div>
         <div class="w-full lg:w-2/5 space-y-6 text-left">

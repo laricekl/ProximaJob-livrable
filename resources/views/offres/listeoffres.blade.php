@@ -21,9 +21,6 @@
       .mb-10 {
         margin-bottom: 1.5rem !important;
       }
-      main {
-        padding-top: 6rem;
-      }
       main.pb-20 {
         padding-bottom: 2rem;
       }
@@ -81,11 +78,11 @@
         gap: 6px;
       }
       .offres-jobs > a {
-        padding: 10px 12px !important;
+        padding: 14px !important;
         border-radius: 12px;
-        flex-direction: row !important;
-        align-items: center !important;
-        gap: 8px;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px;
       }
       .offres-jobs .w-14 {
         width: 34px;
@@ -96,13 +93,16 @@
         font-size: 17px;
       }
       .offres-jobs h4 {
-        font-size: 14px;
+        font-size: 15px;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
       }
       .offres-jobs .text-sm {
-        font-size: 10px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        font-size: 12px;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
       }
       .offres-jobs .mt-4 {
         margin-top: 0;

@@ -14,7 +14,7 @@
 
 <link rel="preload" as="image" href="{{ asset('img/matchjuste-logo.png') }}" fetchpriority="high" />
 @if (request()->routeIs('welcome'))
-  <link rel="preload" as="image" href="{{ asset('img/votre-hero.png') }}" fetchpriority="high" />
+  <link rel="preload" as="image" href="{{ asset('img/istockphoto-1434116614-612x612 1.png') }}" fetchpriority="high" />
 @endif
 
 <!-- Polices -->
