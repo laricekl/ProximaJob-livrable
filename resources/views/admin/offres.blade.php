@@ -38,46 +38,46 @@
     </form>
 
     <div class="card-glow overflow-hidden rounded-2xl">
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
         <table class="w-full text-left text-sm">
           <thead>
             <tr class="bg-surface-container-low/50">
-              <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Offre</th>
-              <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">Entreprise</th>
-              <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Catégorie</th>
-              <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
-              <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-outline">Actions</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Offre</th>
+              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">Entreprise</th>
+              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Catégorie</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
+              <th class="px-3 py-3 sm:px-6 text-right text-xs font-bold uppercase tracking-wider text-outline">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-outline-variant/5">
             @forelse ($offers as $offer)
               <tr class="transition-colors hover:bg-surface-container-low/30">
-                <td class="px-6 py-3">
+                <td class="px-3 py-3 sm:px-6">
                   <p class="font-semibold text-primary">{{ $offer->poste ?: $offer->titre }}</p>
                   <p class="text-xs text-outline">
                     {{ $offer->localisation ?: 'Localisation non renseignée' }}
                     @if ($offer->salaire_min || $offer->salaire_max)
-                      • {{ (int) $offer->salaire_min }}-{{ (int) $offer->salaire_max }}$
+                      • <span class="whitespace-nowrap">{{ (int) $offer->salaire_min }}-{{ (int) $offer->salaire_max }}$</span>
                     @endif
                   </p>
                 </td>
-                <td class="hidden px-6 py-3 text-outline md:table-cell">
+                <td class="hidden px-3 py-3 sm:px-6 text-outline md:table-cell">
                   @if($offer->entreprise)
                     <a href="{{ route('admin.users.show', $offer->entreprise->user_id) }}" class="hover:text-secondary-container transition-colors">{{ $offer->entreprise->company_name }}</a>
                   @else
                     Entreprise inconnue
                   @endif
                 </td>
-                <td class="hidden px-6 py-3 sm:table-cell">
+                <td class="hidden px-3 py-3 sm:px-6 sm:table-cell">
                   <x-admin.status-badge
                     :label="$offer->categorie->nom ?? 'Non classée'"
                     color="bg-surface-container-low text-on-surface-variant"
                   />
                 </td>
-                <td class="px-6 py-3">
+                <td class="px-3 py-3 sm:px-6">
                   <x-admin.status-badge :label="$offer->admin_status_label" :color="$offer->admin_status_color" />
                 </td>
-                <td class="px-6 py-3">
+                <td class="px-3 py-3 sm:px-6">
                   <div class="flex items-center justify-end gap-1">
                     @if ($offer->slug)
                       <x-admin.icon-action tag="a" :href="route('job_infos', $offer)" icon="visibility" label="Voir" />

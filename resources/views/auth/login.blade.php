@@ -16,7 +16,7 @@
   </style>
 @endsection
 @section('content')
-  <main class="flex-grow pt-32 flex items-center justify-center px-4 py-12">
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-md">
 
       <!-- Carte de connexion -->

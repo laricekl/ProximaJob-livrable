@@ -20,7 +20,7 @@
       </div>
     @endif
 
-    <div class="flex items-center gap-0 overflow-x-auto border-b border-outline-variant/10">
+    <div class="flex items-center gap-0 overflow-x-auto border-b border-outline-variant/10 max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
       <button class="tab-btn active whitespace-nowrap px-5 py-3 text-sm font-bold text-primary transition-colors" data-tab="general">Général</button>
       <button class="tab-btn whitespace-nowrap px-5 py-3 text-sm font-semibold text-outline transition-colors hover:text-primary" data-tab="appearance">Apparence</button>
       <button class="tab-btn whitespace-nowrap px-5 py-3 text-sm font-semibold text-outline transition-colors hover:text-primary" data-tab="contact">Contact</button>

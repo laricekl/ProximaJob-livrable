@@ -30,7 +30,7 @@
         <p class="mt-2 max-w-2xl text-on-surface-variant">Traitez les dossiers de toutes vos offres depuis une seule boîte de réception.</p>
       </div>
 
-      <div class="mb-6 flex gap-2 overflow-x-auto pb-2">
+      <div class="mb-6 flex gap-2 overflow-x-auto pb-2 max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
         @foreach ([
           '' => ['Toutes', $totalApplications],
           'en_attente' => ['À examiner', $statusCounts['en_attente'] ?? 0],

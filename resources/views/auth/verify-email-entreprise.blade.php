@@ -1,7 +1,7 @@
 @extends('layouts.guest')
 @section('title', 'Vérification du courriel entreprise')
 @section('content')
-  <main class="flex-grow pt-32 flex items-center justify-center px-4 py-12">
+  <main class="flex-grow flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-3xl">
       <div class="card-glow rounded-[2rem] p-8 md:p-10">
         <div class="text-center">

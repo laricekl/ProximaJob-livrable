@@ -59,39 +59,39 @@
         </div>
 
         <div class="card-glow rounded-2xl overflow-hidden">
-          <div class="overflow-x-auto">
+          <div class="overflow-x-auto max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
             <table class="w-full text-sm text-left">
               <thead>
                 <tr class="border-b border-outline-variant/10 bg-surface-container-low/50">
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Poste</th>
-                  <th class="hidden sm:table-cell px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Type</th>
-                  <th class="hidden md:table-cell px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Date publication</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Candidatures</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Statut</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider text-right">Actions</th>
+                  <th class="px-3 py-4 sm:px-6 font-bold text-primary text-xs uppercase tracking-wider">Poste</th>
+                  <th class="hidden sm:table-cell px-3 py-4 sm:px-6 font-bold text-primary text-xs uppercase tracking-wider">Type</th>
+                  <th class="hidden md:table-cell px-3 py-4 sm:px-6 font-bold text-primary text-xs uppercase tracking-wider">Date publication</th>
+                  <th class="px-3 py-4 sm:px-6 font-bold text-primary text-xs uppercase tracking-wider text-[10px] sm:text-xs">Candidatures</th>
+                  <th class="px-3 py-4 sm:px-6 font-bold text-primary text-xs uppercase tracking-wider">Statut</th>
+                  <th class="px-3 py-4 sm:px-6 font-bold text-primary text-xs uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-outline-variant/5">
                 @forelse ($offres as $offre)
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
-                    <td class="px-6 py-4 font-semibold text-primary">{{ $offre->titre }}</td>
-                    <td class="hidden sm:table-cell px-6 py-4">
+                    <td class="px-3 py-4 sm:px-6 font-semibold text-primary">{{ $offre->titre }}</td>
+                    <td class="hidden sm:table-cell px-3 py-4 sm:px-6">
                       <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-xs font-bold rounded-full">
                         {{ $offre->type?->nom ?? 'Offre' }}
                       </span>
                     </td>
-                    <td class="hidden md:table-cell px-6 py-4 text-on-surface-variant">{{ optional($offre->created_at)->format('d/m/Y') }}</td>
-                    <td class="px-6 py-4">
+                    <td class="hidden md:table-cell px-3 py-4 sm:px-6 text-on-surface-variant">{{ optional($offre->created_at)->format('d/m/Y') }}</td>
+                    <td class="px-3 py-4 sm:px-6">
                       <a href="{{ route('entreprise.offres.candidatures', $offre) }}" class="text-secondary-container font-semibold hover:underline">
                         {{ $offre->postulations_count ?? 0 }}
                       </a>
                     </td>
-                    <td class="px-6 py-4">
-                      <span class="px-2 py-0.5 text-xs font-semibold rounded-full {{ ($offre->status ?? 'active') === 'active' ? 'bg-success-light text-success-dark' : 'bg-surface-container text-on-surface-variant' }}">
+                    <td class="px-3 py-4 sm:px-6">
+                      <span class="px-2 py-0.5 text-xs font-semibold rounded-full whitespace-nowrap {{ ($offre->status ?? 'active') === 'active' ? 'bg-success-light text-success-dark' : 'bg-surface-container text-on-surface-variant' }}">
                         {{ ['active' => 'Active', 'closed' => 'Fermée', 'inactive' => 'Inactive', 'draft' => 'Brouillon'][$offre->status ?? 'active'] ?? ucfirst($offre->status) }}
                       </span>
                     </td>
-                    <td class="px-6 py-4 text-right">
+                    <td class="px-3 py-4 sm:px-6 text-right">
                       <div class="flex justify-end gap-2">
                         <a href="{{ route('entreprise.offres.candidatures', $offre) }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir" aria-label="Voir les candidatures">
                           <span class="material-symbols-outlined text-base">visibility</span>
@@ -104,7 +104,7 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="6" class="px-6 py-10 text-center text-on-surface-variant">Aucune offre publiée pour le moment.</td>
+                    <td colspan="6" class="px-3 py-10 sm:px-6 text-center text-on-surface-variant">Aucune offre publiée pour le moment.</td>
                   </tr>
                 @endforelse
               </tbody>

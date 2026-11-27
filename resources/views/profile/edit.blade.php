@@ -9,9 +9,9 @@
 @section('content')
   <main class="flex-grow pb-16">
 
-    <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; Retour au tableau de bord</a>
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-3xl mx-auto space-y-6">
+        <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors">&larr; Retour au tableau de bord</a>
 
         <!-- Informations du profil -->
         <div class="card-glow rounded-2xl overflow-hidden">
@@ -129,19 +129,19 @@
 
         <!-- Supprimer le compte -->
         <div class="card-glow border border-secondary-container/20 rounded-2xl overflow-hidden">
-          <div class="px-8 py-5 border-b border-secondary-container/10">
+          <div class="px-5 py-5 sm:px-8 border-b border-secondary-container/10">
             <h2 class="text-xl font-bold font-serif text-secondary-container">Supprimer le compte</h2>
             <p class="text-sm text-on-surface-variant mt-0.5">Une fois votre compte supprimé, toutes ses ressources et données seront définitivement effacées. Avant de supprimer votre compte, veuillez télécharger toutes les données ou informations que vous souhaitez conserver.</p>
           </div>
-          <div class="p-8">
-            <form method="POST" action="{{ route('profile.destroy') }}" class="flex items-end gap-4">
+          <div class="p-5 sm:p-8">
+            <form method="POST" action="{{ route('profile.destroy') }}" class="flex flex-col gap-4 sm:flex-row sm:items-end">
               @csrf
               @method('DELETE')
               <div class="flex-1">
                 <label class="block text-sm font-semibold text-primary mb-1.5" for="delete_password">Mot de passe actuel</label>
                 <input type="password" id="delete_password" name="password" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" required />
               </div>
-              <button id="deleteAccountBtn" type="submit" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center gap-2">
+              <button id="deleteAccountBtn" type="submit" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-lg">warning</span> Supprimer le compte
               </button>
             </form>

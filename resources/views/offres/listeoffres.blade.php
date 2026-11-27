@@ -320,11 +320,11 @@
               <span class="material-symbols-outlined text-base text-secondary-container">manage_search</span>
               <span><span class="font-bold text-primary">{{ $offres->total() }} offres</span> correspondent à vos critères</span>
             </p>
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 w-full sm:w-auto">
               <button id="filter-toggle" class="lg:hidden flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary-container bg-secondary-container/5 border border-secondary-container/20 rounded-xl px-4 py-2 hover:bg-secondary-container/10 transition-colors">
                 <span class="material-symbols-outlined text-base">tune</span> Filtres
               </button>
-              <form method="GET" action="{{ route('offres') }}" class="flex items-center gap-3">
+              <form method="GET" action="{{ route('offres') }}" class="flex items-center gap-3 flex-1 sm:flex-none">
                 <input type="hidden" name="search" value="{{ $search }}">
                 <input type="hidden" name="localisation" value="{{ $localisation }}">
                 @foreach ($categories as $categoryId)
@@ -341,8 +341,8 @@
                 @endforeach
                 <input type="hidden" name="salaire_min" value="{{ $salaire_min }}">
                 <input type="hidden" name="salaire_max" value="{{ $salaire_max }}">
-                <span class="text-xs text-on-surface-variant font-medium">Trier par :</span>
-                <select name="sort" onchange="this.form.submit()" class="text-sm font-semibold bg-white border border-outline-variant/30 rounded-xl px-4 py-2 focus:ring-secondary-container focus:border-secondary-container">
+                <span class="hidden sm:inline text-xs text-on-surface-variant font-medium">Trier par :</span>
+                <select name="sort" onchange="this.form.submit()" class="w-full sm:w-auto text-sm font-semibold bg-white border border-outline-variant/30 rounded-xl px-4 py-2 focus:ring-secondary-container focus:border-secondary-container">
                   <option value="random" @selected($sort === 'random')>Pertinence</option>
                   <option value="latest" @selected($sort === 'latest')>Plus récentes</option>
                   <option value="salary_asc" @selected(in_array($sort, ['salary_asc', 'salaire_asc']))>Salaire (croissant)</option>
