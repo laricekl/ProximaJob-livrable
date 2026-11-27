@@ -44,7 +44,7 @@
           </button>
         </div>
 
-        <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2">
+        <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2 max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
           <button type="button" class="filter-pill active px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20" data-filter="all">Toutes</button>
           <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="matching">Matching IA</button>
           <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="application">Candidatures</button>
@@ -53,7 +53,14 @@
         </div>
 
         <div id="notifList" class="space-y-6">
-          @forelse ([
+          @if ($todayNotifications->isEmpty() && $yesterdayNotifications->isEmpty() && $olderNotifications->isEmpty())
+            <div id="emptyState" class="text-center py-16">
+              <span class="material-symbols-outlined text-6xl text-outline mb-4">notifications_off</span>
+              <p class="text-lg font-bold font-serif text-primary mb-2">Aucune notification</p>
+              <p class="text-sm text-on-surface-variant">Vous êtes à jour ! Les notifications apparaîtront ici.</p>
+            </div>
+          @endif
+          @foreach ([
             'Aujourd\'hui' => $todayNotifications,
             'Hier' => $yesterdayNotifications,
             'Plus anciennes' => $olderNotifications,
@@ -95,13 +102,7 @@
                 </article>
               @endforeach
             </div>
-          @empty
-            <div id="emptyState" class="text-center py-16">
-              <span class="material-symbols-outlined text-6xl text-outline mb-4">notifications_off</span>
-              <p class="text-lg font-bold font-serif text-primary mb-2">Aucune notification</p>
-              <p class="text-sm text-on-surface-variant">Vous êtes à jour ! Les notifications apparaîtront ici.</p>
-            </div>
-          @endforelse
+          @endforeach
         </div>
 
         @if ($isPaginatedNotifications && $notifications->hasPages())

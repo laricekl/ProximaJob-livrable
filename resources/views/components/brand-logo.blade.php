@@ -31,7 +31,7 @@
     <img
       src="{{ $defaultLogo }}"
       alt="{{ $brandName }}"
-      class="h-8 md:h-9 w-auto shrink-0 object-contain"
+      class="h-7 md:h-9 w-auto shrink-0 object-contain"
       loading="eager"
       decoding="async"
       fetchpriority="high"

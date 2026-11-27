@@ -219,40 +219,34 @@
     }
   </style>
   <style>
-    /* ── Pricing · One-card mobile ── */
+    /* ── Pricing · Cartes empilées sur mobile ── */
     @media (max-width: 767px) {
       .pricing-grid {
         position: relative;
-        border-radius: 16px;
-        background: #fff;
-        border: 1px solid rgba(0,0,0,0.05);
-        box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-        gap: 0;
+        gap: 20px;
         display: flex !important;
-        flex-direction: row;
+        flex-direction: column;
         grid-template-columns: none !important;
       }
       .card-3d-parent {
         position: relative;
         z-index: 2;
         height: auto;
-        max-width: none;
+        width: 100%;
+        max-width: 400px;
         perspective: none;
         filter: none;
-        margin: 0;
-        flex: 1;
-        min-width: 0;
+        margin: 0 auto;
       }
       .card-3d-parent + .card-3d-parent {
-        border-left: 1px solid rgba(0,0,0,0.06);
-        border-top: none;
+        border: none;
       }
       .card-3d-inner {
-        height: 100%;
-        border-radius: 0;
+        height: auto;
+        border-radius: 28px;
         transform: none !important;
-        box-shadow: none;
-        background: transparent !important;
+        box-shadow: 0 12px 28px rgba(0,0,0,0.10);
+        background: var(--card-grad) !important;
         display: flex;
         flex-direction: column;
       }
@@ -262,7 +256,7 @@
       }
       .card-3d-inner > .absolute {
         position: absolute;
-        top: -4px;
+        top: -10px;
         left: 50%;
         transform: translateX(-50%);
         font-size: 11px;
@@ -273,7 +267,7 @@
         border-radius: 999px;
       }
       .card-3d-content {
-        padding: 16px 10px 14px;
+        padding: 26px 22px 22px;
         transform: none !important;
         display: flex;
         flex-direction: column;
@@ -283,7 +277,7 @@
         flex: 1;
       }
       .card-3d-content .text-4xl {
-        font-size: 1.2rem;
+        font-size: 2rem;
       }
       .card-3d-content ul {
         display: block;
@@ -292,38 +286,33 @@
         width: 100%;
       }
       .card-3d-content ul li {
-        font-size: 12px;
-        padding: 1px 0;
+        font-size: 13px;
+        padding: 3px 0;
         display: flex;
         align-items: center;
-        gap: 3px;
+        gap: 6px;
       }
       .card-3d-content ul .material-symbols-outlined {
-        font-size: 11px;
+        font-size: 14px;
       }
-      .card-3d-content .mt-4,
-      .card-3d-content .mt-5,
       .card-3d-content .mt-1 {
         margin: 0;
       }
       .card-3d-content a {
-        margin: auto 0 0 0 !important;
+        margin: 20px 0 0 0 !important;
         width: 100%;
         padding: 12px 16px;
-        font-size: 13px;
+        font-size: 14px;
         text-align: center;
         border-radius: 999px;
         min-height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
       }
       .card-3d-content > :first-child {
         font-weight: 700;
-        font-size: 11px;
+        font-size: 12px;
       }
 
       /* ── Spotlight mobile ── */
@@ -794,7 +783,7 @@
           <div
             class="relative rounded-2xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-700">
             <img src="{{ asset('img/istockphoto-1434116614-612x612 1.png') }}" alt="Professionnels en collaboration"
-              class="w-full h-[280px] sm:h-[380px] md:h-[450px] object-cover" loading="eager" decoding="async" fetchpriority="high" />
+              class="w-full h-[280px] sm:h-[380px] md:h-[450px] object-cover object-[50%_15%]" loading="eager" decoding="async" fetchpriority="high" />
           </div>
         </div>
         <div class="w-full lg:w-2/5 space-y-6 text-left">
@@ -940,8 +929,8 @@
           <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">Des solutions adaptées pour accélérer votre transition professionnelle.</p>
         </div>
 
-        <div class="pricing-grid-wrapper relative">
-        <div class="pricing-grid grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div class="pricing-grid-wrapper relative max-w-3xl mx-auto">
+        <div class="pricing-grid grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
 
           <!-- Gratuit -->
           <div class="card-3d-parent reveal" style="transition-delay: 0s">
@@ -964,31 +953,6 @@
                   <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalisé par IA</li>
                 </ul>
                 <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
-              </div>
-            </div>
-          </div>
-
-          <!-- Premium (recommande) -->
-          <div class="card-3d-parent reveal" style="transition-delay: 0.15s">
-            <div class="card-3d-inner" style="--card-grad: linear-gradient(135deg, #fff5eb, #f5e0cc);">
-              <div class="card-3d-logo" aria-hidden="true">
-                <span class="card-3d-orbit card-3d-orbit--1" style="background: rgba(255,255,255,0.35);"></span>
-                <span class="card-3d-orbit card-3d-orbit--2" style="background: rgba(255,255,255,0.45);"></span>
-                <span class="card-3d-orbit card-3d-orbit--3" style="background: rgba(255,255,255,0.58);"></span>
-              </div>
-              <div class="card-3d-glass"></div>
-              <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
-              <div class="card-3d-content text-center">
-                <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Premium</p>
-                <div class="flex items-baseline justify-center gap-0.5">
-                  <p class="text-4xl font-bold text-primary">{{ $formatPlanPrice($proPlan, '49') }}<span class="text-lg text-outline">$</span></p>
-                  <p class="text-xs text-outline">/{{ $proPlan?->duree ?? 30 }} jours</p>
-                </div>
-                <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Candidatures illimitées</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> CV personnalisé par IA</li>
-                </ul>
-                <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Commencer</a>
               </div>
             </div>
           </div>

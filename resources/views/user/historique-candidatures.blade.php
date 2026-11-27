@@ -82,9 +82,9 @@
     <section class="px-4 md:px-10 pb-6">
       <div class="max-w-7xl mx-auto">
         <form method="GET" action="{{ route('user.historiques') }}" data-testid="candidate-manual-history-filter-form" class="flex flex-wrap items-end gap-3 rounded-2xl bg-white/90 border border-outline-variant/10 shadow-sm p-4">
-          <div>
+          <div class="w-full sm:w-auto">
             <label for="status" class="block text-xs font-semibold text-primary mb-1.5">Statut</label>
-            <select id="status" name="status" style="min-width: 13rem;" class="px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all">
+            <select id="status" name="status" class="w-full px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all sm:w-auto sm:min-w-[13rem]">
               <option {{ request('status') === null ? 'selected' : '' }}>Tous statuts</option>
               <option value="en_attente" @selected(request('status') === 'en_attente')>À examiner</option>
               <option value="shortlisted" @selected(request('status') === 'shortlisted')>Présélectionnée</option>
@@ -94,16 +94,16 @@
               <option value="rejected" @selected(request('status') === 'rejected')>Refusée</option>
             </select>
           </div>
-          <div>
+          <div class="w-full sm:w-auto">
             <label for="date" class="block text-xs font-semibold text-primary mb-1.5">Date</label>
-            <select id="date" name="date" style="min-width: 13rem;" class="px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all">
+            <select id="date" name="date" class="w-full px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all sm:w-auto sm:min-w-[13rem]">
               <option value="">Toutes</option>
               <option value="Cette semaine" {{ request('date') === 'Cette semaine' ? 'selected' : '' }}>Cette semaine</option>
               <option value="Ce mois" {{ request('date') === 'Ce mois' ? 'selected' : '' }}>Ce mois</option>
               <option value="Cette année" {{ request('date') === 'Cette année' ? 'selected' : '' }}>Cette année</option>
             </select>
           </div>
-          <div class="flex-1 relative">
+          <div class="relative w-full sm:w-auto sm:flex-1">
             <label for="keyword" class="block text-xs font-semibold text-primary mb-1.5">Recherche</label>
             <span class="material-symbols-outlined absolute left-3 top-[2.15rem] text-outline text-sm">search</span>
             <input id="keyword" name="keyword" value="{{ request('keyword') }}" type="text" placeholder="Poste ou entreprise..." class="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 transition-all" />
@@ -125,8 +125,8 @@
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-outline-variant/10 text-left">
-                  <th class="px-6 py-4 text-xs font-bold text-outline uppercase tracking-wider">Poste</th>
-                  <th class="px-6 py-4 text-xs font-bold text-outline uppercase tracking-wider">Entreprise</th>
+                  <th class="px-3 py-4 sm:px-6 text-xs font-bold text-outline uppercase tracking-wider">Poste</th>
+                  <th class="px-3 py-4 sm:px-6 text-xs font-bold text-outline uppercase tracking-wider">Entreprise</th>
                   <th class="px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider hidden md:table-cell">Date</th>
                   <th class="w-20 px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider">Statut</th>
                   <th class="w-20 px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider">Voir</th>
@@ -135,8 +135,8 @@
               <tbody class="divide-y divide-outline-variant/5">
                 @forelse ($postulations as $postulation)
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
-                    <td class="px-6 py-4 font-semibold text-primary align-middle">{{ $postulation->offre?->titre ?? 'Offre supprimée' }}</td>
-                    <td class="px-6 py-4 align-middle text-on-surface-variant">{{ $postulation->offre?->entreprise?->company_name ?? 'Entreprise indisponible' }}</td>
+                    <td class="px-3 py-4 sm:px-6 font-semibold text-primary align-middle">{{ $postulation->offre?->titre ?? 'Offre supprimée' }}</td>
+                    <td class="px-3 py-4 sm:px-6 align-middle text-on-surface-variant">{{ $postulation->offre?->entreprise?->company_name ?? 'Entreprise indisponible' }}</td>
                     <td class="px-4 py-4 align-middle text-center text-on-surface-variant hidden md:table-cell">{{ optional($postulation->created_at)->translatedFormat('d M Y') }}</td>
                     <td class="px-4 py-4 align-middle text-center">
                       @php
@@ -157,7 +157,7 @@
                   </tr>
                 @empty
                   <tr>
-                    <td colspan="5" class="px-6 py-10 text-center text-on-surface-variant">
+                    <td colspan="5" class="px-3 py-10 sm:px-6 text-center text-on-surface-variant">
                       Aucune candidature manuelle trouvée.
                     </td>
                   </tr>

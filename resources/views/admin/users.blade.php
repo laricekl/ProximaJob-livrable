@@ -56,22 +56,22 @@
     </form>
 
     <div class="card-glow overflow-hidden rounded-2xl">
-      <div class="overflow-x-auto">
+      <div class="overflow-x-auto max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
         <table class="w-full text-left text-sm">
           <thead>
             <tr class="bg-surface-container-low/50">
-              <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Utilisateur</th>
-              <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">Email</th>
-              <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Rôle</th>
-              <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Date</th>
-              <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
-              <th class="px-6 py-3 text-right text-xs font-bold uppercase tracking-wider text-outline">Actions</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Utilisateur</th>
+              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">Email</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Rôle</th>
+              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Date</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
+              <th class="px-3 py-3 sm:px-6 text-right text-xs font-bold uppercase tracking-wider text-outline">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-outline-variant/5">
             @forelse ($users as $user)
               <tr class="transition-colors hover:bg-surface-container-low/30">
-                <td class="px-6 py-3">
+                <td class="px-3 py-3 sm:px-6">
                   <div class="flex items-center gap-3">
                     <div class="flex h-8 w-8 items-center justify-center rounded-full bg-secondary-container/20 text-xs font-bold text-secondary-container">
                       {{ $user->initials }}
@@ -86,15 +86,15 @@
                     </div>
                   </div>
                 </td>
-                <td class="hidden px-6 py-3 text-outline md:table-cell">{{ $user->email }}</td>
-                <td class="px-6 py-3">
+                <td class="hidden px-3 py-3 sm:px-6 text-outline md:table-cell">{{ $user->email }}</td>
+                <td class="px-3 py-3 sm:px-6">
                   <x-admin.status-badge :label="$user->admin_role_label" :color="$user->admin_role_color" />
                 </td>
-                <td class="hidden px-6 py-3 text-outline sm:table-cell">{{ optional($user->created_at)->format('d/m/Y') }}</td>
-                <td class="px-6 py-3">
+                <td class="hidden px-3 py-3 sm:px-6 text-outline sm:table-cell">{{ optional($user->created_at)->format('d/m/Y') }}</td>
+                <td class="px-3 py-3 sm:px-6">
                   <x-admin.status-badge :label="$user->display_status_label" :color="$user->display_status_color" />
                 </td>
-                <td class="px-6 py-3">
+                <td class="px-3 py-3 sm:px-6">
                   <div class="flex items-center justify-end gap-1">
                     <x-admin.icon-action tag="a" :href="route('admin.users.show', $user)" icon="visibility" label="Voir" />
                     @if ($user->status === 'Suspendu')
