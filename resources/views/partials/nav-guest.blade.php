@@ -8,34 +8,34 @@
       <x-brand-logo icon-class="w-11 md:w-14 h-auto" text-class="text-[15px] md:text-[18px] font-bold font-serif text-primary tracking-tight" />
     </a>
     <ul class="hidden lg:flex items-center gap-1">
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('welcome') }}">Accueil</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('offres') }}">Offres</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('ressources') }}">Ressources</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('abonnement') }}">Forfaits</a></li>
-      <li><a class="nav-link relative text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('contact') }}">Contact</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('welcome') }}">{{ __('Accueil') }}</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('offres') }}">{{ __('Offres') }}</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('ressources') }}">{{ __('Ressources') }}</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('abonnement') }}">{{ __('Forfaits') }}</a></li>
+      <li><a class="nav-link relative text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-secondary-container' : 'font-medium text-on-surface-variant' }} hover:text-secondary-container transition-colors px-3 py-2" href="{{ route('contact') }}">{{ __('Contact') }}</a></li>
     </ul>
     <div class="flex items-center gap-2 md:gap-3">
       <div class="hidden md:block">
         @include('components.language-selector')
       </div>
       @guest
-        <a href="{{ route('login') }}" class="hidden sm:block text-sm font-medium text-on-surface-variant hover:text-primary transition-colors px-2 md:px-3 py-2">Se connecter</a>
-        <a href="{{ route('register') }}" class="hidden sm:inline-block text-sm font-bold text-white bg-secondary-container hover:bg-secondary px-4 md:px-6 py-2 md:py-2.5 rounded-full transition-all shadow-sm hover:shadow-md">S'inscrire</a>
-        <a href="{{ route('login') }}" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:text-primary hover:bg-black/5 transition-colors min-w-[44px] min-h-[44px]" aria-label="Compte">
+        <a href="{{ route('login') }}" class="hidden sm:block text-sm font-medium text-on-surface-variant hover:text-primary transition-colors px-2 md:px-3 py-2">{{ __('Se connecter') }}</a>
+        <a href="{{ route('register') }}" class="hidden sm:inline-block text-sm font-bold text-white bg-secondary-container hover:bg-secondary px-4 md:px-6 py-2 md:py-2.5 rounded-full transition-all shadow-sm hover:shadow-md">{{ __('S\'inscrire') }}</a>
+        <a href="{{ route('login') }}" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:text-primary hover:bg-black/5 transition-colors min-w-[44px] min-h-[44px]" aria-label="{{ __('Compte') }}">
           <span class="material-symbols-outlined text-xl">person</span>
         </a>
       @endguest
       @auth
-        <a href="{{ route('dashboard') }}" class="hidden sm:block text-sm font-medium text-on-surface-variant hover:text-primary transition-colors px-2 md:px-3 py-2">Mon espace</a>
+        <a href="{{ route('dashboard') }}" class="hidden sm:block text-sm font-medium text-on-surface-variant hover:text-primary transition-colors px-2 md:px-3 py-2">{{ __('Mon espace') }}</a>
         <form method="POST" action="{{ route('logout') }}" class="hidden sm:block">
           @csrf
-          <button class="text-sm font-bold text-white bg-secondary-container hover:bg-secondary px-4 md:px-6 py-2 md:py-2.5 rounded-full transition-all shadow-sm hover:shadow-md">Déconnexion</button>
+          <button class="text-sm font-bold text-white bg-secondary-container hover:bg-secondary px-4 md:px-6 py-2 md:py-2.5 rounded-full transition-all shadow-sm hover:shadow-md">{{ __('Déconnexion') }}</button>
         </form>
-        <a href="{{ route('dashboard') }}" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:text-primary hover:bg-black/5 transition-colors min-w-[44px] min-h-[44px]" aria-label="Tableau de bord">
+        <a href="{{ route('dashboard') }}" class="sm:hidden flex items-center justify-center w-10 h-10 rounded-full text-on-surface-variant hover:text-primary hover:bg-black/5 transition-colors min-w-[44px] min-h-[44px]" aria-label="{{ __('Tableau de bord') }}">
           <span class="material-symbols-outlined text-xl">person</span>
         </a>
       @endauth
-      <button id="menu-toggle" class="lg:hidden flex flex-col gap-1.5 p-2 z-50 relative min-w-[44px] min-h-[44px] items-center justify-center" aria-label="Menu">
+      <button id="menu-toggle" class="lg:hidden flex flex-col gap-1.5 p-2 z-50 relative min-w-[44px] min-h-[44px] items-center justify-center" aria-label="{{ __('Menu') }}">
         <span class="block w-5 h-0.5 bg-primary rounded-full transition-all duration-300" id="bar1"></span>
         <span class="block w-5 h-0.5 bg-primary rounded-full transition-all duration-300" id="bar2"></span>
         <span class="block w-5 h-0.5 bg-primary rounded-full transition-all duration-300" id="bar3"></span>
@@ -50,7 +50,7 @@
         <a href="{{ route('welcome') }}" class="flex items-center gap-2">
           <x-brand-logo icon-class="w-12 h-auto" text-class="text-[15px] font-bold font-serif text-primary tracking-tight" />
         </a>
-        <button id="menu-close" class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors min-w-[44px] min-h-[44px]" aria-label="Fermer">
+        <button id="menu-close" class="w-11 h-11 flex items-center justify-center rounded-full hover:bg-surface-container transition-colors min-w-[44px] min-h-[44px]" aria-label="{{ __('Fermer') }}">
           <span class="material-symbols-outlined text-xl">close</span>
         </button>
       </div>
@@ -58,7 +58,7 @@
       @guest
         <div class="px-5 pt-5 pb-2">
           <a href="{{ route('register') }}" class="flex items-center justify-between bg-secondary-container hover:bg-secondary text-white font-bold px-5 py-3.5 rounded-2xl transition-all shadow-sm">
-            <span class="text-sm">S'inscrire</span>
+            <span class="text-sm">{{ __('S\'inscrire') }}</span>
             <span class="material-symbols-outlined text-lg">arrow_forward</span>
           </a>
         </div>
@@ -67,42 +67,42 @@
       <nav class="flex-1 px-3 pt-3 pb-4 space-y-1 overflow-y-auto">
         <a href="{{ route('welcome') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('welcome') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('welcome') ? 'text-secondary-container' : '' }}">home</span>
-          Accueil
+          {{ __('Accueil') }}
         </a>
         <a href="{{ route('offres') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('offres', 'job_infos', 'details.offre', 'app_form') ? 'text-secondary-container' : '' }}">work</span>
-          Offres
+          {{ __('Offres') }}
         </a>
         <a href="{{ route('ressources') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('ressources') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('ressources') ? 'text-secondary-container' : '' }}">menu_book</span>
-          Ressources
+          {{ __('Ressources') }}
         </a>
         <a href="{{ route('abonnement') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('abonnement') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('abonnement') ? 'text-secondary-container' : '' }}">sell</span>
-          Forfaits
+          {{ __('Forfaits') }}
         </a>
         <a href="{{ route('contact') }}" class="flex items-center gap-3 px-3 py-3 rounded-xl text-sm {{ $isPublicRoute('contact') ? 'font-semibold text-primary bg-surface-container-low' : 'font-medium text-on-surface hover:bg-surface-container-low hover:text-secondary-container transition-colors' }}">
           <span class="material-symbols-outlined text-xl {{ $isPublicRoute('contact') ? 'text-secondary-container' : '' }}">mail</span>
-          Contact
+          {{ __('Contact') }}
         </a>
       </nav>
 
       <div class="px-5 py-4 border-t border-outline-variant/20">
         <div class="mb-4 flex items-center justify-between">
-          <span class="text-xs font-black uppercase tracking-widest text-outline">Langue</span>
+          <span class="text-xs font-black uppercase tracking-widest text-outline">{{ __('Langue') }}</span>
           @include('components.language-selector')
         </div>
         @guest
           <a href="{{ route('login') }}" class="flex items-center gap-3 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">
             <span class="material-symbols-outlined text-xl">login</span>
-            Se connecter
+            {{ __('Se connecter') }}
           </a>
         @else
           <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button class="flex items-center gap-3 text-sm font-medium text-on-surface-variant hover:text-primary transition-colors">
               <span class="material-symbols-outlined text-xl">logout</span>
-              Déconnexion
+              {{ __('Déconnexion') }}
             </button>
           </form>
         @endguest
