@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV principal - {{ trim(($cvProfile->prenom ?? '').' '.($cvProfile->nom ?? '')) }}</title>
+    <title>{{ __('CV principal') }} - {{ trim(($cvProfile->prenom ?? '').' '.($cvProfile->nom ?? '')) }}</title>
     <style>
         @page {
             margin: 18mm;
@@ -111,7 +111,7 @@
 </head>
 <body>
     @php
-        $fullName = trim(($cvProfile->prenom ?? '').' '.($cvProfile->nom ?? '')) ?: 'CV candidat';
+        $fullName = trim(($cvProfile->prenom ?? '').' '.($cvProfile->nom ?? '')) ?: __('CV candidat');
         $contact = collect([
             $cvProfile->email,
             $cvProfile->telephone,
@@ -135,7 +135,7 @@
 
     @if ($cvProfile->langues_competences || $competenceTags->isNotEmpty() || $softwareTags->isNotEmpty())
         <div class="section">
-            <h2 class="section-title">Competences</h2>
+            <h2 class="section-title">{{ __('Competences') }}</h2>
             @if ($cvProfile->langues_competences)
                 <p class="text">{{ $limitText($cvProfile->langues_competences, 520) }}</p>
             @endif
@@ -150,7 +150,7 @@
 
     @if ($experiences->isNotEmpty())
         <div class="section">
-            <h2 class="section-title">Experience professionnelle</h2>
+            <h2 class="section-title">{{ __('Experience professionnelle') }}</h2>
             @foreach ($experiences as $experience)
                 <div class="item">
                     <div class="item-head">
@@ -170,7 +170,7 @@
 
     @if ($formations->isNotEmpty())
         <div class="section">
-            <h2 class="section-title">Formation</h2>
+            <h2 class="section-title">{{ __('Formation') }}</h2>
             @foreach ($formations as $formation)
                 <div class="item">
                     <div class="item-head">
@@ -187,7 +187,7 @@
 
     @if ($perfectionnements->isNotEmpty())
         <div class="section">
-            <h2 class="section-title">Perfectionnement</h2>
+            <h2 class="section-title">{{ __('Perfectionnement') }}</h2>
             @foreach ($perfectionnements as $perfectionnement)
                 <div class="item">
                     <div class="item-head">
@@ -204,16 +204,16 @@
 
     @if ($langues->isNotEmpty())
         <div class="section">
-            <h2 class="section-title">Langues</h2>
+            <h2 class="section-title">{{ __('Langues') }}</h2>
             @foreach ($langues as $langue)
-                <p class="text"><strong>{{ $langue->nom }}</strong>@if ($langue->niveau) : {{ $langue->niveau }} @endif</p>
+                <p class="text"><strong>{{ __($langue->nom) }}</strong>@if ($langue->niveau) : {{ __($langue->niveau) }} @endif</p>
             @endforeach
         </div>
     @endif
 
     @if ($benevolats->isNotEmpty())
         <div class="section">
-            <h2 class="section-title">Activites benevoles</h2>
+            <h2 class="section-title">{{ __('Activites benevoles') }}</h2>
             @foreach ($benevolats as $benevolat)
                 <div class="item">
                     <div class="item-head">

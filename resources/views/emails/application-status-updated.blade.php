@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mise à jour de votre candidature - MatchJuste</title>
+    <title>{{ __('Mise à jour de votre candidature') }} - MatchJuste</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -95,42 +95,42 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Mise à jour de votre candidature</h1>
+            <h1>{{ __('Mise à jour de votre candidature') }}</h1>
         </div>
 
         <div class="content">
-            <div class="greeting">Bonjour {{ $candidateName }},</div>
+            <div class="greeting">{{ __('Bonjour') }} {{ $candidateName }},</div>
 
             <div class="message">
-                <p>L’entreprise a fait avancer votre dossier : votre candidature a été <strong>{{ $statusMessage }}</strong>.</p>
+                <p>{{ __('L’entreprise a fait avancer votre dossier : votre candidature a été') }} <strong>{{ $statusMessage }}</strong>.</p>
             </div>
 
             <div class="offer-box">
-                <h3>Offre concernée</h3>
+                <h3>{{ __('Offre concernée') }}</h3>
                 <p class="offer-title">{{ $offerTitle }}</p>
                 <p class="company-name">{{ $companyName }}</p>
             </div>
 
             <div class="message">
-                <p>Connectez-vous à votre espace pour voir le détail de votre candidature et les prochaines étapes.</p>
+                <p>{{ __('Connectez-vous à votre espace pour voir le détail de votre candidature et les prochaines étapes.') }}</p>
             </div>
 
             <div style="text-align: center;">
-                <a href="{{ $detailUrl }}" class="button">Voir ma candidature</a>
+                <a href="{{ $detailUrl }}" class="button">{{ __('Voir ma candidature') }}</a>
             </div>
 
             <p style="margin-top: 30px; color: #6b7280;">
-                Cordialement,<br>
-                <strong style="color: #059669;">L'équipe MatchJuste</strong>
+                {{ __('Cordialement,') }}<br>
+                <strong style="color: #059669;">{{ __('L\'équipe MatchJuste') }}</strong>
             </p>
         </div>
 
         <div class="footer">
             <p style="margin: 0 0 5px 0;"><strong>MatchJuste</strong></p>
-            <p style="margin: 0 0 15px 0; color: #059669; font-weight: 500;">La plateforme de recrutement de proximité</p>
-            <p style="margin: 0;">&copy; {{ date('Y') }} MatchJuste. Tous droits réservés.</p>
+            <p style="margin: 0 0 15px 0; color: #059669; font-weight: 500;">{{ __('La plateforme de recrutement de proximité') }}</p>
+            <p style="margin: 0;">&copy; {{ date('Y') }} MatchJuste. {{ __('Tous droits réservés.') }}</p>
             <p style="margin: 5px 0 0 0; font-size: 12px; color: #9ca3af;">
-                Cet email a été envoyé automatiquement, merci de ne pas y répondre directement.
+                {{ __('Cet email a été envoyé automatiquement, merci de ne pas y répondre directement.') }}
             </p>
         </div>
     </div>

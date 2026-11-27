@@ -1,6 +1,6 @@
 @if($perfectionnements->isNotEmpty())
     <section class="cv-section additional-section">
-        <h2 class="section-title">Perfectionnement</h2>
+        <h2 class="section-title">{{ __('Perfectionnement') }}</h2>
         <div class="section-content">
             @foreach($perfectionnements as $item)
                 @if(!empty($item['formation']))
@@ -21,13 +21,13 @@
 
 @if($langues->isNotEmpty())
     <section class="cv-section languages-section">
-        <h2 class="section-title">Langues</h2>
+        <h2 class="section-title">{{ __('Langues') }}</h2>
         <div class="section-content language-list">
             @foreach($langues as $langue)
                 @if(!empty($langue['nom']))
                     <span class="language-item">
-                        <strong>{{ $langue['nom'] }}</strong>
-                        @if(!empty($langue['niveau'])) - {{ $langue['niveau'] }} @endif
+                        <strong>{{ __($langue['nom']) }}</strong>
+                        @if(!empty($langue['niveau'])) - {{ __($langue['niveau']) }} @endif
                     </span>
                 @endif
             @endforeach
@@ -37,7 +37,7 @@
 
 @if($benevolats->isNotEmpty())
     <section class="cv-section volunteer-section">
-        <h2 class="section-title">Engagement</h2>
+        <h2 class="section-title">{{ __('Engagement') }}</h2>
         <div class="section-content">
             @foreach($benevolats as $item)
                 @if(!empty($item['role']))

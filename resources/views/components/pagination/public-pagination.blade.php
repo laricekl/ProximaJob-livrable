@@ -13,9 +13,9 @@
   @endphp
   <nav aria-label="{{ __('Pagination des résultats') }}" class="flex w-full max-w-full flex-col items-start justify-between gap-3 overflow-hidden rounded-2xl border border-primary/5 bg-white px-4 py-3 sm:flex-row sm:items-center sm:px-5">
     <p class="text-xs text-on-surface-variant">
-      Affichage de <span class="font-semibold text-primary">{{ $paginator->firstItem() }}</span>
-      à <span class="font-semibold text-primary">{{ $paginator->lastItem() }}</span>
-      sur <span class="font-semibold text-primary">{{ $paginator->total() }}</span> résultats
+      {{ __('Affichage de') }} <span class="font-semibold text-primary">{{ $paginator->firstItem() }}</span>
+      {{ __('à') }} <span class="font-semibold text-primary">{{ $paginator->lastItem() }}</span>
+      {{ __('sur') }} <span class="font-semibold text-primary">{{ $paginator->total() }}</span> {{ __('résultats') }}
     </p>
 
     <div class="flex w-full max-w-full items-center gap-1 overflow-x-auto pb-1 sm:w-auto sm:pb-0">

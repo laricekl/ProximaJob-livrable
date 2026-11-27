@@ -5,19 +5,19 @@
         <span class="material-symbols-outlined">help</span>
       </div>
       <div class="min-w-0 flex-1">
-        <h2 id="proxima-dialog-title" class="font-serif text-xl font-bold text-primary">Confirmation</h2>
+        <h2 id="proxima-dialog-title" class="font-serif text-xl font-bold text-primary">{{ __('Confirmation') }}</h2>
         <p id="proxima-dialog-message" class="mt-2 text-sm leading-6 text-on-surface-variant"></p>
       </div>
     </div>
 
     <div id="proxima-dialog-input-wrap" class="mt-5 hidden">
-      <label id="proxima-dialog-input-label" for="proxima-dialog-input" class="mb-2 block text-sm font-semibold text-primary">Mot de passe</label>
+      <label id="proxima-dialog-input-label" for="proxima-dialog-input" class="mb-2 block text-sm font-semibold text-primary">{{ __('Mot de passe') }}</label>
       <input id="proxima-dialog-input" type="password" autocomplete="current-password" class="w-full rounded-xl border border-outline-variant/30 bg-surface-container-low px-4 py-3 text-sm text-primary outline-none transition focus:border-secondary-container focus:ring-2 focus:ring-secondary-container/20">
     </div>
 
     <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-      <button id="proxima-dialog-cancel" type="button" class="rounded-xl border border-outline-variant/30 bg-white px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-surface-container-low">Annuler</button>
-      <button id="proxima-dialog-confirm" type="button" class="rounded-xl bg-primary-container px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90">Confirmer</button>
+      <button id="proxima-dialog-cancel" type="button" class="rounded-xl border border-outline-variant/30 bg-white px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-surface-container-low">{{ __('Annuler') }}</button>
+      <button id="proxima-dialog-confirm" type="button" class="rounded-xl bg-primary-container px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90">{{ __('Confirmer') }}</button>
     </div>
   </section>
 </div>
@@ -72,10 +72,10 @@
       dialogMode = mode;
       resolveDialog = resolve;
       previousFocus = document.activeElement;
-      title.textContent = options.title || (mode === 'prompt' ? 'Vérification requise' : 'Confirmation');
+      title.textContent = options.title || (mode === 'prompt' ? '{{ __('Vérification requise') }}' : '{{ __('Confirmation') }}');
       message.textContent = text;
-      cancelButton.textContent = options.cancelLabel || 'Annuler';
-      confirmButton.textContent = options.confirmLabel || 'Confirmer';
+      cancelButton.textContent = options.cancelLabel || '{{ __('Annuler') }}';
+      confirmButton.textContent = options.confirmLabel || '{{ __('Confirmer') }}';
 
       const destructive = options.tone === 'danger';
       icon.textContent = destructive ? 'warning' : (mode === 'prompt' ? 'lock' : 'help');
@@ -83,7 +83,7 @@
       confirmButton.className = `rounded-xl px-5 py-2.5 text-sm font-bold text-white transition hover:opacity-90 ${destructive ? 'bg-error' : 'bg-primary-container'}`;
 
       inputWrap.classList.toggle('hidden', mode !== 'prompt');
-      inputLabel.textContent = options.inputLabel || 'Mot de passe';
+      inputLabel.textContent = options.inputLabel || '{{ __('Mot de passe') }}';
       input.type = options.inputType || 'password';
       input.value = '';
       input.placeholder = options.placeholder || '';
@@ -166,8 +166,8 @@
 
       event.preventDefault();
       const approved = await window.ProximaUI.confirm(form.dataset.proximaConfirm, {
-        title: form.dataset.proximaTitle || 'Confirmer cette action',
-        confirmLabel: form.dataset.proximaConfirmLabel || 'Confirmer',
+        title: form.dataset.proximaTitle || '{{ __('Confirmer cette action') }}',
+        confirmLabel: form.dataset.proximaConfirmLabel || '{{ __('Confirmer') }}',
         tone: form.dataset.proximaTone || 'danger',
       });
       if (approved) {

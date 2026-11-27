@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - {{ $cvProfile->prenom }} {{ $cvProfile->nom }}</title>
+    <title>{{ __('CV') }} - {{ $cvProfile->prenom }} {{ $cvProfile->nom }}</title>
     <style>
         @page {
             margin: 16mm;
@@ -135,7 +135,7 @@
     <!-- Profil professionnel -->
     @if($cvProfile->objectif_professionnel)
     <div class="section">
-        <h2>Profil Professionnel</h2>
+        <h2>{{ __('Profil Professionnel') }}</h2>
         <p>{{ $limitText($cvProfile->objectif_professionnel, 420) }}</p>
     </div>
     @endif
@@ -143,7 +143,7 @@
     <!-- Expériences professionnelles -->
     @if($experiences->isNotEmpty())
     <div class="section">
-        <h2>Expériences Professionnelles</h2>
+        <h2>{{ __('Expériences Professionnelles') }}</h2>
         @foreach($experiences as $experience)
         <div class="experience-item">
             <div class="item-header">
@@ -162,7 +162,7 @@
     <!-- Formations -->
     @if($formations->isNotEmpty())
     <div class="section">
-        <h2>Formation</h2>
+        <h2>{{ __('Formation') }}</h2>
         @foreach($formations as $formation)
         <div class="formation-item">
             <div class="item-header">
@@ -180,12 +180,12 @@
 
     <!-- Compétences -->
     <div class="section">
-        <h2>Compétences</h2>
+        <h2>{{ __('Compétences') }}</h2>
         
         <!-- Compétences spécifiques -->
         @if($competencesSpecifiques->isNotEmpty())
         <div style="margin-bottom: 15px;">
-            <strong>Techniques :</strong>
+            <strong>{{ __('Techniques :') }}</strong>
             <div class="skills-list">
                 @foreach($competencesSpecifiques as $competence)
                 <span class="skill-tag">{{ $limitText($competence->description, 120) }}</span>
@@ -197,7 +197,7 @@
         <!-- Compétences générales -->
         @if($competencesGenerales->isNotEmpty())
         <div style="margin-bottom: 15px;">
-            <strong>Transversales :</strong>
+            <strong>{{ __('Transversales :') }}</strong>
             <div class="skills-list">
                 @foreach($competencesGenerales as $competence)
                 <span class="skill-tag">{{ $limitText($competence->description, 120) }}</span>
@@ -209,7 +209,7 @@
         <!-- Logiciels -->
         @if($cvProfile->logiciels)
         <div style="margin-bottom: 15px;">
-            <strong>Logiciels :</strong>
+            <strong>{{ __('Logiciels :') }}</strong>
             <div class="skills-list">
                 @foreach(explode(',', $cvProfile->logiciels) as $logiciel)
                 <span class="skill-tag">{{ trim($logiciel) }}</span>
@@ -222,12 +222,12 @@
     <!-- Langues -->
     @if($langues->isNotEmpty())
     <div class="section">
-        <h2>Langues</h2>
+        <h2>{{ __('Langues') }}</h2>
         <div class="languages">
             @foreach($langues as $langue)
             <div class="language-item">
-                <strong>{{ $langue->nom }}:</strong> 
-                <span>{{ $langue->niveau }}</span>
+                <strong>{{ __($langue->nom) }}:</strong> 
+                <span>{{ __($langue->niveau) }}</span>
             </div>
             @endforeach
         </div>
@@ -237,7 +237,7 @@
     <!-- Certifications et perfectionnements -->
     @if($perfectionnements->isNotEmpty())
     <div class="section">
-        <h2>Certifications & Perfectionnements</h2>
+        <h2>{{ __('Certifications & Perfectionnements') }}</h2>
         @foreach($perfectionnements as $perfectionnement)
         <div class="experience-item">
             <div class="item-header">
@@ -253,7 +253,7 @@
     <!-- Bénévolat -->
     @if($benevolats->isNotEmpty())
     <div class="section">
-        <h2>Engagements & Bénévolat</h2>
+        <h2>{{ __('Engagements & Bénévolat') }}</h2>
         @foreach($benevolats as $benevolat)
         <div class="experience-item">
             <div class="item-header">

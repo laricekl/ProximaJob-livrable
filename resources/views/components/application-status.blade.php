@@ -2,14 +2,14 @@
 
 @php
 $labels = [
-    'en_attente' => 'À examiner',
-    'shortlisted' => 'Présélectionnée',
-    'contacted' => 'Entreprise contactée',
-    'interview' => 'Entretien planifié',
-    'accepted'   => 'Acceptée',
-    'rejected'   => 'Refusée',
-    'entretien'  => 'Entretien',
-    'retenue'    => 'Retenue',
+    'en_attente' => __('À examiner'),
+    'shortlisted' => __('Présélectionnée'),
+    'contacted' => __('Entreprise contactée'),
+    'interview' => __('Entretien planifié'),
+    'accepted'   => __('Acceptée'),
+    'rejected'   => __('Refusée'),
+    'entretien'  => __('Entretien'),
+    'retenue'    => __('Retenue'),
 ];
 
 $icons = [
@@ -34,7 +34,7 @@ $colors = [
     'retenue'    => 'bg-surface-container-low text-on-surface-variant',
 ];
 
-$label = $labels[$status] ?? ucfirst($status);
+$label = $labels[$status] ?? __(ucfirst($status));
 $icon  = $icons[$status] ?? 'help';
 $color = $colors[$status] ?? 'bg-surface-container-low text-on-surface-variant';
 @endphp

@@ -1,5 +1,5 @@
 @extends('layouts.candidat')
-@section('title', 'Candidatures')
+@section('title', __('Candidatures'))
 @section('content')
 
   <main class="flex-grow bg-surface-container-low/40">
@@ -9,12 +9,12 @@
           <div class="p-6 md:p-8">
             <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
               <div>
-                <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight mb-2">Candidatures</h1>
-                <p class="text-on-surface-variant max-w-2xl">Suivez vos candidatures envoyées et ouvrez chaque dossier en un clic.</p>
+                <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight mb-2">{{ __('Candidatures') }}</h1>
+                <p class="text-on-surface-variant max-w-2xl">{{ __('Suivez vos candidatures envoyées et ouvrez chaque dossier en un clic.') }}</p>
 
                 <div class="flex gap-1 mt-6 bg-surface-container rounded-xl p-1.5 w-fit">
-                  <a href="{{ route('user.historiques') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-primary shadow-sm transition-all">Candidatures manuelles</a>
-                  <a href="{{ route('user.historiques_ia') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-primary transition-all">Candidatures IA</a>
+                  <a href="{{ route('user.historiques') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold bg-white text-primary shadow-sm transition-all">{{ __('Candidatures manuelles') }}</a>
+                  <a href="{{ route('user.historiques_ia') }}" class="px-5 py-2.5 rounded-lg text-sm font-semibold text-on-surface-variant hover:text-primary transition-all">{{ __('Candidatures IA') }}</a>
                 </div>
               </div>
 
@@ -24,13 +24,13 @@
                     <span class="material-symbols-outlined text-white text-2xl">send</span>
                   </div>
                   <div class="flex-1">
-                    <h3 class="font-bold text-primary">Suivi de candidature</h3>
-                    <p class="text-sm text-on-surface-variant mt-1">Retrouvez les offres auxquelles vous avez postulé, les documents envoyés et l'état actuel de chaque dossier.</p>
+                    <h3 class="font-bold text-primary">{{ __('Suivi de candidature') }}</h3>
+                    <p class="text-sm text-on-surface-variant mt-1">{{ __("Retrouvez les offres auxquelles vous avez postulé, les documents envoyés et l'état actuel de chaque dossier.") }}</p>
                   </div>
                 </div>
                 <div class="mt-4 flex justify-end">
                   <a href="{{ route('offres') }}" class="inline-flex items-center gap-1.5 text-sm font-bold text-secondary-container hover:underline whitespace-nowrap">
-                    Voir les offres <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    {{ __('Voir les offres') }} <span class="material-symbols-outlined text-sm">arrow_forward</span>
                   </a>
                 </div>
               </div>
@@ -42,7 +42,7 @@
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <div class="text-2xl font-bold text-primary">{{ $postulations->total() }}</div>
-                  <div class="text-xs font-semibold text-on-surface-variant mt-1">Candidatures</div>
+                  <div class="text-xs font-semibold text-on-surface-variant mt-1">{{ __('Candidatures') }}</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">send</span>
               </div>
@@ -51,7 +51,7 @@
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <div class="text-2xl font-bold text-primary">{{ collect(['en_attente', 'shortlisted', 'contacted', 'interview'])->sum(fn ($status) => $statusStats[$status] ?? 0) }}</div>
-                  <div class="text-xs font-semibold text-on-surface-variant mt-1">En cours</div>
+                  <div class="text-xs font-semibold text-on-surface-variant mt-1">{{ __('En cours') }}</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">hourglass_empty</span>
               </div>
@@ -60,7 +60,7 @@
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <div class="text-2xl font-bold text-primary">{{ $statusStats['accepted'] ?? 0 }}</div>
-                  <div class="text-xs font-semibold text-on-surface-variant mt-1">Acceptées</div>
+                  <div class="text-xs font-semibold text-on-surface-variant mt-1">{{ __('Acceptées') }}</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">check_circle</span>
               </div>
@@ -69,7 +69,7 @@
               <div class="flex items-center justify-between gap-3">
                 <div>
                   <div class="text-2xl font-bold text-primary">{{ $statusStats['rejected'] ?? 0 }}</div>
-                  <div class="text-xs font-semibold text-on-surface-variant mt-1">Refusées</div>
+                  <div class="text-xs font-semibold text-on-surface-variant mt-1">{{ __('Refusées') }}</div>
                 </div>
                 <span class="material-symbols-outlined flex h-10 w-10 items-center justify-center rounded-xl bg-secondary-container/10 text-secondary-container">cancel</span>
               </div>
@@ -83,36 +83,36 @@
       <div class="max-w-7xl mx-auto">
         <form method="GET" action="{{ route('user.historiques') }}" data-testid="candidate-manual-history-filter-form" class="flex flex-wrap items-end gap-3 rounded-2xl bg-white/90 border border-outline-variant/10 shadow-sm p-4">
           <div class="w-full sm:w-auto">
-            <label for="status" class="block text-xs font-semibold text-primary mb-1.5">Statut</label>
+            <label for="status" class="block text-xs font-semibold text-primary mb-1.5">{{ __('Statut') }}</label>
             <select id="status" name="status" class="w-full px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all sm:w-auto sm:min-w-[13rem]">
-              <option {{ request('status') === null ? 'selected' : '' }}>Tous statuts</option>
-              <option value="en_attente" @selected(request('status') === 'en_attente')>À examiner</option>
-              <option value="shortlisted" @selected(request('status') === 'shortlisted')>Présélectionnée</option>
-              <option value="contacted" @selected(request('status') === 'contacted')>Entreprise contactée</option>
-              <option value="interview" @selected(request('status') === 'interview')>Entretien planifié</option>
-              <option value="accepted" @selected(request('status') === 'accepted')>Acceptée</option>
-              <option value="rejected" @selected(request('status') === 'rejected')>Refusée</option>
+              <option {{ request('status') === null ? 'selected' : '' }}>{{ __('Tous statuts') }}</option>
+              <option value="en_attente" @selected(request('status') === 'en_attente')>{{ __('À examiner') }}</option>
+              <option value="shortlisted" @selected(request('status') === 'shortlisted')>{{ __('Présélectionnée') }}</option>
+              <option value="contacted" @selected(request('status') === 'contacted')>{{ __('Entreprise contactée') }}</option>
+              <option value="interview" @selected(request('status') === 'interview')>{{ __('Entretien planifié') }}</option>
+              <option value="accepted" @selected(request('status') === 'accepted')>{{ __('Acceptée') }}</option>
+              <option value="rejected" @selected(request('status') === 'rejected')>{{ __('Refusée') }}</option>
             </select>
           </div>
           <div class="w-full sm:w-auto">
-            <label for="date" class="block text-xs font-semibold text-primary mb-1.5">Date</label>
+            <label for="date" class="block text-xs font-semibold text-primary mb-1.5">{{ __('Date') }}</label>
             <select id="date" name="date" class="w-full px-3 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary focus:border-secondary-container/50 transition-all sm:w-auto sm:min-w-[13rem]">
-              <option value="">Toutes</option>
-              <option value="Cette semaine" {{ request('date') === 'Cette semaine' ? 'selected' : '' }}>Cette semaine</option>
-              <option value="Ce mois" {{ request('date') === 'Ce mois' ? 'selected' : '' }}>Ce mois</option>
-              <option value="Cette année" {{ request('date') === 'Cette année' ? 'selected' : '' }}>Cette année</option>
+              <option value="">{{ __('Toutes') }}</option>
+              <option value="Cette semaine" {{ request('date') === 'Cette semaine' ? 'selected' : '' }}>{{ __('Cette semaine') }}</option>
+              <option value="Ce mois" {{ request('date') === 'Ce mois' ? 'selected' : '' }}>{{ __('Ce mois') }}</option>
+              <option value="Cette année" {{ request('date') === 'Cette année' ? 'selected' : '' }}>{{ __('Cette année') }}</option>
             </select>
           </div>
           <div class="relative w-full sm:w-auto sm:flex-1">
-            <label for="keyword" class="block text-xs font-semibold text-primary mb-1.5">Recherche</label>
+            <label for="keyword" class="block text-xs font-semibold text-primary mb-1.5">{{ __('Recherche') }}</label>
             <span class="material-symbols-outlined absolute left-3 top-[2.15rem] text-outline text-sm">search</span>
-            <input id="keyword" name="keyword" value="{{ request('keyword') }}" type="text" placeholder="Poste ou entreprise..." class="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 transition-all" />
+            <input id="keyword" name="keyword" value="{{ request('keyword') }}" type="text" placeholder="{{ __('Poste ou entreprise...') }}" class="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-outline-variant/30 text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 transition-all" />
           </div>
           <button type="submit" class="px-4 py-2.5 bg-secondary-container text-white rounded-xl text-sm font-bold hover:bg-secondary transition-colors">
-            Filtrer
+            {{ __('Filtrer') }}
           </button>
           <a href="{{ route('user.historiques') }}" class="text-sm font-semibold text-outline hover:text-primary flex items-center gap-1 py-2.5 transition-colors">
-            <span class="material-symbols-outlined text-sm">refresh</span> Réinitialiser
+            <span class="material-symbols-outlined text-sm">refresh</span> {{ __('Réinitialiser') }}
           </a>
         </form>
       </div>
@@ -125,24 +125,24 @@
             <table class="w-full text-sm">
               <thead>
                 <tr class="border-b border-outline-variant/10 text-left">
-                  <th class="px-3 py-4 sm:px-6 text-xs font-bold text-outline uppercase tracking-wider">Poste</th>
-                  <th class="px-3 py-4 sm:px-6 text-xs font-bold text-outline uppercase tracking-wider">Entreprise</th>
-                  <th class="px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider hidden md:table-cell">Date</th>
-                  <th class="w-20 px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider">Statut</th>
-                  <th class="w-20 px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider">Voir</th>
+                  <th class="px-3 py-4 sm:px-6 text-xs font-bold text-outline uppercase tracking-wider">{{ __('Poste') }}</th>
+                  <th class="px-3 py-4 sm:px-6 text-xs font-bold text-outline uppercase tracking-wider">{{ __('Entreprise') }}</th>
+                  <th class="px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider hidden md:table-cell">{{ __('Date') }}</th>
+                  <th class="w-20 px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider">{{ __('Statut') }}</th>
+                  <th class="w-20 px-4 py-4 text-center text-xs font-bold text-outline uppercase tracking-wider">{{ __('Voir') }}</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-outline-variant/5">
                 @forelse ($postulations as $postulation)
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
-                    <td class="px-3 py-4 sm:px-6 font-semibold text-primary align-middle">{{ $postulation->offre?->titre ?? 'Offre supprimée' }}</td>
-                    <td class="px-3 py-4 sm:px-6 align-middle text-on-surface-variant">{{ $postulation->offre?->entreprise?->company_name ?? 'Entreprise indisponible' }}</td>
+                    <td class="px-3 py-4 sm:px-6 font-semibold text-primary align-middle">{{ $postulation->offre?->titre ?? __('Offre supprimée') }}</td>
+                    <td class="px-3 py-4 sm:px-6 align-middle text-on-surface-variant">{{ $postulation->offre?->entreprise?->company_name ?? __('Entreprise indisponible') }}</td>
                     <td class="px-4 py-4 align-middle text-center text-on-surface-variant hidden md:table-cell">{{ optional($postulation->created_at)->translatedFormat('d M Y') }}</td>
                     <td class="px-4 py-4 align-middle text-center">
                       @php
                         $statusColors = ['en_attente' => 'bg-warning-light text-warning-dark', 'shortlisted' => 'bg-info-light text-info-dark', 'contacted' => 'bg-info-light text-info-dark', 'interview' => 'bg-success-light text-success-dark', 'accepted' => 'bg-success-light text-success-dark', 'rejected' => 'bg-error-light text-error-dark', 'entretien' => 'bg-info-light text-info-dark'];
-                        $statusLabels = ['en_attente' => 'À examiner', 'shortlisted' => 'Présélectionnée', 'contacted' => 'Entreprise contactée', 'interview' => 'Entretien planifié', 'accepted' => 'Acceptée', 'rejected' => 'Refusée', 'entretien' => 'Entretien'];
-                        $statusLabel = $statusLabels[$postulation->status] ?? ucfirst(str_replace('_', ' ', $postulation->status ?? ''));
+                        $statusLabels = ['en_attente' => __('À examiner'), 'shortlisted' => __('Présélectionnée'), 'contacted' => __('Entreprise contactée'), 'interview' => __('Entretien planifié'), 'accepted' => __('Acceptée'), 'rejected' => __('Refusée'), 'entretien' => __('Entretien')];
+                        $statusLabel = $statusLabels[$postulation->status] ?? __(ucfirst(str_replace('_', ' ', $postulation->status ?? '')));
                         $statusIcon = $postulation->status === 'accepted' ? 'check_circle' : ($postulation->status === 'rejected' ? 'cancel' : 'hourglass_empty');
                       @endphp
                       <span class="mx-auto inline-flex h-8 w-8 items-center justify-center {{ $statusColors[$postulation->status] ?? 'bg-surface-container text-primary' }} rounded-full shadow-sm ring-1 ring-black/5" title="{{ $statusLabel }}" aria-label="{{ $statusLabel }}">
@@ -150,7 +150,7 @@
                       </span>
                     </td>
                     <td class="px-4 py-4 align-middle text-center">
-                      <a href="{{ route('user.detail-candidature', ['id' => $postulation->id]) }}" class="mx-auto inline-flex h-9 w-9 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm hover:bg-secondary-container/10 hover:border-secondary-container/40 transition-colors" title="Voir les détails" aria-label="Voir les détails">
+                      <a href="{{ route('user.detail-candidature', ['id' => $postulation->id]) }}" class="mx-auto inline-flex h-9 w-9 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm hover:bg-secondary-container/10 hover:border-secondary-container/40 transition-colors" title="{{ __('Voir les détails') }}" aria-label="{{ __('Voir les détails') }}">
                         <span class="material-symbols-outlined text-lg">visibility</span>
                       </a>
                     </td>
@@ -158,7 +158,7 @@
                 @empty
                   <tr>
                     <td colspan="5" class="px-3 py-10 sm:px-6 text-center text-on-surface-variant">
-                      Aucune candidature manuelle trouvée.
+                      {{ __('Aucune candidature manuelle trouvée.') }}
                     </td>
                   </tr>
                 @endforelse
@@ -167,7 +167,7 @@
           </div>
           <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between px-6 py-4 border-t border-outline-variant/10">
             <p class="text-xs text-on-surface-variant">
-              Affichage de {{ $postulations->firstItem() ?? 0 }} à {{ $postulations->lastItem() ?? 0 }} sur {{ $postulations->total() }} candidatures
+              {{ __('Affichage de') }} {{ $postulations->firstItem() ?? 0 }} {{ __('à') }} {{ $postulations->lastItem() ?? 0 }} {{ __('sur') }} {{ $postulations->total() }} {{ __('candidatures') }}
             </p>
             <div>
               {{ $postulations->withQueryString()->links('components.pagination.public-pagination') }}

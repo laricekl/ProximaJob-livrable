@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV moderne - {{ $fullName }}</title>
+    <title>{{ __('CV moderne') }} - {{ $fullName }}</title>
     <style>
         @page { margin: 0; size: A4; }
         * { box-sizing: border-box; }
@@ -132,12 +132,12 @@
 </head>
 <body>
     <div class="sidebar-background"></div>
-    <div class="footer">Page </div>
+    <div class="footer">{{ __('Page') }} </div>
     <table class="layout">
         <tr>
             <td class="sidebar">
                 <div class="sidebar-block">
-                    <h2 class="sidebar-title">Coordonnées</h2>
+                    <h2 class="sidebar-title">{{ __('Coordonnées') }}</h2>
                     @if(!empty($email))<div class="contact-line">{{ $email }}</div>@endif
                     @if(!empty($telephone))<div class="contact-line">{{ $telephone }}</div>@endif
                     @if(!empty($location))<div class="contact-line">{{ $location }}</div>@endif
@@ -147,12 +147,12 @@
 
                 @if($langues->isNotEmpty())
                     <section class="cv-section languages-section">
-                        <h2 class="section-title">Langues</h2>
+                        <h2 class="section-title">{{ __('Langues') }}</h2>
                         @foreach($langues as $langue)
                             @if(!empty($langue['nom']))
                                 <span class="language-item">
-                                    <strong>{{ $langue['nom'] }}</strong>
-                                    @if(!empty($langue['niveau'])) - {{ $langue['niveau'] }} @endif
+                                    <strong>{{ __($langue['nom']) }}</strong>
+                                    @if(!empty($langue['niveau'])) - {{ __($langue['niveau']) }} @endif
                                 </span>
                             @endif
                         @endforeach
@@ -177,7 +177,7 @@
 
                 @if($perfectionnements->isNotEmpty())
                     <section class="cv-section additional-section">
-                        <h2 class="section-title">Perfectionnement</h2>
+                        <h2 class="section-title">{{ __('Perfectionnement') }}</h2>
                         @foreach($perfectionnements as $item)
                             @if(!empty($item['formation']))
                                 <article class="cv-item">
@@ -194,7 +194,7 @@
 
                 @if($benevolats->isNotEmpty())
                     <section class="cv-section volunteer-section">
-                        <h2 class="section-title">Engagement</h2>
+                        <h2 class="section-title">{{ __('Engagement') }}</h2>
                         @foreach($benevolats as $item)
                             @if(!empty($item['role']))
                                 <article class="cv-item">

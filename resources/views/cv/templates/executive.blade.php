@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV exécutif - {{ $fullName }}</title>
+    <title>{{ __('CV exécutif') }} - {{ $fullName }}</title>
     <style>
         @page { margin: 0 0 13mm; size: A4; }
         * { box-sizing: border-box; }
@@ -117,7 +117,7 @@
     </style>
 </head>
 <body>
-    <div class="footer">Page </div>
+    <div class="footer">{{ __('Page') }} </div>
     <header class="hero">
         <div class="hero-accent"></div>
         <h1 class="name">{{ $fullName }}</h1>
@@ -134,11 +134,11 @@
             <table class="executive-intro">
                 <tr>
                     <td class="summary-cell">
-                        <h2 class="eyebrow">Profil professionnel</h2>
+                        <h2 class="eyebrow">{{ __('Profil professionnel') }}</h2>
                         <p class="summary-text">{{ $professionalSummary ?: 'Professionnel expérimenté orienté résultats et amélioration continue.' }}</p>
                     </td>
                     <td class="expertise-cell">
-                        <h2 class="eyebrow">Expertises clés</h2>
+                        <h2 class="eyebrow">{{ __('Expertises clés') }}</h2>
                         <ul class="expertise-list">
                             @foreach($competencesList->take(5) as $competence)
                                 @if(!empty($competence['description']))

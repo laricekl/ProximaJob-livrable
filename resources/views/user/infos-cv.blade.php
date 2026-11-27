@@ -1,5 +1,5 @@
 @extends('layouts.candidat')
-@section('title', 'Mon CV principal')
+@section('title', __('Mon CV principal'))
 @section('content')
   @php
     $uploadedCvPath = auth()->user()?->cv;
@@ -60,9 +60,9 @@
       <div class="max-w-7xl mx-auto">
         <div class="mb-6 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>
-            <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">CV principal</p>
-            <h1 class="mt-2 text-3xl font-bold font-serif text-primary">Construire mon CV</h1>
-            <p class="mt-2 max-w-2xl text-sm text-on-surface-variant">Remplissez ici votre CV de base. La personnalisation par offre utilise ces informations pour générer une version adaptée à un poste précis.</p>
+            <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">{{ __('CV principal') }}</p>
+            <h1 class="mt-2 text-3xl font-bold font-serif text-primary">{{ __('Construire mon CV') }}</h1>
+            <p class="mt-2 max-w-2xl text-sm text-on-surface-variant">{{ __('Remplissez ici votre CV de base. La personnalisation par offre utilise ces informations pour générer une version adaptée à un poste précis.') }}</p>
           </div>
         </div>
 
@@ -74,9 +74,9 @@
                   <span class="material-symbols-outlined">palette</span>
                 </span>
                 <div class="min-w-0">
-                  <p class="text-xs font-black uppercase tracking-[0.16em] text-secondary-container">Apparence par défaut</p>
-                  <h2 class="mt-1 text-lg font-bold text-primary">Mon modèle principal : <span id="principalTemplateLabel">{{ $principalTemplate['label'] }}</span></h2>
-                  <p class="mt-1 text-xs text-on-surface-variant">Ce choix sera proposé automatiquement pour vos prochains CV personnalisés.</p>
+                  <p class="text-xs font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Apparence par défaut') }}</p>
+                  <h2 class="mt-1 text-lg font-bold text-primary">{{ __('Mon modèle principal :') }} <span id="principalTemplateLabel">{{ __($principalTemplate['label']) }}</span></h2>
+                  <p class="mt-1 text-xs text-on-surface-variant">{{ __('Ce choix sera proposé automatiquement pour vos prochains CV personnalisés.') }}</p>
                 </div>
               </div>
               <span class="material-symbols-outlined shrink-0 text-outline transition-transform group-open:rotate-180">expand_more</span>
@@ -94,7 +94,7 @@
 
               <div class="mt-5 grid gap-5 lg:grid-cols-[1.4fr_1fr_1fr]">
                 <div>
-                  <label class="mb-2 block text-sm font-semibold text-primary">Couleur principale</label>
+                  <label class="mb-2 block text-sm font-semibold text-primary">{{ __('Couleur principale') }}</label>
                   <div class="grid grid-cols-5 gap-2">
                     @foreach(['blue' => '#2f5f8f', 'green' => '#2f7d5c', 'bordeaux' => '#8a334b', 'anthracite' => '#343a40', 'petrol' => '#28666e'] as $value => $color)
                       <label class="cursor-pointer">
@@ -105,19 +105,19 @@
                   </div>
                 </div>
                 <div>
-                  <label for="principal_font_style" class="mb-2 block text-sm font-semibold text-primary">Police</label>
+                  <label for="principal_font_style" class="mb-2 block text-sm font-semibold text-primary">{{ __('Police') }}</label>
                   <select id="principal_font_style" name="font_style" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary">
-                    <option value="sober" @selected($principalOptions['font_style'] === 'sober')>Sobre</option>
-                    <option value="modern" @selected($principalOptions['font_style'] === 'modern')>Moderne</option>
-                    <option value="classic" @selected($principalOptions['font_style'] === 'classic')>Classique</option>
+                    <option value="sober" @selected($principalOptions['font_style'] === 'sober')>{{ __('Sobre') }}</option>
+                    <option value="modern" @selected($principalOptions['font_style'] === 'modern')>{{ __('Moderne') }}</option>
+                    <option value="classic" @selected($principalOptions['font_style'] === 'classic')>{{ __('Classique') }}</option>
                   </select>
                 </div>
                 <div>
-                  <label for="principal_density" class="mb-2 block text-sm font-semibold text-primary">Densité</label>
+                  <label for="principal_density" class="mb-2 block text-sm font-semibold text-primary">{{ __('Densité') }}</label>
                   <select id="principal_density" name="density" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary">
-                    <option value="airy" @selected($principalOptions['density'] === 'airy')>Aérée</option>
-                    <option value="balanced" @selected($principalOptions['density'] === 'balanced')>Équilibrée</option>
-                    <option value="compact" @selected($principalOptions['density'] === 'compact')>Compacte</option>
+                    <option value="airy" @selected($principalOptions['density'] === 'airy')>{{ __('Aérée') }}</option>
+                    <option value="balanced" @selected($principalOptions['density'] === 'balanced')>{{ __('Équilibrée') }}</option>
+                    <option value="compact" @selected($principalOptions['density'] === 'compact')>{{ __('Compacte') }}</option>
                   </select>
                 </div>
               </div>
@@ -125,14 +125,14 @@
               <div id="principalPhotoOption" class="mt-5 {{ ($principalTemplate['supports_photo'] ?? false) ? '' : 'hidden' }} rounded-xl border border-secondary-container/20 bg-secondary-container/5 p-4">
                 <label class="flex cursor-pointer items-start gap-3">
                   <input type="checkbox" name="include_photo" value="1" class="mt-1 rounded border-outline-variant/40 text-secondary-container" @checked($principalOptions['include_photo'])>
-                  <span><strong class="block text-sm text-primary">Inclure ma photo de profil</strong><span class="mt-1 block text-xs text-on-surface-variant">Disponible pour Signature et Portfolio. Sans photo, vos initiales seront utilisées.</span></span>
+                  <span><strong class="block text-sm text-primary">{{ __('Inclure ma photo de profil') }}</strong><span class="mt-1 block text-xs text-on-surface-variant">{{ __('Disponible pour Signature et Portfolio. Sans photo, vos initiales seront utilisées.') }}</span></span>
                 </label>
               </div>
 
               <div class="mt-5 flex flex-col gap-3 border-t border-outline-variant/10 pt-5 sm:flex-row sm:items-center sm:justify-between">
                 <p id="principalDesignStatus" class="hidden text-sm font-semibold text-secondary-container"></p>
                 <button type="submit" class="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white hover:bg-secondary">
-                  <span class="material-symbols-outlined text-lg">save</span> Enregistrer comme modèle principal
+                  <span class="material-symbols-outlined text-lg">save</span> {{ __('Enregistrer comme modèle principal') }}
                 </button>
               </div>
             </form>
@@ -143,8 +143,8 @@
         <aside class="min-w-0 rounded-2xl border border-outline-variant/10 bg-white p-4 md:p-5 lg:sticky lg:top-28">
           <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
             <div class="min-w-0">
-              <h2 class="text-lg font-bold font-serif text-primary">Mes CV</h2>
-              <p class="mt-1 text-xs leading-5 text-on-surface-variant">CV principal, source et versions générées.</p>
+              <h2 class="text-lg font-bold font-serif text-primary">{{ __('Mes CV') }}</h2>
+              <p class="mt-1 text-xs leading-5 text-on-surface-variant">{{ __('CV principal, source et versions générées.') }}</p>
             </div>
             <div class="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-surface-container-low px-2.5 py-1 text-xs font-semibold text-outline">
               <span class="material-symbols-outlined text-base">folder_open</span>
@@ -162,21 +162,21 @@
                   <div class="min-w-0 flex-1">
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
-                        <p class="truncate text-sm font-bold text-primary">CV principal</p>
-                        <p class="truncate text-xs font-semibold text-on-surface-variant">{{ trim(($existingProfile->prenom ?? '') . ' ' . ($existingProfile->nom ?? '')) ?: 'CV candidat' }}</p>
+                        <p class="truncate text-sm font-bold text-primary">{{ __('CV principal') }}</p>
+                        <p class="truncate text-xs font-semibold text-on-surface-variant">{{ trim(($existingProfile->prenom ?? '') . ' ' . ($existingProfile->nom ?? '')) ?: __('CV candidat') }}</p>
                       </div>
-                      <span class="shrink-0 rounded-full bg-secondary-container/10 px-2 py-0.5 text-2xs font-bold uppercase tracking-wide text-secondary-container">Actif</span>
+                      <span class="shrink-0 rounded-full bg-secondary-container/10 px-2 py-0.5 text-2xs font-bold uppercase tracking-wide text-secondary-container">{{ __('Actif') }}</span>
                     </div>
-                    <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: 'Structure CV editable depuis cette page' }}</p>
+                    <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $existingProfile->experiences->first()?->poste ?: __('Structure CV editable depuis cette page') }}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-2">
                       <button type="button" onclick="openCvBuilder()" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-secondary-container">
-                        <span class="material-symbols-outlined text-sm">edit</span> Modifier
+                        <span class="material-symbols-outlined text-sm">edit</span> {{ __('Modifier') }}
                       </button>
                       <a href="{{ route('cv.principal.inline') }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-secondary-container">
-                        <span class="material-symbols-outlined text-sm">visibility</span> Voir PDF
+                        <span class="material-symbols-outlined text-sm">visibility</span> {{ __('Voir PDF') }}
                       </a>
                       <a href="{{ route('cv.personalization.form') }}" class="inline-flex items-center gap-1 text-xs font-bold text-secondary-container hover:text-secondary">
-                        <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter
+                        <span class="material-symbols-outlined text-sm">auto_awesome</span> {{ __('Adapter') }}
                       </a>
                     </div>
                   </div>
@@ -192,26 +192,26 @@
                   <div class="min-w-0 flex-1">
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
-                        <p class="truncate text-sm font-bold text-primary">CV source</p>
-                        <p class="break-all text-xs font-semibold leading-4 text-on-surface-variant">{{ $uploadedCvPath ? basename($uploadedCvPath) : 'Aucun fichier' }}</p>
+                        <p class="truncate text-sm font-bold text-primary">{{ __('CV source') }}</p>
+                        <p class="break-all text-xs font-semibold leading-4 text-on-surface-variant">{{ $uploadedCvPath ? basename($uploadedCvPath) : __('Aucun fichier') }}</p>
                       </div>
                       @if ($uploadedCvPath)
-                        <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showUploadedCvPreview()">Voir</button>
+                        <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showUploadedCvPreview()">{{ __('Voir') }}</button>
                       @endif
                     </div>
-                    <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $uploadedCvPath ? 'Source pour remplir le CV principal.' : 'PDF, DOCX, DOC ou TXT.' }}</p>
+                    <p class="mt-1 line-clamp-2 text-xs leading-4 text-on-surface-variant">{{ $uploadedCvPath ? __('Source pour remplir le CV principal.') : 'PDF, DOCX, DOC ou TXT.' }}</p>
                     <div class="mt-2 flex flex-wrap items-center gap-2">
                       <form id="sourceCvUploadForm" class="contents" enctype="multipart/form-data">
                         <label class="inline-flex cursor-pointer items-center gap-1 text-xs font-bold text-primary hover:text-secondary-container">
                           <span class="material-symbols-outlined text-sm">upload_file</span>
-                          <span>{{ $uploadedCvPath ? 'Remplacer' : 'Importer' }}</span>
+                          <span>{{ $uploadedCvPath ? __('Remplacer') : __('Importer') }}</span>
                           <input type="file" name="cv" accept=".pdf,.doc,.docx,.txt" class="hidden" onchange="uploadSourceCv(this.form)">
                         </label>
                       </form>
                       @if ($uploadedCvPath)
                         <button type="button" id="importUploadedCvBtn" class="inline-flex items-center gap-1 text-xs font-bold text-secondary-container hover:text-secondary" onclick="importUploadedCv()">
                           <span class="material-symbols-outlined text-sm">magic_button</span>
-                          Analyser
+                          {{ __('Analyser') }}
                         </button>
                       @endif
                     </div>
@@ -228,44 +228,44 @@
                   <div class="min-w-0 flex-1">
                     <div class="flex min-w-0 items-start justify-between gap-2">
                       <div class="min-w-0">
-                        <p class="truncate text-sm font-bold text-primary">Version du CV</p>
+                        <p class="truncate text-sm font-bold text-primary">{{ __('Version du CV') }}</p>
                         <p class="truncate text-xs text-on-surface-variant">
-                          {{ $generatedCv->template_label }} · {{ $generatedCv->date_generation?->format('d/m/Y') ?: 'Version enregistrée' }}
+                          {{ $generatedCv->template_label }} · {{ $generatedCv->date_generation?->format('d/m/Y') ?: __('Version enregistrée') }}
                         </p>
                       </div>
-                      <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->display_name) }}" data-file="Document PDF" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}">Voir</button>
+                      <button type="button" class="shrink-0 text-xs font-bold text-secondary-container hover:text-secondary" onclick="showGeneratedCvPreview(this)" data-title="{{ e($generatedCv->display_name) }}" data-file="{{ __('Document PDF') }}" data-preview-url="{{ route('cv.personalization.inline', ['filename' => basename($generatedCv->chemin_fichier)]) }}" data-open-url="{{ route('cv.personalization.preview', ['filename' => basename($generatedCv->chemin_fichier)]) }}">{{ __('Voir') }}</button>
                     </div>
                     <p class="mt-1 line-clamp-2 text-xs font-semibold leading-4 text-primary">{{ $generatedCv->display_name }}</p>
-                    <p class="mt-1 truncate text-xs leading-4 text-on-surface-variant">Document PDF</p>
+                    <p class="mt-1 truncate text-xs leading-4 text-on-surface-variant">{{ __('Document PDF') }}</p>
                   </div>
                 </div>
               </div>
             @empty
               @if (! $existingProfile && ! $uploadedCvPath)
                 <div class="rounded-2xl border border-dashed border-outline-variant/20 bg-surface-container-low p-5">
-                  <p class="text-sm font-semibold text-primary">Aucun CV principal ou genere pour le moment</p>
-                  <p class="text-xs text-on-surface-variant mt-1">Importez un CV source, completez le CV principal ou genere une version personnalisee pour enrichir cette liste.</p>
+                  <p class="text-sm font-semibold text-primary">{{ __('Aucun CV principal ou genere pour le moment') }}</p>
+                  <p class="text-xs text-on-surface-variant mt-1">{{ __('Importez un CV source, completez le CV principal ou genere une version personnalisee pour enrichir cette liste.') }}</p>
                 </div>
               @endif
             @endforelse
           </div>
 
-          <p class="mt-3 text-xs leading-4 text-outline">La personnalisation part toujours du CV principal.</p>
+          <p class="mt-3 text-xs leading-4 text-outline">{{ __('La personnalisation part toujours du CV principal.') }}</p>
           <p id="cvImportStatus" class="mt-3 hidden rounded-xl border border-secondary-container/20 bg-secondary-container/10 px-4 py-3 text-sm font-semibold text-secondary-container"></p>
         </aside>
 
         <section id="cv-preview" class="rounded-2xl border border-outline-variant/10 bg-white p-5 md:p-8">
           <div class="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
             <div>
-              <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">Aperçu</p>
-              <h2 id="previewTitle" class="mt-1 text-2xl font-bold font-serif text-primary">CV principal</h2>
+              <p class="text-xs font-black uppercase tracking-[0.18em] text-secondary-container">{{ __('Aperçu') }}</p>
+              <h2 id="previewTitle" class="mt-1 text-2xl font-bold font-serif text-primary">{{ __('CV principal') }}</h2>
             </div>
             <div class="flex items-center gap-2">
               <a id="generatedCvOpenLink" href="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '#' }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 rounded-lg bg-white px-3 py-2 text-xs font-bold text-primary hover:bg-surface-container-low border border-outline-variant/20">
-                <span class="material-symbols-outlined text-sm">open_in_new</span> Plein écran
+                <span class="material-symbols-outlined text-sm">open_in_new</span> {{ __('Plein écran') }}
               </a>
               <a href="{{ $existingProfile ? route('cv.principal.download') : '#' }}" class="inline-flex items-center gap-1.5 rounded-lg bg-secondary-container px-3 py-2 text-xs font-bold text-white hover:bg-secondary transition-colors">
-                <span class="material-symbols-outlined text-sm">download</span> Télécharger
+                <span class="material-symbols-outlined text-sm">download</span> {{ __('Télécharger') }}
               </a>
               <button type="button" onclick="toggleSidebar()" class="inline-flex items-center justify-center gap-1 rounded-lg border border-outline-variant/20 bg-white px-2.5 py-2 text-xs font-semibold text-primary hover:bg-surface-container-low">
                 <span class="material-symbols-outlined text-sm" id="toggleSidebarIcon">fullscreen</span>
@@ -278,21 +278,21 @@
               <div id="generatedCvLoading" class="absolute inset-0 z-10 flex items-center justify-center bg-surface-container-low px-6" role="status" aria-live="polite">
                 <div class="w-full max-w-sm rounded-2xl border border-white/70 bg-white/90 p-6 text-center shadow-sm backdrop-blur">
                   <span class="proxima-button-spinner text-secondary-container" aria-hidden="true"></span>
-                  <p class="mt-4 text-sm font-bold text-primary">Chargement de l’aperçu…</p>
-                  <p class="mt-1 text-xs leading-5 text-on-surface-variant">Le document est en cours de préparation.</p>
+                  <p class="mt-4 text-sm font-bold text-primary">{{ __('Chargement de l’aperçu…') }}</p>
+                  <p class="mt-1 text-xs leading-5 text-on-surface-variant">{{ __('Le document est en cours de préparation.') }}</p>
                 </div>
               </div>
               <div id="generatedCvError" class="absolute inset-0 z-10 hidden items-center justify-center bg-surface-container-low px-6" role="alert">
                 <div class="w-full max-w-sm rounded-2xl border border-error/15 bg-white p-6 text-center shadow-sm">
                   <span class="material-symbols-outlined text-3xl text-error" aria-hidden="true">error</span>
-                  <p class="mt-3 text-sm font-bold text-primary">L’aperçu n’a pas pu être chargé</p>
-                  <p class="mt-1 text-xs leading-5 text-on-surface-variant">Vous pouvez réessayer sans perdre vos informations.</p>
+                  <p class="mt-3 text-sm font-bold text-primary">{{ __('L’aperçu n’a pas pu être chargé') }}</p>
+                  <p class="mt-1 text-xs leading-5 text-on-surface-variant">{{ __('Vous pouvez réessayer sans perdre vos informations.') }}</p>
                   <button id="generatedCvRetry" type="button" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-primary-container px-4 py-2.5 text-xs font-bold text-white transition hover:opacity-90">
-                    <span class="material-symbols-outlined text-base" aria-hidden="true">refresh</span> Réessayer
+                    <span class="material-symbols-outlined text-base" aria-hidden="true">refresh</span> {{ __('Réessayer') }}
                   </button>
                 </div>
               </div>
-              <iframe id="generatedCvFrame" scrolling="no" src="" data-initial-src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white opacity-0 transition-opacity duration-200 md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="Aperçu du CV"></iframe>
+              <iframe id="generatedCvFrame" scrolling="no" src="" data-initial-src="{{ $existingProfile ? route('cv.principal.inline').'#zoom=100' : '' }}" class="h-[600px] w-full bg-white opacity-0 transition-opacity duration-200 md:h-[1120px]" style="zoom: 1.0; -moz-transform: scale(1.0); -moz-transform-origin: top left;" title="{{ __('Aperçu du CV') }}"></iframe>
             </div>
           </div>
 
@@ -301,11 +301,11 @@
             <div class="space-y-6">
               <div class="mx-auto flex max-w-[820px] items-center justify-between px-1 text-xs font-bold uppercase tracking-[0.16em] text-outline">
                 <span>Page 1</span>
-                <span>A4 apercu</span>
+                <span>{{ __('A4 apercu') }}</span>
               </div>
               <div class="mx-auto min-h-[980px] max-w-[820px] rounded-lg border border-outline-variant/20 bg-white p-6 shadow-sm md:min-h-[1060px] md:p-10">
                 <div class="border-b border-outline-variant/20 pb-5 text-center">
-                  <h3 class="text-3xl font-bold text-primary">{{ trim(($existingProfile->prenom ?? '') . ' ' . ($existingProfile->nom ?? '')) ?: 'CV candidat' }}</h3>
+                  <h3 class="text-3xl font-bold text-primary">{{ trim(($existingProfile->prenom ?? '') . ' ' . ($existingProfile->nom ?? '')) ?: __('CV candidat') }}</h3>
                   <p class="mt-2 text-sm text-on-surface-variant">
                     {{ $principalContactLine }}
                   </p>
@@ -313,19 +313,19 @@
 
                 @if ($existingProfile->langues_competences || $existingProfile->logiciels)
                   <div class="mt-6">
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Compétences</h4>
+                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Compétences') }}</h4>
                     @if ($existingProfile->langues_competences)
                       <p class="mt-2 text-sm leading-6 text-on-surface-variant">{{ $existingProfile->langues_competences }}</p>
                     @endif
                     @if ($existingProfile->logiciels)
-                      <p class="mt-2 text-sm leading-6 text-on-surface-variant"><span class="font-semibold text-primary">Outils:</span> {{ $existingProfile->logiciels }}</p>
+                      <p class="mt-2 text-sm leading-6 text-on-surface-variant"><span class="font-semibold text-primary">{{ __('Outils:') }}</span> {{ $existingProfile->logiciels }}</p>
                     @endif
                   </div>
                 @endif
 
                 @if ($existingProfile->experiences->isNotEmpty())
                   <div class="mt-6">
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Experience professionnelle</h4>
+                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Experience professionnelle') }}</h4>
                     <div class="mt-3 space-y-4">
                       @foreach ($existingProfile->experiences as $experience)
                         <div>
@@ -347,7 +347,7 @@
 
                 @if ($existingProfile->formations->isNotEmpty())
                   <div class="mt-6">
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Formation</h4>
+                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Formation') }}</h4>
                     <div class="mt-3 space-y-3">
                       @foreach ($existingProfile->formations as $formation)
                         <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
@@ -364,9 +364,9 @@
 
                 @if ($existingProfile->langues->isNotEmpty())
                   <div class="mt-6">
-                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Langues</h4>
+                    <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Langues') }}</h4>
                     <p class="mt-2 text-sm text-on-surface-variant">
-                      {{ $existingProfile->langues->map(fn ($langue) => trim($langue->nom . ($langue->niveau ? ': ' . $langue->niveau : '')))->implode(' | ') }}
+                      {{ $existingProfile->langues->map(fn ($langue) => trim($langue->nom . ($langue->niveau ? ': ' . __($langue->niveau) : '')))->implode(' | ') }}
                     </p>
                   </div>
                 @endif
@@ -375,13 +375,13 @@
               @if ($existingProfile->perfectionnements->isNotEmpty() || $existingProfile->benevolats->isNotEmpty())
                 <div class="mx-auto flex max-w-[820px] items-center justify-between px-1 text-xs font-bold uppercase tracking-[0.16em] text-outline">
                   <span>Page 2</span>
-                  <span>A4 apercu</span>
+                  <span>{{ __('A4 apercu') }}</span>
                 </div>
                 <div class="mx-auto min-h-[980px] max-w-[820px] rounded-lg border border-outline-variant/20 bg-white p-6 shadow-sm md:min-h-[1060px] md:p-10">
 
                   @if ($existingProfile->perfectionnements->isNotEmpty())
                     <div>
-                      <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Perfectionnement</h4>
+                      <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Perfectionnement') }}</h4>
                       <div class="mt-3 space-y-3">
                         @foreach ($existingProfile->perfectionnements as $perfectionnement)
                           <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
@@ -398,7 +398,7 @@
 
                   @if ($existingProfile->benevolats->isNotEmpty())
                     <div class="mt-6">
-                      <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">Activites benevoles</h4>
+                      <h4 class="text-sm font-black uppercase tracking-[0.16em] text-secondary-container">{{ __('Activites benevoles') }}</h4>
                       <div class="mt-3 space-y-3">
                         @foreach ($existingProfile->benevolats as $benevolat)
                           <div class="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between">
@@ -418,10 +418,10 @@
           @else
             <div class="rounded-xl border border-dashed border-outline-variant/30 bg-surface-container-low p-8 text-center">
               <span class="material-symbols-outlined text-5xl text-outline">description</span>
-              <h3 class="mt-3 text-lg font-bold text-primary">Aucun CV principal enregistré</h3>
-              <p class="mx-auto mt-2 max-w-xl text-sm text-on-surface-variant">Importez un CV source pour le pre-remplir ou ouvrez le formulaire pour le creer manuellement.</p>
+              <h3 class="mt-3 text-lg font-bold text-primary">{{ __('Aucun CV principal enregistré') }}</h3>
+              <p class="mx-auto mt-2 max-w-xl text-sm text-on-surface-variant">{{ __('Importez un CV source pour le pre-remplir ou ouvrez le formulaire pour le creer manuellement.') }}</p>
               <button type="button" onclick="openCvBuilder()" class="mt-5 inline-flex items-center justify-center gap-2 rounded-xl bg-secondary-container px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
-                <span class="material-symbols-outlined text-lg">edit_note</span> Creer mon CV principal
+                <span class="material-symbols-outlined text-lg">edit_note</span> {{ __('Creer mon CV principal') }}
               </button>
             </div>
           @endif
@@ -443,35 +443,35 @@
             <nav class="space-y-2">
               <div class="cv-step active flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="1">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">1</div>
-                <span class="text-sm font-semibold">Informations personnelles</span>
+                <span class="text-sm font-semibold">{{ __('Informations personnelles') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="2">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">2</div>
-                <span class="text-sm font-semibold">Compétences</span>
+                <span class="text-sm font-semibold">{{ __('Compétences') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="3">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">3</div>
-                <span class="text-sm font-semibold">Experience professionnelle</span>
+                <span class="text-sm font-semibold">{{ __('Experience professionnelle') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="4">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">4</div>
-                <span class="text-sm font-semibold">Formation</span>
+                <span class="text-sm font-semibold">{{ __('Formation') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="5">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">5</div>
-                <span class="text-sm font-semibold">Perfectionnement</span>
+                <span class="text-sm font-semibold">{{ __('Perfectionnement') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="6">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">6</div>
-                <span class="text-sm font-semibold">Langues</span>
+                <span class="text-sm font-semibold">{{ __('Langues') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="7">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">7</div>
-                <span class="text-sm font-semibold">Activites benevoles</span>
+                <span class="text-sm font-semibold">{{ __('Activites benevoles') }}</span>
               </div>
               <div class="cv-step flex items-center gap-3 p-3 rounded-xl cursor-pointer" data-step="8">
                 <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-sm font-bold flex-shrink-0">8</div>
-                <span class="text-sm font-semibold">Enregistrement</span>
+                <span class="text-sm font-semibold">{{ __('Enregistrement') }}</span>
               </div>
             </nav>
           </aside>
@@ -484,49 +484,49 @@
               <!-- Section 1: Infos personnelles -->
               <div class="cv-form-section active" id="section-1">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Informations personnelles</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Renseignez vos informations de base</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Informations personnelles') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Renseignez vos informations de base') }}</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Nom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="nom" required /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Prénom *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="prenom_cv" required /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Courriel *</label><input type="email" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="email_cv" required /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Téléphone *</label><input type="tel" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="telephone_cv" required /></div>
-                  <div class="md:col-span-2"><label class="block text-sm font-semibold text-primary mb-1.5">Adresse</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="adresse" /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Ville et province</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="ville" placeholder="Montreal (Quebec)" /></div>
-                  <div><label class="block text-sm font-semibold text-primary mb-1.5">Code postal</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="code_postal" placeholder="H1B 8T2" /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Nom *') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="nom" required /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Prénom *') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="prenom_cv" required /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Courriel *') }}</label><input type="email" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="email_cv" required /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Téléphone *') }}</label><input type="tel" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="telephone_cv" required /></div>
+                  <div class="md:col-span-2"><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Adresse') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="adresse" /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Ville et province') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="ville" placeholder="{{ __('Montreal (Quebec)') }}" /></div>
+                  <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Code postal') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="code_postal" placeholder="H1B 8T2" /></div>
                 </div>
               </div>
 
               <!-- Section 2: Compétences -->
               <div class="cv-form-section" id="section-2">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Compétences</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Listez vos competences professionnelles</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Compétences') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Listez vos competences professionnelles') }}</p>
                 </div>
                 <div class="space-y-5">
                   <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6 space-y-5">
                     <div>
-                      <label class="block text-sm font-semibold text-primary mb-1.5">Resume des competences</label>
-                      <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="2" name="langues_competences" placeholder="Gestion administrative, service client, coordination, redaction, suivi de dossiers"></textarea>
-                      <p class="mt-1.5 text-xs text-outline">Les langues se gerent separement dans la section 6.</p>
+                      <label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Resume des competences') }}</label>
+                      <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="2" name="langues_competences" placeholder="{{ __('Gestion administrative, service client, coordination, redaction, suivi de dossiers') }}"></textarea>
+                      <p class="mt-1.5 text-xs text-outline">{{ __('Les langues se gerent separement dans la section 6.') }}</p>
                     </div>
-                    <div><label class="block text-sm font-semibold text-primary mb-1.5">Logiciels et outils maitrises</label><textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="2" name="logiciels" placeholder="Word, Excel, PowerPoint, Simple Comptable, CRM, outils collaboratifs"></textarea></div>
+                    <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Logiciels et outils maitrises') }}</label><textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="2" name="logiciels" placeholder="{{ __('Word, Excel, PowerPoint, Simple Comptable, CRM, outils collaboratifs') }}"></textarea></div>
                   </div>
 
                   <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                     <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                       <div>
-                        <h3 class="text-lg font-bold text-primary">Compétences spécifiques</h3>
-                        <p class="text-sm text-on-surface-variant">Ajoutez une carte par competence ou savoir-faire important.</p>
+                        <h3 class="text-lg font-bold text-primary">{{ __('Compétences spécifiques') }}</h3>
+                        <p class="text-sm text-on-surface-variant">{{ __('Ajoutez une carte par competence ou savoir-faire important.') }}</p>
                       </div>
-                      <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addCompetence()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une competence</button>
+                      <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addCompetence()"><span class="material-symbols-outlined text-lg">add_circle</span> {{ __('Ajouter une competence') }}</button>
                     </div>
                     <div id="competences-container" class="space-y-4">
                       <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
-                        <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
-                        <label class="block text-sm font-semibold text-primary mb-1.5">Competence specifique</label>
-                        <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="3" name="competences[0][description]" placeholder="Comptabilite generale : comptes clients, comptes fournisseurs, paie, facturation, conciliation bancaire"></textarea>
+                        <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
+                        <label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Competence specifique') }}</label>
+                        <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="3" name="competences[0][description]" placeholder="{{ __('Comptabilite generale : comptes clients, comptes fournisseurs, paie, facturation, conciliation bancaire') }}"></textarea>
                       </div>
                     </div>
                   </div>
@@ -536,26 +536,26 @@
               <!-- Section 3: Experience -->
               <div class="cv-form-section" id="section-3">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Experience professionnelle</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Ajoutez vos emplois precedents</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Experience professionnelle') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Ajoutez vos emplois precedents') }}</p>
                 </div>
                 <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                   <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                     <div>
-                      <h3 class="text-lg font-bold text-primary">Blocs d'experience</h3>
-                      <p class="text-sm text-on-surface-variant">Une carte correspond a un poste occupe.</p>
+                      <h3 class="text-lg font-bold text-primary">{{ __("Blocs d'experience") }}</h3>
+                      <p class="text-sm text-on-surface-variant">{{ __('Une carte correspond a un poste occupe.') }}</p>
                     </div>
-                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addExperience()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une experience</button>
+                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addExperience()"><span class="material-symbols-outlined text-lg">add_circle</span> {{ __('Ajouter une experience') }}</button>
                   </div>
                   <div id="experiences-container" class="space-y-5">
                     <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
-                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][periode]" placeholder="2004-2017" required /></div>
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Poste *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][poste]" placeholder="Adjointe administrative" required /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Periode *') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][periode]" placeholder="2004-2017" required /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Poste *') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][poste]" placeholder="{{ __('Adjointe administrative') }}" required /></div>
                       </div>
-                      <div class="mb-4"><label class="block text-sm font-semibold text-primary mb-1.5">Entreprise et lieu</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][entreprise]" placeholder="Entreprise ABC enr., Montreal (Quebec)" /></div>
-                      <div><label class="block text-sm font-semibold text-primary mb-1.5">Description des taches</label><textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="4" name="experiences[0][description]" placeholder="• Tache principale 1&#10;• Tache principale 2&#10;• Tache principale 3"></textarea></div>
+                      <div class="mb-4"><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Entreprise et lieu') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[0][entreprise]" placeholder="{{ __('Entreprise ABC enr., Montreal (Quebec)') }}" /></div>
+                      <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Description des taches') }}</label><textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="4" name="experiences[0][description]" placeholder="{{ __('• Tache principale 1&#10;• Tache principale 2&#10;• Tache principale 3') }}"></textarea></div>
                     </div>
                   </div>
                 </div>
@@ -564,25 +564,25 @@
               <!-- Section 4: Formation -->
               <div class="cv-form-section" id="section-4">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Formation</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Ajoutez vos etudes et diplomes</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Formation') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Ajoutez vos etudes et diplomes') }}</p>
                 </div>
                 <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                   <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                     <div>
-                      <h3 class="text-lg font-bold text-primary">Blocs de formation</h3>
-                      <p class="text-sm text-on-surface-variant">Ajoutez un bloc pour chaque diplome ou parcours.</p>
+                      <h3 class="text-lg font-bold text-primary">{{ __('Blocs de formation') }}</h3>
+                      <p class="text-sm text-on-surface-variant">{{ __('Ajoutez un bloc pour chaque diplome ou parcours.') }}</p>
                     </div>
-                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addFormation()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une formation</button>
+                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addFormation()"><span class="material-symbols-outlined text-lg">add_circle</span> {{ __('Ajouter une formation') }}</button>
                   </div>
                   <div id="formations-container" class="space-y-5">
                     <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
-                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][periode]" placeholder="1995-1998" /></div>
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Diplome *</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][diplome]" required><option value="">Selectionner un diplome</option>@foreach ($diplomes as $diplome)<option value="{{ $diplome->id }}">{{ $diplome->nom_diplome }}</option>@endforeach</select></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Periode') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][periode]" placeholder="1995-1998" /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Diplome *') }}</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][diplome]" required><option value="">{{ __('Selectionner un diplome') }}</option>@foreach ($diplomes as $diplome)<option value="{{ $diplome->id }}">{{ __($diplome->nom_diplome) }}</option>@endforeach</select></div>
                       </div>
-                      <div><label class="block text-sm font-semibold text-primary mb-1.5">Etablissement et lieu</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][etablissement]" placeholder="Cegep Saint-Laurent, Montreal (Quebec)" /></div>
+                      <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Etablissement et lieu') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[0][etablissement]" placeholder="{{ __('Cegep Saint-Laurent, Montreal (Quebec)') }}" /></div>
                     </div>
                   </div>
                 </div>
@@ -591,25 +591,25 @@
               <!-- Section 5: Perfectionnement -->
               <div class="cv-form-section" id="section-5">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Perfectionnement</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Ajoutez vos formations complementaires</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Perfectionnement') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Ajoutez vos formations complementaires') }}</p>
                 </div>
                 <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                   <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                     <div>
-                      <h3 class="text-lg font-bold text-primary">Perfectionnements</h3>
-                      <p class="text-sm text-on-surface-variant">Ajoutez vos formations courtes et mises a jour de competences.</p>
+                      <h3 class="text-lg font-bold text-primary">{{ __('Perfectionnements') }}</h3>
+                      <p class="text-sm text-on-surface-variant">{{ __('Ajoutez vos formations courtes et mises a jour de competences.') }}</p>
                     </div>
-                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addPerfectionnement()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter un perfectionnement</button>
+                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addPerfectionnement()"><span class="material-symbols-outlined text-lg">add_circle</span> {{ __('Ajouter un perfectionnement') }}</button>
                   </div>
                   <div id="perfectionnements-container" class="space-y-5">
                     <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
-                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Annee</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][annee]" placeholder="2003" /></div>
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Formation</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][formation]" placeholder="Actualisation en bureautique" /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Annee') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][annee]" placeholder="2003" /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Formation') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][formation]" placeholder="{{ __('Actualisation en bureautique') }}" /></div>
                       </div>
-                      <div><label class="block text-sm font-semibold text-primary mb-1.5">Etablissement et lieu</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][etablissement]" placeholder="College Informatique de la Rive-Sud, Longueuil (Quebec)" /></div>
+                      <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Etablissement et lieu') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[0][etablissement]" placeholder="{{ __('College Informatique de la Rive-Sud, Longueuil (Quebec)') }}" /></div>
                     </div>
                   </div>
                 </div>
@@ -618,23 +618,23 @@
               <!-- Section 6: Langues -->
               <div class="cv-form-section" id="section-6">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Langues</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Indiquez les langues que vous maitrisez</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Langues') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Indiquez les langues que vous maitrisez') }}</p>
                 </div>
                 <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                   <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                     <div>
-                      <h3 class="text-lg font-bold text-primary">Blocs de langues</h3>
-                      <p class="text-sm text-on-surface-variant">Ajoutez une carte par langue avec son niveau.</p>
+                      <h3 class="text-lg font-bold text-primary">{{ __('Blocs de langues') }}</h3>
+                      <p class="text-sm text-on-surface-variant">{{ __('Ajoutez une carte par langue avec son niveau.') }}</p>
                     </div>
-                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addLangue()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une langue</button>
+                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addLangue()"><span class="material-symbols-outlined text-lg">add_circle</span> {{ __('Ajouter une langue') }}</button>
                   </div>
                   <div id="langues-container" class="space-y-5">
                     <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
-                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Langue</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[0][nom]" placeholder="Francais" /></div>
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Niveau</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[0][niveau]"><option value="">Selectionner</option><option value="Langue maternelle">Langue maternelle</option><option value="Courant">Courant</option><option value="Intermédiaire">Intermediaire</option><option value="Notions de base">Notions de base</option><option value="Connaissances de base">Connaissances de base</option></select></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Langue') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[0][nom]" placeholder="{{ __('Francais') }}" /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Niveau') }}</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[0][niveau]"><option value="">{{ __('Selectionner') }}</option><option value="Langue maternelle">{{ __('Langue maternelle') }}</option><option value="Courant">{{ __('Courant') }}</option><option value="Intermédiaire">{{ __('Intermediaire') }}</option><option value="Notions de base">{{ __('Notions de base') }}</option><option value="Connaissances de base">{{ __('Connaissances de base') }}</option></select></div>
                       </div>
                     </div>
                   </div>
@@ -644,25 +644,25 @@
               <!-- Section 7: Benevolat -->
               <div class="cv-form-section" id="section-7">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Activites benevoles</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Ajoutez vos experiences de benevolat</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Activites benevoles') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __('Ajoutez vos experiences de benevolat') }}</p>
                 </div>
                 <div class="bg-white rounded-2xl border border-outline-variant/10 p-5 md:p-6">
                   <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-5">
                     <div>
-                      <h3 class="text-lg font-bold text-primary">Blocs de benevolat</h3>
-                      <p class="text-sm text-on-surface-variant">Ajoutez chaque implication dans une carte separee.</p>
+                      <h3 class="text-lg font-bold text-primary">{{ __('Blocs de benevolat') }}</h3>
+                      <p class="text-sm text-on-surface-variant">{{ __('Ajoutez chaque implication dans une carte separee.') }}</p>
                     </div>
-                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addBenevolat()"><span class="material-symbols-outlined text-lg">add_circle</span> Ajouter une activite benevole</button>
+                    <button type="button" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-secondary-container/10 text-secondary-container text-sm font-semibold hover:bg-secondary-container/15 transition-colors" onclick="addBenevolat()"><span class="material-symbols-outlined text-lg">add_circle</span> {{ __('Ajouter une activite benevole') }}</button>
                   </div>
                   <div id="benevolats-container" class="space-y-5">
                     <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="0">
-                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+                      <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][periode]" placeholder="2008-2009" /></div>
-                        <div><label class="block text-sm font-semibold text-primary mb-1.5">Role / Activite</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][role]" placeholder="Benevole lors d'activites-benefice au profit de Leucan" /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Periode') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][periode]" placeholder="2008-2009" /></div>
+                        <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Role / Activite') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][role]" placeholder="{{ __('Benevole lors d\'activites-benefice au profit de Leucan') }}" /></div>
                       </div>
-                      <div><label class="block text-sm font-semibold text-primary mb-1.5">Organisation (optionnel)</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][organisation]" placeholder="Leucan" /></div>
+                      <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Organisation (optionnel)') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[0][organisation]" placeholder="Leucan" /></div>
                     </div>
                   </div>
                 </div>
@@ -671,22 +671,22 @@
               <!-- Section 8: Récapitulatif & Enregistrement -->
               <div class="cv-form-section" id="section-8">
                 <div class="mb-8 pb-4 border-b border-outline-variant/10">
-                  <h2 class="text-2xl font-bold font-serif text-primary">Enregistrement</h2>
-                  <p class="text-sm text-on-surface-variant mt-1">Confirmez l'enregistrement de vos informations</p>
+                  <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Enregistrement') }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1">{{ __("Confirmez l'enregistrement de vos informations") }}</p>
                 </div>
 
                 <div id="successAlert" class="hidden bg-secondary-container/10 border border-secondary-container/20 rounded-2xl p-6 mb-6">
                   <div class="flex items-center gap-3 mb-2">
                     <span class="material-symbols-outlined text-secondary-container text-2xl">check_circle</span>
-                    <h3 class="font-bold text-secondary-container">Vos informations ont ete enregistrees avec succes !</h3>
+                    <h3 class="font-bold text-secondary-container">{{ __('Vos informations ont ete enregistrees avec succes !') }}</h3>
                   </div>
-                  <p class="text-sm text-secondary-container ml-9">Ces informations seront utilisees pour generer votre CV ulterieurement.</p>
+                  <p class="text-sm text-secondary-container ml-9">{{ __('Ces informations seront utilisees pour generer votre CV ulterieurement.') }}</p>
                 </div>
 
                 <div class="bg-white rounded-xl border border-outline-variant/10 p-6">
-                  <h3 class="font-bold text-primary mb-4">Récapitulatif de vos informations</h3>
+                  <h3 class="font-bold text-primary mb-4">{{ __('Récapitulatif de vos informations') }}</h3>
                   <div id="summary-content" class="text-sm text-on-surface-variant space-y-3">
-                    <p class="text-outline italic">Naviguez jusqu'a la derniere section pour voir le recapitulatif.</p>
+                    <p class="text-outline italic">{{ __("Naviguez jusqu'a la derniere section pour voir le recapitulatif.") }}</p>
                   </div>
                 </div>
               </div>
@@ -697,18 +697,18 @@
             <div class="flex justify-between items-center pt-6 mt-8 border-t border-outline-variant/10">
               <div class="flex items-center gap-3">
                 <button type="button" id="prevBtn" class="px-6 py-3 bg-surface-container text-primary text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors flex items-center gap-2" style="display:none" onclick="previousSection()">
-                  <span class="material-symbols-outlined text-sm">arrow_back</span> Precedent
+                  <span class="material-symbols-outlined text-sm">arrow_back</span> {{ __('Precedent') }}
                 </button>
                 <button type="button" class="px-6 py-3 bg-white border border-outline-variant/10 text-primary text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors flex items-center gap-2" onclick="closeCvBuilder()">
-                  <span class="material-symbols-outlined text-sm">close</span> Fermer
+                  <span class="material-symbols-outlined text-sm">close</span> {{ __('Fermer') }}
                 </button>
               </div>
               <div class="flex items-center gap-3">
                 <button type="button" id="nextBtn" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center gap-2" onclick="nextSection()">
-                  Suivant <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                  {{ __('Suivant') }} <span class="material-symbols-outlined text-sm">arrow_forward</span>
                 </button>
                 <button type="button" id="saveBtn" class="px-6 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-all flex items-center gap-2" style="display:none" onclick="saveCVData(event)">
-                  <span class="material-symbols-outlined text-sm">save</span> Enregistrer
+                  <span class="material-symbols-outlined text-sm">save</span> {{ __('Enregistrer') }}
                 </button>
               </div>
             </div>
@@ -797,7 +797,7 @@
       const status = document.getElementById('principalDesignStatus');
       button.disabled = true;
       status.classList.remove('hidden');
-      status.textContent = 'Enregistrement en cours...';
+      status.textContent = '{{ __('Enregistrement en cours...') }}';
 
       try {
         const response = await fetch(principalDesignForm.action, {
@@ -806,7 +806,7 @@
           headers: { 'Accept': 'application/json' },
         });
         const data = await response.json();
-        if (!response.ok) throw new Error(data.message || 'Impossible d’enregistrer ce modèle.');
+        if (!response.ok) throw new Error(data.message || '{{ __('Impossible d’enregistrer ce modèle.') }}');
 
         document.getElementById('principalTemplateLabel').textContent = data.template_label;
         status.textContent = data.message;
@@ -858,7 +858,7 @@
     }
 
     function showPrincipalPdfPreview() {
-      document.getElementById('previewTitle').textContent = 'CV principal';
+      document.getElementById('previewTitle').textContent = '{{ __('CV principal') }}';
       document.getElementById('previewEditButton')?.classList.remove('hidden');
       document.getElementById('principalPreviewActions')?.classList.remove('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
@@ -869,7 +869,7 @@
     }
 
     function showUploadedCvPreview() {
-      document.getElementById('previewTitle').textContent = 'CV importé';
+      document.getElementById('previewTitle').textContent = '{{ __('CV importé') }}';
       document.getElementById('previewEditButton')?.classList.add('hidden');
       document.getElementById('principalPreviewActions')?.classList.add('hidden');
       document.getElementById('principalCvPreview')?.classList.add('hidden');
@@ -957,8 +957,8 @@
     function addCompetence() {
       addRepeatableItem('competences-container', (index) => `
         <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
-          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
-          <label class="block text-sm font-semibold text-primary mb-1.5">Competence specifique</label>
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
+          <label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Competence specifique') }}</label>
           <textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="3" name="competences[${index}][description]"></textarea>
         </div>
       `);
@@ -967,13 +967,13 @@
     function addExperience() {
       addRepeatableItem('experiences-container', (index) => `
         <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
-          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][periode]" required /></div>
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Poste *</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][poste]" required /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Periode *') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][periode]" required /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Poste *') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][poste]" required /></div>
           </div>
-          <div class="mb-4"><label class="block text-sm font-semibold text-primary mb-1.5">Entreprise et lieu</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][entreprise]" /></div>
-          <div><label class="block text-sm font-semibold text-primary mb-1.5">Description des taches</label><textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="4" name="experiences[${index}][description]"></textarea></div>
+          <div class="mb-4"><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Entreprise et lieu') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="experiences[${index}][entreprise]" /></div>
+          <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Description des taches') }}</label><textarea class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" rows="4" name="experiences[${index}][description]"></textarea></div>
         </div>
       `);
     }
@@ -981,12 +981,12 @@
     function addFormation() {
       addRepeatableItem('formations-container', (index) => `
         <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
-          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][periode]" /></div>
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Diplome *</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][diplome]" required><option value="">Selectionner un diplome</option>@foreach ($diplomes as $diplome)<option value="{{ $diplome->id }}">{{ $diplome->nom_diplome }}</option>@endforeach</select></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Periode') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][periode]" /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Diplome *') }}</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][diplome]" required><option value="">{{ __('Selectionner un diplome') }}</option>@foreach ($diplomes as $diplome)<option value="{{ $diplome->id }}">{{ __($diplome->nom_diplome) }}</option>@endforeach</select></div>
           </div>
-          <div><label class="block text-sm font-semibold text-primary mb-1.5">Etablissement et lieu</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][etablissement]" /></div>
+          <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Etablissement et lieu') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="formations[${index}][etablissement]" /></div>
         </div>
       `);
     }
@@ -994,12 +994,12 @@
     function addPerfectionnement() {
       addRepeatableItem('perfectionnements-container', (index) => `
         <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
-          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Annee</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][annee]" /></div>
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Formation</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][formation]" /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Annee') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][annee]" /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Formation') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][formation]" /></div>
           </div>
-          <div><label class="block text-sm font-semibold text-primary mb-1.5">Etablissement et lieu</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][etablissement]" /></div>
+          <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Etablissement et lieu') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="perfectionnements[${index}][etablissement]" /></div>
         </div>
       `);
     }
@@ -1007,10 +1007,10 @@
     function addLangue() {
       addRepeatableItem('langues-container', (index) => `
         <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
-          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Langue</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[${index}][nom]" /></div>
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Niveau</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[${index}][niveau]"><option value="">Selectionner</option><option value="Langue maternelle">Langue maternelle</option><option value="Courant">Courant</option><option value="Intermédiaire">Intermediaire</option><option value="Notions de base">Notions de base</option><option value="Connaissances de base">Connaissances de base</option></select></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Langue') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[${index}][nom]" /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Niveau') }}</label><select class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="langues[${index}][niveau]"><option value="">{{ __('Selectionner') }}</option><option value="Langue maternelle">{{ __('Langue maternelle') }}</option><option value="Courant">{{ __('Courant') }}</option><option value="Intermédiaire">{{ __('Intermediaire') }}</option><option value="Notions de base">{{ __('Notions de base') }}</option><option value="Connaissances de base">{{ __('Connaissances de base') }}</option></select></div>
           </div>
         </div>
       `);
@@ -1019,12 +1019,12 @@
     function addBenevolat() {
       addRepeatableItem('benevolats-container', (index) => `
         <div class="repeatable-item bg-surface-container-low rounded-xl p-5 border border-outline-variant/10 relative" data-index="${index}">
-          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="Supprimer">&times;</button>
+          <button type="button" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-white hover:bg-error-light text-outline hover:text-error transition-colors" onclick="this.closest('.repeatable-item').remove()" title="{{ __('Supprimer') }}">&times;</button>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Periode</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][periode]" /></div>
-            <div><label class="block text-sm font-semibold text-primary mb-1.5">Role / Activite</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][role]" /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Periode') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][periode]" /></div>
+            <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Role / Activite') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][role]" /></div>
           </div>
-          <div><label class="block text-sm font-semibold text-primary mb-1.5">Organisation</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][organisation]" /></div>
+          <div><label class="block text-sm font-semibold text-primary mb-1.5">{{ __('Organisation') }}</label><input type="text" class="w-full px-4 py-3 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" name="benevolats[${index}][organisation]" /></div>
         </div>
       `);
     }
@@ -1032,16 +1032,16 @@
     function updateSummary() {
       const formData = new FormData(document.getElementById('cvDataForm'));
       const summary = [
-        ['Nom', formData.get('nom')],
-        ['Prénom', formData.get('prenom_cv')],
-        ['Courriel', formData.get('email_cv')],
-        ['Téléphone', formData.get('telephone_cv')],
-        ['Ville', formData.get('ville')],
+        ['{{ __('Nom') }}', formData.get('nom')],
+        ['{{ __('Prénom') }}', formData.get('prenom_cv')],
+        ['{{ __('Courriel') }}', formData.get('email_cv')],
+        ['{{ __('Téléphone') }}', formData.get('telephone_cv')],
+        ['{{ __('Ville') }}', formData.get('ville')],
       ].filter(([, value]) => value);
 
       document.getElementById('summary-content').innerHTML = summary.length
         ? summary.map(([label, value]) => `<p><span class="font-semibold text-primary">${escapeCvSummaryHtml(label)}:</span> ${escapeCvSummaryHtml(value)}</p>`).join('')
-        : '<p class="text-outline italic">Remplissez au moins vos informations de base pour afficher le recapitulatif.</p>';
+        : '<p class="text-outline italic">{{ __('Remplissez au moins vos informations de base pour afficher le recapitulatif.') }}</p>';
     }
 
     function escapeCvSummaryHtml(value) {
@@ -1177,7 +1177,7 @@
       const input = form?.querySelector('input[type="file"]');
       if (!input?.files?.length) return;
 
-      showCvImportStatus('Televersement du CV source en cours...');
+      showCvImportStatus('{{ __('Televersement du CV source en cours...') }}');
 
       try {
         const formData = new FormData(form);
@@ -1192,13 +1192,13 @@
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-          throw new Error(data.message || 'Impossible de televerser ce CV.');
+          throw new Error(data.message || '{{ __('Impossible de televerser ce CV.') }}');
         }
 
-        showCvImportStatus(data.message || 'CV source televerse.');
+        showCvImportStatus(data.message || '{{ __('CV source televerse.') }}');
         window.setTimeout(() => window.location.reload(), 700);
       } catch (error) {
-        showCvImportStatus(error.message || 'Impossible de televerser ce CV.', true);
+        showCvImportStatus(error.message || '{{ __('Impossible de televerser ce CV.') }}', true);
         input.value = '';
       }
     }
@@ -1210,7 +1210,7 @@
         button.classList.add('opacity-60');
       }
 
-      showCvImportStatus('Lecture du CV televerse en cours...');
+      showCvImportStatus('{{ __('Lecture du CV televerse en cours...') }}');
 
       try {
         const response = await fetch('{{ route('cv.import-uploaded') }}', {
@@ -1224,7 +1224,7 @@
         const data = await response.json();
 
         if (!response.ok || !data.success) {
-          throw new Error(data.message || 'Impossible de pre-remplir le CV principal.');
+          throw new Error(data.message || '{{ __('Impossible de pre-remplir le CV principal.') }}');
         }
 
         applyCvFields(data.fields || {});
@@ -1233,9 +1233,9 @@
         currentSection = 1;
         openCvBuilder();
         updateWizardUI();
-        showCvImportStatus(data.message || 'Champs pre-remplis. Verifiez puis enregistrez votre CV principal.');
+        showCvImportStatus(data.message || '{{ __('Champs pre-remplis. Verifiez puis enregistrez votre CV principal.') }}');
       } catch (error) {
-        showCvImportStatus(error.message || 'Impossible de pre-remplir le CV principal.', true);
+        showCvImportStatus(error.message || '{{ __('Impossible de pre-remplir le CV principal.') }}', true);
       } finally {
         if (button) {
           button.disabled = false;
@@ -1267,10 +1267,10 @@
           successAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
           window.setTimeout(() => window.location.reload(), 600);
         } else {
-          window.ProximaUI.notify(data.message || "Une erreur est survenue lors de l'enregistrement.", 'error');
+          window.ProximaUI.notify(data.message || "{{ __('Une erreur est survenue lors de l\'enregistrement.') }}", 'error');
         }
       } catch (error) {
-        window.ProximaUI.notify("Impossible d'enregistrer le profil CV pour le moment.", 'error');
+        window.ProximaUI.notify("{{ __('Impossible d\'enregistrer le profil CV pour le moment.') }}", 'error');
       }
     }
 

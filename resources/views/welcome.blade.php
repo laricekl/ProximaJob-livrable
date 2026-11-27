@@ -686,7 +686,7 @@
               <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-sm">
                 <option value="">{{ __('Toutes les catégories') }}</option>
                 @foreach ($categoriesWithCount as $category)
-                  <option value="{{ $category->id }}" @selected(in_array($category->id, (array) request('categories', [])))>{{ $category->nom }}</option>
+                  <option value="{{ $category->id }}" @selected(in_array($category->id, (array) request('categories', [])))>{{ __($category->nom) }}</option>
                 @endforeach
               </select>
             </div>
@@ -708,7 +708,7 @@
               <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-base">
                 <option value="">{{ __('Toutes les catégories') }}</option>
                 @foreach ($categoriesWithCount as $category)
-                  <option value="{{ $category->id }}" @selected(in_array($category->id, (array) request('categories', [])))>{{ $category->nom }}</option>
+                  <option value="{{ $category->id }}" @selected(in_array($category->id, (array) request('categories', [])))>{{ __($category->nom) }}</option>
                 @endforeach
               </select>
             </div>
@@ -850,7 +850,7 @@
               class="w-12 h-12 md:w-14 md:h-14 rounded-xl {{ $catBgs[$index] ?? 'bg-primary-fixed' }} flex items-center justify-center mb-4 md:mb-6 group-hover:scale-110 transition-transform">
               <span class="material-symbols-outlined text-xl md:text-2xl" style="font-variation-settings:'FILL' 1">{{ $catIcons[$index] ?? 'work' }}</span>
             </div>
-            <h3 class="font-bold text-lg md:text-xl text-primary mb-2">{{ $category->nom }}</h3>
+            <h3 class="font-bold text-lg md:text-xl text-primary mb-2">{{ __($category->nom) }}</h3>
             <p class="text-on-surface-variant text-sm mb-4">{{ $category->description ?? __('Découvrez les offres dans ce secteur.') }}</p>
             <div class="flex items-center gap-2 text-sm text-secondary-container font-semibold">
               <span>{{ $category->offres_count }} {{ $category->offres_count > 1 ? __('postes ouverts') : __('poste ouvert') }}</span><span class="material-symbols-outlined text-lg">north_east</span>
@@ -887,12 +887,12 @@
               <div>
                 <h4 class="font-bold text-base md:text-lg text-primary group-hover:text-secondary-container transition-colors">
                   {{ $offre->poste ?: $offre->titre }}</h4>
-                <p class="text-on-surface-variant/70 text-xs md:text-sm font-medium">{{ $offre->entreprise->company_name ?? 'Entreprise' }} • {{ $offre->localisation ?: 'Localisation a confirmer' }}</p>
+                <p class="text-on-surface-variant/70 text-xs md:text-sm font-medium">{{ $offre->entreprise->company_name ?? __('Entreprise') }} • {{ $offre->localisation ?: __('Localisation a confirmer') }}</p>
               </div>
             </div>
             <div class="mt-3 sm:mt-0 flex items-center gap-3 md:gap-4 relative z-10">
               <span
-                class="px-3 md:px-4 py-1 md:py-1.5 bg-success-light text-success-dark text-2xs md:text-xs font-black uppercase tracking-widest rounded-full">{{ $offre->type->nom ?? 'Offre' }}</span>
+                class="px-3 md:px-4 py-1 md:py-1.5 bg-success-light text-success-dark text-2xs md:text-xs font-black uppercase tracking-widest rounded-full">{{ __($offre->type->nom ?? 'Offre') }}</span>
               <div
                 class="flex items-center gap-1 text-secondary-container font-bold text-sm opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500">
                 {{ __('Détails') }} <span class="material-symbols-outlined text-lg">arrow_right_alt</span>

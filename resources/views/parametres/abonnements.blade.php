@@ -123,7 +123,7 @@
                   <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">{{ __('Recommandé') }}</span>
                 @endif
                 <div class="card-3d-content text-center">
-                  <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>
+                  <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ __($abo->nom) }}</p>
                   <p class="text-4xl font-bold text-primary">
                     @if ($isFree)
                       0
@@ -139,7 +139,7 @@
                         <span class="material-symbols-outlined text-sm {{ $fct->actif ? 'text-secondary-container' : 'text-outline-variant' }}">
                           {{ $fct->actif ? 'check' : 'close' }}
                         </span>
-                        {{ $fct->nom }}
+                        {{ __($fct->nom) }}
                       </li>
                     @endforeach
                   </ul>

@@ -159,8 +159,8 @@ class CandidatureController extends Controller
                 Notification::create([
                     'user_id' => $entrepriseUser->id,
                     'role' => 'entreprise',
-                    'title' => 'Nouvelle candidature reçue',
-                    'message' => 'Un candidat a postulé à votre offre "' . $offre->titre . '"',
+                    'title' => __('Nouvelle candidature reçue'),
+                    'message' => __('Un candidat a postulé à votre offre "') . $offre->titre . '"',
                     'link' => "/entreprise/offres/{$offreId}/candidatures",
                     'is_read' => false,
                 ]);
@@ -683,8 +683,8 @@ private function servePublicFile($filePath, $candidature)
                 'user_id' => $postulation->user_id,
                 'role' => 'candidat',
                 'type' => 'application',
-                'title' => 'Mise à jour de votre candidature',
-                'message' => 'Votre candidature pour l\'offre "' . $postulation->offre->titre . '" a été ' . $this->getStatusMessage($validated['status']),
+                'title' => __('Mise à jour de votre candidature'),
+                'message' => __('Votre candidature pour l\'offre "') . $postulation->offre->titre . __('" a été ') . $this->getStatusMessage($validated['status']),
                 'link' => route('user.detail-candidature', ['id' => $postulation->id], false),
                 'is_read' => false,
             ]);
@@ -730,15 +730,15 @@ private function servePublicFile($filePath, $candidature)
 private function getStatusMessage($status)
 {
     $messages = [
-        'en_attente' => 'replacée dans la file d’examen',
-        'shortlisted' => 'présélectionnée',
-        'contacted' => 'marquée comme contactée',
-        'interview' => 'retenue pour un entretien',
-        'accepted' => 'acceptée',
-        'rejected' => 'refusée',
+        'en_attente' => __('replacée dans la file d’examen'),
+        'shortlisted' => __('présélectionnée'),
+        'contacted' => __('marquée comme contactée'),
+        'interview' => __('retenue pour un entretien'),
+        'accepted' => __('acceptée'),
+        'rejected' => __('refusée'),
     ];
     
-    return $messages[$status] ?? 'mise à jour';
+    return $messages[$status] ?? __('mise à jour');
 }
 
    

@@ -11,7 +11,7 @@
                 (string) $cv->offre_id => [
                     'id' => $cv->id,
                     'name' => $cv->display_name,
-                    'file' => 'Document PDF',
+                    'file' => __('Document PDF'),
                     'previewUrl' => route('cv.personalization.preview', ['filename' => basename($cv->chemin_fichier), 'offre_id' => $cv->offre_id]),
                 ],
             ])
@@ -740,21 +740,21 @@ select[readonly] {
                 <button type="button" class="close-btn" data-bs-dismiss="modal" onclick="closeApplicationModal()" aria-label="Close">
                     <span class="material-symbols-outlined">close</span>
                 </button>
-                <h1 class="form-title" id="applicationModalTitle">{{ ($existingPostulation ?? null) && !in_array($existingPostulation->status, ['accepted', 'rejected'], true) ? 'Mettre à jour ma candidature' : __('interface.apply_now') }}</h1>
+                <h1 class="form-title" id="applicationModalTitle">{{ ($existingPostulation ?? null) && !in_array($existingPostulation->status, ['accepted', 'rejected'], true) ? __('Mettre à jour ma candidature') : __('interface.apply_now') }}</h1>
 
                 <!-- Progress Steps -->
                 <div class="progress-steps">
                     <div class="step">
                         <div class="step-circle active" id="step-1-circle">1</div>
-                        <div class="step-label">Informations</div>
+                        <div class="step-label">{{ __('Informations') }}</div>
                     </div>
                     <div class="step">
                         <div class="step-circle inactive" id="step-2-circle">2</div>
-                        <div class="step-label">Documents</div>
+                        <div class="step-label">{{ __('Documents') }}</div>
                     </div>
                     <div class="step">
                         <div class="step-circle inactive" id="step-3-circle">3</div>
-                        <div class="step-label">Validation</div>
+                        <div class="step-label">{{ __('Validation') }}</div>
                     </div>
                 </div>
             </div>
@@ -763,44 +763,44 @@ select[readonly] {
             <div class="form-content">
                 <form id="applicationForm" action="{{ route('candidatures.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
-                    <!-- Étape 1: Informations personnelles -->
+                    <!-- Étape 1: {{ __('Informations personnelles') }} -->
                     <div class="step-content active" id="step-1">
                         <div class="section-title">
                             <span class="material-symbols-outlined section-icon">person</span>
-                            Informations personnelles
+                            {{ __('Informations personnelles') }}
                         </div>
                             <input type="hidden" name="offre_id" id="offre_id" value="{{ isset($offre) ? $offre->id : '' }}">
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Nom</label>
+                                <label class="form-label">{{ __('Nom') }}</label>
                                 <input type="text" class="form-input" name="nom" required value ="{{ auth()->user()->name ?? '' }}" readonly>
-                                <div class="error-message" id="nom-error">Ce champ est obligatoire</div>
+                                <div class="error-message" id="nom-error">{{ __('Ce champ est obligatoire') }}</div>
                             </div>
                             <div class="form-group">
-                                <label class="form-label">Prénom</label>
+                                <label class="form-label">{{ __('Prénom') }}</label>
                                 <input type="text" class="form-input" name="prenom" required value ="{{ auth()->user()->prenom ?? '' }}" readonly>
-                                <div class="error-message" id="prenom-error">Ce champ est obligatoire</div>
+                                <div class="error-message" id="prenom-error">{{ __('Ce champ est obligatoire') }}</div>
                             </div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Courriel</label>
+                                <label class="form-label">{{ __('Courriel') }}</label>
                                 <input type="email" class="form-input" name="email" required value ="{{ auth()->user()->email ?? '' }}" readonly>
-                                <div class="error-message" id="email-error">Veuillez entrer une adresse courriel valide</div>
+                                <div class="error-message" id="email-error">{{ __('Veuillez entrer une adresse courriel valide') }}</div>
                             </div>
 
                             <div class="form-group">
-                                <label class="form-label">Numéro de téléphone</label>
+                                <label class="form-label">{{ __('Numéro de téléphone') }}</label>
                                 <input type="tel" class="form-input" name="telephone" required value ="{{ auth()->user()->telephone ?? '' }}" readonly>
-                                <div class="error-message" id="telephone-error">Ce champ est obligatoire</div>
+                                <div class="error-message" id="telephone-error">{{ __('Ce champ est obligatoire') }}</div>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Adresse</label>
+                            <label class="form-label">{{ __('Adresse') }}</label>
                             <input type="text" class="form-input" name="adresse" required value ="{{ auth()->user()->adresse ?? '' }}" readonly>
-                            <div class="error-message" id="adresse-error">Ce champ est obligatoire</div>
+                            <div class="error-message" id="adresse-error">{{ __('Ce champ est obligatoire') }}</div>
                         </div>
                     </div>
 
@@ -808,58 +808,58 @@ select[readonly] {
                     <div class="step-content" id="step-2">
                         <div class="section-title">
                             <span class="material-symbols-outlined section-icon">attach_file</span>
-                            Documents requis
+                            {{ __('Documents requis') }}
                         </div>
 
                         <input type="hidden" id="generated-cv-id" name="generated_cv_id" value="">
                         <div class="generated-cv-choice" id="generated-cv-choice">
                             <div>
-                                <div class="upload-label">CV prêt pour cette offre</div>
+                                <div class="upload-label">{{ __('CV prêt pour cette offre') }}</div>
                                 <div class="upload-status" id="generated-cv-status">
-                                    <span>Aucun CV sélectionné</span>
+                                    <span>{{ __('Aucun CV sélectionné') }}</span>
                                 </div>
                             </div>
                             <div class="generated-cv-actions">
-                                <button type="button" class="upload-btn" id="use-generated-cv-btn">Utiliser ce CV</button>
-                                <a href="#" target="_blank" rel="noopener" class="upload-btn" id="preview-generated-cv-link">Voir</a>
+                                <button type="button" class="upload-btn" id="use-generated-cv-btn">{{ __('Utiliser ce CV') }}</button>
+                                <a href="#" target="_blank" rel="noopener" class="upload-btn" id="preview-generated-cv-link">{{ __('Voir') }}</a>
                             </div>
                         </div>
 
                         <div class="upload-section blue-background">
                             <div class="upload-item">
-                                <label class="upload-label">CV (Format PDF ou DOC)</label>
+                                <label class="upload-label">{{ __('CV (Format PDF ou DOC)') }}</label>
                                 <div class="upload-area">
-                                    <button type="button" class="upload-btn" onclick="triggerFileUpload('cv')">Parcourir</button>
+                                    <button type="button" class="upload-btn" onclick="triggerFileUpload('cv')">{{ __('Parcourir') }}</button>
                                     <div class="upload-status empty" id="cv-status">
-                                        <span>Aucun fichier sélectionné</span>
+                                        <span>{{ __('Aucun fichier sélectionné') }}</span>
                                     </div>
                                 </div>
                                 <input type="file" id="cv-upload" name="cv" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleFileUpload('cv', this)">
-                                <div class="upload-error" id="cv-upload-error">Veuillez uploader votre CV</div>
+                                <div class="upload-error" id="cv-upload-error">{{ __('Veuillez uploader votre CV') }}</div>
                                 <div class="document-toolbar">
-                                    <p class="compact-hint">Utilisez un CV existant, importez un fichier, ou générez une version depuis votre CV principal.</p>
+                                    <p class="compact-hint">{{ __('Utilisez un CV existant, importez un fichier, ou générez une version depuis votre CV principal.') }}</p>
                                     <button type="button" class="generate-btn" onclick="openCVGeneratorModal()">
                                         <span class="material-symbols-outlined text-base">auto_awesome</span>
-                                        Générer
+                                        {{ __('Générer') }}
                                     </button>
                                 </div>
                             </div>
 
                             <div class="upload-item">
-                                <label class="upload-label">Lettre de présentation <span class="text-xs text-outline">(optionnelle)</span></label>
+                                <label class="upload-label">{{ __('Lettre de présentation') }} <span class="text-xs text-outline">{{ __('(optionnelle)') }}</span></label>
                                 <div class="upload-area">
-                                    <button type="button" class="upload-btn" onclick="triggerFileUpload('motivation')">Parcourir</button>
+                                    <button type="button" class="upload-btn" onclick="triggerFileUpload('motivation')">{{ __('Parcourir') }}</button>
                                     <div class="upload-status empty" id="motivation-status">
-                                        <span>Aucun fichier sélectionné</span>
+                                        <span>{{ __('Aucun fichier sélectionné') }}</span>
                                     </div>
                                 </div>
                                 <input type="file" id="motivation-upload" name="motivation" accept=".pdf,.doc,.docx" style="display: none;" onchange="handleFileUpload('motivation', this)">
-                                <div class="upload-error" id="motivation-upload-error">Format invalide pour la lettre de présentation</div>
+                                <div class="upload-error" id="motivation-upload-error">{{ __('Format invalide pour la lettre de présentation') }}</div>
                             </div>
                         </div>
 
                         <div class="subsection-title">
-                            Documents optionnels
+                            {{ __('Documents optionnels') }}
                         </div>
 
                         <div class="upload-section blue-background" id="additional-documents-section">
@@ -870,7 +870,7 @@ select[readonly] {
                             <div class="text-center mt-3">
                                 <button type="button" class="generate-btn" id="add-document-btn">
                                     <span class="material-symbols-outlined text-base">add</span>
-                                    Ajouter un document
+                                    {{ __('Ajouter un document') }}
                                 </button>
                             </div>
                         </div>
@@ -879,30 +879,30 @@ select[readonly] {
                     <template id="document-template">
                         <div class="upload-item additional-document" data-index="{index}">
                             <div class="d-flex justify-content-between align-items-center mb-2">
-                                <label class="upload-label">Document supplémentaire</label>
+                                <label class="upload-label">{{ __('Document supplémentaire') }}</label>
                                 <button type="button" class="remove-doc-btn">
-                                    <span class="material-symbols-outlined text-base">close</span> Supprimer
+                                    <span class="material-symbols-outlined text-base">close</span> {{ __('Supprimer') }}
                                 </button>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">Intitulé du document</label>
+                                <label class="form-label">{{ __('Intitulé du document') }}</label>
                                 <input type="text" class="form-input" name="additional_docs[{index}][intitule]" required>
                             </div>
                             
                             <div class="form-group">
-                                <label class="form-label">Description (optionnelle)</label>
+                                <label class="form-label">{{ __('Description (optionnelle)') }}</label>
                                 <input type="text" class="form-input" name="additional_docs[{index}][description]">
                             </div>
                             
                             <div class="upload-area">
-                                <button type="button" class="upload-btn browse-doc-btn">Parcourir</button>
+                                <button type="button" class="upload-btn browse-doc-btn">{{ __('Parcourir') }}</button>
                                 <div class="upload-status empty">
-                                    <span>Aucun fichier sélectionné</span>
+                                    <span>{{ __('Aucun fichier sélectionné') }}</span>
                                 </div>
                             </div>
                             <input type="file" class="d-none additional-file-input" name="additional_docs[{index}][file]" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                            <div class="upload-error">Veuillez sélectionner un fichier</div>
+                            <div class="upload-error">{{ __('Veuillez sélectionner un fichier') }}</div>
                         </div>
                     </template>
 
@@ -913,34 +913,34 @@ select[readonly] {
                     <div class="step-content" id="step-3">
                         <div class="section-title">
                             <span class="material-symbols-outlined section-icon">verified</span>
-                            Validation
+                            {{ __('Validation') }}
                         </div>
 
                         <div class="summary-section">
-                            <div class="summary-title">Informations personnelles</div>
+                            <div class="summary-title">{{ __('Informations personnelles') }}</div>
                             <div class="summary-row">
                                 <div class="summary-item inline">
-                                    <span class="summary-label">Nom:</span> <span class="summary-value" id="summary-nom">-</span>
+                                    <span class="summary-label">{{ __('Nom:') }}</span> <span class="summary-value" id="summary-nom">-</span>
                                 </div>
                                 <div class="summary-item inline">
-                                    <span class="summary-label">Prénom:</span> <span class="summary-value" id="summary-prenom">-</span>
+                                    <span class="summary-label">{{ __('Prénom:') }}</span> <span class="summary-value" id="summary-prenom">-</span>
                                 </div>
                             </div>
                             <div class="summary-row">
                                 <div class="summary-item inline">
-                                    <span class="summary-label">Courriel:</span> <span class="summary-value" id="summary-email">-</span>
+                                    <span class="summary-label">{{ __('Courriel:') }}</span> <span class="summary-value" id="summary-email">-</span>
                                 </div>
                                 <div class="summary-item inline">
-                                    <span class="summary-label">Téléphone:</span> <span class="summary-value" id="summary-telephone">-</span>
+                                    <span class="summary-label">{{ __('Téléphone:') }}</span> <span class="summary-value" id="summary-telephone">-</span>
                                 </div>
                             </div>
                             <div class="summary-item inline full-width">
-                                <span class="summary-label">Adresse:</span> <span class="summary-value" id="summary-adresse">-</span>
+                                <span class="summary-label">{{ __('Adresse:') }}</span> <span class="summary-value" id="summary-adresse">-</span>
                             </div>
                         </div>
 
                         <div class="summary-section">
-                            <div class="summary-title">Documents</div>
+                            <div class="summary-title">{{ __('Documents') }}</div>
                             <ul class="documents-list" id="documents-summary">
                             </ul>
                         </div>
@@ -948,10 +948,10 @@ select[readonly] {
                         <div class="checkbox-group">
                             <input type="checkbox" class="checkbox" id="terms" name="terms" required>
                             <label for="terms" class="checkbox-label">
-                                J'ai lu et j'approuve les conditions d'utilisations
+                                {{ __("J'ai lu et j'approuve les conditions d'utilisations") }}
                             </label>
                         </div>
-                        <div class="checkbox-error" id="terms-error">Vous devez accepter les conditions d'utilisation</div>
+                        <div class="checkbox-error" id="terms-error">{{ __("Vous devez accepter les conditions d'utilisation") }}</div>
                     </div>
                 </form>
 
@@ -959,10 +959,10 @@ select[readonly] {
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="prevBtn" onclick="previousStep()" style="display: none;">
                         <span class="material-symbols-outlined text-lg">arrow_back</span>
-                        Retour
+                        {{ __('Retour') }}
                     </button>
                     <button type="button" class="btn-primary" id="nextBtn" onclick="nextStep()">
-                        Suivant
+                        {{ __('Suivant') }}
                         <span class="material-symbols-outlined text-lg">arrow_forward</span>
                     </button>
                 </div>
@@ -977,11 +977,11 @@ select[readonly] {
         <div class="success-icon">
             <span class="material-symbols-outlined">check</span>
         </div>
-        <h2 class="success-title" id="successModalTitle">Candidature réussie !</h2>
+        <h2 class="success-title" id="successModalTitle">{{ __('Candidature réussie !') }}</h2>
         <p class="success-message" id="successModalMessage">
-           Votre candidature a été envoyée avec succès!. Veuillez consulter votre mail.
+           {{ __('Votre candidature a été envoyée avec succès!. Veuillez consulter votre mail.') }}
         </p>
-        <button class="close-modal-btn" onclick="closeSuccessModal()">Fermer</button>
+        <button class="close-modal-btn" onclick="closeSuccessModal()">{{ __('Fermer') }}</button>
     </div>
 </div>
 
@@ -1107,9 +1107,9 @@ select[readonly] {
             element.classList.remove('show');
         });
 
-        document.getElementById('cv-status').innerHTML = '<span>Aucun fichier sélectionné</span>';
+        document.getElementById('cv-status').innerHTML = '<span>{{ __('Aucun fichier sélectionné') }}</span>';
         document.getElementById('cv-status').classList.add('empty');
-        document.getElementById('motivation-status').innerHTML = '<span>Aucun fichier sélectionné</span>';
+        document.getElementById('motivation-status').innerHTML = '<span>{{ __('Aucun fichier sélectionné') }}</span>';
         document.getElementById('motivation-status').classList.add('empty');
         document.getElementById('generated-cv-id').value = '';
         document.getElementById('generated-cv-choice').classList.remove('active', 'selected');
@@ -1126,10 +1126,10 @@ select[readonly] {
         document.getElementById('generated-cv-id').value = '';
         choice.classList.remove('active', 'selected');
         useButton.disabled = false;
-        useButton.innerHTML = 'Utiliser ce CV';
+        useButton.innerHTML = '{{ __('Utiliser ce CV') }}';
 
         if (!generatedCv) {
-            status.innerHTML = '<span>Aucun CV sélectionné</span>';
+            status.innerHTML = '<span>{{ __('Aucun CV sélectionné') }}</span>';
             previewLink.setAttribute('href', '#');
             return;
         }
@@ -1137,7 +1137,7 @@ select[readonly] {
         choice.classList.add('active');
         choice.dataset.cvId = generatedCv.id;
         choice.dataset.cvName = generatedCv.name;
-        status.innerHTML = `<span>${escapeApplicationHtml(generatedCv.name)}</span><span class="text-xs text-outline">Document PDF</span>`;
+        status.innerHTML = `<span>${escapeApplicationHtml(generatedCv.name)}</span><span class="text-xs text-outline">{{ __('Document PDF') }}</span>`;
         previewLink.setAttribute('href', generatedCv.previewUrl);
         selectGeneratedCvForApplication();
     }
@@ -1154,7 +1154,7 @@ select[readonly] {
         choice.classList.add('selected');
         const useButton = document.getElementById('use-generated-cv-btn');
         useButton.disabled = true;
-        useButton.innerHTML = '<span class="material-symbols-outlined text-base">check</span> Sélectionné';
+        useButton.innerHTML = '<span class="material-symbols-outlined text-base">check</span> {{ __('Sélectionné') }}';
 
         uploadedFiles.cv = null;
         document.getElementById('cv-upload').value = '';
@@ -1215,10 +1215,10 @@ select[readonly] {
         prevBtn.style.display = currentStep > 1 ? 'flex' : 'none';
 
         if (currentStep === 3) {
-            nextBtn.innerHTML = `<span class="material-symbols-outlined text-lg">check</span> ${isApplicationUpdate ? 'Mettre à jour la candidature' : 'Finaliser la candidature'}`;
+            nextBtn.innerHTML = `<span class="material-symbols-outlined text-lg">check</span> ${isApplicationUpdate ? '{{ __('Mettre à jour la candidature') }}' : '{{ __('Finaliser la candidature') }}'}`;
             updateSummary();
         } else {
-            nextBtn.innerHTML = 'Suivant <span class="material-symbols-outlined text-lg">arrow_forward</span>';
+            nextBtn.innerHTML = '{{ __('Suivant') }} <span class="material-symbols-outlined text-lg">arrow_forward</span>';
         }
     }
 
@@ -1335,7 +1335,7 @@ select[readonly] {
         if (!validExtensions.includes(fileExtension)) {
             // Afficher l'erreur
             const errorDiv = document.getElementById(`${type}-upload-error`);
-            errorDiv.textContent = `Format invalide. Seuls ${validExtensions.join(', ')} sont acceptés`;
+            errorDiv.textContent = `{{ __('Format invalide. Seuls') }} ${validExtensions.join(', ')} {{ __('sont acceptés') }}`;
             errorDiv.classList.add('show');
             
             // Réinitialiser l'input
@@ -1351,14 +1351,14 @@ select[readonly] {
             document.getElementById('generated-cv-choice').classList.remove('selected');
             const useButton = document.getElementById('use-generated-cv-btn');
             useButton.disabled = false;
-            useButton.innerHTML = 'Utiliser ce CV';
+            useButton.innerHTML = '{{ __('Utiliser ce CV') }}';
         }
         const statusDiv = document.getElementById(`${type}-status`);
         statusDiv.innerHTML = `
             <div class="check-circle">
                 <span class="material-symbols-outlined text-[12px]">check</span>
             </div>
-            <span>${escapeApplicationHtml(file.name)} (${(file.size/1024).toFixed(2)} Ko)</span>
+            <span>${escapeApplicationHtml(file.name)} (${(file.size/1024).toFixed(2)} {{ __('Ko') }})</span>
         `;
         statusDiv.classList.remove('empty');
         
@@ -1378,13 +1378,13 @@ select[readonly] {
         docsList.innerHTML = '';
 
         if (uploadedFiles.cv) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${escapeApplicationHtml(uploadedFiles.cv.name)}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> {{ __('CV') }}: ${escapeApplicationHtml(uploadedFiles.cv.name)}</li>`;
         } else if (selectedGeneratedCv) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> CV: ${escapeApplicationHtml(selectedGeneratedCv.name)}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">description</span> {{ __('CV') }}: ${escapeApplicationHtml(selectedGeneratedCv.name)}</li>`;
         }
 
         if (uploadedFiles.motivation) {
-            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> Lettre de présentation: ${escapeApplicationHtml(uploadedFiles.motivation.name)}</li>`;
+            docsList.innerHTML += `<li><span class="material-symbols-outlined text-base">mail</span> {{ __('Lettre de présentation') }}: ${escapeApplicationHtml(uploadedFiles.motivation.name)}</li>`;
         }
          // Ajouter les documents supplémentaires au récapitulatif
         document.querySelectorAll('.additional-document').forEach(doc => {
@@ -1404,7 +1404,7 @@ async function submitApplication() {
         // Vérifier qu'on a bien une offre_id
         const offreId = document.getElementById('offre_id').value;
         if (!offreId) {
-            throw new Error("Aucune offre sélectionnée");
+            throw new Error("{{ __('Aucune offre sélectionnée') }}");
         }
 
         // Préparer FormData
@@ -1413,7 +1413,7 @@ async function submitApplication() {
 
         // Ajouter les fichiers principaux
         if (!uploadedFiles.cv && !selectedGeneratedCv) {
-            throw new Error("Veuillez uploader votre CV");
+            throw new Error("{{ __('Veuillez uploader votre CV') }}");
         }
         if (selectedGeneratedCv) {
             formDataToSend.append('generated_cv_id', selectedGeneratedCv.id);
@@ -1442,7 +1442,7 @@ async function submitApplication() {
 
         // Afficher un loader
         document.getElementById('nextBtn').disabled = true;
-        document.getElementById('nextBtn').innerHTML = '<span class="material-symbols-outlined animate-spin text-lg">progress_activity</span> Envoi en cours...';
+        document.getElementById('nextBtn').innerHTML = '<span class="material-symbols-outlined animate-spin text-lg">progress_activity</span> {{ __('Envoi en cours...') }}';
 
         // Log pour debugging
         //console.log('Données à envoyer:', {
@@ -1505,21 +1505,21 @@ async function submitApplication() {
         console.error('Erreur complète:', error);
         
         // Afficher l'erreur à l'utilisateur avec plus de détails
-        window.ProximaUI.notify(`Erreur : ${error.message}`, 'error');
+        window.ProximaUI.notify(`{{ __('Erreur') }} : ${error.message}`, 'error');
         
         // Réactiver le bouton
         document.getElementById('nextBtn').disabled = false;
-        document.getElementById('nextBtn').innerHTML = '<span class="material-symbols-outlined text-lg">check</span> Finaliser la candidature';
+        document.getElementById('nextBtn').innerHTML = '<span class="material-symbols-outlined text-lg">check</span> {{ __('Finaliser la candidature') }}';
     }
 }
     // Afficher la modal de succès
     function showSuccessModal() {
         document.getElementById('successModalTitle').textContent = isApplicationUpdate
-            ? 'Candidature mise à jour'
-            : 'Candidature réussie !';
+            ? '{{ __('Candidature mise à jour') }}'
+            : '{{ __('Candidature réussie !') }}';
         document.getElementById('successModalMessage').textContent = isApplicationUpdate
-            ? 'Votre dossier de candidature a été mis à jour avec succès.'
-            : 'Votre candidature a été envoyée avec succès.';
+            ? '{{ __('Votre dossier de candidature a été mis à jour avec succès.') }}'
+            : '{{ __('Votre candidature a été envoyée avec succès.') }}';
 
         const applicationModalElement = document.getElementById('applicationModal');
         const applicationModal = resolveBootstrapModal(applicationModalElement);

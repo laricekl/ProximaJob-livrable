@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV portfolio - {{ $fullName }}</title>
+    <title>{{ __('CV portfolio') }} - {{ $fullName }}</title>
     <style>
         @page { margin: 0; size: A4; }
         * { box-sizing: border-box; }
@@ -36,18 +36,18 @@
     </style>
 </head>
 <body>
-    <div class="side-bg"></div><div class="footer">Page </div>
+    <div class="side-bg"></div><div class="footer">{{ __('Page') }} </div>
     <table class="layout"><tr>
         <td class="side">
             <div class="portrait">@if($includePhoto)<img src="{{ $photo_data }}" alt="">@else{{ $initials }}@endif</div>
-            <div class="side-block"><h2 class="side-title">Contact</h2>
+            <div class="side-block"><h2 class="side-title">{{ __('Contact') }}</h2>
                 @if(!empty($email))<div class="contact-line">{{ $email }}</div>@endif
                 @if(!empty($telephone))<div class="contact-line">{{ $telephone }}</div>@endif
                 @if(!empty($location))<div class="contact-line">{{ $location }}</div>@endif
             </div>
             @include('cv.partials.template-skills')
-            @if($langues->isNotEmpty())<div class="side-block"><h2 class="side-title">Langues</h2>
-                @foreach($langues as $langue) @if(!empty($langue['nom']))<span class="language-item"><strong>{{ $langue['nom'] }}</strong>@if(!empty($langue['niveau'])) - {{ $langue['niveau'] }}@endif</span>@endif @endforeach
+            @if($langues->isNotEmpty())<div class="side-block"><h2 class="side-title">{{ __('Langues') }}</h2>
+                @foreach($langues as $langue) @if(!empty($langue['nom']))<span class="language-item"><strong>{{ __($langue['nom']) }}</strong>@if(!empty($langue['niveau'])) - {{ __($langue['niveau']) }}@endif</span>@endif @endforeach
             </div>@endif
         </td>
         <td class="main">

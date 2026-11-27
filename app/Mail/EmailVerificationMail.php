@@ -26,7 +26,7 @@ class EmailVerificationMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Vérification de votre adresse email')
+        return $this->subject(__('Vérification de votre adresse email'))
                     ->view('emails.verification')
                     ->with([
                         'user' => $this->user,

@@ -1,42 +1,42 @@
 @extends('layouts.entreprise')
-@section('title', 'Sélection IA')
+@section('title', __('Sélection IA'))
 @section('content')
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
             <h1 class="text-2xl font-bold font-serif text-primary mb-1 flex items-center gap-3">
-              Sélection IA
-              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-xs font-bold rounded-full">Candidats proposés</span>
+              {{ __('Sélection IA') }}
+              <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-xs font-bold rounded-full">{{ __('Candidats proposés') }}</span>
             </h1>
-            <p class="text-sm text-on-surface-variant">Découvrez les profils dont les compétences et l’expérience correspondent à vos offres.</p>
+            <p class="text-sm text-on-surface-variant">{{ __('Découvrez les profils dont les compétences et l’expérience correspondent à vos offres.') }}</p>
           </div>
         </div>
 
         <div class="bg-secondary-container/10 rounded-2xl p-5 mb-8 flex items-start gap-3">
           <span class="material-symbols-outlined text-secondary-container flex-shrink-0 mt-0.5">info</span>
           <div>
-            <p class="text-sm font-semibold text-secondary-container mb-1">Comment fonctionne la sélection IA ?</p>
-            <p class="text-sm text-secondary-container">La compatibilité est une aide au tri calculée à partir du profil, des compétences et de l’expérience. La décision vous appartient toujours.</p>
+            <p class="text-sm font-semibold text-secondary-container mb-1">{{ __('Comment fonctionne la sélection IA ?') }}</p>
+            <p class="text-sm text-secondary-container">{{ __('La compatibilité est une aide au tri calculée à partir du profil, des compétences et de l’expérience. La décision vous appartient toujours.') }}</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <div class="bg-white rounded-2xl p-5 text-center">
             <div class="text-3xl font-bold text-secondary-container">{{ $stats['total_applications'] ?? 0 }}</div>
-            <div class="text-xs text-on-surface-variant mt-1">Profils proposés</div>
+            <div class="text-xs text-on-surface-variant mt-1">{{ __('Profils proposés') }}</div>
           </div>
           <div class="bg-white rounded-2xl p-5 text-center">
             <div class="text-3xl font-bold text-secondary-container">{{ $stats['new_today'] ?? 0 }}</div>
-            <div class="text-xs text-on-surface-variant mt-1">Nouvelles aujourd'hui</div>
+            <div class="text-xs text-on-surface-variant mt-1">{{ __('Nouvelles aujourd\'hui') }}</div>
           </div>
           <div class="bg-white rounded-2xl p-5 text-center">
             <div class="text-3xl font-bold text-secondary-container">{{ $stats['new_this_week'] ?? 0 }}</div>
-            <div class="text-xs text-on-surface-variant mt-1">Nouvelles cette semaine</div>
+            <div class="text-xs text-on-surface-variant mt-1">{{ __('Nouvelles cette semaine') }}</div>
           </div>
           <div class="bg-white rounded-2xl p-5 text-center">
             <div class="text-3xl font-bold text-secondary-container">{{ $stats['active_offers'] ?? 0 }}</div>
-            <div class="text-xs text-on-surface-variant mt-1">Offres actives</div>
+            <div class="text-xs text-on-surface-variant mt-1">{{ __('Offres actives') }}</div>
           </div>
         </div>
 
@@ -44,22 +44,22 @@
           @forelse ($offres as $offre)
             <div class="card-glow rounded-2xl p-6 relative">
               <span class="absolute top-4 right-4 px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-xs font-bold uppercase tracking-wider rounded-full">
-                {{ $offre->type?->nom ?? 'Offre' }}
+                {{ __($offre->type?->nom ?? 'Offre') }}
               </span>
               <h3 class="text-lg font-bold font-serif text-primary mt-2 mb-3">{{ $offre->titre }}</h3>
               <p class="text-sm text-on-surface-variant line-clamp-3 mb-4">{{ \Illuminate\Support\Str::limit(strip_tags($offre->description ?? ''), 140) }}</p>
               <div class="space-y-2 mb-5 text-sm text-on-surface-variant">
-                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">location_on</span> {{ $offre->localisation ?? 'À confirmer' }}</div>
-                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">smart_toy</span> {{ $offre->autopostulations_count ?? 0 }} candidat{{ ($offre->autopostulations_count ?? 0) > 1 ? 's' : '' }} proposé{{ ($offre->autopostulations_count ?? 0) > 1 ? 's' : '' }}</div>
+                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">location_on</span> {{ $offre->localisation ?? __('À confirmer') }}</div>
+                <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline">smart_toy</span> {{ $offre->autopostulations_count ?? 0 }} {{ __('candidat') }}{{ ($offre->autopostulations_count ?? 0) > 1 ? 's' : '' }} {{ __('proposé') }}{{ ($offre->autopostulations_count ?? 0) > 1 ? 's' : '' }}</div>
               </div>
               <div class="flex justify-between items-center pt-4 border-t border-outline-variant/10">
-                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">{{ ucfirst($offre->status ?? 'active') }}</span>
-                <a href="{{ route('entreprise.offres.candidatures', ['offre' => $offre, 'source' => 'ia']) }}" class="text-sm font-semibold text-secondary-container hover:underline">Voir les profils proposés</a>
+                <span class="px-3 py-1 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">{{ __(ucfirst($offre->status ?? 'active')) }}</span>
+                <a href="{{ route('entreprise.offres.candidatures', ['offre' => $offre, 'source' => 'ia']) }}" class="text-sm font-semibold text-secondary-container hover:underline">{{ __('Voir les profils proposés') }}</a>
               </div>
             </div>
           @empty
             <div class="md:col-span-2 lg:col-span-3 card-glow rounded-2xl p-10 text-center text-on-surface-variant">
-              Aucun profil proposé pour le moment.
+              {{ __('Aucun profil proposé pour le moment.') }}
             </div>
           @endforelse
         </div>

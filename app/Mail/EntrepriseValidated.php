@@ -28,7 +28,7 @@ class EntrepriseValidated extends Mailable
      */
     public function build()
     {
-        return $this->subject('Votre compte entreprise a été validé - MatchJuste')
+        return $this->subject(__('Votre compte entreprise a été validé - MatchJuste'))
                     ->view('emails.entreprise-validated')
                     ->with([
                         'userName' => $this->user->name . ' ' . $this->user->prenom,

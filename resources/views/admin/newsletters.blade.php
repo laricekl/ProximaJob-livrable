@@ -1,44 +1,44 @@
 @extends('layouts.admin')
-@section('title', 'Newsletter')
-@section('page-title', 'Newsletter')
+@section('title', __('Newsletter'))
+@section('page-title', __('Newsletter'))
 @section('content')
 <x-admin.flash />
 
 <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
 
   {{-- Formulaire nouvelle campagne --}}
-  <x-admin.panel class="lg:col-span-2" title="Nouvelle campagne" body-class="space-y-5">
+  <x-admin.panel class="lg:col-span-2" :title="__('Nouvelle campagne')" body-class="space-y-5">
     <form method="POST" action="{{ route('admin.newsletters.store') }}">
       @csrf
       <div class="space-y-5">
-        <x-admin.form-field label="Sujet" name="sujet" :required="true">
-          <input id="sujet" name="sujet" type="text" value="{{ old('sujet') }}" class="w-full rounded-xl border @error('sujet') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Ex: Les offres de la semaine — {{ now()->format('d/m/Y') }}" />
+        <x-admin.form-field :label="__('Sujet')" name="sujet" :required="true">
+          <input id="sujet" name="sujet" type="text" value="{{ old('sujet') }}" class="w-full rounded-xl border @error('sujet') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="{{ __('Ex: Les offres de la semaine —') }} {{ now()->format('d/m/Y') }}" />
           @error('sujet')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 
         <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <x-admin.form-field label="Audience" name="audience">
+          <x-admin.form-field :label="__('Audience')" name="audience">
             <select id="audience" name="audience" class="w-full rounded-xl border border-outline-variant/20 bg-white/70 px-4 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
-              <option value="tous">Tous les utilisateurs</option>
-              <option value="candidats" @selected(old('audience') == 'candidats')>Candidats uniquement</option>
-              <option value="entreprises" @selected(old('audience') == 'entreprises')>Entreprises uniquement</option>
-              <option value="premium" @selected(old('audience') == 'premium')>Abonnés Premium</option>
+              <option value="tous">{{ __('Tous les utilisateurs') }}</option>
+              <option value="candidats" @selected(old('audience') == 'candidats')>{{ __('Candidats uniquement') }}</option>
+              <option value="entreprises" @selected(old('audience') == 'entreprises')>{{ __('Entreprises uniquement') }}</option>
+              <option value="premium" @selected(old('audience') == 'premium')>{{ __('Abonnés Premium') }}</option>
             </select>
           </x-admin.form-field>
         </div>
 
-        <x-admin.form-field label="Contenu" name="contenu" :required="true">
-          <textarea id="contenu" name="contenu" rows="10" class="w-full resize-none rounded-xl border @error('contenu') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="Rédigez votre newsletter...">{{ old('contenu') }}</textarea>
+        <x-admin.form-field :label="__('Contenu')" name="contenu" :required="true">
+          <textarea id="contenu" name="contenu" rows="10" class="w-full resize-none rounded-xl border @error('contenu') border-error @else border-outline-variant/20 @enderror bg-white/70 px-4 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30" placeholder="{{ __('Rédigez votre newsletter...') }}">{{ old('contenu') }}</textarea>
           @error('contenu')<p class="mt-1 text-xs text-error">{{ $message }}</p>@enderror
         </x-admin.form-field>
 
         <input type="hidden" name="action" id="newsletter-action" value="">
         <div class="flex flex-wrap items-center gap-3">
-          <button type="submit" onclick="document.getElementById('newsletter-action').value='envoyer';this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Envoi...'" class="flex items-center gap-2 rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
-            <span class="material-symbols-outlined text-lg">send</span> Envoyer
+          <button type="submit" onclick="document.getElementById('newsletter-action').value='envoyer';this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> {{ __('Envoi...') }}'" class="flex items-center gap-2 rounded-xl bg-secondary-container px-6 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
+            <span class="material-symbols-outlined text-lg">send</span> {{ __('Envoyer') }}
           </button>
-          <button type="submit" onclick="document.getElementById('newsletter-action').value='brouillon';this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> Enregistrement...'" class="flex items-center gap-2 rounded-xl border border-outline-variant/30 px-6 py-3 text-sm font-semibold transition-colors hover:bg-surface-container-low">
-            <span class="material-symbols-outlined text-lg">draft</span> Brouillon
+          <button type="submit" onclick="document.getElementById('newsletter-action').value='brouillon';this.disabled=true;this.innerHTML='<span class=\'material-symbols-outlined text-lg align-middle animate-spin\'>progress_activity</span> {{ __('Enregistrement...') }}'" class="flex items-center gap-2 rounded-xl border border-outline-variant/30 px-6 py-3 text-sm font-semibold transition-colors hover:bg-surface-container-low">
+            <span class="material-symbols-outlined text-lg">draft</span> {{ __('Brouillon') }}
           </button>
         </div>
       </div>
@@ -46,7 +46,7 @@
   </x-admin.panel>
 
   {{-- Campagnes précédentes --}}
-  <x-admin.panel title="Campagnes précédentes" padding="p-0">
+  <x-admin.panel :title="__('Campagnes précédentes')" padding="p-0">
     <div class="divide-y divide-outline-variant/5">
       @forelse ($campagnes as $campagne)
         <div class="p-4 transition-colors hover:bg-surface-container-low/30">
@@ -54,28 +54,28 @@
             <p class="text-sm font-semibold text-primary">{{ $campagne->sujet }}</p>
             <span class="inline-flex items-center rounded-full px-2 py-0.5 text-2xs font-bold
               {{ $campagne->statut === 'envoyee' ? 'bg-success-light text-success-dark' : ($campagne->statut === 'echec' ? 'bg-error-light text-error-dark' : 'bg-warning-light text-warning-dark') }}">
-              {{ ['envoyee' => 'Envoyée', 'echec' => 'Échec', 'en_cours' => 'En cours', 'brouillon' => 'Brouillon'][$campagne->statut] ?? ucfirst($campagne->statut) }}
+              {{ ['envoyee' => __('Envoyée'), 'echec' => __('Échec'), 'en_cours' => __('En cours'), 'brouillon' => __('Brouillon')][$campagne->statut] ?? __(ucfirst($campagne->statut)) }}
             </span>
           </div>
           <p class="mt-0.5 text-xs text-outline">
             @if ($campagne->statut === 'envoyee')
-              Envoyée le {{ $campagne->envoyee_le->format('d/m/Y') }}
+              {{ __('Envoyée le') }} {{ $campagne->envoyee_le->format('d/m/Y') }}
             @else
-              Créée le {{ $campagne->created_at->format('d/m/Y') }}
+              {{ __('Créée le') }} {{ $campagne->created_at->format('d/m/Y') }}
             @endif
           </p>
           <div class="mt-2 flex items-center gap-3 text-xs text-outline">
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> {{ $campagne->audience }}</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">group</span> {{ __(ucfirst($campagne->audience)) }}</span>
             @if ($campagne->statut === 'envoyee')
               <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">mail</span> {{ number_format($campagne->destinataires_count) }}</span>
             @endif
           </div>
           @if(in_array($campagne->statut, ['brouillon', 'echec'], true))
-            <details class="mt-3 rounded-xl border border-outline-variant/20"><summary class="cursor-pointer list-none px-3 py-2 text-xs font-bold text-secondary-container">Modifier le brouillon</summary><form method="POST" action="{{ route('admin.newsletters.update',$campagne) }}" class="space-y-2 border-t p-3">@csrf @method('PUT')<input name="sujet" value="{{ $campagne->sujet }}" required class="w-full rounded-lg border-outline-variant/30 text-xs"><select name="audience" class="w-full rounded-lg border-outline-variant/30 text-xs">@foreach(['tous','candidats','entreprises','premium'] as $audience)<option value="{{ $audience }}" @selected($campagne->audience===$audience)>{{ ucfirst($audience) }}</option>@endforeach</select><textarea name="contenu" required rows="4" class="w-full rounded-lg border-outline-variant/30 text-xs">{{ $campagne->contenu }}</textarea><button class="rounded-lg bg-primary-container px-3 py-2 text-xs font-bold text-white">Enregistrer</button></form><form method="POST" action="{{ route('admin.newsletters.destroy',$campagne) }}" class="px-3 pb-3 text-right" data-proxima-confirm="Supprimer ce brouillon ?" data-proxima-title="Supprimer la campagne" data-proxima-confirm-label="Supprimer" data-proxima-tone="danger">@csrf @method('DELETE')<button class="text-xs font-bold text-red-600">Supprimer</button></form></details>
+            <details class="mt-3 rounded-xl border border-outline-variant/20"><summary class="cursor-pointer list-none px-3 py-2 text-xs font-bold text-secondary-container">{{ __('Modifier le brouillon') }}</summary><form method="POST" action="{{ route('admin.newsletters.update',$campagne) }}" class="space-y-2 border-t p-3">@csrf @method('PUT')<input name="sujet" value="{{ $campagne->sujet }}" required class="w-full rounded-lg border-outline-variant/30 text-xs"><select name="audience" class="w-full rounded-lg border-outline-variant/30 text-xs">@foreach(['tous','candidats','entreprises','premium'] as $audience)<option value="{{ $audience }}" @selected($campagne->audience===$audience)>{{ __(ucfirst($audience)) }}</option>@endforeach</select><textarea name="contenu" required rows="4" class="w-full rounded-lg border-outline-variant/30 text-xs">{{ $campagne->contenu }}</textarea><button class="rounded-lg bg-primary-container px-3 py-2 text-xs font-bold text-white">{{ __('Enregistrer') }}</button></form><form method="POST" action="{{ route('admin.newsletters.destroy',$campagne) }}" class="px-3 pb-3 text-right" data-proxima-confirm="{{ __('Supprimer ce brouillon ?') }}" data-proxima-title="{{ __('Supprimer la campagne') }}" data-proxima-confirm-label="{{ __('Supprimer') }}" data-proxima-tone="danger">@csrf @method('DELETE')<button class="text-xs font-bold text-red-600">{{ __('Supprimer') }}</button></form></details>
           @endif
         </div>
       @empty
-        <div class="p-6 text-center text-sm text-outline">Aucune campagne pour le moment.</div>
+        <div class="p-6 text-center text-sm text-outline">{{ __('Aucune campagne pour le moment.') }}</div>
       @endforelse
     </div>
   </x-admin.panel>

@@ -1842,8 +1842,8 @@ class AdminController extends Controller
         Notification::create([
             'user_id' => $user->id,
             'role' => $user->getRoleNames()->first(),
-            'title' => 'Votre compte a été activé',
-            'message' => 'Votre compte sur MatchJuste a été activé par un administrateur. Vous pouvez maintenant vous connecter et utiliser toutes les fonctionnalités.',
+            'title' => __('Votre compte a été activé'),
+            'message' => __('Votre compte sur MatchJuste a été activé par un administrateur. Vous pouvez maintenant vous connecter et utiliser toutes les fonctionnalités.'),
             'link' => '/login',
             'is_read' => false,
         ]);

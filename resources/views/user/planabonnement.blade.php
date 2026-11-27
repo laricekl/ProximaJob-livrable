@@ -6,9 +6,9 @@
     <!-- Hero -->
     <section class="pt-16 pb-8 px-4 md:px-10 text-center">
       <div class="max-w-3xl mx-auto">
-        <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-4">&larr; Retour au tableau de bord</a>
-        <h1 class="text-4xl md:text-5xl font-bold font-serif text-primary leading-tight mb-4">Choisissez votre Plan</h1>
-        <p class="text-lg text-on-surface-variant mb-10">Trouvez l'abonnement parfait pour vos besoins</p>
+        <a href="{{ route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-4">&larr; {{ __('Retour au tableau de bord') }}</a>
+        <h1 class="text-4xl md:text-5xl font-bold font-serif text-primary leading-tight mb-4">{{ __('Choisissez votre Plan') }}</h1>
+        <p class="text-lg text-on-surface-variant mb-10">{{ __("Trouvez l'abonnement parfait pour vos besoins") }}</p>
       </div>
     </section>
 
@@ -38,14 +38,14 @@
               </div>
               <div class="card-3d-glass"></div>
               @if ($isPopular)
-                <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">Le plus populaire</span>
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">{{ __('Le plus populaire') }}</span>
               @endif
               <div class="card-3d-content text-center">
-                <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>
+                <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ __($abo->nom) }}</p>
                 <p class="text-4xl font-bold text-primary">{{ rtrim(rtrim(number_format((float) $abo->montant, 2, ',', ' '), '0'), ',') }}<span class="text-lg text-outline">$</span></p>
-                <p class="text-xs text-outline mt-1">/{{ $abo->duree }} jour(s)</p>
+                <p class="text-xs text-outline mt-1">/{{ $abo->duree }} {{ __('jour(s)') }}</p>
                 @if ($abo->description)
-                  <p class="text-2xs text-outline/60 mt-1">{{ $abo->description }}</p>
+                  <p class="text-2xs text-outline/60 mt-1">{{ __($abo->description) }}</p>
                 @endif
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                   @foreach ($fonctionnalites as $fct)
@@ -53,7 +53,7 @@
                       <span class="material-symbols-outlined text-sm {{ $fct->actif ? 'text-secondary-container' : 'text-outline-variant' }}">
                         {{ $fct->actif ? 'check' : 'close' }}
                       </span>
-                      {{ $fct->nom }}
+                      {{ __($fct->nom) }}
                     </li>
                   @endforeach
                 </ul>
@@ -62,7 +62,7 @@
                   @if($isPopular) style="background: rgba(var(--pj-accent-rgb),0.88);" @endif
                   data-plan-id="{{ $abo->id }}"
                   data-plan-name="{{ $abo->nom }}"
-                >Choisir {{ $abo->nom }}</button>
+                >{{ __('Choisir') }} {{ __($abo->nom) }}</button>
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@
         if (!csrfToken) return;
 
         button.disabled = true;
-        button.textContent = 'Patientez...';
+        button.textContent = '{{ __('Patientez...') }}';
 
         try {
           const response = await fetch('{{ route('abonnements.souscrire') }}', {
@@ -102,14 +102,14 @@
           if (data.success) {
             window.location.href = '{{ route('user.abonnement') }}';
           } else {
-            window.ProximaUI.notify(data.message || "Erreur lors de la souscription.", 'error');
+            window.ProximaUI.notify(data.message || "{{ __('Erreur lors de la souscription.') }}", 'error');
             button.disabled = false;
-            button.textContent = 'Choisir ' + planName;
+            button.textContent = '{{ __('Choisir') }} ' + planName;
           }
         } catch (error) {
-          window.ProximaUI.notify("Impossible de finaliser la souscription. Veuillez réessayer.", 'error');
+          window.ProximaUI.notify("{{ __('Impossible de finaliser la souscription. Veuillez réessayer.') }}", 'error');
           button.disabled = false;
-          button.textContent = 'Choisir ' + planName;
+          button.textContent = '{{ __('Choisir') }} ' + planName;
         }
       });
     });

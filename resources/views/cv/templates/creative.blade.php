@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV créatif - {{ $fullName }}</title>
+    <title>{{ __('CV créatif') }} - {{ $fullName }}</title>
     <style>
         @page { margin: 0; size: A4; }
         * { box-sizing: border-box; }
@@ -32,10 +32,10 @@
     </style>
 </head>
 <body>
-    <div class="accent-bg"></div><div class="footer">Page </div>
+    <div class="accent-bg"></div><div class="footer">{{ __('Page') }} </div>
     <main class="wrap">
         <header class="header">
-            <div class="eyebrow">Curriculum vitae</div>
+            <div class="eyebrow">{{ __('Curriculum vitae') }}</div>
             <h1 class="name">{{ $fullName }}</h1>
             @if($targetTitle !== '')<div class="target">{{ $targetTitle }}</div>@endif
             <div class="contact">

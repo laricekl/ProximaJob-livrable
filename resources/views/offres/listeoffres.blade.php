@@ -184,7 +184,7 @@
             <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-sm">
               <option value="">{{ __('Toutes les catégories') }}</option>
               @foreach ($categoriesWithCount as $category)
-                <option value="{{ $category->id }}" @selected(in_array($category->id, $categories))>{{ $category->nom }}</option>
+                <option value="{{ $category->id }}" @selected(in_array($category->id, $categories))>{{ __($category->nom) }}</option>
               @endforeach
             </select>
           </div>
@@ -206,7 +206,7 @@
             <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-base">
               <option value="">{{ __('Toutes les catégories') }}</option>
               @foreach ($categoriesWithCount as $category)
-                <option value="{{ $category->id }}" @selected(in_array($category->id, $categories))>{{ $category->nom }}</option>
+                <option value="{{ $category->id }}" @selected(in_array($category->id, $categories))>{{ __($category->nom) }}</option>
               @endforeach
             </select>
           </div>
@@ -237,7 +237,7 @@
                 @foreach ($typesWithCount as $contractType)
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="type[]" value="{{ $contractType->id }}" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array($contractType->id, $types)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ $contractType->nom }} <span class="text-primary/35">({{ $contractType->offres_count }})</span></span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __($contractType->nom) }} <span class="text-primary/35">({{ $contractType->offres_count }})</span></span>
                 </label>
                 @endforeach
               </div>
@@ -250,7 +250,7 @@
                 @foreach ($categoriesWithCount as $category)
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="categories[]" value="{{ $category->id }}" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array($category->id, $categories)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ $category->nom }} <span class="text-primary/35">({{ $category->offres_count }})</span></span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __($category->nom) }} <span class="text-primary/35">({{ $category->offres_count }})</span></span>
                 </label>
                 @endforeach
               </div>

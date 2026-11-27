@@ -1,12 +1,12 @@
 @if(!empty($professionalSummary) || !empty($logiciels) || $competencesList->isNotEmpty())
     <section class="cv-section skills-section">
-        <h2 class="section-title">Compétences</h2>
+        <h2 class="section-title">{{ __('Compétences') }}</h2>
         <div class="section-content">
             @if(!empty($professionalSummary))
                 <p class="professional-summary">{{ $professionalSummary }}</p>
             @endif
             @if(!empty($logiciels))
-                <div class="software-line"><strong>Outils :</strong> {{ $logiciels }}</div>
+                <div class="software-line"><strong>{{ __('Outils :') }}</strong> {{ $logiciels }}</div>
             @endif
             @if($competencesList->isNotEmpty())
                 <div class="skill-list">

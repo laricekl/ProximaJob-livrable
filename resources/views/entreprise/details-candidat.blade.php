@@ -1,5 +1,5 @@
 @extends('layouts.entreprise')
-@section('title', 'Détail candidat')
+@section('title', __('Détail candidat'))
 @section('content')
   @php
     $fullName = trim(($candidat->prenom ?? '') . ' ' . ($candidat->name ?? ''));
@@ -9,12 +9,12 @@
       ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation'])
       : ($postulation?->lettre_motivation ? route('entreprise.candidature.preview', ['postulationId' => $postulation->id, 'type' => 'motivation']) : null);
     $statusLabels = [
-      'en_attente' => 'À examiner',
-      'shortlisted' => 'Présélectionnée',
-      'contacted' => 'Contactée',
-      'interview' => 'Entretien planifié',
-      'accepted' => 'Acceptée',
-      'rejected' => 'Refusée',
+      'en_attente' => __('À examiner'),
+      'shortlisted' => __('Présélectionnée'),
+      'contacted' => __('Contactée'),
+      'interview' => __('Entretien planifié'),
+      'accepted' => __('Acceptée'),
+      'rejected' => __('Refusée'),
     ];
     $statusStyles = [
       'en_attente' => 'bg-secondary-container/10 text-secondary-container',
@@ -33,55 +33,55 @@
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-6xl mx-auto">
         <a href="{{ $backUrl }}" class="inline-flex items-center gap-2 text-sm text-secondary-container font-semibold hover:underline mb-6">
-          <span class="material-symbols-outlined text-lg">arrow_back</span> {{ request('from') === 'inbox' ? 'Retour à toutes les candidatures' : ($source === 'ia' ? 'Retour aux profils proposés' : 'Retour à la liste') }}
+          <span class="material-symbols-outlined text-lg">arrow_back</span> {{ request('from') === 'inbox' ? __('Retour à toutes les candidatures') : ($source === 'ia' ? __('Retour aux profils proposés') : __('Retour à la liste')) }}
         </a>
 
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
           <div>
-            <p class="text-xs font-black uppercase tracking-[0.2em] text-secondary-container mb-2">Dossier de candidature</p>
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-secondary-container mb-2">{{ __('Dossier de candidature') }}</p>
             <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ $postulation->offre?->titre }}</h1>
           </div>
           <span class="self-start sm:self-auto px-4 py-2 text-sm font-bold rounded-full {{ $statusStyles[$postulation->status] ?? 'bg-surface-container text-primary' }}">
-            {{ $statusLabels[$postulation->status] ?? ucfirst($postulation->status) }}
+            {{ $statusLabels[$postulation->status] ?? __(ucfirst($postulation->status)) }}
           </span>
         </div>
 
         <div class="bg-secondary-container/10 rounded-2xl p-6 md:p-8 mb-8 flex flex-col sm:flex-row items-start gap-6">
           <div class="w-24 h-24 md:w-28 md:h-28 rounded-full bg-primary-container flex items-center justify-center text-white text-4xl font-bold flex-shrink-0">{{ $initials ?: 'CA' }}</div>
           <div class="flex-1">
-            <h2 class="text-2xl font-bold font-serif text-primary mb-1">{{ $fullName ?: 'Candidat' }}</h2>
-            <p class="text-on-surface-variant mb-4">{{ $candidat->candidateSector?->sector?->name ?? 'Profil candidat' }}</p>
+            <h2 class="text-2xl font-bold font-serif text-primary mb-1">{{ $fullName ?: __('Candidat') }}</h2>
+            <p class="text-on-surface-variant mb-4">{{ __($candidat->candidateSector?->sector?->name ?? 'Profil candidat') }}</p>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-on-surface-variant mb-4">
               <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">mail</span> {{ $candidat->email }}</div>
-              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">call</span> {{ $candidat->telephone ?? 'À confirmer' }}</div>
-              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">work</span> {{ $candidat->candidateSector?->experience_years ?? 0 }} ans d’expérience</div>
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">call</span> {{ $candidat->telephone ?? __('À confirmer') }}</div>
+              <div class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">work</span> {{ $candidat->candidateSector?->experience_years ?? 0 }} {{ __('ans d’expérience') }}</div>
             </div>
             <div class="flex items-center gap-3 flex-wrap">
               @if ($postulation)
-                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> Reçue le {{ optional($postulation->created_at)->format('d/m/Y') }}</span>
-                <span class="px-3 py-1.5 bg-primary-container/10 text-primary text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">data_usage</span> {{ is_null($postulation->match_score) ? 'Compatibilité non évaluée' : 'Compatibilité estimée : '.round($postulation->match_score).' %' }}</span>
+                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">calendar_today</span> {{ __('Reçue le') }} {{ optional($postulation->created_at)->format('d/m/Y') }}</span>
+                <span class="px-3 py-1.5 bg-primary-container/10 text-primary text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">data_usage</span> {{ is_null($postulation->match_score) ? __('Compatibilité non évaluée') : __('Compatibilité estimée : ').round($postulation->match_score).' %' }}</span>
               @endif
               @if ($candidat->candidateSector?->diplome?->nom_diplome)
-                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">school</span> {{ $candidat->candidateSector->diplome->nom_diplome }}</span>
+                <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-semibold rounded-full flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">school</span> {{ __($candidat->candidateSector->diplome->nom_diplome) }}</span>
               @endif
             </div>
             @if (!is_null($postulation->match_score))
-              <p class="mt-3 text-xs text-on-surface-variant">Cette estimation compare uniquement les critères renseignés dans l’offre avec le profil. Elle aide au tri, mais ne remplace pas votre évaluation.</p>
+              <p class="mt-3 text-xs text-on-surface-variant">{{ __('Cette estimation compare uniquement les critères renseignés dans l’offre avec le profil. Elle aide au tri, mais ne remplace pas votre évaluation.') }}</p>
             @else
-              <p class="mt-3 text-xs text-on-surface-variant">Aucun score global n’est affiché, car l’offre ne contient pas assez de critères évaluables.</p>
+              <p class="mt-3 text-xs text-on-surface-variant">{{ __('Aucun score global n’est affiché, car l’offre ne contient pas assez de critères évaluables.') }}</p>
             @endif
             @if (is_array($postulation->match_details))
               @php
                 $matchCriteria = [
-                  'technical_skills_match' => 'Compétences techniques',
-                  'general_skills_match' => 'Compétences générales',
-                  'experience_match' => 'Expérience',
+                  'technical_skills_match' => __('Compétences techniques'),
+                  'general_skills_match' => __('Compétences générales'),
+                  'experience_match' => __('Expérience'),
                 ];
               @endphp
               <div class="mt-3 grid grid-cols-1 gap-2 text-xs sm:grid-cols-3">
                 @foreach ($matchCriteria as $key => $label)
                   @php($criterionScore = $postulation->match_details[$key] ?? null)
-                  <span class="rounded-lg bg-surface-container-low px-3 py-2">{{ $label }} : {{ is_numeric($criterionScore) ? round($criterionScore).' %' : 'Non évalué' }}</span>
+                  <span class="rounded-lg bg-surface-container-low px-3 py-2">{{ $label }} : {{ is_numeric($criterionScore) ? round($criterionScore).' %' : __('Non évalué') }}</span>
                 @endforeach
               </div>
             @endif
@@ -91,51 +91,51 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div class="lg:col-span-2 space-y-6">
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">handyman</span> Compétences principales</h3>
+              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">handyman</span> {{ __('Compétences principales') }}</h3>
               <div class="flex flex-wrap gap-2">
                 @forelse ($candidat->skills as $skill)
-                  <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full">{{ $skill->name }}</span>
+                  <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full">{{ __($skill->name) }}</span>
                 @empty
-                  <p class="text-sm text-on-surface-variant">Aucune compétence ajoutée.</p>
+                  <p class="text-sm text-on-surface-variant">{{ __('Aucune compétence ajoutée.') }}</p>
                 @endforelse
               </div>
             </div>
 
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h3>
+              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> {{ __('Lettre de présentation') }}</h3>
               @if ($letterUrl)
                 <a href="{{ $letterUrl }}" class="inline-flex items-center gap-2 px-4 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                  <span class="material-symbols-outlined text-lg">visibility</span> Ouvrir la lettre de présentation
+                  <span class="material-symbols-outlined text-lg">visibility</span> {{ __('Ouvrir la lettre de présentation') }}
                 </a>
               @else
-                <p class="text-sm text-on-surface-variant">Aucune lettre de présentation disponible pour cette candidature.</p>
+                <p class="text-sm text-on-surface-variant">{{ __('Aucune lettre de présentation disponible pour cette candidature.') }}</p>
               @endif
             </div>
 
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">badge</span> Informations complémentaires</h3>
+              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">badge</span> {{ __('Informations complémentaires') }}</h3>
               <div class="space-y-3 text-sm text-on-surface-variant">
-                <p><span class="font-semibold text-primary">Candidature reçue :</span> {{ optional($postulation->created_at)->format('d/m/Y à H:i') }}</p>
-                <p><span class="font-semibold text-primary">Origine :</span> {{ $postulation->autopostulation ? 'Sélection IA' : 'Candidature directe' }}</p>
-                <p><span class="font-semibold text-primary">Étape actuelle :</span> {{ $statusLabels[$postulation->status] ?? ucfirst($postulation->status) }}</p>
+                <p><span class="font-semibold text-primary">{{ __('Candidature reçue :') }}</span> {{ optional($postulation->created_at)->format('d/m/Y à H:i') }}</p>
+                <p><span class="font-semibold text-primary">{{ __('Origine :') }}</span> {{ $postulation->autopostulation ? __('Sélection IA') : __('Candidature directe') }}</p>
+                <p><span class="font-semibold text-primary">{{ __('Étape actuelle :') }}</span> {{ $statusLabels[$postulation->status] ?? __(ucfirst($postulation->status)) }}</p>
               </div>
             </div>
           </div>
 
           <div class="space-y-6">
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">picture_as_pdf</span> Curriculum Vitae</h3>
+              <h3 class="text-lg font-bold font-serif text-primary mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">picture_as_pdf</span> {{ __('Curriculum Vitae') }}</h3>
               <div class="space-y-3">
                 @if ($cvUrl)
                   <a href="{{ $cvUrl }}" class="flex items-center justify-center gap-2 w-full px-5 py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                    <span class="material-symbols-outlined text-lg">visibility</span> Voir le CV
+                    <span class="material-symbols-outlined text-lg">visibility</span> {{ __('Voir le CV') }}
                   </a>
                 @else
-                  <div class="px-5 py-3 bg-surface-container text-sm text-on-surface-variant rounded-xl text-center">Aucun CV disponible</div>
+                  <div class="px-5 py-3 bg-surface-container text-sm text-on-surface-variant rounded-xl text-center">{{ __('Aucun CV disponible') }}</div>
                 @endif
                 @if ($letterUrl)
                   <a href="{{ $letterUrl }}" class="flex items-center justify-center gap-2 w-full px-5 py-3 border-2 border-secondary-container text-secondary-container text-sm font-bold rounded-xl hover:bg-secondary-container/5 transition-colors">
-                    <span class="material-symbols-outlined text-lg">description</span> Voir la lettre
+                    <span class="material-symbols-outlined text-lg">description</span> {{ __('Voir la lettre') }}
                   </a>
                 @endif
               </div>
@@ -143,26 +143,26 @@
 
             @if (!in_array($postulation->status, ['accepted', 'rejected'], true))
               <div class="card-glow rounded-2xl p-6">
-                <h3 class="text-lg font-bold font-serif text-primary mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">conversion_path</span> Étape du recrutement</h3>
-                <p class="mb-4 text-sm text-on-surface-variant">Choisissez la prochaine étape pour garder un suivi clair.</p>
+                <h3 class="text-lg font-bold font-serif text-primary mb-2 flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">conversion_path</span> {{ __('Étape du recrutement') }}</h3>
+                <p class="mb-4 text-sm text-on-surface-variant">{{ __('Choisissez la prochaine étape pour garder un suivi clair.') }}</p>
                 <form method="POST" action="{{ route('candidature.updateStatus', $postulation) }}" class="space-y-3">
                     @csrf
                     @method('PUT')
-                    <label for="status" class="sr-only">Nouvelle étape</label>
+                    <label for="status" class="sr-only">{{ __('Nouvelle étape') }}</label>
                     <select id="status" name="status" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
                       @foreach ($statusLabels as $value => $label)
                         <option value="{{ $value }}" @selected($postulation->status === $value)>{{ $label }}</option>
                       @endforeach
                     </select>
                     <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary-container px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-secondary">
-                      <span class="material-symbols-outlined text-lg">save</span> Enregistrer l’étape
+                      <span class="material-symbols-outlined text-lg">save</span> {{ __('Enregistrer l’étape') }}
                     </button>
                   </form>
               </div>
             @else
               <div class="card-glow rounded-2xl p-6">
-                <h3 class="text-lg font-bold font-serif text-primary mb-2">Décision enregistrée</h3>
-                <p class="text-sm text-on-surface-variant">Cette candidature est {{ strtolower($statusLabels[$postulation->status] ?? $postulation->status) }}. Les actions de décision ne sont plus proposées.</p>
+                <h3 class="text-lg font-bold font-serif text-primary mb-2">{{ __('Décision enregistrée') }}</h3>
+                <p class="text-sm text-on-surface-variant">{{ __('Cette candidature est') }} {{ strtolower($statusLabels[$postulation->status] ?? $postulation->status) }}. {{ __('Les actions de décision ne sont plus proposées.') }}</p>
               </div>
             @endif
           </div>

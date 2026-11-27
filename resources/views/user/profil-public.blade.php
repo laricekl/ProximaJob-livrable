@@ -1,13 +1,13 @@
 @extends('layouts.candidat')
-@section('title', 'Profil candidat')
+@section('title', __('Profil candidat'))
 @php
   $publicUser = $user ?? auth()->user();
   $publicFullName = trim(($cvProfile?->prenom ?? $publicUser->prenom ?? '') . ' ' . ($cvProfile?->nom ?? $publicUser->name ?? ''));
-  $publicFullName = $publicFullName !== '' ? $publicFullName : 'Profil candidat';
+  $publicFullName = $publicFullName !== '' ? $publicFullName : __('Profil candidat');
   $publicInitials = $publicUser->initials ?: 'PJ';
-  $profileHeadline = $profileData['headline'] ?? 'Profil en recherche active';
-  $profileLocation = $profileData['location'] ?? 'À compléter';
-  $profilePhone = $profileData['phone'] ?? 'À compléter';
+  $profileHeadline = $profileData['headline'] ?? __('Profil en recherche active');
+  $profileLocation = $profileData['location'] ?? __('À compléter');
+  $profilePhone = $profileData['phone'] ?? __('À compléter');
   $profileExperienceYears = $profileData['experience_years'] ?? 0;
   $profileSkills = $profileData['skills'] ?? collect();
   $profileSkillsCount = $profileData['skills_count'] ?? 0;
@@ -51,13 +51,13 @@
     <section class="px-4 md:px-10 mb-6">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ $isRecruiterPreview ? 'Aperçu employeur' : 'Mon profil candidat' }}</h1>
-          <p class="text-sm text-on-surface-variant mt-1">{{ $isRecruiterPreview ? "Voici ce que l'employeur voit quand il consulte votre profil candidat." : 'Ces informations enrichissent vos candidatures et aident les employeurs à comprendre votre profil.' }}</p>
+          <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ $isRecruiterPreview ? __('Aperçu employeur') : __('Mon profil candidat') }}</h1>
+          <p class="text-sm text-on-surface-variant mt-1">{{ $isRecruiterPreview ? __("Voici ce que l'employeur voit quand il consulte votre profil candidat.") : __('Ces informations enrichissent vos candidatures et aident les employeurs à comprendre votre profil.') }}</p>
         </div>
         <div class="flex items-center gap-3">
           <a href="{{ $isRecruiterPreview ? route('user.profil-public') : route('user.profil-public', ['preview' => 'employeur']) }}" class="flex items-center gap-2 px-5 py-2.5 text-sm font-bold text-secondary-container border border-secondary-container/30 rounded-full hover:bg-secondary-container/5 transition-colors">
             <span class="material-symbols-outlined text-lg">{{ $isRecruiterPreview ? 'edit' : 'visibility' }}</span>
-            <span class="hidden sm:inline">{{ $isRecruiterPreview ? 'Retour édition' : 'Prévisualiser comme employeur' }}</span>
+            <span class="hidden sm:inline">{{ $isRecruiterPreview ? __('Retour édition') : __('Prévisualiser comme employeur') }}</span>
           </a>
         </div>
       </div>
@@ -85,80 +85,80 @@
                   @endunless
                 </div>
                 <div class="w-full">
-                  <h2 class="text-xl font-bold font-serif text-primary" contenteditable="{{ $editableAttr }}" data-placeholder="Votre nom complet">{{ $publicFullName }}</h2>
-                  <p class="text-sm text-on-surface-variant mt-1" contenteditable="{{ $editableAttr }}" data-placeholder="Titre professionnel">{{ $profileHeadline }}</p>
+                  <h2 class="text-xl font-bold font-serif text-primary" contenteditable="{{ $editableAttr }}" data-placeholder="{{ __('Votre nom complet') }}">{{ $publicFullName }}</h2>
+                  <p class="text-sm text-on-surface-variant mt-1" contenteditable="{{ $editableAttr }}" data-placeholder="{{ __('Titre professionnel') }}">{{ $profileHeadline }}</p>
                 </div>
               </div>
               <div class="border-t border-outline-variant/10 px-6 py-4 space-y-3">
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">location_on</span>
-                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Votre ville">{{ $profileLocation }}</span>
+                  <span contenteditable="{{ $editableAttr }}" data-placeholder="{{ __('Votre ville') }}">{{ $profileLocation }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">mail</span>
-                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Courriel">{{ $publicUser->email ?? 'Non renseigné' }}</span>
+                  <span contenteditable="{{ $editableAttr }}" data-placeholder="{{ __('Courriel') }}">{{ $publicUser->email ?? __('Non renseigné') }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">call</span>
-                  <span contenteditable="{{ $editableAttr }}" data-placeholder="Téléphone">{{ $profilePhone }}</span>
+                  <span contenteditable="{{ $editableAttr }}" data-placeholder="{{ __('Téléphone') }}">{{ $profilePhone }}</span>
                 </div>
                 <div class="flex items-center gap-3 text-sm text-on-surface-variant">
                   <span class="material-symbols-outlined text-lg text-outline">language</span>
-                  <span contenteditable="{{ $editableAttr }}" data-placeholder="LinkedIn / portfolio">LinkedIn / portfolio</span>
+                  <span contenteditable="{{ $editableAttr }}" data-placeholder="{{ __('LinkedIn / portfolio') }}">{{ __('LinkedIn / portfolio') }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Quick stats -->
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">En résumé</h3>
+              <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">{{ __('En résumé') }}</h3>
               <div class="grid grid-cols-2 gap-4">
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-primary">{{ $profileExperienceYears }}</p>
-                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">ans d'exp.</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">{{ __("ans d'exp.") }}</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-primary">{{ $profileSkillsCount }}</p>
-                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">compétences</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">{{ __('compétences') }}</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-secondary-container">{{ $profileCompletion }}%</p>
-                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">complétude</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">{{ __('complétude') }}</p>
                 </div>
                 <div class="text-center p-3 bg-surface-container-low rounded-xl">
                   <p class="text-2xl font-bold text-primary">{{ $profileApplicationsCount }}</p>
-                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">candidatures</p>
+                  <p class="text-2xs text-outline uppercase tracking-wider mt-1">{{ __('candidatures') }}</p>
                 </div>
               </div>
             </div>
 
             <!-- Preferences -->
             <div class="card-glow rounded-2xl p-6">
-              <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">Préférences</h3>
+              <h3 class="text-sm font-bold text-primary uppercase tracking-wider mb-4">{{ __('Préférences') }}</h3>
               <div class="space-y-4">
                 <div>
-                  <label class="block text-xs font-semibold text-outline mb-1.5">Salaire souhaité</label>
+                  <label class="block text-xs font-semibold text-outline mb-1.5">{{ __('Salaire souhaité') }}</label>
                   <div class="flex items-center gap-2">
                     <input type="number" class="w-full px-3 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="65000" value="{{ $publicUser->salary_expectation_min ?? '' }}" @disabled($isRecruiterPreview) />
-                    <span class="text-sm text-outline font-medium">$/an</span>
+                    <span class="text-sm text-outline font-medium">{{ __('$/an') }}</span>
                   </div>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-outline mb-1.5">Disponibilité</label>
+                  <label class="block text-xs font-semibold text-outline mb-1.5">{{ __('Disponibilité') }}</label>
                   <select class="w-full px-3 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" @disabled($isRecruiterPreview)>
-                    <option>Immédiate</option>
-                    <option>1 mois</option>
-                    <option>3 mois</option>
-                    <option>En poste</option>
+                    <option>{{ __('Immédiate') }}</option>
+                    <option>{{ __('1 mois') }}</option>
+                    <option>{{ __('3 mois') }}</option>
+                    <option>{{ __('En poste') }}</option>
                   </select>
                 </div>
                 <div>
-                  <label class="block text-xs font-semibold text-outline mb-1.5">Type de contrat recherché</label>
+                  <label class="block text-xs font-semibold text-outline mb-1.5">{{ __('Type de contrat recherché') }}</label>
                   <div class="flex flex-wrap gap-2">
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>Permanent</span></label>
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>Temporaire</span></label>
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>Contractuel</span></label>
-                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>Stage</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>{{ __('Permanent') }}</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>{{ __('Temporaire') }}</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" checked @disabled($isRecruiterPreview) /> <span>{{ __('Contractuel') }}</span></label>
+                    <label class="flex items-center gap-1.5 text-sm {{ $isRecruiterPreview ? '' : 'cursor-pointer' }}"><input type="checkbox" class="rounded border-outline-variant/50 text-secondary-container focus:ring-2 focus:ring-secondary-container/30" @disabled($isRecruiterPreview) /> <span>{{ __('Stage') }}</span></label>
                   </div>
                 </div>
                 @unless ($isRecruiterPreview)
@@ -166,7 +166,7 @@
                   @csrf
                   <input type="hidden" name="salary_expectation_min" id="sidebar-salaire">
                   <button type="submit" onclick="document.getElementById('sidebar-salaire').value=this.closest('.space-y-5').querySelector('input[type=number]').value" class="w-full py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-lg">save</span> Enregistrer
+                    <span class="material-symbols-outlined text-lg">save</span> {{ __('Enregistrer') }}
                   </button>
                 </form>
                 @endunless
@@ -182,19 +182,19 @@
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <div>
-                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">auto_awesome</span> Mon pitch</h2>
-                  <p class="text-xs text-on-surface-variant mt-0.5">Présentez-vous en quelques phrases. C'est la première chose que les employeurs lisent.</p>
+                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">auto_awesome</span> {{ __('Mon pitch') }}</h2>
+                  <p class="text-xs text-on-surface-variant mt-0.5">{{ __("Présentez-vous en quelques phrases. C'est la première chose que les employeurs lisent.") }}</p>
                 </div>
                 <span class="char-count text-xs text-outline" data-target="pitchBio" data-max="500">0/500</span>
               </div>
               <div class="p-6">
-                <textarea id="pitchBio" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Ex. Coordonnateur administratif avec 4 ans d'expérience, reconnu pour structurer les suivis, améliorer les processus et soutenir les équipes dans leurs priorités." maxlength="500" @readonly($isRecruiterPreview)>{{ $profilePitch }}</textarea>
+                <textarea id="pitchBio" rows="5" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="{{ __('Ex. Coordonnateur administratif avec 4 ans d\'expérience, reconnu pour structurer les suivis, améliorer les processus et soutenir les équipes dans leurs priorités.') }}" maxlength="500" @readonly($isRecruiterPreview)>{{ $profilePitch }}</textarea>
                 @unless ($isRecruiterPreview)
                 <form method="POST" action="{{ route('user.profile.update') }}" class="flex justify-end mt-3">
                   @csrf
                   <input type="hidden" name="pitch" :value="document.getElementById('pitchBio')?.value">
                   <button type="submit" onclick="this.form.querySelector('[name=pitch]').value=document.getElementById('pitchBio').value" class="flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                    <span class="material-symbols-outlined text-lg">save</span> Enregistrer
+                    <span class="material-symbols-outlined text-lg">save</span> {{ __('Enregistrer') }}
                   </button>
                 </form>
                 @endunless
@@ -205,8 +205,8 @@
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <div>
-                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">handyman</span> Compétences phares</h2>
-                  <p class="text-xs text-on-surface-variant mt-0.5">Mettez en avant vos compétences les plus fortes. Elles apparaîtront en premier.</p>
+                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">handyman</span> {{ __('Compétences phares') }}</h2>
+                  <p class="text-xs text-on-surface-variant mt-0.5">{{ __('Mettez en avant vos compétences les plus fortes. Elles apparaîtront en premier.') }}</p>
                 </div>
                 <span class="text-xs text-outline" id="skillCount">8/15</span>
               </div>
@@ -215,20 +215,20 @@
                   @forelse ($profileSkills as $skillLabel)
                     <span class="skill-tag inline-flex items-center gap-1.5 px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-sm font-medium rounded-full {{ $isRecruiterPreview ? '' : 'cursor-pointer hover:bg-secondary-container/20' }} transition-colors">{{ $skillLabel }} @unless ($isRecruiterPreview)<span class="material-symbols-outlined text-sm">close</span>@endunless</span>
                   @empty
-                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-outline text-sm font-medium rounded-full">Ajoutez des competences depuis votre profil</span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container text-outline text-sm font-medium rounded-full">{{ __('Ajoutez des competences depuis votre profil') }}</span>
                   @endforelse
                   @unless ($isRecruiterPreview)
                   <!-- Add skill button -->
                   <button id="addSkillBtn" class="inline-flex items-center gap-1.5 px-4 py-1.5 border-2 border-dashed border-outline-variant/50 text-outline text-sm font-medium rounded-full hover:border-secondary-container/50 hover:text-secondary-container transition-colors">
-                    <span class="material-symbols-outlined text-lg">add</span> Ajouter
+                    <span class="material-symbols-outlined text-lg">add</span> {{ __('Ajouter') }}
                   </button>
                   @endunless
                 </div>
                 @unless ($isRecruiterPreview)
                 <div id="skillInputRow" class="hidden flex items-center gap-2">
-                  <input id="skillInput" type="text" class="flex-1 px-4 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="Nouvelle compétence..." />
-                  <button id="skillAddConfirm" class="px-4 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">Ajouter</button>
-                  <button id="skillAddCancel" class="px-4 py-2.5 bg-surface-container text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors">Annuler</button>
+                  <input id="skillInput" type="text" class="flex-1 px-4 py-2.5 bg-white border border-outline-variant/30 rounded-xl text-sm text-primary focus:border-secondary-container/50 focus:ring-0 transition-all" placeholder="{{ __('Nouvelle compétence...') }}" />
+                  <button id="skillAddConfirm" class="px-4 py-2.5 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">{{ __('Ajouter') }}</button>
+                  <button id="skillAddCancel" class="px-4 py-2.5 bg-surface-container text-sm font-semibold rounded-xl hover:bg-surface-container-low transition-colors">{{ __('Annuler') }}</button>
                 </div>
                 @endunless
               </div>
@@ -238,11 +238,11 @@
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <div>
-                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">work</span> Expérience professionnelle</h2>
+                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">work</span> {{ __('Expérience professionnelle') }}</h2>
                   <p class="text-xs text-on-surface-variant mt-0.5">
-                    Gérée depuis votre CV.
+                    {{ __('Gérée depuis votre CV.') }}
                     @unless ($isRecruiterPreview)
-                      <a href="{{ route('infos.cv') }}" class="text-secondary-container font-semibold hover:underline">Modifier dans le builder CV →</a>
+                      <a href="{{ route('infos.cv') }}" class="text-secondary-container font-semibold hover:underline">{{ __('Modifier dans le builder CV →') }}</a>
                     @endunless
                   </p>
                 </div>
@@ -253,14 +253,14 @@
                     <div class="border-l-2 border-secondary-container pl-5 relative">
                       <div class="absolute -left-[5px] top-1 w-2 h-2 bg-secondary-container rounded-full"></div>
                       <h4 class="font-bold text-primary">{{ $experience->poste }}</h4>
-                      <p class="text-sm text-on-surface-variant">{{ $experience->entreprise ?: 'Entreprise non precisee' }}</p>
-                      <p class="text-xs text-outline mb-2">{{ $experience->periode ?: 'Periode a completer' }}</p>
+                      <p class="text-sm text-on-surface-variant">{{ $experience->entreprise ?: __('Entreprise non precisee') }}</p>
+                      <p class="text-xs text-outline mb-2">{{ $experience->periode ?: __('Periode a completer') }}</p>
                       @if ($experience->description)
                         <p class="text-sm text-on-surface-variant">{{ $experience->description }}</p>
                       @endif
                     </div>
                   @empty
-                    <p class="text-sm text-on-surface-variant">Aucune experience n'est encore indiquée dans votre CV.</p>
+                    <p class="text-sm text-on-surface-variant">{{ __("Aucune experience n'est encore indiquée dans votre CV.") }}</p>
                   @endforelse
                 </div>
               </div>
@@ -270,24 +270,24 @@
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
                 <div>
-                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> Lettre de présentation</h2>
-                  <p class="text-xs text-on-surface-variant mt-0.5">Une lettre de base que vous pouvez joindre ou adapter selon l'offre.</p>
+                  <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">description</span> {{ __('Lettre de présentation') }}</h2>
+                  <p class="text-xs text-on-surface-variant mt-0.5">{{ __("Une lettre de base que vous pouvez joindre ou adapter selon l'offre.") }}</p>
                 </div>
                 @unless ($isRecruiterPreview)
                 <a href="{{ route('cv.personalization.form') }}" class="text-xs font-bold text-secondary-container hover:underline flex items-center gap-1">
-                  <span class="material-symbols-outlined text-sm">auto_awesome</span> Adapter à une offre
+                  <span class="material-symbols-outlined text-sm">auto_awesome</span> {{ __('Adapter à une offre') }}
                 </a>
                 @endunless
               </div>
               <div class="p-6">
-                <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="Rédigez une lettre de base que vous pourrez adapter pour une offre précise. Cette étape reste optionnelle." @readonly($isRecruiterPreview)>{{ $profileMotivation }}</textarea>
+                <textarea id="pitchMotivation" rows="6" class="w-full px-4 py-3 bg-white border border-outline-variant/20 rounded-xl text-sm text-primary placeholder:text-outline focus:border-secondary-container/50 focus:ring-0 transition-all resize-none" placeholder="{{ __('Rédigez une lettre de base que vous pourrez adapter pour une offre précise. Cette étape reste optionnelle.') }}" @readonly($isRecruiterPreview)>{{ $profileMotivation }}</textarea>
                 @unless ($isRecruiterPreview)
                 <form method="POST" action="{{ route('user.profile.update') }}" class="flex justify-end mt-3">
                   @csrf
                   <input type="hidden" name="motivation">
                   <button type="submit" onclick="this.form.querySelector('[name=motivation]').value=document.getElementById('pitchMotivation').value" class="flex items-center gap-2 px-4 py-2 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                    <span class="material-symbols-outlined text-lg">save</span> Enregistrer
-                    <span class="save-feedback text-white text-xs">✓ Sauvegardé</span>
+                    <span class="material-symbols-outlined text-lg">save</span> {{ __('Enregistrer') }}
+                    <span class="save-feedback text-white text-xs">{{ __('✓ Sauvegardé') }}</span>
                   </button>
                 </form>
                 @endunless
@@ -297,16 +297,16 @@
             <!-- CV principal visible sur le profil -->
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10">
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">picture_as_pdf</span> CV principal</h2>
-                <p class="text-xs text-on-surface-variant mt-0.5">{{ $isRecruiterPreview ? 'Voici le CV principal rendu visible aux employeurs.' : 'Ce CV généré à partir de votre profil est celui que les employeurs voient ici.' }}</p>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">picture_as_pdf</span> {{ __('CV principal') }}</h2>
+                <p class="text-xs text-on-surface-variant mt-0.5">{{ $isRecruiterPreview ? __('Voici le CV principal rendu visible aux employeurs.') : __('Ce CV généré à partir de votre profil est celui que les employeurs voient ici.') }}</p>
               </div>
               <div class="p-6 space-y-4">
                 @unless ($isRecruiterPreview)
                 <!-- Upload zone -->
                 <div class="border-2 border-dashed border-outline-variant/30 rounded-2xl p-8 text-center hover:border-secondary-container/40 transition-colors cursor-pointer">
                   <span class="material-symbols-outlined text-4xl text-outline mb-3">upload_file</span>
-                  <p class="text-sm font-semibold text-primary">Déposez votre CV ici</p>
-                  <p class="text-xs text-outline mt-1">PDF, DOCX — max 5 Mo</p>
+                  <p class="text-sm font-semibold text-primary">{{ __('Déposez votre CV ici') }}</p>
+                  <p class="text-xs text-outline mt-1">{{ __('PDF, DOCX — max 5 Mo') }}</p>
                   <input type="file" class="hidden" accept=".pdf,.docx" />
                 </div>
                 @endunless
@@ -316,31 +316,31 @@
                       <div class="w-10 h-10 rounded-lg bg-secondary-container/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary-container">description</span></div>
                       <div>
                         <p class="text-sm font-semibold text-primary">{{ $principalCvLabel }}</p>
-                        <p class="text-2xs text-outline">Version publique du profil candidat</p>
+                        <p class="text-2xs text-outline">{{ __('Version publique du profil candidat') }}</p>
                       </div>
                     </div>
                     <div class="flex items-center gap-2">
-                      <a href="{{ $principalCvUrl }}" target="_blank" rel="noopener" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Voir le CV principal"><span class="material-symbols-outlined text-lg text-outline">visibility</span></a>
+                      <a href="{{ $principalCvUrl }}" target="_blank" rel="noopener" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="{{ __('Voir le CV principal') }}"><span class="material-symbols-outlined text-lg text-outline">visibility</span></a>
                       @unless ($isRecruiterPreview)
-                        <a href="{{ route('cv.personalization.form') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="Adapter"><span class="material-symbols-outlined text-lg text-outline">auto_awesome</span></a>
+                        <a href="{{ route('cv.personalization.form') }}" class="w-9 h-9 rounded-full hover:bg-surface-container transition-colors flex items-center justify-center" title="{{ __('Adapter') }}"><span class="material-symbols-outlined text-lg text-outline">auto_awesome</span></a>
                       @endunless
                     </div>
                   </div>
                 @else
                   <div class="rounded-xl bg-surface-container-low p-5 text-center">
                     <span class="material-symbols-outlined text-3xl text-outline">description</span>
-                    <p class="mt-2 text-sm font-semibold text-primary">Aucun CV principal disponible</p>
-                    <p class="mt-1 text-xs text-on-surface-variant">Créez votre CV principal pour le rendre visible sur ce profil.</p>
+                    <p class="mt-2 text-sm font-semibold text-primary">{{ __('Aucun CV principal disponible') }}</p>
+                    <p class="mt-1 text-xs text-on-surface-variant">{{ __('Créez votre CV principal pour le rendre visible sur ce profil.') }}</p>
                     @unless ($isRecruiterPreview)
                       <a href="{{ route('infos.cv') }}" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white hover:bg-secondary">
-                        <span class="material-symbols-outlined text-lg">add</span> Créer mon CV principal
+                        <span class="material-symbols-outlined text-lg">add</span> {{ __('Créer mon CV principal') }}
                       </a>
                     @endunless
                   </div>
                 @endif
                 @unless ($isRecruiterPreview)
                 <a href="{{ route('cv.personalization.form') }}" class="flex items-center justify-center gap-2 w-full py-3 bg-secondary-container text-white text-sm font-bold rounded-xl hover:bg-secondary transition-colors">
-                  <span class="material-symbols-outlined text-lg">auto_awesome</span> Adapter mon CV à une offre
+                  <span class="material-symbols-outlined text-lg">auto_awesome</span> {{ __("Adapter mon CV à une offre") }}
                 </a>
                 @endunless
               </div>

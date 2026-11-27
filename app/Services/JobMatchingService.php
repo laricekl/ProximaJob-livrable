@@ -619,8 +619,8 @@ class JobMatchingService
         Notification::create([
             'user_id' => $candidateId,  
             'role' => 'candidat',
-            'title' => 'Nouvelle candidature assistée par IA',
-            'message' => 'Votre profil a été proposé pour l\'offre "' . $offer->titre . '" chez ' . ($offer->entreprise?->company_name ?? 'l\'entreprise') . '. Consultez le dossier envoyé.',
+            'title' => __('Nouvelle candidature assistée par IA'),
+            'message' => __('Votre profil a été proposé pour l\'offre "') . $offer->titre . __('" chez ') . ($offer->entreprise?->company_name ?? __('l’entreprise')) . __('. Consultez le dossier envoyé.'),
             'link' => "/user/detail-candidature?id={$postulation->id}",
             'is_read' => false,
             'type' => 'matching',
@@ -631,8 +631,8 @@ class JobMatchingService
             Notification::create([
                 'user_id' => $offer->entreprise->user->id,
                 'role' => 'entreprise',  
-                'title' => 'Nouvelle candidature ',
-                'message' => 'Un candidat a postulé à votre offre "' . $offer->titre . '"',
+                'title' => __('Nouvelle candidature '),
+                'message' => __('Un candidat a postulé à votre offre "') . $offer->titre . '"',
                 'link' => "/entreprise/offres/{$offerId}/candidatures",  
                 'is_read' => false,
             ]);

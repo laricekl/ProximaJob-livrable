@@ -18,55 +18,55 @@
     </div>
     <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-6">
       {{-- Close button (mobile) --}}
-      <button onclick="closeSidebar()" class="lg:hidden w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm text-white/60 hover:bg-white/10 hover:text-white transition-colors mb-2" aria-label="Fermer le menu">
-        <span class="material-symbols-outlined text-lg">close</span> Fermer
+      <button onclick="closeSidebar()" class="lg:hidden w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-sm text-white/60 hover:bg-white/10 hover:text-white transition-colors mb-2" aria-label="{{ __('Fermer le menu') }}">
+        <span class="material-symbols-outlined text-lg">close</span> {{ __('Fermer') }}
       </button>
       <div>
-        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Principal</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">{{ __('Principal') }}</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">dashboard</span> Tableau de bord</a></li>
+          <li><a href="{{ route('admin.dashboard') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.dashboard') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">dashboard</span> {{ __('Tableau de bord') }}</a></li>
         </ul>
       </div>
       @role('admin')
       <div>
-        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Gestion</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">{{ __('Gestion') }}</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.users') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.users*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">group</span> Utilisateurs</a></li>
-          <li><a href="{{ route('admin.entreprises.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.entreprises*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">domain</span> Entreprises</a></li>
-          <li><a href="{{ route('admin.offres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work</span> Offres</a></li>
-          <li><a href="{{ route('admin.candidatures.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.candidatures*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">clinical_notes</span> Candidatures</a></li>
-          <li><a href="{{ route('admin.abonnements') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.abonnements*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">credit_card</span> Abonnements</a></li>
+          <li><a href="{{ route('admin.users') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.users*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">group</span> {{ __('Utilisateurs') }}</a></li>
+          <li><a href="{{ route('admin.entreprises.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.entreprises*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">domain</span> {{ __('Entreprises') }}</a></li>
+          <li><a href="{{ route('admin.offres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work</span> {{ __('Offres') }}</a></li>
+          <li><a href="{{ route('admin.candidatures.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.candidatures*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">clinical_notes</span> {{ __('Candidatures') }}</a></li>
+          <li><a href="{{ route('admin.abonnements') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.abonnements*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">credit_card</span> {{ __('Abonnements') }}</a></li>
         </ul>
       </div>
       @endrole
       @role('admin')
       <div>
-        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Référentiel</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">{{ __('Référentiel') }}</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.categories.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.categories*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">category</span> Catégories</a></li>
-          <li><a href="{{ route('admin.types-offres.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.types-offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work_history</span> Types d'offres</a></li>
-          <li><a href="{{ route('admin.secteurs.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.secteurs*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">business</span> Secteurs</a></li>
-          <li><a href="{{ route('admin.skills.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.skills*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bolt</span> Compétences</a></li>
-          <li><a href="{{ route('admin.diplomes.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.diplomes*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">school</span> Diplômes</a></li>
+          <li><a href="{{ route('admin.categories.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.categories*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">category</span> {{ __('Catégories') }}</a></li>
+          <li><a href="{{ route('admin.types-offres.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.types-offres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">work_history</span> {{ __('Types d\'offres') }}</a></li>
+          <li><a href="{{ route('admin.secteurs.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.secteurs*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">business</span> {{ __('Secteurs') }}</a></li>
+          <li><a href="{{ route('admin.skills.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.skills*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bolt</span> {{ __('Compétences') }}</a></li>
+          <li><a href="{{ route('admin.diplomes.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.diplomes*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">school</span> {{ __('Diplômes') }}</a></li>
         </ul>
       </div>
       @endrole
       <div>
-        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Communication</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">{{ __('Communication') }}</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.statistiques') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> Statistiques</a></li>
-          <li><a href="{{ route('admin.newsletters') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> Newsletter</a></li>
+          <li><a href="{{ route('admin.statistiques') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.statistiques*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">bar_chart</span> {{ __('Statistiques') }}</a></li>
+          <li><a href="{{ route('admin.newsletters') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.newsletters*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">mail</span> {{ __('Newsletter') }}</a></li>
           @role('admin')
-          <li><a href="{{ route('admin.ressources.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.ressources*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">library_books</span> Ressources</a></li>
+          <li><a href="{{ route('admin.ressources.index') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.ressources*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">library_books</span> {{ __('Ressources') }}</a></li>
           @endrole
         </ul>
       </div>
       @role('admin')
       <div>
-        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">Configuration</h3>
+        <h3 class="text-2xs font-bold text-white/50 uppercase tracking-widest mb-2 px-3">{{ __('Configuration') }}</h3>
         <ul class="space-y-0.5">
-          <li><a href="{{ route('admin.parametres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> Paramètres</a></li>
-          <li><a href="{{ route('admin.pilotage') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.pilotage') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">shield</span> Pilotage & sécurité</a></li>
+          <li><a href="{{ route('admin.parametres') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.parametres*') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">settings</span> {{ __('Paramètres') }}</a></li>
+          <li><a href="{{ route('admin.pilotage') }}" class="sidebar-link flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm {{ request()->routeIs('admin.pilotage') ? 'bg-white/10 text-white font-semibold' : 'text-white/60 hover:bg-white/10 hover:text-white' }} transition-colors"><span class="material-symbols-outlined text-lg">shield</span> {{ __('Pilotage & sécurité') }}</a></li>
         </ul>
       </div>
       @endrole
@@ -75,7 +75,7 @@
       <form method="POST" action="{{ route('logout') }}" onsubmit="if(window.innerWidth<1024)closeSidebar()">
         @csrf
         <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm text-secondary-container hover:bg-white/5 transition-colors">
-          <span class="material-symbols-outlined text-lg">logout</span> Déconnexion
+          <span class="material-symbols-outlined text-lg">logout</span> {{ __('Déconnexion') }}
         </button>
       </form>
     </div>
@@ -89,30 +89,30 @@
     <header class="sticky top-0 z-30 bg-white/75 backdrop-blur-xl border-b border-white/40 shadow-sm">
       <div class="flex items-center justify-between px-4 md:px-6 py-3">
         <div class="flex items-center gap-4">
-          <button id="menuBtn" class="lg:hidden text-primary hover:text-secondary-container transition-colors p-2.5" onclick="openSidebar()" aria-expanded="false" aria-controls="sidebar" aria-label="Menu de navigation">
+          <button id="menuBtn" class="lg:hidden text-primary hover:text-secondary-container transition-colors p-2.5" onclick="openSidebar()" aria-expanded="false" aria-controls="sidebar" aria-label="{{ __('Menu de navigation') }}">
             <span class="material-symbols-outlined">menu</span>
           </button>
-          <h1 class="text-xl font-bold font-serif text-primary">@yield('page-title', 'Administration')</h1>
+          <h1 class="text-xl font-bold font-serif text-primary">@yield('page-title', __('Administration'))</h1>
         </div>
         <div class="flex items-center gap-3 relative">
-          <button id="userBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity" aria-haspopup="true" aria-expanded="false" aria-label="Menu utilisateur">
+          <button id="userBtn" class="flex items-center gap-2 hover:opacity-80 transition-opacity" aria-haspopup="true" aria-expanded="false" aria-label="{{ __('Menu utilisateur') }}">
             <div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-white text-xs font-bold">{{ strtoupper(substr(auth()->user()->name ?? 'A', 0, 1)) }}{{ strtoupper(substr(auth()->user()->prenom ?? 'D', 0, 1)) }}</div>
             <span class="hidden text-xs font-semibold text-outline sm:inline">
-              @if(auth()->user()->hasRole('admin')) Administrateur
+              @if(auth()->user()->hasRole('admin')) {{ __('Administrateur') }}
               @elseif(auth()->user()->hasRole('Marketing')) Marketing
-              @else {{ ucfirst(auth()->user()->getRoleNames()->first() ?? 'Utilisateur') }}
+              @else {{ ucfirst(auth()->user()->getRoleNames()->first() ?? __('Utilisateur')) }}
               @endif
             </span>
             <span class="material-symbols-outlined text-sm text-outline">expand_more</span>
           </button>
           <div id="userDropdown" class="user-dropdown absolute top-full right-0 mt-2 bg-white rounded-2xl shadow-xl border border-outline-variant/20 p-2 min-w-[180px] z-50">
             <a href="{{ route('profile.edit') }}" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-primary hover:bg-surface-container-low transition-colors">
-              <span class="material-symbols-outlined text-lg">person</span> Mon profil
+              <span class="material-symbols-outlined text-lg">person</span> {{ __('Mon profil') }}
             </a>
             <form method="POST" action="{{ route('logout') }}">
               @csrf
               <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-secondary-container hover:bg-secondary-container/5 transition-colors">
-                <span class="material-symbols-outlined text-lg">logout</span> Déconnexion
+                <span class="material-symbols-outlined text-lg">logout</span> {{ __('Déconnexion') }}
               </button>
             </form>
           </div>
@@ -128,9 +128,9 @@
       <div class="max-w-5xl mx-auto py-6 px-4 md:px-10 flex flex-col sm:flex-row justify-between items-center gap-4">
         <span class="text-xs text-primary/30 font-medium">© {{ date('Y') }} {{ $siteSettings?->site_nom ?? 'MatchJuste' }}.</span>
         <nav class="flex items-center gap-6 text-xs uppercase tracking-widest text-primary/30 font-bold">
-          <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">Confidentialité</a>
-          <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">Cookies</a>
-          <a href="{{ route('terms') }}" class="hover:text-secondary-container transition-colors">Conditions</a>
+          <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">{{ __('Confidentialité') }}</a>
+          <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">{{ __('Cookies') }}</a>
+          <a href="{{ route('terms') }}" class="hover:text-secondary-container transition-colors">{{ __('Conditions') }}</a>
         </nav>
       </div>
     </footer>
