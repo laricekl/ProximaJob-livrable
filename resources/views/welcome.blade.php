@@ -219,30 +219,32 @@
     }
   </style>
   <style>
-    /* ── Pricing · Cartes empilées sur mobile ── */
+    /* ── Pricing · Cartes côte à côte sur mobile (2 forfaits) ── */
     @media (max-width: 767px) {
       .pricing-grid {
         position: relative;
-        gap: 16px;
+        gap: 12px;
         display: flex !important;
-        flex-direction: column;
+        flex-direction: row;
+        align-items: stretch;
         grid-template-columns: none !important;
       }
       .card-3d-parent {
         position: relative;
         z-index: 2;
         height: auto;
-        width: 100%;
-        max-width: 400px;
+        flex: 1 1 0;
+        width: auto;
+        max-width: none;
         perspective: none;
         filter: none;
-        margin: 0 auto;
+        margin: 0;
       }
       .card-3d-parent + .card-3d-parent {
         border: none;
       }
       .card-3d-inner {
-        height: auto;
+        height: 100%;
         border-radius: 28px;
         transform: none !important;
         box-shadow: 0 12px 28px rgba(0,0,0,0.10);
@@ -267,7 +269,7 @@
         border-radius: 999px;
       }
       .card-3d-content {
-        padding: 18px 18px 16px;
+        padding: 16px 12px 14px;
         transform: none !important;
         display: flex;
         flex-direction: column;
@@ -277,42 +279,45 @@
         flex: 1;
       }
       .card-3d-content .text-4xl {
-        font-size: 1.8rem;
+        font-size: 1.45rem;
       }
       .card-3d-content ul {
         display: block;
-        margin: 2px 0;
+        margin: 2px 0 12px;
         text-align: left;
         width: 100%;
       }
       .card-3d-content ul li {
-        font-size: 12.5px;
+        font-size: 11.5px;
+        line-height: 1.35;
         padding: 2px 0;
         display: flex;
-        align-items: center;
-        gap: 6px;
+        align-items: flex-start;
+        gap: 4px;
       }
       .card-3d-content ul .material-symbols-outlined {
-        font-size: 14px;
+        font-size: 12px;
+        margin-top: 1px;
       }
       .card-3d-content .mt-1 {
         margin: 0;
       }
       .card-3d-content a {
-        margin: 14px 0 0 0 !important;
+        margin: 0 !important;
+        margin-top: auto !important;
         width: 100%;
-        padding: 10px 16px;
-        font-size: 14px;
+        padding: 9px 8px;
+        font-size: 12.5px;
         text-align: center;
         border-radius: 999px;
-        min-height: 44px;
+        min-height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
       }
       .card-3d-content > :first-child {
         font-weight: 700;
-        font-size: 12px;
+        font-size: 11px;
       }
 
       /* ── Spotlight mobile ── */
