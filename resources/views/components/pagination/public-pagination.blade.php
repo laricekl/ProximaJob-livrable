@@ -11,7 +11,7 @@
       $start = max(1, $end - $window * 2);
     }
   @endphp
-  <nav aria-label="Pagination des résultats" class="flex w-full max-w-full flex-col items-start justify-between gap-3 overflow-hidden rounded-2xl border border-primary/5 bg-white px-4 py-3 sm:flex-row sm:items-center sm:px-5">
+  <nav aria-label="{{ __('Pagination des résultats') }}" class="flex w-full max-w-full flex-col items-start justify-between gap-3 overflow-hidden rounded-2xl border border-primary/5 bg-white px-4 py-3 sm:flex-row sm:items-center sm:px-5">
     <p class="text-xs text-on-surface-variant">
       Affichage de <span class="font-semibold text-primary">{{ $paginator->firstItem() }}</span>
       à <span class="font-semibold text-primary">{{ $paginator->lastItem() }}</span>
@@ -21,9 +21,9 @@
     <div class="flex w-full max-w-full items-center gap-1 overflow-x-auto pb-1 sm:w-auto sm:pb-0">
       {{-- Prev --}}
       @if ($paginator->onFirstPage())
-        <span data-pagination-control class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant/40">Préc.</span>
+        <span data-pagination-control class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant/40">{{ __('Préc.') }}</span>
       @else
-        <a data-pagination-control href="{{ $paginator->previousPageUrl() }}" class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant transition hover:border-secondary-container/40 hover:text-secondary-container">Préc.</a>
+        <a data-pagination-control href="{{ $paginator->previousPageUrl() }}" class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant transition hover:border-secondary-container/40 hover:text-secondary-container">{{ __('Préc.') }}</a>
       @endif
 
       {{-- First page + ... --}}
@@ -53,9 +53,9 @@
 
       {{-- Next --}}
       @if ($paginator->hasMorePages())
-        <a data-pagination-control href="{{ $paginator->nextPageUrl() }}" class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant transition hover:border-secondary-container/40 hover:text-secondary-container">Suiv.</a>
+        <a data-pagination-control href="{{ $paginator->nextPageUrl() }}" class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant transition hover:border-secondary-container/40 hover:text-secondary-container">{{ __('Suiv.') }}</a>
       @else
-        <span data-pagination-control class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant/40">Suiv.</span>
+        <span data-pagination-control class="inline-flex h-8 flex-shrink-0 items-center rounded-xl border border-outline-variant/20 px-3 text-xs font-semibold text-on-surface-variant/40">{{ __('Suiv.') }}</span>
       @endif
     </div>
   </nav>

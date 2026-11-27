@@ -12,7 +12,7 @@
     $values = array_filter([$offer->salaire_min, $offer->salaire_max], fn ($value) => !is_null($value));
     return $values
       ? collect($values)->map(fn ($value) => number_format((float) $value, 0, ',', ' ') . ' $')->join(' – ')
-      : 'Salaire à confirmer';
+      : __('Salaire à confirmer');
   };
 @endphp
 
@@ -22,7 +22,7 @@
     <div class="max-w-7xl mx-auto">
 
       {{-- Back --}}
-      <a href="{{ url()->previous() }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; Retour</a>
+      <a href="{{ url()->previous() }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; {{ __('Retour') }}</a>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
@@ -41,7 +41,7 @@
             <h2 class="mt-4 text-xl font-bold font-serif text-primary">{{ $entreprise->company_name }}</h2>
             @if ($entreprise->verified_at)
               <span class="inline-flex items-center gap-1 mt-2 px-3 py-0.5 bg-success-light text-success-dark text-2xs font-bold rounded-full">
-                <span class="material-symbols-outlined text-sm">verified</span> Vérifiée
+                <span class="material-symbols-outlined text-sm">verified</span> {{ __('Vérifiée') }}
               </span>
             @endif
             <div class="mt-5 space-y-2.5 text-left">
@@ -61,16 +61,16 @@
           {{-- Stats --}}
           <div class="card-glow rounded-2xl overflow-hidden">
             <div class="px-6 py-4 border-b border-outline-variant/10">
-              <h3 class="text-sm font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container text-lg">bar_chart</span> En chiffres</h3>
+              <h3 class="text-sm font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container text-lg">bar_chart</span> {{ __('En chiffres') }}</h3>
             </div>
             <div class="p-6 grid grid-cols-2 gap-4">
               <div class="text-center">
                 <p class="text-2xl font-bold text-primary">{{ $offres->total() }}</p>
-                <p class="text-xs text-outline mt-0.5">{{ $offres->total() === 1 ? 'Offre active' : 'Offres actives' }}</p>
+                <p class="text-xs text-outline mt-0.5">{{ $offres->total() === 1 ? __('Offre active') : __('Offres actives') }}</p>
               </div>
               <div class="text-center">
                 <p class="text-2xl font-bold text-primary">{{ $totalPublishedOffers }}</p>
-                <p class="text-xs text-outline mt-0.5">Total publié</p>
+                <p class="text-xs text-outline mt-0.5">{{ __('Total publié') }}</p>
               </div>
             </div>
           </div>
@@ -84,8 +84,8 @@
           @if ($entreprise->description)
             <div class="card-glow rounded-2xl overflow-hidden">
               <div class="px-8 py-5 border-b border-outline-variant/10">
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">auto_awesome</span> À propos</h2>
-                <p class="text-xs text-on-surface-variant mt-0.5">Découvrez l'entreprise et sa mission.</p>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">auto_awesome</span> {{ __('À propos') }}</h2>
+                <p class="text-xs text-on-surface-variant mt-0.5">{{ __('Découvrez l\'entreprise et sa mission.') }}</p>
               </div>
               <div class="p-8">
                 <p class="text-sm text-on-surface-variant leading-relaxed whitespace-pre-line">{{ $entreprise->description }}</p>
@@ -97,8 +97,8 @@
           <div class="card-glow rounded-2xl overflow-hidden">
             <div class="px-8 py-5 border-b border-outline-variant/10 flex items-center justify-between">
               <div>
-                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">work</span> Offres publiées</h2>
-                <p class="text-xs text-on-surface-variant mt-0.5">{{ $offres->total() }} {{ $offres->total() === 1 ? 'offre active publiée' : 'offres actives publiées' }}.</p>
+                <h2 class="text-lg font-bold font-serif text-primary flex items-center gap-2"><span class="material-symbols-outlined text-secondary-container">work</span> {{ __('Offres publiées') }}</h2>
+                <p class="text-xs text-on-surface-variant mt-0.5">{{ $offres->total() }} {{ $offres->total() === 1 ? __('offre active publiée') : __('offres actives publiées') }}.</p>
               </div>
             </div>
             <div class="p-6">
@@ -106,8 +106,8 @@
               @if ($offres->total() == 0)
                 <div class="text-center py-10">
                   <span class="material-symbols-outlined text-5xl text-outline mb-4">work_off</span>
-                  <p class="text-lg font-bold font-serif text-primary mb-2">Aucune offre pour le moment</p>
-                  <p class="text-sm text-on-surface-variant">Cette entreprise n'a pas encore publié d'offres d'emploi.</p>
+                  <p class="text-lg font-bold font-serif text-primary mb-2">{{ __('Aucune offre pour le moment') }}</p>
+                  <p class="text-sm text-on-surface-variant">{{ __('Cette entreprise n\'a pas encore publié d\'offres d\'emploi.') }}</p>
                 </div>
 
               @elseif ($offres->total() == 1)
@@ -121,7 +121,7 @@
                       <h3 class="font-bold text-primary group-hover:text-secondary-container transition-colors">{{ $o->titre }}</h3>
                       <p class="text-sm text-outline mt-1">{{ $o->localisation ?? '—' }}</p>
                       <div class="flex flex-wrap items-center gap-2 mt-3">
-                        <span class="px-2.5 py-0.5 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ $o->type?->nom ?? 'Offre' }}</span>
+                        <span class="px-2.5 py-0.5 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ $o->type?->nom ?? __('Offre') }}</span>
                         @if ($o->remote_work)
                           <span class="px-2.5 py-0.5 bg-surface-container text-outline text-2xs font-bold rounded-full">{{ $o->remote_work }}</span>
                         @endif
@@ -147,7 +147,7 @@
                           <h3 class="font-semibold text-primary text-sm group-hover:text-secondary-container transition-colors">{{ $o->titre }}</h3>
                           <div class="flex items-center gap-3 mt-1">
                             <span class="text-xs text-outline">{{ $o->localisation ?? '—' }}</span>
-                            <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ $o->type?->nom ?? 'Offre' }}</span>
+                            <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ $o->type?->nom ?? __('Offre') }}</span>
                           </div>
                         </div>
                         <div class="text-right flex-shrink-0">

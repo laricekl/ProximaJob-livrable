@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Inscription')
+@section('title', __('Inscription'))
 @section('styles')
   <style>
     input[type="text"], input[type="email"], input[type="tel"], input[type="password"], input[type="file"] {
@@ -21,14 +21,14 @@
 
         <!-- En-tête -->
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold font-serif text-primary mb-2">Créer un compte</h1>
-          <p class="text-on-surface-variant text-sm">Remplissez les informations ci-dessous</p>
+          <h1 class="text-3xl font-bold font-serif text-primary mb-2">{{ __('Créer un compte') }}</h1>
+          <p class="text-on-surface-variant text-sm">{{ __('Remplissez les informations ci-dessous') }}</p>
         </div>
 
         <!-- Switch Rôle -->
         <div class="flex bg-surface-container rounded-xl p-1.5 mb-8">
-          <button id="btn-candidat" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-white text-primary shadow-sm">Chercheur d'emploi</button>
-          <a href="{{ route('entreprise.register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-on-surface-variant hover:text-primary text-center">Entreprise</a>
+          <button id="btn-candidat" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-white text-primary shadow-sm">{{ __('Chercheur d\'emploi') }}</button>
+          <a href="{{ route('entreprise.register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-on-surface-variant hover:text-primary text-center">{{ __('Entreprise') }}</a>
         </div>
 
         @if (session('success'))
@@ -45,7 +45,7 @@
 
         @if ($errors->any())
           <div class="mb-6 rounded-2xl border border-error-light bg-error-light px-4 py-3 text-sm text-error-deep" role="alert">
-            <p class="font-semibold">Veuillez corriger les champs suivants :</p>
+            <p class="font-semibold">{{ __('Veuillez corriger les champs suivants :') }}</p>
             <ul class="mt-2 list-disc space-y-1 pl-5">
               @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>
@@ -60,34 +60,34 @@
           <!-- Nom + Prénoms -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="name" class="block text-sm font-semibold text-primary mb-2">Nom *</label>
-              <input type="text" id="name" name="name" placeholder="Nom" required
+              <label for="name" class="block text-sm font-semibold text-primary mb-2">{{ __('Nom *') }}</label>
+              <input type="text" id="name" name="name" placeholder="{{ __('Nom') }}" required
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
             <div>
-              <label for="prenom" class="block text-sm font-semibold text-primary mb-2">Prénoms *</label>
-              <input type="text" id="prenom" name="prenom" placeholder="Prénoms" required
+              <label for="prenom" class="block text-sm font-semibold text-primary mb-2">{{ __('Prénoms *') }}</label>
+              <input type="text" id="prenom" name="prenom" placeholder="{{ __('Prénoms') }}" required
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
           </div>
 
           <!-- Email -->
           <div>
-            <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail *</label>
-            <input type="email" id="email" name="email" placeholder="votre@email.com" required
+            <label for="email" class="block text-sm font-semibold text-primary mb-2">{{ __('Adresse e-mail *') }}</label>
+            <input type="email" id="email" name="email" placeholder="{{ __('votre@email.com') }}" required
               class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
           </div>
 
           <!-- Téléphone + Adresse -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="telephone" class="block text-sm font-semibold text-primary mb-2">Téléphone *</label>
+              <label for="telephone" class="block text-sm font-semibold text-primary mb-2">{{ __('Téléphone *') }}</label>
               <input type="tel" id="telephone" name="telephone" placeholder="+1 XX XX XX XX"
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
             <div>
-              <label for="adresse" class="block text-sm font-semibold text-primary mb-2">Adresse *</label>
-              <input type="text" id="adresse" name="adresse" placeholder="Votre adresse"
+              <label for="adresse" class="block text-sm font-semibold text-primary mb-2">{{ __('Adresse *') }}</label>
+              <input type="text" id="adresse" name="adresse" placeholder="{{ __('Votre adresse') }}"
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
           </div>
@@ -95,12 +95,12 @@
           <!-- Password + Confirmation -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label for="password" class="block text-sm font-semibold text-primary mb-2">Mot de passe *</label>
+              <label for="password" class="block text-sm font-semibold text-primary mb-2">{{ __('Mot de passe *') }}</label>
               <input type="password" id="password" name="password" placeholder="••••••••" required
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
             <div>
-              <label for="password_confirmation" class="block text-sm font-semibold text-primary mb-2">Confirmer *</label>
+              <label for="password_confirmation" class="block text-sm font-semibold text-primary mb-2">{{ __('Confirmer *') }}</label>
               <input type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
@@ -110,7 +110,7 @@
           <div class="flex items-start gap-3 p-4 bg-surface-container-low/50 rounded-xl">
             <input type="checkbox" id="terms" name="terms" required class="mt-0.5 rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" />
             <label for="terms" class="text-xs text-on-surface-variant leading-relaxed">
-              J'accepte les <a href="{{ route('terms') }}" class="text-secondary-container font-semibold hover:underline">conditions d'utilisation</a> et la <a href="{{ route('policy') }}" class="text-secondary-container font-semibold hover:underline">politique de confidentialité</a>
+              {{ __('J\'accepte les') }} <a href="{{ route('terms') }}" class="text-secondary-container font-semibold hover:underline">{{ __('Conditions d\'utilisation') }}</a> {{ __('et la') }} <a href="{{ route('policy') }}" class="text-secondary-container font-semibold hover:underline">{{ __('politique de confidentialité') }}</a>
             </label>
           </div>
 
@@ -118,13 +118,13 @@
           <div class="flex items-start gap-3 p-4 bg-surface-container-low/50 rounded-xl">
             <input type="checkbox" id="newsletter" name="newsletter" class="mt-0.5 rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" />
             <label for="newsletter" class="text-xs text-on-surface-variant leading-relaxed">
-              Je souhaite recevoir les actualités et offres par e-mail
+              {{ __('Je souhaite recevoir les actualités et offres par e-mail') }}
             </label>
           </div>
 
           <!-- Submit -->
           <button type="submit" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20">
-            Créer mon compte
+            {{ __('Créer mon compte') }}
           </button>
         </form>
 
@@ -133,7 +133,7 @@
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-outline-variant/30"></div>
           </div>
-          <span class="relative bg-white/70 backdrop-blur-2xl px-4 text-xs font-semibold text-outline uppercase tracking-wider">ou</span>
+          <span class="relative bg-white/70 backdrop-blur-2xl px-4 text-xs font-semibold text-outline uppercase tracking-wider">{{ __('ou') }}</span>
         </div>
 
         @php
@@ -151,10 +151,10 @@
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
               <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
             </svg>
-            Continuer avec Google
+            {{ __('Continuer avec Google') }}
           </a>
           @else
-            <button type="button" disabled class="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low py-3.5 text-sm font-semibold text-outline">Google bientôt disponible</button>
+            <button type="button" disabled class="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low py-3.5 text-sm font-semibold text-outline">{{ __('Google bientôt disponible') }}</button>
           @endif
 
           @if ($facebookEnabled)
@@ -162,16 +162,16 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
             </svg>
-            Continuer avec Facebook
+            {{ __('Continuer avec Facebook') }}
           </a>
           @else
-            <button type="button" disabled class="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low py-3.5 text-sm font-semibold text-outline">Facebook bientôt disponible</button>
+            <button type="button" disabled class="flex w-full cursor-not-allowed items-center justify-center gap-3 rounded-xl border border-outline-variant/20 bg-surface-container-low py-3.5 text-sm font-semibold text-outline">{{ __('Facebook bientôt disponible') }}</button>
           @endif
         </div>
 
         <!-- Lien connexion -->
         <p class="text-center text-sm text-on-surface-variant mt-8">
-          Vous avez déjà un compte ? <a href="{{ route('login') }}" class="text-secondary-container font-bold hover:underline">Se connecter</a>
+          {{ __('Vous avez déjà un compte ?') }} <a href="{{ route('login') }}" class="text-secondary-container font-bold hover:underline">{{ __('Se connecter') }}</a>
         </p>
 
       </div>

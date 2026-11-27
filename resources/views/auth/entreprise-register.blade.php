@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Inscription entreprise')
+@section('title', __('Inscription entreprise'))
 @section('content')
   <main class="flex-grow flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-lg">
@@ -7,14 +7,14 @@
       <div class="card-glow rounded-[2rem] p-8 md:p-10">
 
         <div class="text-center mb-8">
-          <h1 class="text-3xl font-bold font-serif text-primary mb-2">Créer un compte entreprise</h1>
-          <p class="text-on-surface-variant text-sm">Créez votre profil. Après confirmation de votre courriel, notre équipe validera l’entreprise.</p>
+          <h1 class="text-3xl font-bold font-serif text-primary mb-2">{{ __('Créer un compte entreprise') }}</h1>
+          <p class="text-on-surface-variant text-sm">{{ __('Créez votre profil. Après confirmation de votre courriel, notre équipe validera l’entreprise.') }}</p>
         </div>
 
         <!-- Switch Rôle -->
         <div class="flex bg-surface-container rounded-xl p-1.5 mb-8">
-          <a href="{{ route('register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-on-surface-variant hover:text-primary text-center">Chercheur d'emploi</a>
-          <span class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-white text-primary shadow-sm text-center">Entreprise</span>
+          <a href="{{ route('register') }}" class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 text-on-surface-variant hover:text-primary text-center">{{ __('Chercheur d\'emploi') }}</a>
+          <span class="flex-1 py-3 px-4 rounded-lg text-sm font-semibold transition-all duration-300 bg-white text-primary shadow-sm text-center">{{ __('Entreprise') }}</span>
         </div>
 
         <form class="space-y-5" action="{{ route('register.entreprise') }}" method="POST" enctype="multipart/form-data">
@@ -22,7 +22,7 @@
 
           @if ($errors->any())
             <div class="rounded-2xl border border-error-light bg-error-light px-5 py-4 text-sm text-error-dark">
-              <p class="font-bold mb-1">Veuillez corriger les erreurs suivantes :</p>
+              <p class="font-bold mb-1">{{ __('Veuillez corriger les erreurs suivantes :') }}</p>
               <p>{{ $errors->first() }}</p>
             </div>
           @endif
@@ -30,30 +30,30 @@
           <div class="pb-4 border-b border-outline-variant/20">
             <h3 class="font-bold text-primary text-sm flex items-center gap-2 mb-5">
               <span class="material-symbols-outlined text-secondary-container text-lg">person</span>
-              Informations du responsable
+              {{ __('Informations du responsable') }}
             </h3>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label for="name" class="block text-sm font-semibold text-primary mb-2">Nom *</label>
-                <input type="text" id="name" value="{{ old('name') }}" name="name" placeholder="Nom" required
+                <label for="name" class="block text-sm font-semibold text-primary mb-2">{{ __('Nom *') }}</label>
+                <input type="text" id="name" value="{{ old('name') }}" name="name" placeholder="{{ __('Nom') }}" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
-                <label for="prenom" class="block text-sm font-semibold text-primary mb-2">Prénom *</label>
-                <input type="text" id="prenom" name="prenom" value="{{ old('prenom') }}" placeholder="Prénom" required
+                <label for="prenom" class="block text-sm font-semibold text-primary mb-2">{{ __('Prénom *') }}</label>
+                <input type="text" id="prenom" name="prenom" value="{{ old('prenom') }}" placeholder="{{ __('Prénom') }}" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
             </div>
 
             <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label for="email" class="block text-sm font-semibold text-primary mb-2">Adresse e-mail *</label>
-                <input type="email" id="email" value="{{ old('email') }}" name="email" placeholder="votre@email.com" required
+                <label for="email" class="block text-sm font-semibold text-primary mb-2">{{ __('Adresse e-mail *') }}</label>
+                <input type="email" id="email" value="{{ old('email') }}" name="email" placeholder="{{ __('votre@email.com') }}" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
-                <label for="telephone" class="block text-sm font-semibold text-primary mb-2">Téléphone *</label>
+                <label for="telephone" class="block text-sm font-semibold text-primary mb-2">{{ __('Téléphone *') }}</label>
                 <input type="tel" id="telephone" required value="{{ old('telephone') }}" name="telephone" placeholder="+1 XX XX XX XX"
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
@@ -64,32 +64,32 @@
           <div class="pb-4 border-b border-outline-variant/20">
             <h3 class="font-bold text-primary text-sm flex items-center gap-2 mb-5">
               <span class="material-symbols-outlined text-secondary-container text-lg">business</span>
-              Informations de l'entreprise
+              {{ __('Informations de l\'entreprise') }}
             </h3>
 
             <div>
-              <label for="company_name" class="block text-sm font-semibold text-primary mb-2">Nom de l'entreprise *</label>
-              <input type="text" id="company_name" value="{{ old('company_name') }}" name="company_name" placeholder="Nom de votre entreprise" required
+              <label for="company_name" class="block text-sm font-semibold text-primary mb-2">{{ __('Nom de l\'entreprise *') }}</label>
+              <input type="text" id="company_name" value="{{ old('company_name') }}" name="company_name" placeholder="{{ __('Nom de votre entreprise') }}" required
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
 
             <div class="mt-4">
-              <label for="description" class="block text-sm font-semibold text-primary mb-2">Description de l'entreprise</label>
-              <textarea id="description" name="description" rows="3" placeholder="Décrivez votre entreprise, votre mission, ce qui vous rend unique..."
+              <label for="description" class="block text-sm font-semibold text-primary mb-2">{{ __('Description de l\'entreprise') }}</label>
+              <textarea id="description" name="description" rows="3" placeholder="{{ __('Décrivez votre entreprise, votre mission, ce qui vous rend unique...') }}"
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline resize-none">{{ old('description') }}</textarea>
             </div>
 
             <div class="mt-4">
               <div>
                 <label for="neq" class="block text-sm font-semibold text-primary mb-2">NEQ *</label>
-                <input type="text" id="neq" value="{{ old('neq') }}" name="neq" placeholder="N° NEQ" required
+                <input type="text" id="neq" value="{{ old('neq') }}" name="neq" placeholder="{{ __('N° NEQ') }}" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
             </div>
 
             <div class="mt-4">
-              <label for="adresse" class="block text-sm font-semibold text-primary mb-2">Adresse *</label>
-              <input type="text" id="adresse" required value="{{ old('adresse') }}" name="adresse" placeholder="Adresse de l'entreprise"
+              <label for="adresse" class="block text-sm font-semibold text-primary mb-2">{{ __('Adresse *') }}</label>
+              <input type="text" id="adresse" required value="{{ old('adresse') }}" name="adresse" placeholder="{{ __('Adresse de l\'entreprise') }}"
                 class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
             </div>
 
@@ -99,17 +99,17 @@
           <div>
             <h3 class="font-bold text-primary text-sm flex items-center gap-2 mb-5">
               <span class="material-symbols-outlined text-secondary-container text-lg">lock</span>
-              Sécurité
+              {{ __('Sécurité') }}
             </h3>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label for="password" class="block text-sm font-semibold text-primary mb-2">Mot de passe *</label>
+                <label for="password" class="block text-sm font-semibold text-primary mb-2">{{ __('Mot de passe *') }}</label>
                 <input type="password" id="password" name="password" placeholder="••••••••" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
               <div>
-                <label for="password_confirmation" class="block text-sm font-semibold text-primary mb-2">Confirmer *</label>
+                <label for="password_confirmation" class="block text-sm font-semibold text-primary mb-2">{{ __('Confirmer *') }}</label>
                 <input type="password" id="password_confirmation" name="password_confirmation" placeholder="••••••••" required
                   class="w-full px-4 py-3.5 bg-white/80 backdrop-blur-sm border border-outline-variant/50 rounded-xl text-sm text-primary placeholder:text-outline" />
               </div>
@@ -120,17 +120,17 @@
           <div class="flex items-start gap-3 p-4 bg-surface-container-low/50 rounded-xl">
             <input type="checkbox" id="terms" name="terms" required class="mt-0.5 rounded border-outline-variant/50 text-secondary-container focus:ring-secondary-container/30" />
             <label for="terms" class="text-xs text-on-surface-variant leading-relaxed">
-              J'accepte les <a href="{{ route('terms') }}" class="text-secondary-container font-semibold hover:underline">conditions d'utilisation</a> et la <a href="{{ route('policy') }}" class="text-secondary-container font-semibold hover:underline">politique de confidentialité</a>
+              {{ __('J\'accepte les') }} <a href="{{ route('terms') }}" class="text-secondary-container font-semibold hover:underline">{{ __('Conditions d\'utilisation') }}</a> {{ __('et la') }} <a href="{{ route('policy') }}" class="text-secondary-container font-semibold hover:underline">{{ __('politique de confidentialité') }}</a>
             </label>
           </div>
 
           <button type="submit" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20">
-            Créer mon compte entreprise
+            {{ __('Créer mon compte entreprise') }}
           </button>
         </form>
 
         <p class="text-center text-sm text-on-surface-variant mt-8">
-          Vous avez déjà un compte ? <a href="{{ route('login') }}" class="text-secondary-container font-bold hover:underline">Se connecter</a>
+          {{ __('Vous avez déjà un compte ?') }} <a href="{{ route('login') }}" class="text-secondary-container font-bold hover:underline">{{ __('Se connecter') }}</a>
         </p>
 
       </div>

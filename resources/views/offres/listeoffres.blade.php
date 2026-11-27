@@ -1,5 +1,5 @@
 @extends(auth()->check() ? (auth()->user()->hasRole('entreprise') ? 'layouts.entreprise' : 'layouts.candidat') : 'layouts.guest')
-@section('title', 'Offres')
+@section('title', __('Offres'))
 @section('styles')
   <style>
     .premium-card {
@@ -149,8 +149,8 @@
 @section('content')
   <main class="flex-grow pb-20" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
     <x-public-page-hero
-      title="Opportunités d'emploi"
-      subtitle="Explorez les offres disponibles et repérez rapidement celles qui correspondent à votre profil."
+      title="{{ __('Opportunités d\'emploi') }}"
+      subtitle="{{ __('Explorez les offres disponibles et repérez rapidement celles qui correspondent à votre profil.') }}"
     />
 
     <div class="max-w-7xl mx-auto px-4 md:px-10 mt-8">
@@ -162,9 +162,9 @@
         <form method="GET" action="{{ route('offres') }}" data-testid="offers-mobile-search-form" class="flex md:hidden items-center gap-1 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-1.5 border border-white search-glass">
           <div class="flex-1 flex items-center min-w-0 px-3 py-1.5">
             <span class="material-symbols-outlined text-outline mr-2 text-sm flex-shrink-0">search</span>
-            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
+            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="{{ __('Titre du poste, mots-clés...') }}" type="text" />
           </div>
-          <button id="search-filter-toggle" type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-outline hover:text-secondary-container hover:bg-secondary-container/5 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px]" aria-label="Filtres">
+          <button id="search-filter-toggle" type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-outline hover:text-secondary-container hover:bg-secondary-container/5 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px]" aria-label="{{ __('Filtres') }}">
             <span class="material-symbols-outlined text-xl">tune</span>
           </button>
           <button type="submit" class="bg-secondary-container text-white font-bold px-4 py-2.5 rounded-xl hover:bg-secondary transition-all shadow flex items-center justify-center gap-1 cta-pulse text-sm flex-shrink-0 min-w-[44px] min-h-[44px]">
@@ -177,41 +177,41 @@
           <input type="hidden" name="search" value="{{ $search }}">
           <div class="flex items-center px-3 py-2 mb-2 border-b border-outline-variant/20">
             <span class="material-symbols-outlined text-outline mr-2 text-sm">location_on</span>
-            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Localisation" type="text" />
+            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="{{ __('Localisation') }}" type="text" />
           </div>
           <div class="flex items-center px-3 py-2">
             <span class="material-symbols-outlined text-outline mr-2 text-sm">category</span>
             <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-sm">
-              <option value="">Toutes les catégories</option>
+              <option value="">{{ __('Toutes les catégories') }}</option>
               @foreach ($categoriesWithCount as $category)
                 <option value="{{ $category->id }}" @selected(in_array($category->id, $categories))>{{ $category->nom }}</option>
               @endforeach
             </select>
           </div>
-          <button type="submit" class="mt-3 w-full bg-secondary-container text-white font-bold px-4 py-3 rounded-xl hover:bg-secondary transition-all shadow text-sm">Appliquer</button>
+          <button type="submit" class="mt-3 w-full bg-secondary-container text-white font-bold px-4 py-3 rounded-xl hover:bg-secondary transition-all shadow text-sm">{{ __('Appliquer') }}</button>
         </form>
 
         <!-- DESKTOP: Full multi-field row -->
         <form method="GET" action="{{ route('offres') }}" data-testid="offers-desktop-search-form" class="hidden md:flex items-center gap-2 bg-white backdrop-blur-xl rounded-2xl shadow-lg p-2 border border-white search-glass">
           <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
             <span class="material-symbols-outlined text-outline mr-3 text-base">search</span>
-            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
+            <input name="search" value="{{ $search }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="{{ __('Titre du poste, mots-clés...') }}" type="text" />
           </div>
           <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
             <span class="material-symbols-outlined text-outline mr-3 text-base">location_on</span>
-            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Localisation" type="text" />
+            <input name="localisation" value="{{ $localisation }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="{{ __('Localisation') }}" type="text" />
           </div>
           <div class="flex-1 flex items-center px-4 py-2">
             <span class="material-symbols-outlined text-outline mr-3 text-base">category</span>
             <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-base">
-              <option value="">Toutes les catégories</option>
+              <option value="">{{ __('Toutes les catégories') }}</option>
               @foreach ($categoriesWithCount as $category)
                 <option value="{{ $category->id }}" @selected(in_array($category->id, $categories))>{{ $category->nom }}</option>
               @endforeach
             </select>
           </div>
           <button type="submit" class="bg-secondary-container text-white font-bold px-8 py-4 rounded-xl hover:bg-secondary transition-all shadow flex items-center justify-center gap-2 cta-pulse text-base flex-shrink-0">
-            Rechercher <span class="material-symbols-outlined text-lg">arrow_forward</span>
+            {{ __('Rechercher') }} <span class="material-symbols-outlined text-lg">arrow_forward</span>
           </button>
         </form>
       </div>
@@ -226,13 +226,13 @@
             <input type="hidden" name="sort" value="{{ $sort }}">
 
             <div class="flex items-center justify-between mb-6">
-              <h3 class="font-bold text-primary text-sm uppercase tracking-wide">Filtres</h3>
-              <a href="{{ route('offres', request('sort') ? ['sort' => request('sort')] : []) }}" class="text-2xs font-bold uppercase tracking-wider text-secondary-container hover:underline">Réinitialiser</a>
+              <h3 class="font-bold text-primary text-sm uppercase tracking-wide">{{ __('Filtres') }}</h3>
+              <a href="{{ route('offres', request('sort') ? ['sort' => request('sort')] : []) }}" class="text-2xs font-bold uppercase tracking-wider text-secondary-container hover:underline">{{ __('Réinitialiser') }}</a>
             </div>
 
             <!-- Type de contrat -->
             <div class="mb-6">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">Type de contrat</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">{{ __('Type de contrat') }}</h4>
               <div class="space-y-2">
                 @foreach ($typesWithCount as $contractType)
                 <label class="flex items-center gap-3 cursor-pointer group">
@@ -245,7 +245,7 @@
 
             <!-- Catégories -->
             <div class="mb-6 pt-6 border-t border-primary/5">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">Catégorie</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">{{ __('Catégorie') }}</h4>
               <div class="space-y-2">
                 @foreach ($categoriesWithCount as $category)
                 <label class="flex items-center gap-3 cursor-pointer group">
@@ -258,28 +258,28 @@
 
             <!-- Mode de travail -->
             <div class="mb-6 pt-6 border-t border-primary/5">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">Mode de travail</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">{{ __('Mode de travail') }}</h4>
               <div class="space-y-2">
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="remote_work[]" value="Présentiel" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('Présentiel', $remoteWork)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Présentiel</span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __('Présentiel') }}</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="remote_work[]" value="Hybride" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('Hybride', $remoteWork)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Hybride</span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __('Hybride') }}</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="remote_work[]" value="Télétravail" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('Télétravail', $remoteWork)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Télétravail</span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __('Télétravail') }}</span>
                 </label>
               </div>
             </div>
 
             <!-- Salaire -->
             <div class="mb-6 pt-6 border-t border-primary/5">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">Salaire minimum</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">{{ __('Salaire minimum') }}</h4>
               <select name="salaire_min" class="w-full rounded-xl border-outline-variant/30 text-sm text-on-surface focus:ring-secondary-container focus:border-secondary-container">
-                <option value="">Aucun minimum</option>
+                <option value="">{{ __('Aucun minimum') }}</option>
                 @foreach ([30000, 50000, 70000, 90000, 110000] as $salaryOption)
                   <option value="{{ $salaryOption }}" @selected((string) $salaire_min === (string) $salaryOption)>{{ number_format($salaryOption, 0, ',', ' ') }} $</option>
                 @endforeach
@@ -288,25 +288,25 @@
 
             <!-- Niveau d'expérience -->
             <div class="pt-6 border-t border-primary/5">
-              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">Expérience</h4>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-primary/50 mb-3">{{ __('Expérience') }}</h4>
               <div class="space-y-2">
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="experience[]" value="junior" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('junior', $experience)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Junior (0-2 ans)</span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __('Junior (0-2 ans)') }}</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="experience[]" value="intermediaire" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('intermediaire', $experience)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Intermédiaire (2-5 ans)</span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __('Intermédiaire (2-5 ans)') }}</span>
                 </label>
                 <label class="flex items-center gap-3 cursor-pointer group">
                   <input name="experience[]" value="senior" type="checkbox" class="rounded border-outline-variant text-secondary-container focus:ring-secondary-container" @checked(in_array('senior', $experience)) />
-                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">Senior (5+ ans)</span>
+                  <span class="text-sm text-on-surface group-hover:text-primary transition-colors">{{ __('Senior (5+ ans)') }}</span>
                 </label>
               </div>
             </div>
 
             <button type="submit" class="mt-6 w-full bg-primary text-white font-bold px-5 py-3 rounded-xl hover:bg-secondary-container transition-all shadow">
-              Appliquer les filtres
+              {{ __('Appliquer les filtres') }}
             </button>
           </form>
         </aside>
@@ -318,11 +318,11 @@
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 rounded-2xl bg-white border border-white shadow-md px-5 py-4">
             <p class="text-sm text-on-surface-variant flex items-center gap-2">
               <span class="material-symbols-outlined text-base text-secondary-container">manage_search</span>
-              <span><span class="font-bold text-primary">{{ $offres->total() }} offres</span> correspondent à vos critères</span>
+              <span><span class="font-bold text-primary">{{ $offres->total() }} {{ __('offres') }}</span> {{ __('correspondent à vos critères') }}</span>
             </p>
             <div class="flex items-center gap-3 w-full sm:w-auto">
               <button id="filter-toggle" class="lg:hidden flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-secondary-container bg-secondary-container/5 border border-secondary-container/20 rounded-xl px-4 py-2 hover:bg-secondary-container/10 transition-colors">
-                <span class="material-symbols-outlined text-base">tune</span> Filtres
+                <span class="material-symbols-outlined text-base">tune</span> {{ __('Filtres') }}
               </button>
               <form method="GET" action="{{ route('offres') }}" class="flex items-center gap-3 flex-1 sm:flex-none">
                 <input type="hidden" name="search" value="{{ $search }}">
@@ -341,12 +341,12 @@
                 @endforeach
                 <input type="hidden" name="salaire_min" value="{{ $salaire_min }}">
                 <input type="hidden" name="salaire_max" value="{{ $salaire_max }}">
-                <span class="hidden sm:inline text-xs text-on-surface-variant font-medium">Trier par :</span>
+                <span class="hidden sm:inline text-xs text-on-surface-variant font-medium">{{ __('Trier par :') }}</span>
                 <select name="sort" onchange="this.form.submit()" class="w-full sm:w-auto text-sm font-semibold bg-white border border-outline-variant/30 rounded-xl px-4 py-2 focus:ring-secondary-container focus:border-secondary-container">
-                  <option value="random" @selected($sort === 'random')>Pertinence</option>
-                  <option value="latest" @selected($sort === 'latest')>Plus récentes</option>
-                  <option value="salary_asc" @selected(in_array($sort, ['salary_asc', 'salaire_asc']))>Salaire (croissant)</option>
-                  <option value="salary_desc" @selected(in_array($sort, ['salary_desc', 'salaire_desc']))>Salaire (décroissant)</option>
+                  <option value="random" @selected($sort === 'random')>{{ __('Pertinence') }}</option>
+                  <option value="latest" @selected($sort === 'latest')>{{ __('Plus récentes') }}</option>
+                  <option value="salary_asc" @selected(in_array($sort, ['salary_asc', 'salaire_asc']))>{{ __('Salaire (croissant)') }}</option>
+                  <option value="salary_desc" @selected(in_array($sort, ['salary_desc', 'salaire_desc']))>{{ __('Salaire (décroissant)') }}</option>
                 </select>
               </form>
             </div>
@@ -355,7 +355,7 @@
           <!-- Job Cards -->
           <div class="offres-jobs space-y-4">
             @forelse ($offres as $offre)
-            <a href="{{ route('job_infos', $offre) }}" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 bg-white rounded-2xl border border-white shadow-md hover:border-secondary-container/30 hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden" aria-label="Voir les détails de l'offre {{ $offre->poste ?: $offre->titre }}">
+            <a href="{{ route('job_infos', $offre) }}" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 bg-white rounded-2xl border border-white shadow-md hover:border-secondary-container/30 hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden" aria-label="{{ __('Voir les détails de l\'offre') }} {{ $offre->poste ?: $offre->titre }}">
               <div class="absolute inset-y-0 left-0 w-1 bg-secondary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div class="flex items-center gap-4 relative z-10 min-w-0">
                 <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0 shadow-sm ring-1 ring-secondary-container/10">
@@ -364,29 +364,29 @@
                 <div class="min-w-0">
                   <h4 class="font-bold text-base md:text-lg text-primary group-hover:text-secondary-container transition-colors truncate">{{ $offre->poste ?: $offre->titre }}</h4>
                   <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-on-surface-variant/75 font-medium">
-                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-outline">business</span>{{ $offre->entreprise->company_name ?? 'Entreprise' }}</span>
-                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-outline">location_on</span>{{ $offre->localisation ?: 'Localisation à confirmer' }}</span>
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-outline">business</span>{{ $offre->entreprise->company_name ?? __('Entreprise') }}</span>
+                    <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-outline">location_on</span>{{ $offre->localisation ?: __('Localisation à confirmer') }}</span>
                   </div>
                 </div>
               </div>
               <div class="mt-2 sm:mt-0 flex items-center gap-2 relative z-10 sm:flex-shrink-0">
-                <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? 'Offre' }}</span>
+                <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold uppercase tracking-wide rounded-full whitespace-nowrap">{{ $offre->type->nom ?? __('Offre') }}</span>
                 <span class="text-xs font-bold text-primary/70 whitespace-nowrap">
                   @if ($offre->salaire_min || $offre->salaire_max)
                     {{ $offre->salaire_min ? floor($offre->salaire_min / 1000) . 'k' : '?' }}$ – {{ $offre->salaire_max ? floor($offre->salaire_max / 1000) . 'k' : '?' }}$
                   @else
-                    Salaire à confirmer
+                    {{ __('Salaire à confirmer') }}
                   @endif
                 </span>
                 <span class="text-2xs text-outline whitespace-nowrap">{{ $offre->salary_type ?? '' }}</span>
-                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm group-hover:bg-secondary-container/10 transition-colors" title="Voir les détails" aria-label="Voir les détails">
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-secondary-container/20 bg-white text-secondary-container shadow-sm group-hover:bg-secondary-container/10 transition-colors" title="{{ __('Voir les détails') }}" aria-label="{{ __('Voir les détails') }}">
                   <span class="material-symbols-outlined text-base">visibility</span>
                 </span>
               </div>
             </a>
             @empty
             <div class="rounded-2xl border border-dashed border-outline-variant/30 bg-surface-container-low p-6 text-sm text-on-surface-variant">
-              Aucune offre ne correspond à vos critères pour le moment.
+              {{ __('Aucune offre ne correspond à vos critères pour le moment.') }}
             </div>
             @endforelse
           </div>
