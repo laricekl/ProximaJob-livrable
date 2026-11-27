@@ -1,12 +1,12 @@
 @extends(auth()->check() ? 'layouts.candidat' : 'layouts.guest')
-@section('title', $offre->titre ?? 'Detail offre')
+@section('title', $offre->titre ?? __('Detail offre'))
 @section('content')
   @php
-    $companyName = $offre->entreprise?->company_name ?? $offre->entreprise?->user?->name ?? 'Entreprise';
-    $contractType = $offre->type?->nom ?? $offre->employment_type ?? 'Type non indiqué';
+    $companyName = $offre->entreprise?->company_name ?? $offre->entreprise?->user?->name ?? __('Entreprise');
+    $contractType = $offre->type?->nom ?? $offre->employment_type ?? __('Type non indiqué');
     $salary = ($offre->salaire_min || $offre->salaire_max)
       ? trim(number_format((float) $offre->salaire_min, 0, ',', ' ') . ' - ' . number_format((float) $offre->salaire_max, 0, ',', ' ') . ' $')
-      : 'Salaire à confirmer';
+      : __('Salaire à confirmer');
     $skills = collect($offre->skills ?? [])
       ->map(fn ($jobSkill) => $jobSkill->skill?->name)
       ->filter();
@@ -17,16 +17,16 @@
       $benefits = collect(preg_split('/\r\n|\r|\n|,/', $offre->avantages))->map(fn ($item) => trim($item))->filter();
     }
     $responsibilities = collect(preg_split('/\r\n|\r|\n/', $offre->responsibilities ?? $offre->missions ?? ''))->map(fn ($item) => trim($item))->filter();
-    $description = $offre->description ?? $offre->missions ?? 'Aucune description detaillee disponible pour cette offre.';
+    $description = $offre->description ?? $offre->missions ?? __('Aucune description detaillee disponible pour cette offre.');
   @endphp
 
   <main class="flex-grow">
     <section class="px-4 md:px-10 pb-2">
       <div class="max-w-7xl mx-auto">
-        <nav class="inline-flex max-w-full items-center gap-2 rounded-full bg-white/90 px-4 py-2.5 text-xs font-semibold text-outline shadow-sm ring-1 ring-outline-variant/10" aria-label="Fil d'Ariane">
-          <a href="{{ auth()->check() ? route('user.home') : route('welcome') }}" class="whitespace-nowrap hover:text-primary transition-colors">Accueil</a>
+        <nav class="inline-flex max-w-full items-center gap-2 rounded-full bg-white/90 px-4 py-2.5 text-xs font-semibold text-outline shadow-sm ring-1 ring-outline-variant/10" aria-label="{{ __('Fil d\'Ariane') }}">
+          <a href="{{ auth()->check() ? route('user.home') : route('welcome') }}" class="whitespace-nowrap hover:text-primary transition-colors">{{ __('Accueil') }}</a>
           <span class="text-outline/50">/</span>
-          <a href="{{ route('offres') }}" class="whitespace-nowrap hover:text-primary transition-colors">Offres</a>
+          <a href="{{ route('offres') }}" class="whitespace-nowrap hover:text-primary transition-colors">{{ __('Offres') }}</a>
           <span class="text-outline/50">/</span>
           <span class="truncate text-primary">{{ $offre->titre }}</span>
         </nav>
@@ -50,7 +50,7 @@
                     @else
                       {{ $companyName }}
                     @endif
-                    • {{ $offre->localisation ?? 'Localisation à confirmer' }}</p>
+                    • {{ $offre->localisation ?? __('Localisation à confirmer') }}</p>
                   <div class="flex flex-wrap items-center gap-2 mt-3">
                     <span class="px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">{{ $contractType }}</span>
                     @if ($offre->remote_work)
@@ -61,21 +61,21 @@
                 </div>
               </div>
               <div class="flex flex-wrap items-center justify-start md:justify-end gap-x-6 gap-y-2 text-sm text-on-surface-variant">
-                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">today</span> Publié le {{ optional($offre->created_at)->translatedFormat('d M Y') }}</span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">today</span> {{ __('Publié le') }} {{ optional($offre->created_at)->translatedFormat('d M Y') }}</span>
                 @if ($offre->date_fin)
-                  <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> Date limite : {{ \Carbon\Carbon::parse($offre->date_fin)->translatedFormat('d M Y') }}</span>
+                  <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> {{ __('Date limite') }} : {{ \Carbon\Carbon::parse($offre->date_fin)->translatedFormat('d M Y') }}</span>
                 @endif
               </div>
             </div>
 
             <div class="card-glow rounded-2xl p-5 md:p-8">
-              <h2 class="text-lg md:text-xl font-bold font-serif text-primary mb-4">Description du poste</h2>
+              <h2 class="text-lg md:text-xl font-bold font-serif text-primary mb-4">{{ __('Description du poste') }}</h2>
               <div class="text-on-surface-variant leading-relaxed text-sm space-y-3">
                 {!! nl2br(e($description)) !!}
               </div>
 
               @if ($responsibilities->isNotEmpty())
-                <h3 class="font-bold text-primary mt-8 mb-3">Responsabilités</h3>
+                <h3 class="font-bold text-primary mt-8 mb-3">{{ __('Responsabilités') }}</h3>
                 <ul class="space-y-2 text-sm text-on-surface-variant">
                   @foreach ($responsibilities as $responsibility)
                     <li class="flex items-start gap-2"><span class="material-symbols-outlined text-secondary-container text-sm mt-0.5">check_circle</span> {{ $responsibility }}</li>
@@ -84,7 +84,7 @@
               @endif
 
               @if ($displaySkills->isNotEmpty())
-                <h3 class="font-bold text-primary mt-8 mb-3">Compétences requises</h3>
+                <h3 class="font-bold text-primary mt-8 mb-3">{{ __('Compétences requises') }}</h3>
                 <div class="flex flex-wrap gap-2">
                   @foreach ($displaySkills as $skill)
                     <span class="px-3 py-1.5 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">{{ $skill }}</span>
@@ -93,7 +93,7 @@
               @endif
 
               @if ($benefits->isNotEmpty())
-                <h3 class="font-bold text-primary mt-8 mb-3">Avantages</h3>
+                <h3 class="font-bold text-primary mt-8 mb-3">{{ __('Avantages') }}</h3>
                 <ul class="space-y-2 text-sm text-on-surface-variant">
                   @foreach ($benefits as $benefit)
                     <li class="flex items-start gap-2"><span class="material-symbols-outlined text-secondary-container text-sm mt-0.5">star</span> {{ is_array($benefit) ? ($benefit['label'] ?? implode(' ', $benefit)) : $benefit }}</li>
@@ -114,43 +114,43 @@
                   $applicationStatus = $existingPostulation?->status;
                   $canUpdateApplication = $existingPostulation && !in_array($applicationStatus, ['accepted', 'rejected'], true);
                   $isFinalApplication = $existingPostulation && in_array($applicationStatus, ['accepted', 'rejected'], true);
-                  $applicationButtonLabel = $canUpdateApplication ? 'Mettre à jour ma candidature' : 'Postuler maintenant';
+                  $applicationButtonLabel = $canUpdateApplication ? __('Mettre à jour ma candidature') : __('Postuler maintenant');
                   $applicationButtonIcon = $canUpdateApplication ? 'edit_document' : 'send';
-                  $finalApplicationLabel = $applicationStatus === 'accepted' ? 'Candidature acceptée' : 'Candidature refusée';
+                  $finalApplicationLabel = $applicationStatus === 'accepted' ? __('Candidature acceptée') : __('Candidature refusée');
                 @endphp
 
                 @if (!$hasCV)
                   <a href="{{ route('infos.cv') }}" class="w-full py-3.5 bg-warning-light text-warning-dark font-bold rounded-xl hover:bg-warning-light/80 transition-all mb-3 flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-lg">description</span> Compléter mon CV pour postuler
+                    <span class="material-symbols-outlined text-lg">description</span> {{ __('Compléter mon CV pour postuler') }}
                   </a>
                 @elseif ($isFinalApplication)
                   <button type="button" disabled class="w-full py-3.5 bg-surface-container-low text-outline font-bold rounded-xl mb-3 flex items-center justify-center gap-2 cursor-not-allowed">
                     <span class="material-symbols-outlined text-lg">lock</span> {{ $finalApplicationLabel }}
                   </button>
-                  <p class="mb-3 text-xs leading-5 text-on-surface-variant">Cette candidature a déjà reçu une décision finale.</p>
+                  <p class="mb-3 text-xs leading-5 text-on-surface-variant">{{ __('Cette candidature a déjà reçu une décision finale.') }}</p>
                 @else
                   <button type="button" onclick="handleApplyClick({{ $offre->id }})" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 mb-3 flex items-center justify-center gap-2">
                     <span class="material-symbols-outlined text-lg">{{ $applicationButtonIcon }}</span> {{ $applicationButtonLabel }}
                   </button>
                   @if ($canUpdateApplication)
-                    <p class="mb-3 text-xs leading-5 text-on-surface-variant">Vous avez déjà postulé. Les nouveaux documents remplaceront votre dossier en attente.</p>
+                    <p class="mb-3 text-xs leading-5 text-on-surface-variant">{{ __('Vous avez déjà postulé. Les nouveaux documents remplaceront votre dossier en attente.') }}</p>
                   @endif
                 @endif
               @else
                 <a href="{{ route('login') }}" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 mb-3 flex items-center justify-center gap-2">
-                  <span class="material-symbols-outlined text-lg">login</span> Se connecter pour postuler
+                  <span class="material-symbols-outlined text-lg">login</span> {{ __('Se connecter pour postuler') }}
                 </a>
               @endauth
 
               @auth
                 @if (!($isFinalApplication ?? false))
                   <a href="{{ route('cv.personalization.form', ['offre_id' => $offre->id]) }}" class="w-full py-3 bg-white border border-outline-variant/30 text-primary font-bold rounded-xl hover:bg-surface-container-low transition-all flex items-center justify-center gap-2">
-                    <span class="material-symbols-outlined text-lg">auto_awesome</span> Préparer mon CV
+                    <span class="material-symbols-outlined text-lg">auto_awesome</span> {{ __('Préparer mon CV') }}
                   </a>
                 @endif
               @else
                 <a href="{{ route('register') }}" class="w-full py-3 bg-white border border-outline-variant/30 text-primary font-bold rounded-xl hover:bg-surface-container-low transition-all flex items-center justify-center gap-2">
-                  <span class="material-symbols-outlined text-lg">auto_awesome</span> Préparer mon CV
+                  <span class="material-symbols-outlined text-lg">auto_awesome</span> {{ __('Préparer mon CV') }}
                 </a>
               @endauth
 
@@ -158,24 +158,24 @@
 
               <dl class="space-y-4 text-left">
                 <div class="flex justify-between gap-4 text-sm">
-                  <dt class="text-outline">Contrat</dt>
+                  <dt class="text-outline">{{ __('Contrat') }}</dt>
                   <dd class="font-semibold text-primary text-right">{{ $contractType }}</dd>
                 </div>
                 <div class="flex justify-between gap-4 text-sm">
-                  <dt class="text-outline">Experience</dt>
-                  <dd class="font-semibold text-primary text-right">{{ $offre->experience ?? $offre->required_experience ?? 'À confirmer' }}</dd>
+                  <dt class="text-outline">{{ __('Experience') }}</dt>
+                  <dd class="font-semibold text-primary text-right">{{ $offre->experience ?? $offre->required_experience ?? __('À confirmer') }}</dd>
                 </div>
                 <div class="flex justify-between gap-4 text-sm">
-                  <dt class="text-outline">Niveau</dt>
-                  <dd class="font-semibold text-primary text-right">{{ $offre->education_level ?? $offre->diplomes->pluck('name')->first() ?? 'À confirmer' }}</dd>
+                  <dt class="text-outline">{{ __('Niveau') }}</dt>
+                  <dd class="font-semibold text-primary text-right">{{ $offre->education_level ?? $offre->diplomes->pluck('name')->first() ?? __('À confirmer') }}</dd>
                 </div>
                 <div class="flex justify-between gap-4 text-sm">
-                  <dt class="text-outline">Langues</dt>
-                  <dd class="font-semibold text-primary text-right">{{ $offre->langues ?? 'À confirmer' }}</dd>
+                  <dt class="text-outline">{{ __('Langues') }}</dt>
+                  <dd class="font-semibold text-primary text-right">{{ $offre->langues ?? __('À confirmer') }}</dd>
                 </div>
                 @if ($offre->date_fin)
                   <div class="flex justify-between gap-4 text-sm">
-                    <dt class="text-outline">Date limite</dt>
+                    <dt class="text-outline">{{ __('Date limite') }}</dt>
                     <dd class="font-semibold text-primary text-right">{{ \Carbon\Carbon::parse($offre->date_fin)->translatedFormat('d M Y') }}</dd>
                   </div>
                 @endif

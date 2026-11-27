@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Abonnements')
+@section('title', __('Abonnements'))
 @section('styles')
 <style>
     .premium-card {
@@ -53,37 +53,37 @@
   <main class="flex-grow" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
 
     <x-public-page-hero
-      title="Abonnements Premium"
-      subtitle="Des fonctionnalités avancées, notre expertise, découvrez nos offres adaptées à vos besoins."
+      title="{{ __('Abonnements Premium') }}"
+      subtitle="{{ __('Des fonctionnalités avancées, notre expertise, découvrez nos offres adaptées à vos besoins.') }}"
     />
 
     <!-- Features -->
     <section class="py-20 px-4 md:px-10">
       <div class="max-w-6xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">Pourquoi nous choisir ?</h2>
-        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Une qualité différentielle pour votre recherche d'emploi ou votre recrutement.</p>
+        <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">{{ __('Pourquoi nous choisir ?') }}</h2>
+        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">{{ __('Une qualité différentielle pour votre recherche d\'emploi ou votre recrutement.') }}</p>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-8">
           <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-primary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-primary">trending_up</span>
             </div>
-            <h3 class="font-bold text-xl text-primary mb-3">Performance Maximale</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed">Profitez de notre réseau avancé de candidats pré-qualifiés pour vous proposer les meilleures opportunités.</p>
+            <h3 class="font-bold text-xl text-primary mb-3">{{ __('Performance Maximale') }}</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">{{ __('Profitez de notre réseau avancé de candidats pré-qualifiés pour vous proposer les meilleures opportunités.') }}</p>
           </div>
           <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-secondary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-on-secondary-fixed-variant">workspace_premium</span>
             </div>
-            <h3 class="font-bold text-xl text-primary mb-3">Service Premium</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed">Bénéficiez de services avancés sur le recrutement de votre main-d'oeuvre avec un accompagnement dédié.</p>
+            <h3 class="font-bold text-xl text-primary mb-3">{{ __('Service Premium') }}</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">{{ __('Bénéficiez de services avancés sur le recrutement de votre main-d\'oeuvre avec un accompagnement dédié.') }}</p>
           </div>
           <div class="bg-white rounded-2xl p-8 shadow-md border border-white text-center premium-card">
             <div class="w-16 h-16 rounded-xl bg-tertiary-fixed flex items-center justify-center mx-auto mb-6">
               <span class="material-symbols-outlined text-3xl text-on-tertiary-fixed">support_agent</span>
             </div>
-            <h3 class="font-bold text-xl text-primary mb-3">Support Dédié</h3>
-            <p class="text-on-surface-variant text-sm leading-relaxed">Support dédié au niveau avancé pendant votre parcours pour vous accompagner à chaque étape.</p>
+            <h3 class="font-bold text-xl text-primary mb-3">{{ __('Support Dédié') }}</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">{{ __('Support dédié au niveau avancé pendant votre parcours pour vous accompagner à chaque étape.') }}</p>
           </div>
         </div>
       </div>
@@ -92,8 +92,8 @@
     <!-- Pricing · Cartes 3D dynamiques -->
     <section class="py-20 px-4 md:px-10 bg-white/55">
       <div class="max-w-5xl mx-auto">
-        <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">Choisissez votre forfait</h2>
-        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">Découvrez nos offres adaptées à vos besoins</p>
+        <h2 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight text-center mb-4">{{ __('Choisissez votre forfait') }}</h2>
+        <p class="text-on-surface-variant text-center mb-16 max-w-2xl mx-auto">{{ __('Découvrez nos offres adaptées à vos besoins') }}</p>
 
         <div class="pricing-mobile grid grid-cols-1 md:grid-cols-{{ min(count($abonnements), 3) }} gap-3 md:gap-6">
 
@@ -120,7 +120,7 @@
                 </div>
                 <div class="card-3d-glass"></div>
                 @if ($isPopular)
-                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">Recommandé</span>
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1 rounded-full text-xs font-bold text-white bg-secondary-container shadow-lg">{{ __('Recommandé') }}</span>
                 @endif
                 <div class="card-3d-content text-center">
                   <p class="text-xs font-bold {{ $isPopular ? 'text-secondary-container' : 'text-outline' }} uppercase tracking-wide mb-1">{{ $abo->nom }}</p>
@@ -132,7 +132,7 @@
                     @endif
                     <span class="text-lg text-outline">$</span>
                   </p>
-                  <p class="text-xs text-outline mt-1">/{{ $abo->duree }} jour(s)</p>
+                  <p class="text-xs text-outline mt-1">/{{ $abo->duree }} {{ __('jour(s)') }}</p>
                   <ul class="mt-4 space-y-2 text-xs text-outline text-left">
                     @foreach ($fonctionnalites as $fct)
                       <li class="flex items-center gap-2">
@@ -144,11 +144,11 @@
                     @endforeach
                   </ul>
                   @if ($isFree)
-                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
+                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">{{ __('Commencer') }}</a>
                   @elseif ($isPopular)
-                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">Créer mon compte</a>
+                    <a href="{{ route('register') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:shadow-xl text-center" style="background: rgba(var(--pj-accent-rgb),0.88);">{{ __('Créer mon compte') }}</a>
                   @else
-                    <a href="{{ route('contact') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
+                    <a href="{{ route('contact') }}" class="block mt-5 w-full py-2.5 rounded-full text-sm font-semibold text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">{{ __('Contacter') }}</a>
                   @endif
                 </div>
               </div>
@@ -157,7 +157,7 @@
 
         </div>
 
-        <p class="text-center text-sm text-outline mt-8">Les forfaits payants sont activés après confirmation par notre équipe.</p>
+        <p class="text-center text-sm text-outline mt-8">{{ __('Les forfaits payants sont activés après confirmation par notre équipe.') }}</p>
       </div>
     </section>
 
@@ -170,70 +170,70 @@
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">01</span>
-                <span>Comment fonctionne l'abonnement Premium ?</span>
+                <span>{{ __('Comment fonctionne l\'abonnement Premium ?') }}</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de MatchJuste, y compris la personnalisation de CV par IA et les candidatures illimitées.
+              {{ __('Notre abonnement Premium vous donne accès à toutes les fonctionnalités avancées de MatchJuste, y compris la personnalisation de CV par IA et les candidatures illimitées.') }}
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">02</span>
-                <span>Puis-je annuler à tout moment ?</span>
+                <span>{{ __('Puis-je annuler à tout moment ?') }}</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Oui, vous pouvez annuler votre abonnement à tout moment. Après annulation, vous conservez l'accès aux fonctionnalités Premium jusqu'à la fin de votre période de facturation en cours.
+              {{ __('Oui, vous pouvez annuler votre abonnement à tout moment. Après annulation, vous conservez l\'accès aux fonctionnalités Premium jusqu\'à la fin de votre période de facturation en cours.') }}
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">03</span>
-                <span>Comment activer un forfait payant ?</span>
+                <span>{{ __('Comment activer un forfait payant ?') }}</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Depuis votre espace, choisissez le forfait souhaité et envoyez votre demande. Elle apparaît alors « En attente » : payez en ligne depuis votre espace d'abonnement et l'activation est automatique, dès la confirmation du paiement. Sans paiement en ligne, l'équipe peut aussi activer votre forfait manuellement.
+              {{ __('Depuis votre espace, choisissez le forfait souhaité et envoyez votre demande. Elle apparaît alors « En attente » : payez en ligne depuis votre espace d\'abonnement et l\'activation est automatique, dès la confirmation du paiement. Sans paiement en ligne, l\'équipe peut aussi activer votre forfait manuellement.') }}
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">04</span>
-                <span>Quand les fonctionnalités deviennent-elles accessibles ?</span>
+                <span>{{ __('Quand les fonctionnalités deviennent-elles accessibles ?') }}</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Les fonctionnalités du forfait deviennent accessibles dès que son statut passe à « Actif ». La date de début et la date d’expiration sont alors visibles dans votre espace.
+              {{ __('Les fonctionnalités du forfait deviennent accessibles dès que son statut passe à « Actif ». La date de début et la date d’expiration sont alors visibles dans votre espace.') }}
             </div>
           </div>
           <div class="faq-item bg-white rounded-2xl border border-white shadow-md overflow-hidden">
             <button class="faq-question w-full flex items-center justify-between p-6 text-left font-semibold text-primary hover:bg-surface-container-low/50 transition-colors">
               <div class="flex items-center gap-4">
                 <span class="w-8 h-8 rounded-full bg-secondary-container text-white flex items-center justify-center text-xs font-bold flex-shrink-0">05</span>
-                <span>Le compte Basique est-il vraiment gratuit ?</span>
+                <span>{{ __('Le compte Basique est-il vraiment gratuit ?') }}</span>
               </div>
               <span class="faq-icon w-8 h-8 rounded-full bg-surface-container flex items-center justify-center transition-transform flex-shrink-0">
                 <span class="material-symbols-outlined text-sm">add</span>
               </span>
             </button>
             <div class="faq-answer px-6 pb-6 pl-20 text-on-surface-variant text-sm leading-relaxed">
-              Oui, le compte Basique est entièrement gratuit et le restera. Il vous permet d'accéder aux offres d'emploi, de postuler et de créer votre profil sans aucun frais.
+              {{ __('Oui, le compte Basique est entièrement gratuit et le restera. Il vous permet d\'accéder aux offres d\'emploi, de postuler et de créer votre profil sans aucun frais.') }}
             </div>
           </div>
         </div>

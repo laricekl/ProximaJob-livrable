@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Renvoyer l\'email de verification')
+@section('title', __('Renvoyer l\'email de verification'))
 @section('content')
   <main class="flex-grow flex items-center justify-center px-4 py-12">
     <div class="w-full max-w-2xl">
@@ -8,9 +8,9 @@
           <div class="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-[1.75rem] bg-secondary-container/12 text-secondary-container">
             <span class="material-symbols-outlined text-4xl">mail</span>
           </div>
-          <h1 class="text-3xl font-bold font-serif text-primary mb-3">Renvoyer un lien de verification</h1>
+          <h1 class="text-3xl font-bold font-serif text-primary mb-3">{{ __('Renvoyer un lien de verification') }}</h1>
           <p class="mx-auto max-w-xl text-sm leading-relaxed text-on-surface-variant">
-            Saisissez l'adresse email de votre compte non verifie. Nous vous renverrons un nouveau lien si le compte existe encore en attente de confirmation.
+            {{ __('Saisissez l\'adresse email de votre compte non verifie. Nous vous renverrons un nouveau lien si le compte existe encore en attente de confirmation.') }}
           </p>
         </div>
 
@@ -29,7 +29,7 @@
         <form method="POST" action="{{ route('verification.custom.resend') }}" class="mt-8 space-y-5">
           @csrf
           <div>
-            <label for="email" class="mb-2 block text-sm font-semibold text-primary">Adresse e-mail</label>
+            <label for="email" class="mb-2 block text-sm font-semibold text-primary">{{ __('Adresse e-mail') }}</label>
             <input
               id="email"
               name="email"
@@ -37,7 +37,7 @@
               value="{{ old('email', session('email')) }}"
               required
               class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary outline-none transition-colors focus:border-secondary-container/50"
-              placeholder="vous@entreprise.com"
+              placeholder="{{ __('vous@entreprise.com') }}"
             />
             @error('email')
               <p class="mt-2 text-sm font-medium text-error">{{ $message }}</p>
@@ -46,10 +46,10 @@
 
           <div class="flex flex-col gap-3 sm:flex-row">
             <button type="submit" class="flex-1 rounded-xl bg-secondary-container px-5 py-3.5 text-sm font-bold text-white shadow-lg shadow-secondary-container/20 transition-all hover:bg-secondary">
-              Renvoyer l'e-mail
+              {{ __('Renvoyer l\'e-mail') }}
             </button>
             <a href="{{ route('login') }}" class="flex-1 rounded-xl border border-outline-variant/30 px-5 py-3 text-center text-sm font-semibold text-outline transition-colors hover:border-outline hover:text-on-surface-variant">
-              Retour a la connexion
+              {{ __('Retour a la connexion') }}
             </a>
           </div>
         </form>

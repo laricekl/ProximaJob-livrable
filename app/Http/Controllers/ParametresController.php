@@ -51,7 +51,7 @@ class ParametresController extends Controller
         }
 
         return redirect()->route('contact')
-            ->with('success', 'Votre message a bien été envoyé. Nous vous recontacterons rapidement.');
+            ->with('success', __('Votre message a bien été envoyé. Nous vous recontacterons rapidement.'));
     }
     public function abonnement()
     {

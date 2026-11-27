@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Contact')
+@section('title', __('Contact'))
 @section('styles')
   <style>
     input:focus, textarea:focus {
@@ -47,8 +47,8 @@
   <main class="flex-grow" style="background: linear-gradient(180deg, rgba(176, 177, 192, 0.22) 0%, rgba(240, 242, 245, 0.36) 100%), radial-gradient(at 10% 8%, rgba(235, 132, 60, 0.055) 0, transparent 38%), radial-gradient(at 90% 88%, rgba(36, 98, 183, 0.035) 0, transparent 40%), #f7f9fb;">
 
     <x-public-page-hero
-      title="Contactez-nous"
-      subtitle="Une question, un besoin ou une demande d'accompagnement ? Notre equipe vous repond rapidement."
+      title="{{ __('Contactez-nous') }}"
+      subtitle="{{ __('Une question, un besoin ou une demande d\'accompagnement ? Notre equipe vous repond rapidement.') }}"
     />
 
     <!-- Contact + Form -->
@@ -58,21 +58,21 @@
 
           <!-- Presentation + Carte -->
           <div class="flex flex-col">
-            <h2 class="text-3xl md:text-[2rem] xl:text-4xl font-bold font-serif text-primary leading-tight mb-6 lg:whitespace-nowrap">Vous grandirez, vous réussirez.</h2>
+            <h2 class="text-3xl md:text-[2rem] xl:text-4xl font-bold font-serif text-primary leading-tight mb-6 lg:whitespace-nowrap">{{ __('Vous grandirez, vous réussirez.') }}</h2>
             <p class="text-on-surface-variant text-lg leading-relaxed mb-10">
-              Notre algorithme intelligent analyse votre profil et vous propose automatiquement les offres d'emploi qui correspondent vraiment à vos compétences et aspirations.
+              {{ __('Notre algorithme intelligent analyse votre profil et vous propose automatiquement les offres d\'emploi qui correspondent vraiment à vos compétences et aspirations.') }}
             </p>
 
             <div class="contact-map-frame lg:flex-1 rounded-[2rem] overflow-hidden shadow-md border border-white bg-surface-container flex items-center justify-center">
-              <a href="{{ $mapSearchUrl }}" target="_blank" rel="noopener" class="relative block h-full w-full group" aria-label="Ouvrir la carte de localisation {{ $infos?->site_nom ?? 'MatchJuste' }}">
+              <a href="{{ $mapSearchUrl }}" target="_blank" rel="noopener" class="relative block h-full w-full group" aria-label="{{ __('Ouvrir la carte de localisation') }} {{ $infos?->site_nom ?? 'MatchJuste' }}">
                 <img
                   src="{{ asset('img/contact-map-montreal.png') }}"
-                  alt="Carte de localisation {{ $infos?->site_nom ?? 'MatchJuste' }}"
+                  alt="{{ __('Carte de localisation') }} {{ $infos?->site_nom ?? 'MatchJuste' }}"
                   class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                   loading="lazy"
                 />
                 <span class="absolute bottom-4 right-4 rounded-full bg-white/90 px-4 py-2 text-xs font-bold text-primary shadow-md backdrop-blur-sm transition-colors group-hover:text-secondary-container">
-                  Ouvrir la carte
+                  {{ __('Ouvrir la carte') }}
                 </span>
               </a>
             </div>
@@ -80,7 +80,7 @@
 
           <!-- Formulaire -->
           <div class="bg-secondary-fixed/30 rounded-[2rem] p-8 md:p-10">
-            <h3 class="font-bold text-xl text-primary mb-8">Envoyez-nous un message</h3>
+            <h3 class="font-bold text-xl text-primary mb-8">{{ __('Envoyez-nous un message') }}</h3>
             @if (session('success'))
               <div class="mb-6 rounded-2xl border border-success-light bg-success-light px-4 py-3 text-sm font-medium text-success-dark">
                 {{ session('success') }}
@@ -90,16 +90,16 @@
               @csrf
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label for="name" class="block text-sm font-semibold text-primary mb-2">Nom</label>
-                  <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="Votre nom"
+                  <label for="name" class="block text-sm font-semibold text-primary mb-2">{{ __('Nom') }}</label>
+                  <input type="text" id="name" name="name" value="{{ old('name') }}" placeholder="{{ __('Votre nom') }}"
                     class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('name') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                   @error('name')
                     <p class="mt-1 text-xs text-error">{{ $message }}</p>
                   @enderror
                 </div>
                 <div>
-                  <label for="firstname" class="block text-sm font-semibold text-primary mb-2">Prénom</label>
-                  <input type="text" id="firstname" name="firstname" value="{{ old('firstname') }}" placeholder="Votre prénom"
+                  <label for="firstname" class="block text-sm font-semibold text-primary mb-2">{{ __('Prénom') }}</label>
+                  <input type="text" id="firstname" name="firstname" value="{{ old('firstname') }}" placeholder="{{ __('Votre prénom') }}"
                     class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('firstname') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                   @error('firstname')
                     <p class="mt-1 text-xs text-error">{{ $message }}</p>
@@ -107,16 +107,16 @@
                 </div>
               </div>
               <div>
-                <label for="email" class="block text-sm font-semibold text-primary mb-2">Courriel</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="votre@email.com"
+                <label for="email" class="block text-sm font-semibold text-primary mb-2">{{ __('Courriel') }}</label>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" placeholder="{{ __('votre@email.com') }}"
                   class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('email') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none" />
                 @error('email')
                   <p class="mt-1 text-xs text-error">{{ $message }}</p>
                 @enderror
               </div>
               <div>
-                <label for="message" class="block text-sm font-semibold text-primary mb-2">Message</label>
-                <textarea id="message" name="message" rows="5" placeholder="Votre message..."
+                <label for="message" class="block text-sm font-semibold text-primary mb-2">{{ __('Message') }}</label>
+                <textarea id="message" name="message" rows="5" placeholder="{{ __('Votre message...') }}"
                   class="w-full px-4 py-3.5 bg-white/90 backdrop-blur-sm border {{ $errors->has('message') ? 'border-error' : 'border-outline-variant/50' }} rounded-xl text-sm text-primary placeholder:text-outline focus:outline-none resize-none">{{ old('message') }}</textarea>
                 @error('message')
                   <p class="mt-1 text-xs text-error">{{ $message }}</p>
@@ -124,7 +124,7 @@
               </div>
               <button type="submit" class="w-full py-3.5 bg-secondary-container text-white font-bold rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20 flex items-center justify-center gap-2">
                 <span class="material-symbols-outlined text-lg">send</span>
-                Envoyer un message
+                {{ __('Envoyer un message') }}
               </button>
             </form>
           </div>
