@@ -223,7 +223,7 @@
     @media (max-width: 767px) {
       .pricing-grid {
         position: relative;
-        gap: 20px;
+        gap: 16px;
         display: flex !important;
         flex-direction: column;
         grid-template-columns: none !important;
@@ -267,7 +267,7 @@
         border-radius: 999px;
       }
       .card-3d-content {
-        padding: 26px 22px 22px;
+        padding: 18px 18px 16px;
         transform: none !important;
         display: flex;
         flex-direction: column;
@@ -277,7 +277,7 @@
         flex: 1;
       }
       .card-3d-content .text-4xl {
-        font-size: 2rem;
+        font-size: 1.8rem;
       }
       .card-3d-content ul {
         display: block;
@@ -286,8 +286,8 @@
         width: 100%;
       }
       .card-3d-content ul li {
-        font-size: 13px;
-        padding: 3px 0;
+        font-size: 12.5px;
+        padding: 2px 0;
         display: flex;
         align-items: center;
         gap: 6px;
@@ -299,9 +299,9 @@
         margin: 0;
       }
       .card-3d-content a {
-        margin: 20px 0 0 0 !important;
+        margin: 14px 0 0 0 !important;
         width: 100%;
-        padding: 12px 16px;
+        padding: 10px 16px;
         font-size: 14px;
         text-align: center;
         border-radius: 999px;
@@ -783,7 +783,7 @@
           <div
             class="relative rounded-2xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-700">
             <img src="{{ asset('img/istockphoto-1434116614-612x612 1.png') }}" alt="Professionnels en collaboration"
-              class="w-full h-[280px] sm:h-[380px] md:h-[450px] object-cover object-[50%_15%]" loading="eager" decoding="async" fetchpriority="high" />
+              class="w-full h-[190px] sm:h-[380px] md:h-[450px] object-cover object-[50%_15%]" loading="eager" decoding="async" fetchpriority="high" />
           </div>
         </div>
         <div class="w-full lg:w-2/5 space-y-6 text-left">
