@@ -43,13 +43,22 @@ class Offre extends Model
     'required_experience',
     'education_level',
     'responsibilities',
+    'titre_en',
+    'poste_en',
+    'description_en',
+    'missions_en',
+    'responsibilities_en',
+    'objectif_en',
+    'criteres_en',
+    'traduction_hash',
+    'traduit_le',
 ];
 
     protected $casts = [
         'salaire' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
-         
+        'traduit_le' => 'datetime',
     ];
 
     protected static function booted()
@@ -57,6 +66,73 @@ class Offre extends Model
         static::creating(function ($offre) {
             $offre->slug = Str::slug($offre->poste . '-' . uniqid());
         });
+
+        // Traduction automatique en cache : à la publication ou à la
+        // modification des textes français, (re)traduire en arrière-plan
+        // si la version anglaise en cache n'est plus à jour.
+        static::saved(function ($offre) {
+            // Aucun pilote configuré = aucun appel, aucun coût.
+            if (! app(\App\Services\Translation\AutoTranslator::class)->available()) {
+                return;
+            }
+
+            $service = app(\App\Services\Translation\OffreTranslationService::class);
+
+            if (! $service->isCached($offre)) {
+                \App\Jobs\TranslateOffreJob::dispatch($offre->id);
+            }
+        });
+    }
+
+    /**
+     * Valeur affichée d'un champ libre : la traduction anglaise en
+     * cache quand la locale est "en", sinon le français (source).
+     */
+    public function localizedField(string $field): ?string
+    {
+        if (app()->getLocale() === 'en') {
+            $translated = $this->{$field . '_en'} ?? null;
+            if (filled($translated)) {
+                return $translated;
+            }
+        }
+
+        return $this->{$field};
+    }
+
+    public function getDisplayTitreAttribute(): ?string
+    {
+        return $this->localizedField('titre');
+    }
+
+    public function getDisplayPosteAttribute(): ?string
+    {
+        return $this->localizedField('poste');
+    }
+
+    public function getDisplayDescriptionAttribute(): ?string
+    {
+        return $this->localizedField('description');
+    }
+
+    public function getDisplayMissionsAttribute(): ?string
+    {
+        return $this->localizedField('missions');
+    }
+
+    public function getDisplayResponsibilitiesAttribute(): ?string
+    {
+        return $this->localizedField('responsibilities');
+    }
+
+    public function getDisplayObjectifAttribute(): ?string
+    {
+        return $this->localizedField('objectif');
+    }
+
+    public function getDisplayCriteresAttribute(): ?string
+    {
+        return $this->localizedField('criteres');
     }
 
     // Relations
