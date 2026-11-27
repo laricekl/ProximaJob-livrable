@@ -121,7 +121,7 @@
                   <span class="material-symbols-outlined text-secondary-container text-xl">code</span>
                 </div>
                 <div>
-                  <h4 class="font-bold text-primary group-hover:text-secondary-container transition-colors">{{ $offre->poste ?: $offre->titre }}</h4>
+                  <h4 class="font-bold text-primary group-hover:text-secondary-container transition-colors">{{ $offre->display_poste ?: $offre->display_titre }}</h4>
                   <p class="text-on-surface-variant/70 text-xs font-medium">{{ __($offre->entreprise->company_name ?? 'Entreprise') }} • {{ $offre->localisation ?: __('Localisation a confirmer') }}</p>
                 </div>
               </div>
@@ -159,7 +159,7 @@
                   </div>
                   <div>
                     <p class="text-sm font-semibold text-primary">{{ $application->autopostulation ? __('Candidature IA envoyée') : __('Candidature envoyée') }}</p>
-                    <p class="text-xs text-on-surface-variant">{{ $application->offre->poste ?? $application->offre->titre ?? 'Offre' }} {{ __('chez') }} {{ __($application->offre->entreprise->company_name ?? 'Entreprise') }}</p>
+                    <p class="text-xs text-on-surface-variant">{{ $application->offre->display_poste ?? $application->offre->display_titre ?? 'Offre' }} {{ __('chez') }} {{ __($application->offre->entreprise->company_name ?? 'Entreprise') }}</p>
                     <div class="mt-1 flex items-center gap-2">
                       <p class="text-2xs text-outline">{{ optional($application->created_at)->diffForHumans() }}</p>
                       <x-application-status :status="$application->status" />

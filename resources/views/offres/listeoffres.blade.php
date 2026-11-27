@@ -355,14 +355,14 @@
           <!-- Job Cards -->
           <div class="offres-jobs space-y-4">
             @forelse ($offres as $offre)
-            <a href="{{ route('job_infos', $offre) }}" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 bg-white rounded-2xl border border-white shadow-md hover:border-secondary-container/30 hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden" aria-label="{{ __('Voir les détails de l\'offre') }} {{ $offre->poste ?: $offre->titre }}">
+            <a href="{{ route('job_infos', $offre) }}" class="group flex flex-col sm:flex-row sm:items-center justify-between gap-5 p-5 bg-white rounded-2xl border border-white shadow-md hover:border-secondary-container/30 hover:shadow-lg transition-all duration-300 cursor-pointer relative overflow-hidden" aria-label="{{ __('Voir les détails de l\'offre') }} {{ $offre->display_poste ?: $offre->display_titre }}">
               <div class="absolute inset-y-0 left-0 w-1 bg-secondary-container opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <div class="flex items-center gap-4 relative z-10 min-w-0">
                 <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 flex-shrink-0 shadow-sm ring-1 ring-secondary-container/10">
                   <span class="material-symbols-outlined text-secondary-container text-xl">work</span>
                 </div>
                 <div class="min-w-0">
-                  <h4 class="font-bold text-base md:text-lg text-primary group-hover:text-secondary-container transition-colors truncate">{{ $offre->poste ?: $offre->titre }}</h4>
+                  <h4 class="font-bold text-base md:text-lg text-primary group-hover:text-secondary-container transition-colors truncate">{{ $offre->display_poste ?: $offre->display_titre }}</h4>
                   <div class="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-on-surface-variant/75 font-medium">
                     <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-outline">business</span>{{ $offre->entreprise->company_name ?? __('Entreprise') }}</span>
                     <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-sm text-outline">location_on</span>{{ $offre->localisation ?: __('Localisation à confirmer') }}</span>

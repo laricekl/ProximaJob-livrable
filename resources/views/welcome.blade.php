@@ -886,7 +886,7 @@
               </div>
               <div>
                 <h4 class="font-bold text-base md:text-lg text-primary group-hover:text-secondary-container transition-colors">
-                  {{ $offre->poste ?: $offre->titre }}</h4>
+                  {{ $offre->display_poste ?: $offre->display_titre }}</h4>
                 <p class="text-on-surface-variant/70 text-xs md:text-sm font-medium">{{ $offre->entreprise->company_name ?? __('Entreprise') }} • {{ $offre->localisation ?: __('Localisation a confirmer') }}</p>
               </div>
             </div>

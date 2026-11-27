@@ -1,5 +1,5 @@
 @extends(auth()->check() ? 'layouts.candidat' : 'layouts.guest')
-@section('title', $offre->titre ?? __('Detail offre'))
+@section('title', $offre->display_titre ?? __('Detail offre'))
 @section('content')
   @php
     $companyName = $offre->entreprise?->company_name ?? $offre->entreprise?->user?->name ?? __('Entreprise');
@@ -16,8 +16,8 @@
     if ($benefits->isEmpty() && $offre->avantages) {
       $benefits = collect(preg_split('/\r\n|\r|\n|,/', $offre->avantages))->map(fn ($item) => trim($item))->filter();
     }
-    $responsibilities = collect(preg_split('/\r\n|\r|\n/', $offre->responsibilities ?? $offre->missions ?? ''))->map(fn ($item) => trim($item))->filter();
-    $description = $offre->description ?? $offre->missions ?? __('Aucune description detaillee disponible pour cette offre.');
+    $responsibilities = collect(preg_split('/\r\n|\r|\n/', $offre->display_responsibilities ?? $offre->display_missions ?? ''))->map(fn ($item) => trim($item))->filter();
+    $description = $offre->display_description ?? $offre->display_missions ?? __('Aucune description detaillee disponible pour cette offre.');
   @endphp
 
   <main class="flex-grow">
@@ -28,7 +28,7 @@
           <span class="text-outline/50">/</span>
           <a href="{{ route('offres') }}" class="whitespace-nowrap hover:text-primary transition-colors">{{ __('Offres') }}</a>
           <span class="text-outline/50">/</span>
-          <span class="truncate text-primary">{{ $offre->titre }}</span>
+          <span class="truncate text-primary">{{ $offre->display_titre }}</span>
         </nav>
       </div>
     </section>
@@ -43,7 +43,7 @@
                   <span class="material-symbols-outlined text-secondary-container text-2xl md:text-3xl">work</span>
                 </div>
                 <div>
-                  <h1 class="text-xl md:text-3xl font-bold font-serif text-primary leading-tight">{{ $offre->titre }}</h1>
+                  <h1 class="text-xl md:text-3xl font-bold font-serif text-primary leading-tight">{{ $offre->display_titre }}</h1>
                   <p class="text-on-surface-variant mt-1">
                     @if($offre->entreprise)
                       <a href="{{ route('entreprise.profil', $offre->entreprise) }}" class="hover:text-secondary-container transition-colors font-semibold">{{ $companyName }}</a>
@@ -96,7 +96,7 @@
                 <h3 class="font-bold text-primary mt-8 mb-3">{{ __('Avantages') }}</h3>
                 <ul class="space-y-2 text-sm text-on-surface-variant">
                   @foreach ($benefits as $benefit)
-                    <li class="flex items-start gap-2"><span class="material-symbols-outlined text-secondary-container text-sm mt-0.5">star</span> {{ is_array($benefit) ? ($benefit['label'] ?? implode(' ', $benefit)) : $benefit }}</li>
+                    <li class="flex items-start gap-2"><span class="material-symbols-outlined text-secondary-container text-sm mt-0.5">star</span> {{ is_array($benefit) ? ($benefit['label'] ?? implode(' ', $benefit)) : __($benefit) }}</li>
                   @endforeach
                 </ul>
               @endif
