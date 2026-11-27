@@ -33,17 +33,17 @@
       </div>
     </section>
 
-    <section class="py-8 px-4 md:px-10">
+    <section class="py-5 md:py-8 px-4 md:px-10">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col lg:flex-row gap-8">
           <div class="flex-1 space-y-6">
-            <div class="card-glow rounded-2xl p-8">
-              <div class="flex items-start gap-5 mb-6">
-                <div class="w-16 h-16 rounded-2xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0">
-                  <span class="material-symbols-outlined text-secondary-container text-3xl">work</span>
+            <div class="card-glow rounded-2xl p-5 md:p-8">
+              <div class="flex items-start gap-4 md:gap-5 mb-6">
+                <div class="w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-secondary-container text-2xl md:text-3xl">work</span>
                 </div>
                 <div>
-                  <h1 class="text-2xl md:text-3xl font-bold font-serif text-primary leading-tight">{{ $offre->titre }}</h1>
+                  <h1 class="text-xl md:text-3xl font-bold font-serif text-primary leading-tight">{{ $offre->titre }}</h1>
                   <p class="text-on-surface-variant mt-1">
                     @if($offre->entreprise)
                       <a href="{{ route('entreprise.profil', $offre->entreprise) }}" class="hover:text-secondary-container transition-colors font-semibold">{{ $companyName }}</a>
@@ -60,7 +60,7 @@
                   </div>
                 </div>
               </div>
-              <div class="flex flex-wrap items-center justify-end gap-6 text-sm text-on-surface-variant">
+              <div class="flex flex-wrap items-center justify-start md:justify-end gap-x-6 gap-y-2 text-sm text-on-surface-variant">
                 <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">today</span> Publié le {{ optional($offre->created_at)->translatedFormat('d M Y') }}</span>
                 @if ($offre->date_fin)
                   <span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm">schedule</span> Date limite : {{ \Carbon\Carbon::parse($offre->date_fin)->translatedFormat('d M Y') }}</span>
@@ -68,8 +68,8 @@
               </div>
             </div>
 
-            <div class="card-glow rounded-2xl p-8">
-              <h2 class="text-xl font-bold font-serif text-primary mb-4">Description du poste</h2>
+            <div class="card-glow rounded-2xl p-5 md:p-8">
+              <h2 class="text-lg md:text-xl font-bold font-serif text-primary mb-4">Description du poste</h2>
               <div class="text-on-surface-variant leading-relaxed text-sm space-y-3">
                 {!! nl2br(e($description)) !!}
               </div>
