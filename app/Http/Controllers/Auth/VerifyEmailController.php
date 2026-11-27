@@ -146,8 +146,8 @@ class VerifyEmailController extends Controller
         Notification::create([
             'user_id' => $admin->id,
             'role' => 'admin',
-            'title' => 'Nouvelle entreprise en attente de validation',
-            'message' => 'L\'entreprise "' . ($entreprise->company_name ?? 'N/A') . '" a confirmé son email et attend votre validation.',
+            'title' => __('Nouvelle entreprise en attente de validation'),
+            'message' => __('L\'entreprise "') . ($entreprise->company_name ?? 'N/A') . __('" a confirmé son email et attend votre validation.'),
             'link' => '/admin/users-details/'. $user->id,
             'is_read' => false,
         ]);

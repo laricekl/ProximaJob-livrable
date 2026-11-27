@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV minimaliste - {{ $fullName }}</title>
+    <title>{{ __('CV minimaliste') }} - {{ $fullName }}</title>
     <style>
         @page { margin: {{ $density['margin'] }} 18mm; size: A4; }
         * { box-sizing: border-box; }
@@ -29,7 +29,7 @@
     </style>
 </head>
 <body>
-    <div class="footer">Page </div>
+    <div class="footer">{{ __('Page') }} </div>
     <header class="header">
         <h1 class="name">{{ $fullName }}</h1>
         @if($targetTitle !== '')<div class="target">{{ $targetTitle }}</div>@endif

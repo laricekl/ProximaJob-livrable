@@ -42,9 +42,9 @@
       </span>
     </span>
     <span class="flex items-center justify-between gap-2">
-      <span class="text-sm font-bold text-primary">{{ $template['label'] }}</span>
-      <span class="rounded-full bg-secondary-container/10 px-2 py-0.5 text-2xs font-bold text-secondary-container">{{ $template['badge'] }}</span>
+      <span class="text-sm font-bold text-primary">{{ __($template['label']) }}</span>
+      <span class="rounded-full bg-secondary-container/10 px-2 py-0.5 text-2xs font-bold text-secondary-container">{{ __($template['badge']) }}</span>
     </span>
-    <span class="mt-1 block text-xs leading-5 text-on-surface-variant">{{ $template['description'] }}</span>
+    <span class="mt-1 block text-xs leading-5 text-on-surface-variant">{{ __($template['description']) }}</span>
   </label>
 </div>

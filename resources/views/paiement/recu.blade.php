@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Reçu — {{ $userAbonnement->abonnement->nom ?? 'Abonnement' }} — MatchJuste</title>
+  <title>{{ __('Reçu') }} — {{ __($userAbonnement->abonnement->nom ?? 'Abonnement') }} — MatchJuste</title>
   <style>
     body { font-family: Arial, Helvetica, sans-serif; color: #1a1a2e; margin: 0; background: #f4f4f6; }
     .sheet { max-width: 720px; margin: 32px auto; background: #fff; padding: 40px 44px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,.08); }
@@ -29,19 +29,19 @@
     $acheteur = $userAbonnement->user;
     $reference = $userAbonnement->stripe_payment_intent_id
         ?? $userAbonnement->stripe_checkout_session_id
-        ?? 'Paiement validé par l’administration';
+        ?? __('Paiement validé par l’administration');
   @endphp
 
   <div class="sheet">
     <div class="brand">MatchJuste</div>
-    <p class="muted">Reçu d’abonnement — document généré le {{ now()->translatedFormat('d F Y') }}</p>
+    <p class="muted">{{ __('Reçu d’abonnement — document généré le') }} {{ now()->translatedFormat('d F Y') }}</p>
 
-    <h1>{{ $plan->nom ?? 'Abonnement' }}</h1>
-    <p class="muted">Abonnement n° {{ $userAbonnement->id }}</p>
+    <h1>{{ __($plan->nom ?? 'Abonnement') }}</h1>
+    <p class="muted">{{ __('Abonnement n°') }} {{ $userAbonnement->id }}</p>
 
     <table>
       <tr>
-        <th>Client</th>
+        <th>{{ __('Client') }}</th>
         <td>
           {{ trim(($acheteur->prenom ?? '') . ' ' . ($acheteur->name ?? '')) }}<br>
           {{ $acheteur->email }}
@@ -51,32 +51,32 @@
         </td>
       </tr>
       <tr>
-        <th>Plan</th>
-        <td>{{ $plan->nom ?? 'Abonnement' }} ({{ $plan->duree ?? '—' }} jours)</td>
+        <th>{{ __('Plan') }}</th>
+        <td>{{ __($plan->nom ?? 'Abonnement') }} ({{ $plan->duree ?? '—' }} {{ __('jours') }})</td>
       </tr>
       <tr>
-        <th>Période</th>
-        <td>Du {{ $userAbonnement->date_debut ? $userAbonnement->date_debut->translatedFormat('d F Y') : '—' }} au {{ $userAbonnement->date_fin ? \Carbon\Carbon::parse($userAbonnement->date_fin)->translatedFormat('d F Y') : '—' }}</td>
+        <th>{{ __('Période') }}</th>
+        <td>{{ __('Du') }} {{ $userAbonnement->date_debut ? $userAbonnement->date_debut->translatedFormat('d F Y') : '—' }} {{ __('au') }} {{ $userAbonnement->date_fin ? \Carbon\Carbon::parse($userAbonnement->date_fin)->translatedFormat('d F Y') : '—' }}</td>
       </tr>
       <tr>
-        <th>Statut</th>
-        <td>{{ $userAbonnement->effective_status }}</td>
+        <th>{{ __('Statut') }}</th>
+        <td>{{ __($userAbonnement->effective_status) }}</td>
       </tr>
       <tr>
-        <th>Référence du paiement</th>
+        <th>{{ __('Référence du paiement') }}</th>
         <td>{{ $reference }}</td>
       </tr>
       <tr>
-        <th>Montant payé</th>
+        <th>{{ __('Montant payé') }}</th>
         <td class="total">{{ number_format((float) ($plan->montant ?? 0), 2, ',', ' ') }} $ CAD</td>
       </tr>
     </table>
 
-    <p class="muted" style="margin-top:28px;">Merci de votre confiance. Pour toute question sur ce reçu, contactez le support via la page Contact de MatchJuste.</p>
+    <p class="muted" style="margin-top:28px;">{{ __('Merci de votre confiance. Pour toute question sur ce reçu, contactez le support via la page Contact de MatchJuste.') }}</p>
   </div>
 
   <div class="actions">
-    <button type="button" onclick="window.print()">Imprimer / enregistrer en PDF</button>
+    <button type="button" onclick="window.print()">{{ __('Imprimer / enregistrer en PDF') }}</button>
   </div>
 </body>
 </html>

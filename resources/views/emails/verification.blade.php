@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vérification de votre email - MatchJuste</title>
+    <title>{{ __('Vérification de votre email') }} - MatchJuste</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -89,36 +89,36 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Vérification de votre email</h1>
+            <h1>{{ __('Vérification de votre email') }}</h1>
         </div>
         <div class="content">
-            <div class="greeting">Bonjour {{ $user->prenom }} {{ $user->name }},</div>
+            <div class="greeting">{{ __('Bonjour') }} {{ $user->prenom }} {{ $user->name }},</div>
             
             <div class="instructions">
-                <p>Merci de vous être inscrit sur <strong>MatchJuste</strong>. Pour activer votre compte et commencer à utiliser nos services, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :</p>
+                <p>{{ __('Merci de vous être inscrit sur') }} <strong>MatchJuste</strong>. {{ __('Pour activer votre compte et commencer à utiliser nos services, veuillez vérifier votre adresse email en cliquant sur le bouton ci-dessous :') }}</p>
             </div>
             
             <div style="text-align: center;">
-                <a href="{{ $verificationUrl }}" class="button">Vérifier mon email</a>
+                <a href="{{ $verificationUrl }}" class="button">{{ __('Vérifier mon email') }}</a>
             </div>
 
             <div class="expiry-notice">
-                 <strong>Important :</strong> Ce lien expirera dans 24 heures.
+                 <strong>{{ __('Important :') }}</strong> {{ __('Ce lien expirera dans 24 heures.') }}
             </div>
 
-            <p>Si le bouton ne fonctionne pas, vous pouvez copier-coller le lien suivant dans votre navigateur :</p>
+            <p>{{ __('Si le bouton ne fonctionne pas, vous pouvez copier-coller le lien suivant dans votre navigateur :') }}</p>
             
             <div class="verification-link">
                 {{ $verificationUrl }}
             </div>
 
             <p style="color: #718096; font-size: 14px; margin-top: 25px;">
-                Si vous n'avez pas créé de compte sur MatchJuste, veuillez ignorer cet email.
+                {{ __("Si vous n'avez pas créé de compte sur MatchJuste, veuillez ignorer cet email.") }}
             </p>
         </div>
         <div class="footer">
-            <p>&copy; {{ date('Y') }} MatchJuste. Tous droits réservés.</p>
-            <p>Cet email a été envoyé automatiquement, merci de ne pas y répondre.</p>
+            <p>&copy; {{ date('Y') }} MatchJuste. {{ __('Tous droits réservés.') }}</p>
+            <p>{{ __('Cet email a été envoyé automatiquement, merci de ne pas y répondre.') }}</p>
         </div>
     </div>
 </body>

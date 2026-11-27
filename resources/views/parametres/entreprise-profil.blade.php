@@ -123,7 +123,7 @@
                       <div class="flex flex-wrap items-center gap-2 mt-3">
                         <span class="px-2.5 py-0.5 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ $o->type?->nom ?? __('Offre') }}</span>
                         @if ($o->remote_work)
-                          <span class="px-2.5 py-0.5 bg-surface-container text-outline text-2xs font-bold rounded-full">{{ $o->remote_work }}</span>
+                          <span class="px-2.5 py-0.5 bg-surface-container text-outline text-2xs font-bold rounded-full">{{ __($o->remote_work) }}</span>
                         @endif
                         <span class="text-xs text-outline">{{ $o->created_at?->diffForHumans() }}</span>
                       </div>

@@ -1,15 +1,15 @@
 @extends('layouts.entreprise')
-@section('title', 'Candidatures')
+@section('title', __('Candidatures'))
 
 @section('content')
   @php
     $statusLabels = [
-      'en_attente' => 'À examiner',
-      'shortlisted' => 'Présélectionnée',
-      'contacted' => 'Contactée',
-      'interview' => 'Entretien planifié',
-      'accepted' => 'Acceptée',
-      'rejected' => 'Refusée',
+      'en_attente' => __('À examiner'),
+      'shortlisted' => __('Présélectionnée'),
+      'contacted' => __('Contactée'),
+      'interview' => __('Entretien planifié'),
+      'accepted' => __('Acceptée'),
+      'rejected' => __('Refusée'),
     ];
     $statusStyles = [
       'en_attente' => 'bg-secondary-container/10 text-secondary-container',
@@ -25,20 +25,20 @@
   <section class="px-4 py-8 md:px-10">
     <div class="mx-auto max-w-7xl">
       <div class="mb-7">
-        <p class="mb-2 text-xs font-black uppercase tracking-[0.2em] text-secondary-container">Recrutement</p>
-        <h1 class="font-serif text-3xl font-bold text-primary">Toutes les candidatures</h1>
-        <p class="mt-2 max-w-2xl text-on-surface-variant">Traitez les dossiers de toutes vos offres depuis une seule boîte de réception.</p>
+        <p class="mb-2 text-xs font-black uppercase tracking-[0.2em] text-secondary-container">{{ __('Recrutement') }}</p>
+        <h1 class="font-serif text-3xl font-bold text-primary">{{ __('Toutes les candidatures') }}</h1>
+        <p class="mt-2 max-w-2xl text-on-surface-variant">{{ __('Traitez les dossiers de toutes vos offres depuis une seule boîte de réception.') }}</p>
       </div>
 
       <div class="mb-6 flex gap-2 overflow-x-auto pb-2 max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
         @foreach ([
-          '' => ['Toutes', $totalApplications],
-          'en_attente' => ['À examiner', $statusCounts['en_attente'] ?? 0],
-          'shortlisted' => ['Présélectionnées', $statusCounts['shortlisted'] ?? 0],
-          'contacted' => ['Contactées', $statusCounts['contacted'] ?? 0],
-          'interview' => ['Entretiens', $statusCounts['interview'] ?? 0],
-          'accepted' => ['Acceptées', $statusCounts['accepted'] ?? 0],
-          'rejected' => ['Refusées', $statusCounts['rejected'] ?? 0],
+          '' => [__('Toutes'), $totalApplications],
+          'en_attente' => [__('À examiner'), $statusCounts['en_attente'] ?? 0],
+          'shortlisted' => [__('Présélectionnées'), $statusCounts['shortlisted'] ?? 0],
+          'contacted' => [__('Contactées'), $statusCounts['contacted'] ?? 0],
+          'interview' => [__('Entretiens'), $statusCounts['interview'] ?? 0],
+          'accepted' => [__('Acceptées'), $statusCounts['accepted'] ?? 0],
+          'rejected' => [__('Refusées'), $statusCounts['rejected'] ?? 0],
         ] as $value => [$label, $count])
           <a href="{{ route('entreprise.candidatures.index', array_filter(['status' => $value, 'offre_id' => $filters['offre_id'] ?? null, 'source' => $filters['source'] ?? null, 'search' => $filters['search'] ?? null])) }}"
              class="inline-flex whitespace-nowrap items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-colors {{ ($filters['status'] ?? '') === $value ? 'bg-primary-container text-white' : 'border border-outline-variant/20 bg-white text-on-surface-variant hover:text-primary' }}">
@@ -53,36 +53,36 @@
           <input type="hidden" name="status" value="{{ $filters['status'] }}">
         @endif
         <div class="md:col-span-2">
-          <label for="applications-search" class="mb-1.5 block text-sm font-semibold text-primary">Rechercher</label>
-          <input id="applications-search" name="search" type="search" value="{{ $filters['search'] ?? '' }}" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0" placeholder="Candidat, courriel ou offre…">
+          <label for="applications-search" class="mb-1.5 block text-sm font-semibold text-primary">{{ __('Rechercher') }}</label>
+          <input id="applications-search" name="search" type="search" value="{{ $filters['search'] ?? '' }}" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0" placeholder="{{ __('Candidat, courriel ou offre…') }}">
         </div>
         <div>
-          <label for="applications-offer" class="mb-1.5 block text-sm font-semibold text-primary">Offre</label>
+          <label for="applications-offer" class="mb-1.5 block text-sm font-semibold text-primary">{{ __('Offre') }}</label>
           <select id="applications-offer" name="offre_id" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
-            <option value="">Toutes les offres</option>
+            <option value="">{{ __('Toutes les offres') }}</option>
             @foreach ($offres as $offre)
               <option value="{{ $offre->id }}" @selected((string) ($filters['offre_id'] ?? '') === (string) $offre->id)>{{ $offre->titre }}</option>
             @endforeach
           </select>
         </div>
         <div>
-          <label for="applications-source" class="mb-1.5 block text-sm font-semibold text-primary">Origine</label>
+          <label for="applications-source" class="mb-1.5 block text-sm font-semibold text-primary">{{ __('Origine') }}</label>
           <select id="applications-source" name="source" class="w-full rounded-xl border border-outline-variant/30 bg-white px-4 py-3 text-sm text-primary focus:border-secondary-container/50 focus:ring-0">
-            <option value="">Toutes</option>
-            <option value="directe" @selected(($filters['source'] ?? '') === 'directe')>Candidature directe</option>
-            <option value="ia" @selected(($filters['source'] ?? '') === 'ia')>Sélection IA</option>
+            <option value="">{{ __('Toutes') }}</option>
+            <option value="directe" @selected(($filters['source'] ?? '') === 'directe')>{{ __('Candidature directe') }}</option>
+            <option value="ia" @selected(($filters['source'] ?? '') === 'ia')>{{ __('Sélection IA') }}</option>
           </select>
         </div>
         <div class="flex flex-wrap gap-3 md:col-span-4">
-          <button class="inline-flex items-center gap-2 rounded-xl bg-secondary-container px-5 py-2.5 text-sm font-bold text-white hover:bg-secondary"><span class="material-symbols-outlined text-lg">filter_alt</span>Appliquer</button>
-          <a href="{{ route('entreprise.candidatures.index') }}" class="inline-flex items-center gap-2 rounded-xl bg-surface-container px-5 py-2.5 text-sm font-semibold text-primary"><span class="material-symbols-outlined text-lg">close</span>Effacer</a>
+          <button class="inline-flex items-center gap-2 rounded-xl bg-secondary-container px-5 py-2.5 text-sm font-bold text-white hover:bg-secondary"><span class="material-symbols-outlined text-lg">filter_alt</span>{{ __('Appliquer') }}</button>
+          <a href="{{ route('entreprise.candidatures.index') }}" class="inline-flex items-center gap-2 rounded-xl bg-surface-container px-5 py-2.5 text-sm font-semibold text-primary"><span class="material-symbols-outlined text-lg">close</span>{{ __('Effacer') }}</a>
         </div>
       </form>
 
       <div class="mb-10 space-y-4">
         @forelse ($postulations as $postulation)
           @php
-            $name = trim(($postulation->user?->prenom ?? '') . ' ' . ($postulation->user?->name ?? 'Candidat'));
+            $name = trim(($postulation->user?->prenom ?? '') . ' ' . ($postulation->user?->name ?? __('Candidat')));
             $skills = $postulation->user?->skills?->take(3) ?? collect();
           @endphp
           <article class="card-glow rounded-2xl p-5 md:p-6">
@@ -90,36 +90,36 @@
               <div class="min-w-0 flex-1">
                 <div class="mb-2 flex flex-wrap items-center gap-2">
                   <h2 class="text-lg font-bold text-primary">{{ $name }}</h2>
-                  <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $statusStyles[$postulation->status] ?? 'bg-surface-container text-primary' }}">{{ $statusLabels[$postulation->status] ?? ucfirst($postulation->status) }}</span>
-                  <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $postulation->autopostulation ? 'bg-secondary-container/10 text-secondary-container' : 'bg-surface-container text-on-surface-variant' }}">{{ $postulation->autopostulation ? 'Sélection IA' : 'Candidature directe' }}</span>
+                  <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $statusStyles[$postulation->status] ?? 'bg-surface-container text-primary' }}">{{ $statusLabels[$postulation->status] ?? __(ucfirst($postulation->status)) }}</span>
+                  <span class="rounded-full px-3 py-1 text-xs font-semibold {{ $postulation->autopostulation ? 'bg-secondary-container/10 text-secondary-container' : 'bg-surface-container text-on-surface-variant' }}">{{ $postulation->autopostulation ? __('Sélection IA') : __('Candidature directe') }}</span>
                 </div>
                 <p class="font-semibold text-primary">{{ $postulation->offre?->titre }}</p>
                 <div class="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-sm text-on-surface-variant">
                   <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-outline">mail</span>{{ $postulation->user?->email }}</span>
-                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-outline">work_history</span>{{ $postulation->user?->candidateSector?->experience_years ?? 0 }} an(s) d’expérience</span>
-                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-outline">calendar_today</span>Reçue le {{ optional($postulation->created_at)->format('d/m/Y') }}</span>
+                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-outline">work_history</span>{{ $postulation->user?->candidateSector?->experience_years ?? 0 }} {{ __('an(s) d’expérience') }}</span>
+                  <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-base text-outline">calendar_today</span>{{ __('Reçue le') }} {{ optional($postulation->created_at)->format('d/m/Y') }}</span>
                   @if (!is_null($postulation->match_score))
-                    <span class="flex items-center gap-1.5 font-semibold text-secondary-container"><span class="material-symbols-outlined text-base">data_usage</span>Compatibilité estimée : {{ round($postulation->match_score) }} %</span>
+                    <span class="flex items-center gap-1.5 font-semibold text-secondary-container"><span class="material-symbols-outlined text-base">data_usage</span>{{ __('Compatibilité estimée :') }} {{ round($postulation->match_score) }} %</span>
                   @endif
                 </div>
                 @if ($skills->isNotEmpty())
                   <div class="mt-3 flex flex-wrap gap-2">
                     @foreach ($skills as $skill)
-                      <span class="rounded-full bg-surface-container px-2.5 py-1 text-xs text-on-surface-variant">{{ $skill->name }}</span>
+                      <span class="rounded-full bg-surface-container px-2.5 py-1 text-xs text-on-surface-variant">{{ __($skill->name) }}</span>
                     @endforeach
                   </div>
                 @endif
               </div>
               <a href="{{ route('entreprise.candidatures.show', ['postulation' => $postulation, 'source' => $postulation->autopostulation ? 'ia' : null, 'from' => 'inbox']) }}" class="inline-flex flex-shrink-0 items-center justify-center gap-2 rounded-xl bg-primary-container px-5 py-3 text-sm font-bold text-white hover:bg-primary">
-                Examiner le dossier <span class="material-symbols-outlined text-lg">arrow_forward</span>
+                {{ __('Examiner le dossier') }} <span class="material-symbols-outlined text-lg">arrow_forward</span>
               </a>
             </div>
           </article>
         @empty
           <div class="card-glow rounded-2xl p-12 text-center">
             <span class="material-symbols-outlined mb-3 text-4xl text-outline">inbox</span>
-            <h2 class="font-serif text-xl font-bold text-primary">Aucune candidature trouvée</h2>
-            <p class="mt-2 text-sm text-on-surface-variant">Modifiez les filtres ou revenez consulter cette boîte plus tard.</p>
+            <h2 class="font-serif text-xl font-bold text-primary">{{ __('Aucune candidature trouvée') }}</h2>
+            <p class="mt-2 text-sm text-on-surface-variant">{{ __('Modifiez les filtres ou revenez consulter cette boîte plus tard.') }}</p>
           </div>
         @endforelse
       </div>

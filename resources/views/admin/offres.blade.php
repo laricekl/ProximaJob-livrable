@@ -1,6 +1,6 @@
 @extends('layouts.admin')
-@section('title', 'Offres')
-@section('page-title', 'Offres')
+@section('title', __('Offres'))
+@section('page-title', __('Offres'))
 @section('content')
   <div class="space-y-6">
     <form method="GET" action="{{ route('admin.offres') }}" class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -12,27 +12,27 @@
             name="search"
             value="{{ request('search') }}"
             class="w-full rounded-xl border border-outline-variant/20 bg-white/70 py-2.5 pl-10 pr-4 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30"
-            placeholder="Rechercher une offre..."
+            placeholder="{{ __('Rechercher une offre...') }}"
           />
         </div>
         <select name="status" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
-          <option value="">Tous les statuts</option>
-          <option value="active" @selected(request('status') === 'active')>Publiée</option>
-          <option value="desactive" @selected(request('status') === 'desactive')>Désactivée</option>
-          <option value="brouillon" @selected(request('status') === 'brouillon')>Brouillon</option>
-          <option value="expire" @selected(request('status') === 'expire')>Expirée</option>
+          <option value="">{{ __('Tous les statuts') }}</option>
+          <option value="active" @selected(request('status') === 'active')>{{ __('Publiée') }}</option>
+          <option value="desactive" @selected(request('status') === 'desactive')>{{ __('Désactivée') }}</option>
+          <option value="brouillon" @selected(request('status') === 'brouillon')>{{ __('Brouillon') }}</option>
+          <option value="expire" @selected(request('status') === 'expire')>{{ __('Expirée') }}</option>
         </select>
         <select name="entreprise_id" class="rounded-xl border border-outline-variant/20 bg-white/70 px-3 py-2.5 text-sm transition-all focus:border-secondary-container/50 focus:ring-2 focus:ring-accent/30">
-          <option value="">Toutes les entreprises</option>
+          <option value="">{{ __('Toutes les entreprises') }}</option>
           @foreach ($entreprises as $entreprise)
             <option value="{{ $entreprise->id }}" @selected((string) request('entreprise_id') === (string) $entreprise->id)>{{ $entreprise->company_name }}</option>
           @endforeach
         </select>
       </div>
       <div class="flex items-center gap-2">
-        <button type="submit" class="rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-secondary">Filtrer</button>
+        <button type="submit" class="rounded-xl bg-secondary-container px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-secondary">{{ __('Filtrer') }}</button>
         @if (request()->hasAny(['search', 'status', 'entreprise_id']))
-          <a href="{{ route('admin.offres') }}" class="rounded-xl border border-outline-variant/20 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-surface-container-low">Réinitialiser</a>
+          <a href="{{ route('admin.offres') }}" class="rounded-xl border border-outline-variant/20 px-4 py-2.5 text-sm font-semibold transition-colors hover:bg-surface-container-low">{{ __('Réinitialiser') }}</a>
         @endif
       </div>
     </form>
@@ -42,11 +42,11 @@
         <table class="w-full text-left text-sm">
           <thead>
             <tr class="bg-surface-container-low/50">
-              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Offre</th>
-              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">Entreprise</th>
-              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Catégorie</th>
-              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
-              <th class="px-3 py-3 sm:px-6 text-right text-xs font-bold uppercase tracking-wider text-outline">Actions</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">{{ __('Offre') }}</th>
+              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline md:table-cell">{{ __('Entreprise') }}</th>
+              <th class="hidden px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">{{ __('Catégorie') }}</th>
+              <th class="px-3 py-3 sm:px-6 text-xs font-bold uppercase tracking-wider text-outline">{{ __('Statut') }}</th>
+              <th class="px-3 py-3 sm:px-6 text-right text-xs font-bold uppercase tracking-wider text-outline">{{ __('Actions') }}</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-outline-variant/5">
@@ -55,7 +55,7 @@
                 <td class="px-3 py-3 sm:px-6">
                   <p class="font-semibold text-primary">{{ $offer->poste ?: $offer->titre }}</p>
                   <p class="text-xs text-outline">
-                    {{ $offer->localisation ?: 'Localisation non renseignée' }}
+                    {{ $offer->localisation ?: __('Localisation non renseignée') }}
                     @if ($offer->salaire_min || $offer->salaire_max)
                       • <span class="whitespace-nowrap">{{ (int) $offer->salaire_min }}-{{ (int) $offer->salaire_max }}$</span>
                     @endif
@@ -65,12 +65,12 @@
                   @if($offer->entreprise)
                     <a href="{{ route('admin.users.show', $offer->entreprise->user_id) }}" class="hover:text-secondary-container transition-colors">{{ $offer->entreprise->company_name }}</a>
                   @else
-                    Entreprise inconnue
+                    {{ __('Entreprise inconnue') }}
                   @endif
                 </td>
                 <td class="hidden px-3 py-3 sm:px-6 sm:table-cell">
                   <x-admin.status-badge
-                    :label="$offer->categorie->nom ?? 'Non classée'"
+                    :label="__($offer->categorie->nom ?? 'Non classée')"
                     color="bg-surface-container-low text-on-surface-variant"
                   />
                 </td>
@@ -80,13 +80,13 @@
                 <td class="px-3 py-3 sm:px-6">
                   <div class="flex items-center justify-end gap-1">
                     @if ($offer->slug)
-                      <x-admin.icon-action tag="a" :href="route('job_infos', $offer)" icon="visibility" label="Voir" />
+                      <x-admin.icon-action tag="a" :href="route('job_infos', $offer)" icon="visibility" :label="__('Voir')" />
                     @endif
                     @if ($offer->admin_status === 'desactive' || $offer->admin_status === 'expire')
                       <x-admin.icon-action
                         type="button"
                         icon="restart_alt"
-                        label="Réactiver"
+                        :label="__('Réactiver')"
                         color="text-success"
                         hover="hover:bg-success-light"
                         class="js-admin-offer-action"
@@ -97,7 +97,7 @@
                       <x-admin.icon-action
                         type="button"
                         icon="block"
-                        label="Désactiver"
+                        :label="__('Désactiver')"
                         color="text-warning"
                         hover="hover:bg-warning-light"
                         class="js-admin-offer-action"
@@ -110,7 +110,7 @@
               </tr>
             @empty
               <tr>
-                <td colspan="5" class="px-6 py-10 text-center text-sm text-outline">Aucune offre ne correspond aux filtres actuels.</td>
+                <td colspan="5" class="px-6 py-10 text-center text-sm text-outline">{{ __('Aucune offre ne correspond aux filtres actuels.') }}</td>
               </tr>
             @endforelse
           </tbody>
@@ -119,7 +119,7 @@
 
       <div class="flex flex-col gap-4 border-t border-outline-variant/10 px-6 py-4 text-sm sm:flex-row sm:items-center sm:justify-between">
         <span class="text-outline">
-          {{ $offers->firstItem() ?? 0 }}-{{ $offers->lastItem() ?? 0 }} sur {{ $offers->total() }} offres
+          {{ $offers->firstItem() ?? 0 }}-{{ $offers->lastItem() ?? 0 }} {{ __('sur') }} {{ $offers->total() }} {{ __('offres') }}
         </span>
         {{ $offers->withQueryString()->links('components.pagination.public-pagination') }}
       </div>
@@ -134,11 +134,11 @@
 
       document.querySelectorAll('.js-admin-offer-action').forEach((button) => {
         button.addEventListener('click', async () => {
-          const action = button.dataset.url.includes('deactivate') ? 'désactiver' : 'réactiver';
-          const approved = await window.ProximaUI.confirm(`Confirmer la ${action} de cette offre ?`, {
-            title: `${action.charAt(0).toUpperCase()}${action.slice(1)} l’offre`,
+          const action = button.dataset.url.includes('deactivate') ? '{{ __('désactiver') }}' : '{{ __('réactiver') }}';
+          const approved = await window.ProximaUI.confirm(`{{ __('Confirmer la') }} ${action} {{ __('de cette offre ?') }}`, {
+            title: `${action.charAt(0).toUpperCase()}${action.slice(1)} {{ __('l’offre') }}`,
             confirmLabel: action.charAt(0).toUpperCase() + action.slice(1),
-            tone: action === 'désactiver' ? 'danger' : 'default',
+            tone: action === '{{ __('désactiver') }}' ? 'danger' : 'default',
           });
           if (!approved) return;
           try {
@@ -154,13 +154,13 @@
             const payload = await response.json();
 
             if (!response.ok || payload.success === false) {
-              window.ProximaUI.notify(payload.message || 'Action impossible pour le moment.', 'error');
+              window.ProximaUI.notify(payload.message || '{{ __('Action impossible pour le moment.') }}', 'error');
               return;
             }
 
             window.location.reload();
           } catch (error) {
-            window.ProximaUI.notify('Une erreur est survenue pendant la mise à jour de l’offre.', 'error');
+            window.ProximaUI.notify('{{ __('Une erreur est survenue pendant la mise à jour de l’offre.') }}', 'error');
           }
         });
       });

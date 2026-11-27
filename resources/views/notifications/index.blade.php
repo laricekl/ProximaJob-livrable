@@ -1,6 +1,6 @@
 @extends($layout ?? 'layouts.candidat')
 
-@section('title', 'Notifications')
+@section('title', __('Notifications'))
 
 @php
   $isPaginatedNotifications = method_exists($notifications, 'items');
@@ -32,38 +32,38 @@
 @section('content')
   <main class="flex-grow pb-16">
     <section class="px-4 md:px-10">
-      <a href="{{ $dashboardUrl ?? route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; Retour au tableau de bord</a>
+      <a href="{{ $dashboardUrl ?? route('user.home') }}" class="inline-flex items-center gap-1.5 text-sm font-semibold text-outline hover:text-primary transition-colors mb-6">&larr; {{ __('Retour au tableau de bord') }}</a>
       <div class="max-w-4xl mx-auto">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
           <div>
             <h1 class="text-2xl font-bold font-serif text-primary">Notifications</h1>
-            <p class="text-sm text-on-surface-variant mt-1"><span id="unreadCount">{{ $unreadCount }}</span> non lues</p>
+            <p class="text-sm text-on-surface-variant mt-1"><span id="unreadCount">{{ $unreadCount }}</span> {{ __('non lues') }}</p>
           </div>
           <button id="markAllRead" type="button" class="text-sm font-bold text-secondary-container hover:underline flex items-center gap-1.5 self-start">
-            <span class="material-symbols-outlined text-lg">done_all</span> Tout marquer comme lu
+            <span class="material-symbols-outlined text-lg">done_all</span> {{ __('Tout marquer comme lu') }}
           </button>
         </div>
 
         <div class="flex items-center gap-2 mb-6 overflow-x-auto pb-2 max-sm:[mask-image:linear-gradient(to_right,black_93%,transparent_100%)] max-sm:[-webkit-mask-image:linear-gradient(to_right,black_93%,transparent_100%)]">
-          <button type="button" class="filter-pill active px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20" data-filter="all">Toutes</button>
-          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="matching">Matching IA</button>
-          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="application">Candidatures</button>
-          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="message">Messages</button>
-          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="system">Système</button>
+          <button type="button" class="filter-pill active px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20" data-filter="all">{{ __('Toutes') }}</button>
+          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="matching">{{ __('Matching IA') }}</button>
+          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="application">{{ __('Candidatures') }}</button>
+          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="message">{{ __('Messages') }}</button>
+          <button type="button" class="filter-pill px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap bg-white border border-outline-variant/20 text-outline" data-filter="system">{{ __('Système') }}</button>
         </div>
 
         <div id="notifList" class="space-y-6">
           @if ($todayNotifications->isEmpty() && $yesterdayNotifications->isEmpty() && $olderNotifications->isEmpty())
             <div id="emptyState" class="text-center py-16">
               <span class="material-symbols-outlined text-6xl text-outline mb-4">notifications_off</span>
-              <p class="text-lg font-bold font-serif text-primary mb-2">Aucune notification</p>
-              <p class="text-sm text-on-surface-variant">Vous êtes à jour ! Les notifications apparaîtront ici.</p>
+              <p class="text-lg font-bold font-serif text-primary mb-2">{{ __('Aucune notification') }}</p>
+              <p class="text-sm text-on-surface-variant">{{ __('Vous êtes à jour ! Les notifications apparaîtront ici.') }}</p>
             </div>
           @endif
           @foreach ([
-            'Aujourd\'hui' => $todayNotifications,
-            'Hier' => $yesterdayNotifications,
-            'Plus anciennes' => $olderNotifications,
+            __('Aujourd\'hui') => $todayNotifications,
+            __('Hier') => $yesterdayNotifications,
+            __('Plus anciennes') => $olderNotifications,
           ] as $sectionTitle => $sectionNotifications)
             @continue($sectionNotifications->isEmpty())
 
@@ -89,13 +89,13 @@
                     <div class="flex flex-wrap items-center gap-3 mt-3">
                       <span class="text-xs text-outline">{{ $notification->created_at?->diffForHumans() }}</span>
                       @if ($notification->link)
-                        <a href="{{ $notification->link }}" class="text-xs font-bold text-secondary-container hover:underline">Ouvrir</a>
+                        <a href="{{ $notification->link }}" class="text-xs font-bold text-secondary-container hover:underline">{{ __('Ouvrir') }}</a>
                       @endif
                     </div>
                   </div>
 
                   @unless ($notification->is_read)
-                    <button type="button" class="mark-read flex-shrink-0 w-8 h-8 rounded-full hover:bg-surface-container-low flex items-center justify-center transition-colors" data-id="{{ $notification->id }}" title="Marquer comme lu">
+                    <button type="button" class="mark-read flex-shrink-0 w-8 h-8 rounded-full hover:bg-surface-container-low flex items-center justify-center transition-colors" data-id="{{ $notification->id }}" title="{{ __('Marquer comme lu') }}">
                       <span class="material-symbols-outlined text-outline text-lg">check</span>
                     </button>
                   @endunless

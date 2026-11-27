@@ -1,13 +1,13 @@
 @extends('layouts.admin')
-@section('title', 'Dashboard')
-@section('page-title', 'Dashboard')
+@section('title', __('Dashboard'))
+@section('page-title', __('Dashboard'))
 @section('content')
   @php
     $growthLabel = static function ($growth): string {
-      if ($growth === null) return 'Pas de comparaison disponible';
-      if ($growth <= -100) return 'Aucune nouvelle donnée ce mois';
+      if ($growth === null) return __('Pas de comparaison disponible');
+      if ($growth <= -100) return __('Aucune nouvelle donnée ce mois');
 
-      return ($growth >= 0 ? '+' : '').$growth.'% ce mois';
+      return ($growth >= 0 ? '+' : '').$growth.__('% ce mois');
     };
   @endphp
   <div class="space-y-8">
@@ -17,7 +17,7 @@
           <span class="material-symbols-outlined text-2xl text-secondary-container">business</span>
         </div>
         <div>
-          <p class="text-xs text-on-surface-variant">Entreprises</p>
+          <p class="text-xs text-on-surface-variant">{{ __('Entreprises') }}</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($entrepriseStats['count']) }}</p>
           <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($entrepriseStats['monthlyGrowth']) }}</p>
         </div>
@@ -27,7 +27,7 @@
           <span class="material-symbols-outlined text-2xl text-secondary-container">work</span>
         </div>
         <div>
-          <p class="text-xs text-on-surface-variant">Offres d'emploi</p>
+          <p class="text-xs text-on-surface-variant">{{ __("Offres d'emploi") }}</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($offreStats['count']) }}</p>
           <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($offreStats['monthlyGrowth']) }}</p>
         </div>
@@ -37,7 +37,7 @@
           <span class="material-symbols-outlined text-2xl text-secondary-container">group</span>
         </div>
         <div>
-          <p class="text-xs text-on-surface-variant">Candidats</p>
+          <p class="text-xs text-on-surface-variant">{{ __('Candidats') }}</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($candidateStats['count']) }}</p>
           <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($candidateStats['monthlyGrowth']) }}</p>
         </div>
@@ -47,7 +47,7 @@
           <span class="material-symbols-outlined text-2xl text-secondary-container">auto_awesome</span>
         </div>
         <div>
-          <p class="text-xs text-on-surface-variant">Candidatures</p>
+          <p class="text-xs text-on-surface-variant">{{ __('Candidatures') }}</p>
           <p class="text-2xl font-bold text-primary">{{ number_format($matchStats['count']) }}</p>
           <p class="text-2xs font-semibold text-secondary-container">{{ $growthLabel($matchStats['monthlyGrowth']) }}</p>
         </div>
@@ -61,7 +61,7 @@
       @endphp
       <div class="card-glow rounded-2xl p-6">
         <div class="mb-6 flex items-center justify-between">
-          <h3 class="font-bold font-serif text-primary">Inscriptions</h3>
+          <h3 class="font-bold font-serif text-primary">{{ __('Inscriptions') }}</h3>
           <span class="text-xs font-semibold uppercase tracking-wider text-outline">{{ $userChartData['currentYear'] }}</span>
         </div>
         <div class="flex h-48 items-end gap-1 px-1">
@@ -71,13 +71,13 @@
         </div>
         <div class="mt-3 flex justify-between text-2xs font-semibold uppercase tracking-wider text-outline">
           @foreach ($userChartData['labels'] as $label)
-            <span>{{ $label }}</span>
+            <span>{{ __($label) }}</span>
           @endforeach
         </div>
       </div>
       <div class="card-glow rounded-2xl p-6">
         <div class="mb-6 flex items-center justify-between">
-          <h3 class="font-bold font-serif text-primary">Offres publiées</h3>
+          <h3 class="font-bold font-serif text-primary">{{ __('Offres publiées') }}</h3>
           <span class="text-xs font-semibold uppercase tracking-wider text-outline">{{ $offerChartData['currentYear'] }}</span>
         </div>
         <div class="flex h-48 items-end gap-1 px-1">
@@ -87,7 +87,7 @@
         </div>
         <div class="mt-3 flex justify-between text-2xs font-semibold uppercase tracking-wider text-outline">
           @foreach ($offerChartData['labels'] as $label)
-            <span>{{ $label }}</span>
+            <span>{{ __($label) }}</span>
           @endforeach
         </div>
       </div>
@@ -97,17 +97,17 @@
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-3">
       <div class="card-glow overflow-hidden rounded-2xl lg:col-span-2">
         <div class="flex items-center justify-between border-b border-outline-variant/10 px-6 py-4">
-          <h3 class="font-bold font-serif text-primary">Derniers inscrits</h3>
-          <a href="{{ route('admin.users') }}" class="text-sm font-semibold text-secondary-container hover:underline">Voir tout</a>
+          <h3 class="font-bold font-serif text-primary">{{ __('Derniers inscrits') }}</h3>
+          <a href="{{ route('admin.users') }}" class="text-sm font-semibold text-secondary-container hover:underline">{{ __('Voir tout') }}</a>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-sm">
             <thead>
               <tr class="bg-surface-container-low/50">
-                <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Utilisateur</th>
-                <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Rôle</th>
-                <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">Date</th>
-                <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">Statut</th>
+                <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">{{ __('Utilisateur') }}</th>
+                <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">{{ __('Rôle') }}</th>
+                <th class="hidden px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline sm:table-cell">{{ __('Date') }}</th>
+                <th class="px-6 py-3 text-xs font-bold uppercase tracking-wider text-outline">{{ __('Statut') }}</th>
               </tr>
             </thead>
             <tbody class="divide-y divide-outline-variant/5">
@@ -137,23 +137,23 @@
       </div>
 
       <div class="card-glow rounded-2xl p-6">
-        <h3 class="mb-4 font-bold font-serif text-primary">Actions rapides</h3>
+        <h3 class="mb-4 font-bold font-serif text-primary">{{ __('Actions rapides') }}</h3>
         <div class="space-y-3">
           <a href="{{ route('admin.users') }}" class="flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-surface-container-low">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary-container/10"><span class="material-symbols-outlined text-secondary-container">person_add</span></div>
-            <div><p class="text-sm font-semibold text-primary">Utilisateurs</p><p class="text-xs text-outline">Gérer les comptes</p></div>
+            <div><p class="text-sm font-semibold text-primary">{{ __('Utilisateurs') }}</p><p class="text-xs text-outline">{{ __('Gérer les comptes') }}</p></div>
           </a>
           <a href="{{ route('admin.offres') }}" class="flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-surface-container-low">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary-container/10"><span class="material-symbols-outlined text-secondary-container">work</span></div>
-            <div><p class="text-sm font-semibold text-primary">Offres</p><p class="text-xs text-outline">Modérer les offres</p></div>
+            <div><p class="text-sm font-semibold text-primary">{{ __('Offres') }}</p><p class="text-xs text-outline">{{ __('Modérer les offres') }}</p></div>
           </a>
           <a href="{{ route('admin.abonnements') }}" class="flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-surface-container-low">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-secondary-container/10"><span class="material-symbols-outlined text-secondary-container">credit_card</span></div>
-            <div><p class="text-sm font-semibold text-primary">Abonnements</p><p class="text-xs text-outline">Suivre les plans</p></div>
+            <div><p class="text-sm font-semibold text-primary">{{ __('Abonnements') }}</p><p class="text-xs text-outline">{{ __('Suivre les plans') }}</p></div>
           </a>
           <a href="{{ route('admin.parametres') }}" class="flex items-center gap-3 rounded-xl p-3 transition-colors hover:bg-surface-container-low">
             <div class="flex h-10 w-10 items-center justify-center rounded-lg bg-surface-container"><span class="material-symbols-outlined text-outline">settings</span></div>
-            <div><p class="text-sm font-semibold text-primary">Paramètres</p><p class="text-xs text-outline">Configurer le site</p></div>
+            <div><p class="text-sm font-semibold text-primary">{{ __('Paramètres') }}</p><p class="text-xs text-outline">{{ __('Configurer le site') }}</p></div>
           </a>
         </div>
       </div>
@@ -163,13 +163,13 @@
       <div class="grid gap-6 md:grid-cols-2">
         <a href="{{ route('admin.statistiques') }}" class="card-glow rounded-2xl p-6 hover:border-secondary-container/30">
           <span class="material-symbols-outlined text-secondary-container">bar_chart</span>
-          <h3 class="mt-3 font-bold text-primary">Statistiques</h3>
-          <p class="mt-1 text-sm text-on-surface-variant">Analyser les tendances agrégées de la plateforme.</p>
+          <h3 class="mt-3 font-bold text-primary">{{ __('Statistiques') }}</h3>
+          <p class="mt-1 text-sm text-on-surface-variant">{{ __('Analyser les tendances agrégées de la plateforme.') }}</p>
         </a>
         <a href="{{ route('admin.newsletters') }}" class="card-glow rounded-2xl p-6 hover:border-secondary-container/30">
           <span class="material-symbols-outlined text-secondary-container">mail</span>
-          <h3 class="mt-3 font-bold text-primary">Campagnes</h3>
-          <p class="mt-1 text-sm text-on-surface-variant">Préparer et envoyer les communications autorisées.</p>
+          <h3 class="mt-3 font-bold text-primary">{{ __('Campagnes') }}</h3>
+          <p class="mt-1 text-sm text-on-surface-variant">{{ __('Préparer et envoyer les communications autorisées.') }}</p>
         </a>
       </div>
     @endrole

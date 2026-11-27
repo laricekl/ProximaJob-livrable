@@ -1,6 +1,6 @@
 @if($formations->isNotEmpty())
     <section class="cv-section education-section">
-        <h2 class="section-title">Formation</h2>
+        <h2 class="section-title">{{ __('Formation') }}</h2>
         <div class="section-content">
             @foreach($formations as $formation)
                 @if(!empty($formation['diplome']))

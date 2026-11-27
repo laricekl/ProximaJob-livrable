@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Compte entreprise validé - MatchJuste</title>
+    <title>{{ __('Compte entreprise validé') }} - MatchJuste</title>
     <style>
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
@@ -192,48 +192,48 @@
         <!-- En-tête avec succès -->
         <div class="header">
             <div class="success-icon">✓</div>
-            <h1>Compte entreprise validé !</h1>
-            <div class="success-badge">Félicitations</div>
+            <h1>{{ __('Compte entreprise validé !') }}</h1>
+            <div class="success-badge">{{ __('Félicitations') }}</div>
         </div>
 
         <!-- Contenu principal -->
         <div class="content">
-            <div class="greeting">Bonjour {{ $userName }},</div>
+            <div class="greeting">{{ __('Bonjour') }} {{ $userName }},</div>
             
             <div class="message">
-                <p>Excellente nouvelle ! Nous avons le plaisir de vous informer que votre compte entreprise a été <strong>validé avec succès</strong> par notre équipe d'administration.</p>
+                <p>{{ __('Excellente nouvelle ! Nous avons le plaisir de vous informer que votre compte entreprise a été') }} <strong>{{ __('validé avec succès') }}</strong> {{ __('par notre équipe d’administration.') }}</p>
             </div>
 
             <!-- Informations de l'entreprise -->
             <div class="company-box">
-                <h3>Entreprise validée</h3>
+                <h3>{{ __('Entreprise validée') }}</h3>
                 <div class="company-name">{{ $companyName }}</div>
             </div>
 
             <div class="message">
-                <p>Votre profil d'entreprise est maintenant <strong>actif</strong> et vous avez accès à toutes les fonctionnalités de la plateforme MatchJuste.</p>
+                <p>{{ __('Votre profil d’entreprise est maintenant') }} <strong>{{ __('actif') }}</strong> {{ __('et vous avez accès à toutes les fonctionnalités de la plateforme MatchJuste.') }}</p>
             </div>
  
 
             <div class="tip-box">
-                <p>💡 <strong>Conseil :</strong> Utilisez votre mot de passe habituel pour vous connecter</p>
+                <p>💡 <strong>{{ __('Conseil :') }}</strong> {{ __('Utilisez votre mot de passe habituel pour vous connecter') }}</p>
             </div>
 
             <!-- Liste des avantages -->
             <div class="benefits">
-                <h3>🎯 Vous pouvez désormais :</h3>
+                <h3>{{ __('🎯 Vous pouvez désormais :') }}</h3>
                 <ul>
-                    <li><strong>Publier des offres d'emploi</strong> et atteindre des milliers de candidats qualifiés</li>
-                    <li><strong>Gérer vos annonces</strong> depuis votre tableau de bord entreprise</li>
-                    <li><strong>Consulter les candidatures</strong> et entrer en contact avec les talents</li>
-                    <li><strong>Mettre à jour votre profil</strong> et présenter votre entreprise</li>
-                    <li><strong>Accéder aux statistiques</strong> de vos offres d'emploi</li>
+                    <li><strong>{{ __("Publier des offres d'emploi") }}</strong> {{ __('et atteindre des milliers de candidats qualifiés') }}</li>
+                    <li><strong>{{ __('Gérer vos annonces') }}</strong> {{ __('depuis votre tableau de bord entreprise') }}</li>
+                    <li><strong>{{ __('Consulter les candidatures') }}</strong> {{ __('et entrer en contact avec les talents') }}</li>
+                    <li><strong>{{ __('Mettre à jour votre profil') }}</strong> {{ __('et présenter votre entreprise') }}</li>
+                    <li><strong>{{ __('Accéder aux statistiques') }}</strong> {{ __("de vos offres d'emploi") }}</li>
                 </ul>
             </div>
 
             <!-- Bouton d'action principal -->
             <div style="text-align: center;">
-                <a href="https://matchjuste.ca/login" class="button">Se connecter maintenant</a>
+                <a href="https://matchjuste.ca/login" class="button">{{ __('Se connecter maintenant') }}</a>
             </div>
 
           
@@ -241,28 +241,28 @@
             <!-- Message de support -->
             <div class="message" style="margin-top: 30px; padding-top: 30px; border-top: 1px solid #e5e7eb;">
                 <p style="color: #6b7280; font-size: 14px;">
-                    Si vous avez des questions ou besoin d'assistance, n'hésitez pas à 
-                    <a href="mailto:{{ config('mail.from.address') }}" style="color: #059669; text-decoration: none; font-weight: 500;">contacter notre support</a>.
+                    {{ __("Si vous avez des questions ou besoin d'assistance, n'hésitez pas à") }} 
+                    <a href="mailto:{{ config('mail.from.address') }}" style="color: #059669; text-decoration: none; font-weight: 500;">{{ __('contacter notre support') }}</a>.
                 </p>
             </div>
 
             <div class="message">
-                <p style="font-size: 15px;">Merci de votre confiance et bienvenue sur <strong>MatchJuste</strong> !</p>
+                <p style="font-size: 15px;">{{ __('Merci de votre confiance et bienvenue sur') }} <strong>MatchJuste</strong> !</p>
             </div>
 
             <p style="margin-top: 30px; color: #6b7280;">
-                Cordialement,<br>
-                <strong style="color: #059669;">L'équipe MatchJuste</strong>
+                {{ __('Cordialement,') }}<br>
+                <strong style="color: #059669;">{{ __('L\'équipe MatchJuste') }}</strong>
             </p>
         </div>
 
         <!-- Pied de page -->
         <div class="footer">
             <p style="margin: 0 0 5px 0;"><strong>MatchJuste</strong></p>
-            <p style="margin: 0 0 15px 0; color: #059669; font-weight: 500;">La plateforme de recrutement de proximité</p>
-            <p style="margin: 0;">&copy; {{ date('Y') }} MatchJuste. Tous droits réservés.</p>
+            <p style="margin: 0 0 15px 0; color: #059669; font-weight: 500;">{{ __('La plateforme de recrutement de proximité') }}</p>
+            <p style="margin: 0;">&copy; {{ date('Y') }} MatchJuste. {{ __('Tous droits réservés.') }}</p>
             <p style="margin: 5px 0 0 0; font-size: 12px; color: #9ca3af;">
-                Cet email a été envoyé automatiquement, merci de ne pas y répondre directement.
+                {{ __('Cet email a été envoyé automatiquement, merci de ne pas y répondre directement.') }}
             </p>
         </div>
     </div>

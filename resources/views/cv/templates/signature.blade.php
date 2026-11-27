@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV signature - {{ $fullName }}</title>
+    <title>{{ __('CV signature') }} - {{ $fullName }}</title>
     <style>
         @page { margin: 12mm 15mm; size: A4; }
         * { box-sizing: border-box; }
@@ -32,7 +32,7 @@
     </style>
 </head>
 <body>
-    <div class="footer">Page </div>
+    <div class="footer">{{ __('Page') }} </div>
     <table class="header-table"><tr>
         <td class="portrait-cell"><div class="portrait">@if($includePhoto)<img src="{{ $photo_data }}" alt="">@else{{ $initials }}@endif</div></td>
         <td class="identity">

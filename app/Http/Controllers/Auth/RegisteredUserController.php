@@ -176,8 +176,8 @@ class RegisteredUserController extends Controller
         Notification::create([
             'user_id' => $admin->id,
             'role' => 'admin',
-            'title' => 'Nouvelle entreprise en attente de validation',
-            'message' => 'L\'entreprise "' . $request->company_name . '" a demandé une inscription et attend votre validation.',
+            'title' => __('Nouvelle entreprise en attente de validation'),
+            'message' => __('L\'entreprise "') . $request->company_name . __('" a demandé une inscription et attend votre validation.'),
             'link' => '/admin/users-details/'. $user->id,
             'is_read' => false,
         ]);

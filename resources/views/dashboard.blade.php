@@ -5,10 +5,10 @@
     <div class="mx-auto mt-6 max-w-7xl px-4 md:px-10">
       <div class="rounded-2xl border border-secondary-container/20 bg-secondary-container/5 p-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p class="font-bold text-primary">Matching IA disponible avec le forfait Pro</p>
-          <p class="text-sm text-on-surface-variant">Les recommandations et scores ne sont affichés qu’avec un abonnement Pro actif.</p>
+          <p class="font-bold text-primary">{{ __('Matching IA disponible avec le forfait Pro') }}</p>
+          <p class="text-sm text-on-surface-variant">{{ __('Les recommandations et scores ne sont affichés qu’avec un abonnement Pro actif.') }}</p>
         </div>
-        <a href="{{ route('plan.abonnement') }}" class="inline-flex justify-center rounded-xl bg-secondary-container px-5 py-2.5 text-sm font-bold text-white">Voir les forfaits</a>
+        <a href="{{ route('plan.abonnement') }}" class="inline-flex justify-center rounded-xl bg-secondary-container px-5 py-2.5 text-sm font-bold text-white">{{ __('Voir les forfaits') }}</a>
       </div>
     </div>
   @endif
@@ -21,9 +21,9 @@
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
           <p class="text-sm text-warning-dark flex items-center gap-2">
             <span class="material-symbols-outlined text-lg">info</span>
-            Complétez votre profil CV pour débloquer le matching IA et postuler aux offres.
+            {{ __('Complétez votre profil CV pour débloquer le matching IA et postuler aux offres.') }}
           </p>
-          <a href="{{ route('infos.cv') }}" class="whitespace-nowrap text-sm font-bold text-warning-dark hover:underline">Compléter mon CV →</a>
+          <a href="{{ route('infos.cv') }}" class="whitespace-nowrap text-sm font-bold text-warning-dark hover:underline">{{ __('Compléter mon CV →') }}</a>
         </div>
       </div>
     @endif
@@ -33,11 +33,11 @@
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight">Bonjour, {{ auth()->user()->prenom ?? auth()->user()->name ?? 'candidat' }}</h1>
-            <p class="text-on-surface-variant mt-2">Bienvenue sur votre espace MatchJuste</p>
+            <h1 class="text-3xl md:text-4xl font-bold font-serif text-primary leading-tight">{{ __('Bonjour') }}, {{ auth()->user()->prenom ?? auth()->user()->name ?? 'candidat' }}</h1>
+            <p class="text-on-surface-variant mt-2">{{ __('Bienvenue sur votre espace MatchJuste') }}</p>
           </div>
           <a href="{{ route('offres') }}" class="inline-flex items-center gap-2 bg-secondary-container text-white font-bold px-6 py-3 rounded-xl hover:bg-secondary transition-all shadow-lg shadow-secondary-container/20">
-            <span class="material-symbols-outlined text-lg">search</span> Chercher des offres
+            <span class="material-symbols-outlined text-lg">search</span> {{ __('Chercher des offres') }}
           </a>
         </div>
       </div>
@@ -55,7 +55,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold text-primary">{{ $dashboardStats['applications_count'] }}</div>
-                <div class="text-xs text-on-surface-variant">Candidatures envoyées</div>
+                <div class="text-xs text-on-surface-variant">{{ __('Candidatures envoyées') }}</div>
               </div>
             </div>
           </div>
@@ -67,7 +67,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold text-primary">{{ $dashboardStats['interviews_count'] }}</div>
-                <div class="text-xs text-on-surface-variant">Entretiens obtenus</div>
+                <div class="text-xs text-on-surface-variant">{{ __('Entretiens obtenus') }}</div>
               </div>
             </div>
           </div>
@@ -79,7 +79,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold text-primary">{{ $dashboardStats['auto_applications_count'] }}</div>
-                <div class="text-xs text-on-surface-variant">CV personnalisés par IA</div>
+                <div class="text-xs text-on-surface-variant">{{ __('CV personnalisés par IA') }}</div>
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@
               </div>
               <div>
                 <div class="text-2xl font-bold text-primary">{{ $dashboardStats['unread_notifications_count'] }}</div>
-                <div class="text-xs text-on-surface-variant">Notifications non lues</div>
+                <div class="text-xs text-on-surface-variant">{{ __('Notifications non lues') }}</div>
               </div>
             </div>
           </div>
@@ -107,9 +107,9 @@
         <!-- Offres recommandées -->
         <div class="lg:col-span-2">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold font-serif text-primary">Offres recommandées</h2>
+            <h2 class="text-2xl font-bold font-serif text-primary">{{ __('Offres recommandées') }}</h2>
             <a href="{{ route('offres') }}" class="text-sm font-semibold text-secondary-container hover:underline flex items-center gap-1">
-              Voir tout <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              {{ __('Voir tout') }} <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
           </div>
           <div class="space-y-4">
@@ -122,11 +122,11 @@
                 </div>
                 <div>
                   <h4 class="font-bold text-primary group-hover:text-secondary-container transition-colors">{{ $offre->poste ?: $offre->titre }}</h4>
-                  <p class="text-on-surface-variant/70 text-xs font-medium">{{ $offre->entreprise->company_name ?? 'Entreprise' }} • {{ $offre->localisation ?: 'Localisation a confirmer' }}</p>
+                  <p class="text-on-surface-variant/70 text-xs font-medium">{{ __($offre->entreprise->company_name ?? 'Entreprise') }} • {{ $offre->localisation ?: __('Localisation a confirmer') }}</p>
                 </div>
               </div>
               <div class="mt-3 sm:mt-0 flex items-center gap-3 relative z-10">
-                <span class="px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">{{ $offre->type->nom ?? 'Offre' }}</span>
+                <span class="px-3 py-1 bg-success-light text-success-dark text-2xs font-black uppercase tracking-widest rounded-full">{{ __($offre->type->nom ?? 'Offre') }}</span>
                 @if (!empty($offre->match_score))
                   <span class="px-2.5 py-1 bg-secondary-container/10 text-secondary-container text-2xs font-bold rounded-full">{{ round($offre->match_score) }}% match</span>
                 @endif
@@ -134,14 +134,14 @@
                   @if ($offre->salaire_min || $offre->salaire_max)
                     {{ $offre->salaire_min ? number_format((float) $offre->salaire_min, 0, ',', ' ') : '?' }} - {{ $offre->salaire_max ? number_format((float) $offre->salaire_max, 0, ',', ' ') : '?' }}$
                   @else
-                    Salaire a confirmer
+                    {{ __('Salaire a confirmer') }}
                   @endif
                 </span>
               </div>
             </a>
             @empty
             <div class="rounded-2xl border border-dashed border-outline-variant/30 bg-surface-container-low p-6 text-sm text-on-surface-variant">
-              Aucune offre active n'est disponible pour le moment.
+              {{ __("Aucune offre active n'est disponible pour le moment.") }}
             </div>
             @endforelse
           </div>
@@ -149,7 +149,7 @@
 
         <!-- Activité récente -->
         <div>
-          <h2 class="text-2xl font-bold font-serif text-primary mb-6">Activité récente</h2>
+          <h2 class="text-2xl font-bold font-serif text-primary mb-6">{{ __('Activité récente') }}</h2>
           <div class="card-glow rounded-2xl p-6">
             <div class="space-y-5">
               @forelse ($recentApplications as $application)
@@ -158,8 +158,8 @@
                     <span class="material-symbols-outlined text-secondary-container text-sm">{{ $application->autopostulation ? 'auto_awesome' : 'send' }}</span>
                   </div>
                   <div>
-                    <p class="text-sm font-semibold text-primary">{{ $application->autopostulation ? 'Candidature IA envoyée' : 'Candidature envoyée' }}</p>
-                    <p class="text-xs text-on-surface-variant">{{ $application->offre->poste ?? $application->offre->titre ?? 'Offre' }} chez {{ $application->offre->entreprise->company_name ?? 'Entreprise' }}</p>
+                    <p class="text-sm font-semibold text-primary">{{ $application->autopostulation ? __('Candidature IA envoyée') : __('Candidature envoyée') }}</p>
+                    <p class="text-xs text-on-surface-variant">{{ $application->offre->poste ?? $application->offre->titre ?? 'Offre' }} {{ __('chez') }} {{ __($application->offre->entreprise->company_name ?? 'Entreprise') }}</p>
                     <div class="mt-1 flex items-center gap-2">
                       <p class="text-2xs text-outline">{{ optional($application->created_at)->diffForHumans() }}</p>
                       <x-application-status :status="$application->status" />
@@ -168,7 +168,7 @@
                 </div>
               @empty
                 <div class="text-sm text-on-surface-variant">
-                  Aucune activité récente pour le moment.
+                  {{ __('Aucune activité récente pour le moment.') }}
                 </div>
               @endforelse
             </div>

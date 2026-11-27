@@ -1,6 +1,6 @@
 @if($experiences->isNotEmpty())
     <section class="cv-section experience-section">
-        <h2 class="section-title">Expérience professionnelle</h2>
+        <h2 class="section-title">{{ __('Expérience professionnelle') }}</h2>
         <div class="section-content">
             @foreach($experiences as $experience)
                 @if(!empty($experience['poste']))

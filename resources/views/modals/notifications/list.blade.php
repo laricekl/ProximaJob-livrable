@@ -11,6 +11,6 @@
 @empty
     <div class="px-4 py-6 text-center text-gray-500">
         <i class="fas fa-bell-slash text-2xl mb-2"></i>
-        <p>Aucune notification</p>
+        <p>{{ __('Aucune notification') }}</p>
     </div>
 @endforelse

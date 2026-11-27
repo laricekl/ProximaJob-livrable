@@ -1,53 +1,53 @@
 @extends('layouts.entreprise')
-@section('title', 'Promotions')
+@section('title', __('Promotions'))
 @section('content')
     <section class="py-8 px-4 md:px-10">
       <div class="max-w-7xl mx-auto">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
           <div>
-            <h1 class="text-2xl font-bold font-serif text-primary mb-2">Promotions</h1>
-            <p class="text-sm text-on-surface-variant">Préparez les offres que vous souhaiterez mettre davantage en valeur.</p>
+            <h1 class="text-2xl font-bold font-serif text-primary mb-2">{{ __('Promotions') }}</h1>
+            <p class="text-sm text-on-surface-variant">{{ __('Préparez les offres que vous souhaiterez mettre davantage en valeur.') }}</p>
           </div>
         </div>
 
         <div class="mb-8 rounded-2xl bg-gradient-to-r from-secondary-container/10 to-secondary-container/5 border border-secondary-container/20 px-6 py-5 flex items-center gap-4">
           <span class="material-symbols-outlined text-3xl text-secondary-container flex-shrink-0">rocket_launch</span>
           <div>
-            <p class="text-lg font-bold font-serif text-primary">Module de promotion — Bientôt disponible</p>
-            <p class="text-sm text-on-surface-variant">La promotion payante n’est pas encore activée. Aucun achat ni prélèvement ne peut être effectué sur cette page.</p>
+            <p class="text-lg font-bold font-serif text-primary">{{ __('Module de promotion — Bientôt disponible') }}</p>
+            <p class="text-sm text-on-surface-variant">{{ __('La promotion payante n’est pas encore activée. Aucun achat ni prélèvement ne peut être effectué sur cette page.') }}</p>
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
           <div class="card-glow rounded-2xl p-6 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-secondary-container">inventory_2</span></div>
-            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['total_offers'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Offres admissibles</p></div>
+            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['total_offers'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">{{ __('Offres admissibles') }}</p></div>
           </div>
           <div class="card-glow rounded-2xl p-6 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-secondary-container">trending_up</span></div>
-            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['active_offers'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Offres actives</p></div>
+            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['active_offers'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">{{ __('Offres actives') }}</p></div>
           </div>
           <div class="card-glow rounded-2xl p-6 flex items-center gap-4">
             <div class="w-12 h-12 rounded-xl bg-secondary-container/10 flex items-center justify-center flex-shrink-0"><span class="material-symbols-outlined text-secondary-container">smart_toy</span></div>
-            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['autopostulations'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">Profils IA proposés</p></div>
+            <div><p class="text-2xl font-bold text-primary">{{ $promotionStats['autopostulations'] ?? 0 }}</p><p class="text-sm text-on-surface-variant">{{ __('Profils IA proposés') }}</p></div>
           </div>
         </div>
 
         <div class="card-glow rounded-2xl overflow-hidden mb-10">
           <div class="border-b border-outline-variant/10 px-6 py-5">
-            <h2 class="font-serif text-lg font-bold text-primary">Offres admissibles à une future promotion</h2>
-            <p class="mt-1 text-sm text-on-surface-variant">Vous pouvez continuer à consulter ou modifier vos offres en attendant l’ouverture du module.</p>
+            <h2 class="font-serif text-lg font-bold text-primary">{{ __('Offres admissibles à une future promotion') }}</h2>
+            <p class="mt-1 text-sm text-on-surface-variant">{{ __('Vous pouvez continuer à consulter ou modifier vos offres en attendant l’ouverture du module.') }}</p>
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-sm text-left">
               <thead>
                 <tr class="border-b border-outline-variant/10 bg-surface-container-low/50">
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Offre</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Type</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Statut</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">Candidatures</th>
+                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">{{ __('Offre') }}</th>
+                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">{{ __('Type') }}</th>
+                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">{{ __('Statut') }}</th>
+                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">{{ __('Candidatures') }}</th>
                   <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider">IA</th>
-                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider text-right">Actions</th>
+                  <th class="px-6 py-4 font-bold text-primary text-xs uppercase tracking-wider text-right">{{ __('Actions') }}</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-outline-variant/5">
@@ -55,19 +55,19 @@
                   <tr class="hover:bg-surface-container-low/30 transition-colors">
                     <td class="px-6 py-4">
                       <p class="font-semibold text-primary">{{ $offer->titre }}</p>
-                      <p class="text-xs text-on-surface-variant mt-1">{{ $offer->localisation ?? 'Localisation à confirmer' }}</p>
+                      <p class="text-xs text-on-surface-variant mt-1">{{ $offer->localisation ?? __('Localisation à confirmer') }}</p>
                     </td>
-                    <td class="px-6 py-4 text-on-surface-variant">{{ $offer->type?->nom ?? 'Offre' }}</td>
+                    <td class="px-6 py-4 text-on-surface-variant">{{ __($offer->type?->nom ?? 'Offre') }}</td>
                     <td class="px-6 py-4">
-                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">{{ ucfirst($offer->status ?? 'active') }}</span>
+                      <span class="px-2 py-0.5 bg-secondary-container/10 text-secondary-container text-xs font-semibold rounded-full">{{ __(ucfirst($offer->status ?? 'active')) }}</span>
                     </td>
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->postulations_count ?? 0 }}</td>
                     <td class="px-6 py-4 text-on-surface-variant">{{ $offer->autopostulations_count ?? 0 }}</td>
                     <td class="px-6 py-4 text-right">
                       <div class="flex justify-end gap-2">
-                        <a href="{{ route('entreprise.offres.candidatures', $offer) }}" aria-label="Voir les candidatures de {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Voir les candidatures"><span class="material-symbols-outlined text-base">visibility</span></a>
-                        <a href="{{ route('edit.offres', $offer->id) }}" aria-label="Modifier l’offre {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="Modifier l’offre"><span class="material-symbols-outlined text-base">edit</span></a>
-                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface-container text-outline" title="Promotion bientôt disponible" aria-label="Promotion bientôt disponible">
+                        <a href="{{ route('entreprise.offres.candidatures', $offer) }}" aria-label="{{ __('Voir les candidatures de') }} {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="{{ __('Voir les candidatures') }}"><span class="material-symbols-outlined text-base">visibility</span></a>
+                        <a href="{{ route('edit.offres', $offer->id) }}" aria-label="{{ __('Modifier l’offre') }} {{ $offer->titre }}" class="w-8 h-8 rounded-lg bg-surface-container-low hover:bg-primary-container/10 transition-colors flex items-center justify-center text-outline hover:text-primary" title="{{ __('Modifier l’offre') }}"><span class="material-symbols-outlined text-base">edit</span></a>
+                        <span class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-surface-container text-outline" title="{{ __('Promotion bientôt disponible') }}" aria-label="{{ __('Promotion bientôt disponible') }}">
                           <span class="material-symbols-outlined text-base" aria-hidden="true">schedule</span>
                         </span>
                       </div>
@@ -77,8 +77,8 @@
                   <tr>
                     <td colspan="6" class="px-6 py-12 text-center">
                       <span class="material-symbols-outlined text-4xl text-outline mb-3 block">campaign</span>
-                      <h3 class="font-bold text-primary mb-1">Aucune offre à promouvoir</h3>
-                      <p class="text-sm text-on-surface-variant">Publiez votre première offre pour commencer à suivre ses performances.</p>
+                      <h3 class="font-bold text-primary mb-1">{{ __('Aucune offre à promouvoir') }}</h3>
+                      <p class="text-sm text-on-surface-variant">{{ __('Publiez votre première offre pour commencer à suivre ses performances.') }}</p>
                     </td>
                   </tr>
                 @endforelse

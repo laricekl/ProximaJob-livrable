@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
-    <title>CV classique - {{ $fullName }}</title>
+    <title>{{ __('CV classique') }} - {{ $fullName }}</title>
     <style>
         @page { margin: 10mm 17mm; size: A4; }
         * { box-sizing: border-box; }
@@ -107,7 +107,7 @@
     </style>
 </head>
 <body>
-    <div class="footer">Page </div>
+    <div class="footer">{{ __('Page') }} </div>
     <header class="header">
         <h1 class="name">{{ $fullName }}</h1>
         @if($targetTitle !== '')<div class="target">{{ $targetTitle }}</div>@endif
@@ -129,7 +129,7 @@
 
     @if($perfectionnements->isNotEmpty())
         <section class="cv-section">
-            <h2 class="section-title">Perfectionnement</h2>
+            <h2 class="section-title">{{ __('Perfectionnement') }}</h2>
             @foreach($perfectionnements as $item)
                 @if(!empty($item['formation']))
                     <article class="cv-item">
@@ -149,12 +149,12 @@
             <tr>
                 <td>
                     @if($langues->isNotEmpty())
-                        <h2 class="extras-title">Langues</h2>
+                        <h2 class="extras-title">{{ __('Langues') }}</h2>
                         @foreach($langues as $langue)
                             @if(!empty($langue['nom']))
                                 <div class="extras-line">
-                                    <strong>{{ $langue['nom'] }}</strong>
-                                    @if(!empty($langue['niveau'])) - {{ $langue['niveau'] }} @endif
+                                    <strong>{{ __($langue['nom']) }}</strong>
+                                    @if(!empty($langue['niveau'])) - {{ __($langue['niveau']) }} @endif
                                 </div>
                             @endif
                         @endforeach
@@ -162,7 +162,7 @@
                 </td>
                 <td>
                     @if($benevolats->isNotEmpty())
-                        <h2 class="extras-title">Engagement</h2>
+                        <h2 class="extras-title">{{ __('Engagement') }}</h2>
                         @foreach($benevolats as $item)
                             @if(!empty($item['role']))
                                 <div class="extras-line"><strong>{{ $item['role'] }}</strong></div>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="{{ app()->getLocale() }}">
 <body>
-  <h1>Nouveau message de contact</h1>
-  <p><strong>Nom :</strong> {{ $contact['firstname'] }} {{ $contact['name'] }}</p>
-  <p><strong>Courriel :</strong> {{ $contact['email'] }}</p>
+  <h1>{{ __('Nouveau message de contact') }}</h1>
+  <p><strong>{{ __('Nom :') }}</strong> {{ $contact['firstname'] }} {{ $contact['name'] }}</p>
+  <p><strong>{{ __('Courriel :') }}</strong> {{ $contact['email'] }}</p>
   <hr>
   <p>{!! nl2br(e($contact['message'])) !!}</p>
 </body>
