@@ -286,25 +286,25 @@
     <div class="cookie-consent-summary">
       <div class="cookie-summary-copy">
         <p class="cookie-accessible-only">
-          <span class="cookie-accessible-only">Vos préférences de confidentialité</span>
+          <span class="cookie-accessible-only">{{ __('Vos préférences de confidentialité') }}</span>
         </p>
         <div class="cookie-consent-line cookie-mini-note text-xs leading-5 md:text-[13px]">
           <span class="cookie-consent-title">Cookies</span>
           <span class="cookie-consent-separator" aria-hidden="true"></span>
-          <span class="cookie-optional-note">Audience, préférences et marketing en option.</span>
-          <a href="{{ route('cookies.policy') }}" class="cookie-policy-link font-bold text-secondary-container hover:underline">Politique cookies</a>
+          <span class="cookie-optional-note">{{ __('Audience, préférences et marketing en option.') }}</span>
+          <a href="{{ route('cookies.policy') }}" class="cookie-policy-link font-bold text-secondary-container hover:underline">{{ __('Politique cookies') }}</a>
         </div>
       </div>
 
       <div class="cookie-consent-actions flex flex-wrap items-center gap-2">
         <button type="button" data-cookie-action="toggle-preferences" class="rounded-full px-2 py-1 text-[12px] font-bold text-outline transition hover:text-secondary-container">
-          Personnaliser
+          {{ __('Personnaliser') }}
         </button>
         <button type="button" data-cookie-action="decline-all" class="rounded-full border border-outline-variant/30 bg-white/80 px-3 py-1.5 text-[12px] font-bold text-primary transition hover:bg-surface-container-low">
-          Refuser
+          {{ __('Refuser') }}
         </button>
         <button type="button" data-cookie-action="accept-all" class="rounded-full bg-secondary-container px-3 py-1.5 text-[12px] font-bold text-white transition hover:bg-secondary">
-          Tout accepter
+          {{ __('Tout accepter') }}
         </button>
         <button type="button" data-cookie-action="close-preferences" class="cookie-close-button h-8 w-8 items-center justify-center rounded-full border border-outline-variant/20 bg-white/85 text-outline transition hover:text-primary">
           <span class="material-symbols-outlined text-[16px]">close</span>
@@ -317,21 +317,21 @@
         <article class="rounded-2xl border border-outline-variant/10 bg-white/70 p-4">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h3 class="text-sm font-bold text-primary">Cookies nécessaires</h3>
-              <p class="mt-1 text-sm text-on-surface-variant">Connexion, sécurité, navigation, choix de langue et mémorisation de votre consentement.</p>
+              <h3 class="text-sm font-bold text-primary">{{ __('Cookies nécessaires') }}</h3>
+              <p class="mt-1 text-sm text-on-surface-variant">{{ __('Connexion, sécurité, navigation, choix de langue et mémorisation de votre consentement.') }}</p>
             </div>
-            <span class="rounded-full bg-success-light px-3 py-1 text-xs font-bold text-success-dark">Actifs</span>
+            <span class="rounded-full bg-success-light px-3 py-1 text-xs font-bold text-success-dark">{{ __('Actifs') }}</span>
           </div>
         </article>
 
         <article class="rounded-2xl border border-outline-variant/10 bg-white/70 p-4">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h3 class="text-sm font-bold text-primary">Mesure d'audience</h3>
-              <p class="mt-1 text-sm text-on-surface-variant">Mesurer les visites, comprendre les parcours et améliorer le produit sans casser l'expérience.</p>
+              <h3 class="text-sm font-bold text-primary">{{ __('Mesure d\'audience') }}</h3>
+              <p class="mt-1 text-sm text-on-surface-variant">{{ __('Mesurer les visites, comprendre les parcours et améliorer le produit sans casser l\'expérience.') }}</p>
             </div>
             <button type="button" class="cookie-choice-chip rounded-full border border-outline-variant/20 px-3 py-1 text-xs font-bold text-outline transition" data-cookie-toggle="analytics" aria-pressed="false">
-              Désactivé
+              {{ __('Désactivé') }}
             </button>
           </div>
         </article>
@@ -339,11 +339,11 @@
         <article class="rounded-2xl border border-outline-variant/10 bg-white/70 p-4">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h3 class="text-sm font-bold text-primary">Préférences</h3>
-              <p class="mt-1 text-sm text-on-surface-variant">Conserver des réglages de confort, par exemple des préférences d'affichage avancées.</p>
+              <h3 class="text-sm font-bold text-primary">{{ __('Préférences') }}</h3>
+              <p class="mt-1 text-sm text-on-surface-variant">{{ __('Conserver des réglages de confort, par exemple des préférences d\'affichage avancées.') }}</p>
             </div>
             <button type="button" class="cookie-choice-chip rounded-full border border-outline-variant/20 px-3 py-1 text-xs font-bold text-outline transition" data-cookie-toggle="preferences" aria-pressed="false">
-              Désactivé
+              {{ __('Désactivé') }}
             </button>
           </div>
         </article>
@@ -351,20 +351,20 @@
         <article class="rounded-2xl border border-outline-variant/10 bg-white/70 p-4">
           <div class="flex items-start justify-between gap-4">
             <div>
-              <h3 class="text-sm font-bold text-primary">Marketing</h3>
-              <p class="mt-1 text-sm text-on-surface-variant">Campagnes, pixels publicitaires et intégrations sociales non essentielles.</p>
+              <h3 class="text-sm font-bold text-primary">{{ __('Marketing') }}</h3>
+              <p class="mt-1 text-sm text-on-surface-variant">{{ __('Campagnes, pixels publicitaires et intégrations sociales non essentielles.') }}</p>
             </div>
             <button type="button" class="cookie-choice-chip rounded-full border border-outline-variant/20 px-3 py-1 text-xs font-bold text-outline transition" data-cookie-toggle="marketing" aria-pressed="false">
-              Désactivé
+              {{ __('Désactivé') }}
             </button>
           </div>
         </article>
       </div>
 
       <div class="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <p class="text-xs text-outline">Vous pourrez modifier ces choix plus tard via “Gérer les cookies”.</p>
+        <p class="text-xs text-outline">{{ __('Vous pourrez modifier ces choix plus tard via “Gérer les cookies”.') }}</p>
         <button type="button" data-cookie-action="save-preferences" class="rounded-full bg-primary px-4 py-2 text-[13px] font-bold text-white transition hover:bg-primary/90">
-          Enregistrer mes choix
+          {{ __('Enregistrer mes choix') }}
         </button>
       </div>
     </div>
@@ -376,7 +376,7 @@
   id="cookiePreferencesTrigger"
   data-cookie-open
   class="cookie-floating-trigger cookie-consent-hidden inline-flex items-center rounded-full text-primary transition hover:border-secondary-container/30 hover:text-secondary-container"
-  aria-label="Gérer les cookies"
+  aria-label="{{ __('Gérer les cookies') }}"
   title="Cookies"
 >
   <span class="material-symbols-outlined text-[17px]">cookie</span>
@@ -449,7 +449,7 @@
 
       const syncToggleButton = (button, enabled) => {
         button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
-        button.textContent = enabled ? 'Activé' : 'Désactivé';
+        button.textContent = enabled ? '{{ __('Activé') }}' : '{{ __('Désactivé') }}';
       };
 
       const applyConsentToToggles = (consent) => {

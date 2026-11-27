@@ -1,5 +1,5 @@
 @extends('layouts.guest')
-@section('title', 'Accueil')
+@section('title', __('Accueil'))
 
 @section('styles')
   <style>
@@ -651,12 +651,11 @@
         </div>
 
         <h1 class="hero-reveal hero-reveal--1 text-4xl md:text-6xl font-bold font-serif text-primary leading-tight tracking-tight">
-          Votre recherche d'emploi,<br />
-          <span class="text-secondary-container">propulsée par l'IA.</span>
+          {{ __('Votre recherche d\'emploi,') }}<br />
+          <span class="text-secondary-container">{{ __('propulsée par l\'IA.') }}</span>
         </h1>
         <p class="hero-reveal hero-reveal--2 text-base md:text-lg text-on-surface-variant max-w-2xl mx-auto mt-4 md:mt-6 leading-relaxed">
-          Déposez votre CV et laissez MatchJuste analyser votre profil pour vous connecter aux meilleures opportunités
-          adaptées à vos compétences.
+          {{ __('Déposez votre CV et laissez MatchJuste analyser votre profil pour vous connecter aux meilleures opportunités adaptées à vos compétences.') }}
         </p>
 
         <!-- Search Bar -->
@@ -666,9 +665,9 @@
           <form method="GET" action="{{ route('offres') }}" class="flex md:hidden items-center gap-1 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-1.5 border border-white/50 search-glass">
             <div class="flex-1 flex items-center min-w-0 px-3 py-1.5">
               <span class="material-symbols-outlined text-outline mr-2 text-sm flex-shrink-0">search</span>
-              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Titre du poste, mots-clés..." type="text" />
+              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="{{ __('Titre du poste, mots-clés...') }}" type="text" />
             </div>
-            <button id="filter-toggle" type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-outline hover:text-secondary-container hover:bg-secondary-container/5 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px]" aria-label="Filtres">
+            <button id="filter-toggle" type="button" class="w-10 h-10 flex items-center justify-center rounded-xl text-outline hover:text-secondary-container hover:bg-secondary-container/5 transition-colors flex-shrink-0 min-w-[44px] min-h-[44px]" aria-label="{{ __('Filtres') }}">
               <span class="material-symbols-outlined text-xl">tune</span>
             </button>
             <button type="submit" class="bg-secondary-container text-white font-bold px-4 py-2.5 rounded-xl hover:bg-secondary transition-all shadow flex items-center justify-center gap-1 cta-pulse text-sm flex-shrink-0 min-w-[44px] min-h-[44px]">
@@ -680,41 +679,41 @@
           <form method="GET" action="{{ route('offres') }}" id="filter-panel" class="md:hidden bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl p-3 border border-white/50 hidden">
             <div class="flex items-center px-3 py-2 mb-2 border-b border-outline-variant/20">
               <span class="material-symbols-outlined text-outline mr-2 text-sm">location_on</span>
-              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="Localisation" type="text" />
+              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-sm" placeholder="{{ __('Localisation') }}" type="text" />
             </div>
             <div class="flex items-center px-3 py-2">
               <span class="material-symbols-outlined text-outline mr-2 text-sm">category</span>
               <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-sm">
-                <option value="">Toutes les catégories</option>
+                <option value="">{{ __('Toutes les catégories') }}</option>
                 @foreach ($categoriesWithCount as $category)
                   <option value="{{ $category->id }}" @selected(in_array($category->id, (array) request('categories', [])))>{{ $category->nom }}</option>
                 @endforeach
               </select>
             </div>
-            <button type="submit" class="mt-3 w-full bg-secondary-container text-white font-bold px-4 py-3 rounded-xl hover:bg-secondary transition-all shadow text-sm">Rechercher</button>
+            <button type="submit" class="mt-3 w-full bg-secondary-container text-white font-bold px-4 py-3 rounded-xl hover:bg-secondary transition-all shadow text-sm">{{ __('Rechercher') }}</button>
           </form>
 
           <!-- DESKTOP: Multi-field row -->
           <form method="GET" action="{{ route('offres') }}" class="hidden md:flex items-center gap-2 bg-white/80 backdrop-blur-xl rounded-2xl shadow-2xl p-2 border border-white/50 search-glass">
             <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
               <span class="material-symbols-outlined text-outline mr-3 text-base">search</span>
-              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Titre du poste, mots-clés..." type="text" />
+              <input name="search" value="{{ request('search') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="{{ __('Titre du poste, mots-clés...') }}" type="text" />
             </div>
             <div class="flex-1 flex items-center px-4 py-2 border-r border-outline-variant/30">
               <span class="material-symbols-outlined text-outline mr-3 text-base">location_on</span>
-              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="Localisation" type="text" />
+              <input name="localisation" value="{{ request('localisation') }}" class="w-full bg-transparent border-none focus:ring-0 focus:outline-none text-on-surface placeholder-outline text-base" placeholder="{{ __('Localisation') }}" type="text" />
             </div>
             <div class="flex-1 flex items-center px-4 py-2">
               <span class="material-symbols-outlined text-outline mr-3 text-base">category</span>
               <select name="categories[]" class="w-full bg-transparent border-none focus:ring-0 text-on-surface text-base">
-                <option value="">Toutes les catégories</option>
+                <option value="">{{ __('Toutes les catégories') }}</option>
                 @foreach ($categoriesWithCount as $category)
                   <option value="{{ $category->id }}" @selected(in_array($category->id, (array) request('categories', [])))>{{ $category->nom }}</option>
                 @endforeach
               </select>
             </div>
             <button type="submit" class="bg-secondary-container text-white font-bold px-8 py-4 rounded-xl hover:bg-secondary transition-all shadow flex items-center justify-center gap-2 cta-pulse text-base flex-shrink-0">
-              Rechercher <span class="material-symbols-outlined text-lg">arrow_forward</span>
+              {{ __('Rechercher') }} <span class="material-symbols-outlined text-lg">arrow_forward</span>
             </button>
           </form>
         </div>
@@ -723,15 +722,15 @@
         <div class="hero-reveal hero-reveal--4 mt-6 md:mt-10 max-w-xl mx-auto grid grid-cols-3 gap-2 md:gap-4">
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
             <p class="text-xl md:text-3xl font-bold text-primary font-serif">{{ number_format($totalOffres, 0, ',', ' ') }}<span class="text-secondary-container">+</span></p>
-            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Emplois</p>
+            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">{{ __('Emplois') }}</p>
           </div>
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
             <p class="text-xl md:text-3xl font-bold text-primary font-serif">{{ $totalUtilisateurs >= 1000 ? round($totalUtilisateurs/1000, 1).'k' : number_format($totalUtilisateurs, 0, ',', ' ') }}</p>
-            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Utilisateurs</p>
+            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">{{ __('Utilisateurs') }}</p>
           </div>
           <div class="bg-white/60 backdrop-blur-sm rounded-2xl px-3 md:px-6 py-3 md:py-4 text-center border border-white/50 shadow-sm">
             <p class="text-xl md:text-3xl font-bold text-primary font-serif">{{ number_format($totalEntreprises, 0, ',', ' ') }}<span class="text-secondary-container">+</span></p>
-            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">Entreprises</p>
+            <p class="text-2xs md:text-xs text-on-surface-variant/60 uppercase tracking-widest mt-1">{{ __('Entreprises') }}</p>
           </div>
         </div>
 
@@ -760,17 +759,17 @@
                   <div class="overflow-hidden flex-shrink min-w-0">
                     <div id="spotlight2-text" class="space-y-1 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] w-full sm:w-[280px] min-h-[120px]" style="transform: translateX(0);">
                       <div class="flex items-center gap-3">
-                        <span class="px-2 py-0.5 rounded bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-wider border border-secondary-container/20">Partenaire Élite</span>
-                        <span class="text-2xs text-primary/40 font-medium italic">Solution recrutement</span>
+                        <span class="px-2 py-0.5 rounded bg-secondary-container/10 text-secondary-container text-2xs font-black uppercase tracking-wider border border-secondary-container/20">{{ __('Partenaire Élite') }}</span>
+                        <span class="text-2xs text-primary/40 font-medium italic">{{ __('Solution recrutement') }}</span>
                       </div>
-                      <h3 class="text-xl md:text-2xl font-bold text-primary truncate" id="spotlight2-name">MatchJuste Entreprise</h3>
-                      <p class="text-primary/60 text-sm italic font-medium line-clamp-3 min-h-[3.5rem]" id="spotlight2-quote">"La plateforme tout-en-un pour trouver, évaluer et recruter les meilleurs talents."</p>
+                      <h3 class="text-xl md:text-2xl font-bold text-primary truncate" id="spotlight2-name">{{ __('MatchJuste Entreprise') }}</h3>
+                      <p class="text-primary/60 text-sm italic font-medium line-clamp-3 min-h-[3.5rem]" id="spotlight2-quote">{{ __('"La plateforme tout-en-un pour trouver, évaluer et recruter les meilleurs talents."') }}</p>
                     </div>
                   </div>
                 </div>
 
                 <a href="{{ route('entreprises.index') }}" id="spotlight2-link" class="whitespace-nowrap bg-primary text-white text-xs font-bold uppercase tracking-widest px-8 py-4 rounded-full hover:bg-secondary-container transition-all shadow-lg hover:shadow-secondary-container/20 active:scale-95 spotlight-cta flex-shrink-0">
-                  Découvrir
+                  {{ __('Découvrir') }}
                 </a>
               </div>
             </div>
@@ -787,39 +786,36 @@
         <div class="w-full lg:w-3/5 relative">
           <div
             class="relative rounded-2xl overflow-hidden shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-700">
-            <img src="{{ asset('img/istockphoto-1434116614-612x612 1.png') }}" alt="Professionnels en collaboration"
+            <img src="{{ asset('img/istockphoto-1434116614-612x612 1.png') }}" alt="{{ __('Professionnels en collaboration') }}"
               class="w-full h-[190px] sm:h-[380px] md:h-[450px] object-cover object-[50%_15%]" loading="eager" decoding="async" fetchpriority="high" />
           </div>
         </div>
         <div class="w-full lg:w-2/5 space-y-6 text-left">
           <span
-            class="inline-block px-3 py-1 rounded-full bg-primary-container text-white text-2xs md:text-xs uppercase tracking-widest">L'Excellence
-            au service de votre carrière</span>
+            class="inline-block px-3 py-1 rounded-full bg-primary-container text-white text-2xs md:text-xs uppercase tracking-widest">{{ __('L\'Excellence au service de votre carrière') }}</span>
           <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight">
-            Bien plus qu'un portail,<br /><span class="text-secondary-container italic">votre concierge dédié.</span>
+            {{ __('Bien plus qu\'un portail,') }}<br /><span class="text-secondary-container italic">{{ __('votre concierge dédié.') }}</span>
           </h2>
-          <p class="text-on-surface-variant text-sm md:text-lg leading-relaxed">Notre algorithme prédictif analyse votre
-            trajectoire, vos soft skills et votre potentiel pour vous proposer des postes qui correspondent à votre
-            vision.</p>
+          <p class="text-on-surface-variant text-sm md:text-lg leading-relaxed">{{ __('Notre algorithme prédictif analyse votre trajectoire, vos soft skills et votre potentiel pour vous proposer des postes qui correspondent à votre vision.') }}</p>
           <div class="grid grid-cols-2 gap-4">
             <div class="flex items-start gap-3">
               <span class="material-symbols-outlined text-secondary-container mt-1">auto_awesome</span>
               <div>
-                <h4 class="font-semibold text-primary text-sm">Matching de Précision</h4>
-                <p class="text-on-surface-variant text-sm">Réduction de 70% du temps de recherche.</p>
+                <h4 class="font-semibold text-primary text-sm">{{ __('Matching de Précision') }}</h4>
+                <p class="text-on-surface-variant text-sm">{{ __('Réduction de 70% du temps de recherche.') }}</p>
               </div>
             </div>
             <div class="flex items-start gap-3">
               <span class="material-symbols-outlined text-secondary-container mt-1">shield_person</span>
               <div>
-                <h4 class="font-semibold text-primary text-sm">Accès Exclusif</h4>
-                <p class="text-on-surface-variant text-sm">Offres non publiées sur le marché public.</p>
+                <h4 class="font-semibold text-primary text-sm">{{ __('Accès Exclusif') }}</h4>
+                <p class="text-on-surface-variant text-sm">{{ __('Offres non publiées sur le marché public.') }}</p>
               </div>
             </div>
           </div>
           <a href="{{ route('offres') }}"
             class="inline-flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full hover:bg-primary-container transition-all shadow-xl group">
-            <span class="font-semibold">Découvrir votre potentiel</span>
+            <span class="font-semibold">{{ __('Découvrir votre potentiel') }}</span>
             <span class="material-symbols-outlined group-hover:translate-x-2 transition-transform">arrow_forward</span>
           </a>
         </div>
@@ -831,13 +827,13 @@
       <div class="max-w-6xl mx-auto">
         <div class="reveal flex flex-col md:flex-row justify-between items-baseline mb-8 md:mb-12 gap-3 md:gap-4">
           <div>
-            <h2 class="text-2xl md:text-3xl font-bold font-serif text-primary">Explorer par <span
-                class="text-secondary-container">Catégorie</span></h2>
-            <p class="text-on-surface-variant text-sm md:text-base mt-1 md:mt-2">Découvrez les secteurs qui recrutent activement aujourd'hui.</p>
+            <h2 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ __('Explorer par') }} <span
+                class="text-secondary-container">{{ __('Catégorie') }}</span></h2>
+            <p class="text-on-surface-variant text-sm md:text-base mt-1 md:mt-2">{{ __('Découvrez les secteurs qui recrutent activement aujourd\'hui.') }}</p>
           </div>
           <a href="{{ route('offres') }}"
             class="flex items-center gap-2 text-sm font-semibold text-secondary-container hover:underline group py-2 min-h-[44px]">
-            Afficher toutes les offres <span
+            {{ __('Afficher toutes les offres') }} <span
               class="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">east</span>
           </a>
         </div>
@@ -855,14 +851,14 @@
               <span class="material-symbols-outlined text-xl md:text-2xl" style="font-variation-settings:'FILL' 1">{{ $catIcons[$index] ?? 'work' }}</span>
             </div>
             <h3 class="font-bold text-lg md:text-xl text-primary mb-2">{{ $category->nom }}</h3>
-            <p class="text-on-surface-variant text-sm mb-4">{{ $category->description ?? 'Découvrez les offres dans ce secteur.' }}</p>
+            <p class="text-on-surface-variant text-sm mb-4">{{ $category->description ?? __('Découvrez les offres dans ce secteur.') }}</p>
             <div class="flex items-center gap-2 text-sm text-secondary-container font-semibold">
-              <span>{{ $category->offres_count }} poste{{ $category->offres_count > 1 ? 's' : '' }} ouvert{{ $category->offres_count > 1 ? 's' : '' }}</span><span class="material-symbols-outlined text-lg">north_east</span>
+              <span>{{ $category->offres_count }} {{ $category->offres_count > 1 ? __('postes ouverts') : __('poste ouvert') }}</span><span class="material-symbols-outlined text-lg">north_east</span>
             </div>
           </a>
           @empty
           <div class="col-span-full rounded-2xl border border-dashed border-outline-variant/30 bg-surface-container-low p-6 text-sm text-on-surface-variant text-center">
-            Aucune catégorie disponible pour le moment.
+            {{ __('Aucune catégorie disponible pour le moment.') }}
           </div>
           @endforelse
         </div>
@@ -873,9 +869,8 @@
     <section class="home-deferred py-12 md:py-20 px-4 md:px-10 bg-white">
       <div class="max-w-4xl mx-auto">
         <div class="reveal text-center mb-8 md:mb-12">
-          <h2 class="text-2xl md:text-3xl font-bold font-serif text-primary">Dernières opportunités</h2>
-          <p class="text-on-surface-variant text-sm md:text-base mt-2">Découvrez les postes récemment publiés par nos entreprises
-            partenaires.</p>
+          <h2 class="text-2xl md:text-3xl font-bold font-serif text-primary">{{ __('Dernières opportunités') }}</h2>
+          <p class="text-on-surface-variant text-sm md:text-base mt-2">{{ __('Découvrez les postes récemment publiés par nos entreprises partenaires.') }}</p>
         </div>
         <div class="jobs-grid-mobile space-y-4">
           @forelse ($offres->take(3) as $index => $offre)
@@ -900,20 +895,19 @@
                 class="px-3 md:px-4 py-1 md:py-1.5 bg-success-light text-success-dark text-2xs md:text-xs font-black uppercase tracking-widest rounded-full">{{ $offre->type->nom ?? 'Offre' }}</span>
               <div
                 class="flex items-center gap-1 text-secondary-container font-bold text-sm opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all duration-500">
-                Détails <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+                {{ __('Détails') }} <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
               </div>
             </div>
           </a>
           @empty
           <div class="rounded-2xl border border-dashed border-outline-variant/30 bg-surface-container-low p-6 text-sm text-on-surface-variant">
-            Aucune opportunite recente n'est disponible pour le moment.
+            {{ __('Aucune opportunite recente n\'est disponible pour le moment.') }}
           </div>
           @endforelse
         </div>
         <div class="mt-10 text-center">
           <a href="{{ route('offres') }}"
-            class="px-6 md:px-8 py-3 rounded-full border border-primary text-primary text-sm md:text-base font-semibold hover:bg-surface-container-low transition-colors inline-block min-h-[44px]">Parcourir
-            toutes les offres</a>
+            class="px-6 md:px-8 py-3 rounded-full border border-primary text-primary text-sm md:text-base font-semibold hover:bg-surface-container-low transition-colors inline-block min-h-[44px]">{{ __('Parcourir toutes les offres') }}</a>
         </div>
       </div>
     </section>
@@ -930,8 +924,8 @@
     <section class="home-deferred py-12 md:py-20 px-4 md:px-10">
       <div class="max-w-5xl mx-auto">
         <div class="reveal text-center mb-10 md:mb-16">
-          <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight mb-4">Choisissez votre forfait</h2>
-          <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">Des solutions adaptées pour accélérer votre transition professionnelle.</p>
+          <h2 class="text-2xl md:text-4xl font-bold font-serif text-primary leading-tight mb-4">{{ __('Choisissez votre forfait') }}</h2>
+          <p class="text-on-surface-variant text-sm md:text-base max-w-2xl mx-auto">{{ __('Des solutions adaptées pour accélérer votre transition professionnelle.') }}</p>
         </div>
 
         <div class="pricing-grid-wrapper relative max-w-3xl mx-auto">
@@ -947,17 +941,17 @@
               </div>
               <div class="card-3d-glass"></div>
               <div class="card-3d-content text-center">
-                <p class="text-xs font-bold text-outline uppercase tracking-wide mb-1">Gratuit</p>
+                <p class="text-xs font-bold text-outline uppercase tracking-wide mb-1">{{ __('Gratuit') }}</p>
                 <div class="flex items-baseline justify-center gap-0.5">
                   <p class="text-4xl font-bold text-primary">{{ $formatPlanPrice($discoveryPlan, '0') }}<span class="text-lg text-outline">$</span></p>
-                  <p class="text-xs text-outline">/{{ $discoveryPlan?->duree ?? 30 }} jours</p>
+                  <p class="text-xs text-outline">/{{ $discoveryPlan?->duree ?? 30 }} {{ __('jours') }}</p>
                 </div>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Accès aux offres</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> 3 candidatures par mois</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> CV personnalisé par IA</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> {{ __('Accès aux offres') }}</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> {{ __('3 candidatures par mois') }}</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-outline-variant">close</span> {{ __('CV personnalisé par IA') }}</li>
                 </ul>
-                <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">Commencer</a>
+                <a href="{{ route('register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] border border-outline-variant/40 text-primary hover:bg-black/5 transition-colors text-center">{{ __('Commencer') }}</a>
               </div>
             </div>
           </div>
@@ -972,17 +966,17 @@
               </div>
               <div class="card-3d-glass"></div>
               <div class="card-3d-content text-center">
-                <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">Entreprise</p>
+                <p class="text-xs font-bold text-secondary-container uppercase tracking-wide mb-1">{{ __('Entreprise') }}</p>
                 <div class="flex items-baseline justify-center gap-0.5">
                   <p class="text-4xl font-bold text-primary">{{ $formatPlanPrice($enterprisePlan, '399') }}<span class="text-lg text-outline">$</span></p>
-                  <p class="text-xs text-outline">/{{ $enterprisePlan?->duree ?? 365 }} jours</p>
+                  <p class="text-xs text-outline">/{{ $enterprisePlan?->duree ?? 365 }} {{ __('jours') }}</p>
                 </div>
                 <ul class="mt-4 space-y-2 text-xs text-outline text-left">
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Offres illimitées</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Matching des candidats</li>
-                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> Suivi des candidatures</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> {{ __('Offres illimitées') }}</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> {{ __('Matching des candidats') }}</li>
+                  <li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm text-secondary-container">check</span> {{ __('Suivi des candidatures') }}</li>
                 </ul>
-                <a href="{{ route('entreprise.register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">Contacter</a>
+                <a href="{{ route('entreprise.register') }}" class="block mt-5 w-full py-3 rounded-full text-sm font-semibold min-h-[44px] text-white bg-primary-container hover:bg-primary-container/90 transition-colors shadow-lg text-center">{{ __('Contacter') }}</a>
               </div>
             </div>
           </div>

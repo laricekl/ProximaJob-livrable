@@ -6,10 +6,10 @@
       </a>
 
       <nav class="flex items-center gap-3 shrink min-w-0">
-        <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">Confidentialite</a>
-        <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">Cookies</a>
-        <a href="{{ route('terms') }}" class="hover:text-secondary-container transition-colors">Conditions</a>
-        <a href="{{ route('contact') }}" class="hover:text-secondary-container transition-colors">Contact</a>
+        <a href="{{ route('policy') }}" class="hover:text-secondary-container transition-colors">{{ __('Confidentialite') }}</a>
+        <a href="{{ route('cookies.policy') }}" class="hover:text-secondary-container transition-colors">{{ __('Cookies') }}</a>
+        <a href="{{ route('terms') }}" class="hover:text-secondary-container transition-colors">{{ __('Conditions') }}</a>
+        <a href="{{ route('contact') }}" class="hover:text-secondary-container transition-colors">{{ __('Contact') }}</a>
       </nav>
 
       <span class="text-outline shrink-0">© {{ date('Y') }} {{ $siteSettings?->site_nom ?? 'MatchJuste' }}.</span>
